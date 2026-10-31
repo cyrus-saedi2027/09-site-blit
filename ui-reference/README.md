@@ -9,18 +9,18 @@ This folder is the UI reference for the ticketing site. The home page is designe
 ```bash
 cd ui-reference && npx http-server -p 8000
 ```
-Then open http://localhost:8000/01-hero/ to compare the hero versions. Use a local server rather than double-clicking the file. Pick one that supports range requests (`http-server` does), so the music player can seek. The songs aren't in git; see [`01-hero/assets/music/README.md`](01-hero/assets/music/README.md).
+Then open http://localhost:8000/01-hero/ to compare the hero versions (each fills the whole window; switch versions from the round settings button at the bottom-left). Use a local server rather than double-clicking the file. Pick one that supports range requests (`http-server` does), so the music player can seek. The songs aren't in git; see [`01-hero/assets/music/README.md`](01-hero/assets/music/README.md).
 
 Hosted previews (private to the owner; the hero preview includes the songs):
 - Moodboard of 16 international ticketing, festival and theatre sites: https://claude.ai/artifact/G67hnwxgRA75NhkLfJZUAP
-- Hero, all versions on one page (tabs 1–7, the first owner's account): https://claude.ai/artifact/FMdoTVhR22nUCmfX76FvjU
-- Hero, versions 6, 7 and 8 on one page (new account, with the real posters and banners; no songs): https://claude.ai/artifact/SWmrAjx1oGu4Lj6zokerLp
+- Hero, versions 1–7 on one page (the first owner's account; still has the old tab bar): https://claude.ai/artifact/FMdoTVhR22nUCmfX76FvjU
+- Hero, versions 6, 7 and 8 on one page (new account, with the real banners; no songs; no bar, the versions switch from the settings button): https://claude.ai/artifact/SWmrAjx1oGu4Lj6zokerLp
 
 ## بخش‌ها · Sections
 
 | # | بخش | Section | Status | Refs |
 |---|---|---|---|---|
-| 1 | هیرو · جایگاه ویژه | Hero: eight versions side by side (v1 WebGL stage, v2 photo + featured rail, v3 posters, v4 formal and alive, v5 cut-out performer and striped halo, v6 = v5 working with posters, banners, photos or nothing, plus a demo admin panel, v7 after the owner's reference screenshot: a full-screen photo that slowly zooms out and fades into the next, cards on the right and a capsule header, **v8 the featured slot: the organiser's 16:9 banner covers the whole hero, with a solid header, the rail and a solid capsule of facts over it; a demo admin panel**) | **v8 new, waiting for feedback; v6 and v7 liked, v5 liked** → [`01-hero`](01-hero/) | الف، ب، ۱۰، ۱۵، leemeenal.app |
+| 1 | هیرو · جایگاه ویژه | Hero: eight versions side by side (v1 WebGL stage, v2 photo + featured rail, v3 posters, v4 formal and alive, v5 cut-out performer and striped halo, v6 = v5 working with posters, banners, photos or nothing, plus a demo admin panel, v7 after the owner's reference screenshot: a full-screen photo that slowly zooms out and fades into the next, cards on the right and a capsule header, **v8 the featured slot: a bento of separate rounded panels (header, the cards, the banner shown whole, the facts) with a small gap between them and the banner's own blurred colours behind; a demo admin panel**) | **v8 new, waiting for feedback; v6 and v7 liked, v5 liked** → [`01-hero`](01-hero/) | الف، ب، ۱۰، ۱۵، leemeenal.app |
 | 2 | جستجو با حال‌وهوا | Mood search ("something funny", "date night", "this weekend") | next | ۳، ۵ |
 | 3 | پرفروش‌های هفته | Weekly best sellers with giant numbers | later | ۳ |
 | 4 | قفسه‌ی تئاتر | Theatre poster shelf | later | ۵، ۱۴ |

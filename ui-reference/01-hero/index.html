@@ -9,96 +9,79 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap">
 <style>
-/* One page to compare every hero version: a thin bar of tabs on top, the chosen version below.
-   Each version is its own page in v1/ … v8/. The bar is deliberately neutral so it doesn't
-   colour the comparison. */
-:root {
-  --bar: #0b0a0e;
-  --bar-line: rgba(255, 255, 255, .1);
-  --fg: #f4f1f8;
-  --fg-2: rgba(244, 241, 248, .66);
-  --fg-3: rgba(244, 241, 248, .44);
-  --hi: #f4f1f8;
-  color-scheme: dark;
-}
-html, body { margin: 0; height: 100%; }
-body { background: var(--bar); color: var(--fg); font-family: "Vazirmatn", Tahoma, system-ui, sans-serif; font-size: 14px; }
-.shell { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); }
-.bar { display: flex; align-items: center; gap: 18px; min-height: 52px; padding-block: 6px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); border-bottom: 1px solid var(--bar-line); }
-.bar h1 { margin: 0; font-size: 14px; font-weight: 700; white-space: nowrap; }
-.tabs { display: flex; gap: 4px; min-width: 0; margin-inline: auto; overflow-x: auto; scrollbar-width: none; }
-.tabs::-webkit-scrollbar { display: none; }
-.tab { all: unset; cursor: pointer; position: relative; display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 14px; border-radius: 999px; color: var(--fg-2); white-space: nowrap; transition: color .25s, background .25s; }
-.tab b { font-weight: 700; color: var(--fg); }
-.tab small { font-size: 12.5px; }
-.tab:hover { color: var(--fg); background: rgba(255, 255, 255, .06); }
-.tab[aria-selected="true"] { background: var(--hi); color: var(--bar); }
-.tab[aria-selected="true"] b { color: var(--bar); }
-.tab:focus-visible { outline: 2px solid var(--hi); outline-offset: 2px; }
-.tab .tag { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; opacity: .7; }
-.side { display: flex; align-items: center; gap: 14px; white-space: nowrap; color: var(--fg-3); font-size: 12.5px; }
-.side a { color: var(--fg-2); text-decoration: none; border-bottom: 1px solid var(--bar-line); }
-.side a:hover { color: var(--fg); border-color: var(--fg-2); }
-.keys { direction: ltr; unicode-bidi: isolate; }
-.view { position: relative; min-height: 0; background: #000; }
+/* One page to compare the hero versions. There is no bar: the chosen version fills the whole window, so it
+   opens at its own size. Each version carries a "مقایسه‌ی نسخه‌ها" group in its settings panel (the round
+   button at the bottom left); it asks this page to switch (postMessage). A page without that group gets a
+   tiny floating capsule of ours instead. */
+:root { --fg: #f4f1f8; --fg-2: rgba(244, 241, 248, .72); --fg-3: rgba(244, 241, 248, .46); --line: rgba(255, 255, 255, .18); --pill: #14121d; color-scheme: dark; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: var(--fg); font-family: "Vazirmatn", Tahoma, system-ui, sans-serif; font-size: 14px; }
+.view { position: fixed; inset: 0; background: #000; }
 .view iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #000; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--fg-3); pointer-events: none; transition: opacity .3s; }
 .view.is-ready .loading { opacity: 0; }
-/* when the bar is short of room, only the open version keeps its description */
-@media (max-width: 1880px) {
-  .tab:not([aria-selected="true"]) small, .tab:not([aria-selected="true"]) .tag { display: none; }
-}
-@media (max-width: 900px) {
-  .bar { flex-wrap: wrap; gap: 8px; }
-  .bar h1 { flex: 1; }
-  .tabs { order: 3; width: 100%; margin: 0; }
-  .tab small, .keys { display: none; }
-}
+.fb { position: fixed; z-index: 5; right: 8px; bottom: 8px; display: grid; justify-items: end; gap: 8px; }
+.fb[hidden] { display: none; }
+.fb-btn, .fb-menu button { all: unset; box-sizing: border-box; cursor: pointer; }
+.fb-btn { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding-inline: 12px; border-radius: 999px; background: var(--pill); border: 1px solid var(--line); color: var(--fg-2); font-size: 12.5px; box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .8); transition: color .3s; }
+.fb-btn:hover, .fb-btn[aria-expanded="true"] { color: var(--fg); }
+.fb-btn b { font-weight: 700; color: var(--fg); }
+.fb-menu { display: grid; gap: 2px; padding: 6px; border-radius: 14px; background: var(--pill); border: 1px solid var(--line); box-shadow: 0 30px 70px -24px rgba(0, 0, 0, .85); }
+.fb-menu[hidden] { display: none; }
+.fb-menu button { padding: 6px 12px; border-radius: 9px; color: var(--fg-2); font-size: 13px; white-space: nowrap; }
+.fb-menu button:hover { background: rgba(255, 255, 255, .07); color: var(--fg); }
+.fb-menu button[aria-current="true"] { background: rgba(255, 255, 255, .12); color: var(--fg); font-weight: 700; }
+.fb-btn:focus-visible, .fb-menu button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 </style>
 
-<div class="shell">
-  <header class="bar">
-    <h1>هیروی بلیت · مقایسه‌ی نسخه‌ها</h1>
-    <nav class="tabs" role="tablist" aria-label="نسخه‌ها">
-      <button type="button" class="tab" role="tab" data-v="v1" aria-selected="false"><b>۱</b><small>نسخه‌ی اول · صحنه‌ی WebGL و دسته‌ی بلیت</small></button>
-      <button type="button" class="tab" role="tab" data-v="v2" aria-selected="false"><b>۲</b><small>عکس و جایگاه ویژه</small><span class="tag">نگه‌داشته</span></button>
-      <button type="button" class="tab" role="tab" data-v="v3" aria-selected="false"><b>۳</b><small>پوستر گرافیکی</small></button>
-      <button type="button" class="tab" role="tab" data-v="v4" aria-selected="false"><b>۴</b><small>رسمی و زنده</small></button>
-      <button type="button" class="tab" role="tab" data-v="v5" aria-selected="false"><b>۵</b><small>صحنه و هاله، از روی نمونه‌ها</small><span class="tag">پسندیده</span></button>
-      <button type="button" class="tab" role="tab" data-v="v6" aria-selected="false"><b>۶</b><small>پوستر، بنر یا عکس · پنل مدیریت</small><span class="tag">پسندیده</span></button>
-      <button type="button" class="tab" role="tab" data-v="v7" aria-selected="false"><b>۷</b><small>زوم‌اوت و محو · کارت‌ها سمت راست</small><span class="tag">پسندیده</span></button>
-      <button type="button" class="tab" role="tab" data-v="v8" aria-selected="false"><b>۸</b><small>جایگاه ویژه · بنر کل صفحه</small><span class="tag">تازه</span></button>
-    </nav>
-    <span class="side"><span class="keys">1 – 8</span><a id="openAlone" href="v8/index.html" target="_blank" rel="noopener">باز کردن جدا</a></span>
-  </header>
+<div class="shell" dir="rtl" lang="fa">
   <main class="view" id="view">
     <div class="loading" aria-hidden="true">در حال بارگذاری…</div>
     <iframe id="frame" title="نسخه‌ی انتخاب‌شده" allow="autoplay; fullscreen"></iframe>
   </main>
+  <div class="fb" id="fb" hidden>
+    <div class="fb-menu" id="fbMenu" role="menu" hidden></div>
+    <button type="button" class="fb-btn" id="fbBtn" aria-expanded="false" aria-controls="fbMenu">نسخه <b id="fbCur"></b></button>
+  </div>
 </div>
 
 <script>
 (() => {
-  const tabs = [...document.querySelectorAll('.tab')], frame = document.getElementById('frame'), view = document.getElementById('view'), alone = document.getElementById('openAlone');
-  const ids = tabs.map((t) => t.dataset.v);
+  const VERSIONS = [{"id": "v1", "label": "۱ · صحنه‌ی WebGL", "name": "نسخه‌ی اول · صحنه‌ی WebGL و دسته‌ی بلیت"}, {"id": "v2", "label": "۲ · عکس و جایگاه ویژه", "name": "عکس و جایگاه ویژه"}, {"id": "v3", "label": "۳ · پوستر گرافیکی", "name": "پوستر گرافیکی"}, {"id": "v4", "label": "۴ · رسمی و زنده", "name": "رسمی و زنده"}, {"id": "v5", "label": "۵ · صحنه و هاله", "name": "صحنه و هاله، از روی نمونه‌ها"}, {"id": "v6", "label": "۶ · پنل مدیریت", "name": "پوستر، بنر یا عکس · پنل مدیریت"}, {"id": "v7", "label": "۷ · زوم‌اوت و محو", "name": "زوم‌اوت و محو · کارت‌ها سمت راست"}, {"id": "v8", "label": "۸ · جایگاه ویژه", "name": "جایگاه ویژه · کادرها"}];
+  const DEFAULT = VERSIONS[VERSIONS.length - 1].id;
+  const frame = document.getElementById('frame'), view = document.getElementById('view'), fb = document.getElementById('fb'), fbBtn = document.getElementById('fbBtn'), fbMenu = document.getElementById('fbMenu'), fbCur = document.getElementById('fbCur');
+  const faDigit = (s) => s.replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
+  let current = null, ready = false, timer = 0;
+  const send = () => { try { frame.contentWindow.postMessage({ heroVersions: VERSIONS, current }, '*'); } catch (e) { /* the page isn't ours */ } };
+  const menu = (open) => { fbMenu.hidden = !open; fbBtn.setAttribute('aria-expanded', open); };
   const show = (v, push = true) => {
-    if (!ids.includes(v)) v = 'v8';
-    tabs.forEach((t) => { const on = t.dataset.v === v; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; });
-    const src = `${v}/index.html`;
+    if (!VERSIONS.some((x) => x.id === v)) v = DEFAULT;
+    current = v; ready = false; fb.hidden = true; menu(false); clearTimeout(timer);
+    fbCur.textContent = faDigit(v.slice(1));
+    [...fbMenu.children].forEach((b) => b.setAttribute('aria-current', b.dataset.v === v));
+    const src = v + '/index.html';
     if (frame.getAttribute('src') !== src) { view.classList.remove('is-ready'); frame.setAttribute('src', src); }
-    alone.href = src;
     if (push && location.hash !== '#' + v) { try { history.replaceState(null, '', '#' + v); } catch (e) { location.hash = v; } }
   };
-  frame.addEventListener('load', () => view.classList.add('is-ready'));
-  tabs.forEach((t) => t.addEventListener('click', () => show(t.dataset.v)));
-  document.querySelector('.tabs').addEventListener('keydown', (e) => {
-    const i = ids.indexOf(tabs.find((t) => t.getAttribute('aria-selected') === 'true').dataset.v);
-    if (e.key === 'ArrowLeft') { e.preventDefault(); show(ids[(i + 1) % ids.length]); tabs[(i + 1) % ids.length].focus(); }
-    if (e.key === 'ArrowRight') { e.preventDefault(); show(ids[(i - 1 + ids.length) % ids.length]); tabs[(i - 1 + ids.length) % ids.length].focus(); }
+  VERSIONS.forEach((v) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem'); b.dataset.v = v.id; b.textContent = v.label; b.title = v.name; b.addEventListener('click', () => show(v.id)); fbMenu.appendChild(b); });
+  fbBtn.addEventListener('click', () => menu(fbMenu.hidden));
+  frame.addEventListener('load', () => {
+    view.classList.add('is-ready'); send();
+    // a version without its own switcher doesn't answer: then our capsule shows
+    timer = setTimeout(() => { if (!ready) fb.hidden = false; }, 1600);
   });
-  document.addEventListener('keydown', (e) => { if (/^[1-8]$/.test(e.key) && !e.metaKey && !e.ctrlKey && !e.altKey) show('v' + e.key); });
+  window.addEventListener('message', (ev) => {
+    if (ev.source !== frame.contentWindow) return;
+    const d = ev.data || {};
+    if (d.heroReady) { ready = true; fb.hidden = true; send(); }
+    if (d.heroSwitch) show(d.heroSwitch);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'Escape') { menu(false); return; }
+    const v = 'v' + e.key; if (VERSIONS.some((x) => x.id === v)) show(v);
+  });
   window.addEventListener('hashchange', () => show(location.hash.slice(1), false));
-  show(location.hash.slice(1) || 'v8', false);
+  show(location.hash.slice(1) || DEFAULT, false);
 })();
 </script>
 <!-- artifact:end -->

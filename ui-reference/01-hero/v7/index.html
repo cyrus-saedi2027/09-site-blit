@@ -308,6 +308,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   <button type="button" class="proto-fab" id="protoFab" aria-expanded="false" aria-controls="protoPanel" aria-label="تنظیمات نمونه"><svg class="i"><use href="#i-sliders"/></svg></button>
   <div class="proto-panel" id="protoPanel" role="dialog" aria-label="تنظیمات نمونه" hidden>
     <div class="pp-head"><div><b>تنظیمات نمونه</b><span>برای مقایسه؛ جزو سایت نیست</span></div><button type="button" class="ghost" id="protoClose" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <div class="pp-group" id="cmpGroup" hidden><span>مقایسه‌ی نسخه‌ها</span><div class="seg" id="cmpSeg" role="group" aria-label="نسخه‌ها"></div></div>
     <div class="pp-group"><span>زوم اول هر عکس</span><div class="seg" data-ctrl="zoom"><button type="button" data-v="1.08" aria-pressed="false">کم</button><button type="button" data-v="1.15" aria-pressed="true">متوسط</button><button type="button" data-v="1.24" aria-pressed="false">زیاد</button></div></div>
     <div class="pp-group"><span>زمان هر اجرا</span><div class="seg" data-ctrl="dur"><button type="button" data-v="5" aria-pressed="false">۵ ثانیه</button><button type="button" data-v="7" aria-pressed="true">۷ ثانیه</button><button type="button" data-v="10" aria-pressed="false">۱۰ ثانیه</button></div></div>
     <div class="pp-group"><span>محو شدن روی بعدی</span><div class="seg" data-ctrl="fade"><button type="button" data-v="0.8" aria-pressed="false">تند</button><button type="button" data-v="1.2" aria-pressed="true">معمولی</button><button type="button" data-v="1.8" aria-pressed="false">آروم</button></div></div>
@@ -958,6 +959,26 @@ if (reduceMotion) { state.userPaused = true; $('#autoBtn').setAttribute('aria-pr
 
 // test hook for local checks only (?debug in the URL)
 if (/[?&]debug/.test(location.search)) window.__hero = { bg, cards, copy, timer, player, meters, audioSys, A, analyseTrack, TRACKS, EVENTS, state, go, next, prev, syncPlay };
+})();
+</script>
+<script>
+/* compare: inside the comparison page (which has no bar of its own, so a sample opens at full size)
+   the settings panel lists the versions and switches between them */
+(function () {
+  var group = document.getElementById('cmpGroup'), seg = document.getElementById('cmpSeg');
+  if (!group || !seg || window.parent === window) return;
+  window.addEventListener('message', function (ev) {
+    var d = ev.data; if (!d || !d.heroVersions) return;
+    seg.textContent = '';
+    d.heroVersions.forEach(function (v) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = v.label; b.title = v.name;
+      b.setAttribute('aria-pressed', v.id === d.current ? 'true' : 'false');
+      b.addEventListener('click', function () { if (v.id !== d.current) window.parent.postMessage({ heroSwitch: v.id }, '*'); });
+      seg.appendChild(b);
+    });
+    group.hidden = false;
+  });
+  window.parent.postMessage({ heroReady: true }, '*');
 })();
 </script>
 </body>

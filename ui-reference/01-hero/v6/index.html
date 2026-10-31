@@ -648,6 +648,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   <button type="button" class="proto-fab" id="protoFab" aria-expanded="false" aria-controls="protoPanel" aria-label="تنظیمات نمونه"><svg class="i"><use href="#i-sliders"/></svg></button>
   <div class="proto-panel" id="protoPanel" role="dialog" aria-label="تنظیمات نمونه" hidden>
     <div class="pp-head"><div><b>تنظیمات نمونه</b><span>برای مقایسه؛ جزو سایت نیست</span></div><button type="button" class="ghost" id="protoClose" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button></div>
+    <div class="pp-group" id="cmpGroup" hidden><span>مقایسه‌ی نسخه‌ها</span><div class="seg" id="cmpSeg" role="group" aria-label="نسخه‌ها"></div></div>
     <div class="pp-group"><span>رنگ</span><div class="seg" data-ctrl="color"><button type="button" data-v="event" aria-pressed="true">رنگ هر اجرا از پالت</button><button type="button" data-v="violet" aria-pressed="false">همه بنفش</button></div></div>
     <div class="pp-group"><span>قلم تیتر</span><div class="seg" data-ctrl="font"><button type="button" data-v="noto" aria-pressed="true">فشرده (نوتو)</button><button type="button" data-v="lalezar" aria-pressed="false">لاله‌زار</button></div></div>
     <div class="pp-group"><span>قاب جایگاه ویژه</span><div class="seg" data-ctrl="frame"><button type="button" data-v="fade" aria-pressed="true">محو روی کارت بعدی</button><button type="button" data-v="slide" aria-pressed="false">لغزان</button></div></div>
@@ -1937,6 +1938,26 @@ new ResizeObserver(() => copy.fit()).observe(copy.el);
 
 // test hook for local checks only (?debug in the URL)
 if (/[?&]debug/.test(location.search)) window.__hero = { halo, fig, tix, visual, rail, copy, ticket, countdown, player, teaser, admin, audioSys, A, analyseTrack, TRACKS, EVENTS, PALETTE, EMBLEMS, suggestPalette, tinted, prepare, state, setEvent };
+})();
+</script>
+<script>
+/* compare: inside the comparison page (which has no bar of its own, so a sample opens at full size)
+   the settings panel lists the versions and switches between them */
+(function () {
+  var group = document.getElementById('cmpGroup'), seg = document.getElementById('cmpSeg');
+  if (!group || !seg || window.parent === window) return;
+  window.addEventListener('message', function (ev) {
+    var d = ev.data; if (!d || !d.heroVersions) return;
+    seg.textContent = '';
+    d.heroVersions.forEach(function (v) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = v.label; b.title = v.name;
+      b.setAttribute('aria-pressed', v.id === d.current ? 'true' : 'false');
+      b.addEventListener('click', function () { if (v.id !== d.current) window.parent.postMessage({ heroSwitch: v.id }, '*'); });
+      seg.appendChild(b);
+    });
+    group.hidden = false;
+  });
+  window.parent.postMessage({ heroReady: true }, '*');
 })();
 </script>
 </body>

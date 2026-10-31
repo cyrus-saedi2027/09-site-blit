@@ -11,27 +11,27 @@
 <link rel="preload" as="image" href="assets/events/skykings-banner-1672.webp" imagesrcset="assets/events/skykings-banner-1024.webp 1024w, assets/events/skykings-banner-1672.webp 1672w" imagesizes="100vw" fetchpriority="high">
 <script>document.documentElement.classList.add('is-intro');setTimeout(function(){document.documentElement.classList.remove('is-intro')},4000);</script>
 <style>
-/* Version 8, second round: "the featured slot". The organiser's banner (16:9, with its own words)
-   is the background of the whole hero, the way the photo is in v7. Nothing but the header, the rail
-   and one small capsule with the facts sits over it. Two ways to give the facts:
-     bar  : a floating capsule at the bottom (for a banner that has its words baked in)
-     text : the words on the left over a dark gradient (for a photo with no words in it, as in v7)
-   On a narrow or tall screen a 16:9 picture can't cover the screen without losing most of itself, so
-   there the banner is shown whole in a frame, on its own blurred copy ("ambient"), with the facts
-   under it.
-   Every size follows one unit, --u (1% of the width on a 16:9 screen, smaller on wider ones), so
-   the composition is the same on any desktop screen and never overflows. The header, the rail, the
-   capsule and every scene share one geometry (the --pad-*, --nav-h and --rail-w values and the grid
-   areas nav / rail / main / copy), so the pieces never overlap each other. */
+/* Version 8, third round: "the featured slot" as a small bento. The hero is cut into separate panels,
+   each one a solid rounded frame, with a small gap between them:
+     the header, the rail (all the shows), the banner (alone, never covered by anything), and the facts.
+   The banner is shown whole, in its own proportions, so what the organiser designed is what the visitor
+   sees. Behind the panels sits the same banner, tiny and blurred (the "ambient"), so the page takes its
+   colours; it shows in the gaps and the margins.
+   Two layouts for the facts:
+     bar  : a panel under the banner (for a banner that has its words baked in)
+     text : the words on the picture, inside the picture's panel (for a photo with no words; as in v7)
+   Every size follows one unit, --u (1% of the width on a 16:9 screen, smaller on wider ones), so the
+   composition is the same on any desktop screen and never overflows. The hero is a size container, so
+   the rail and the banner work out the same size from the same numbers and line up. */
 :root {
-  --u: clamp(11px, min(1vw, 1.7778svh), 26px);
+  --u: clamp(8px, min(1vw, 1.7778svh), 26px);
   --bg: #07060c;
   --ink: #ffffff;
   --ink-2: rgba(255, 255, 255, .86);
   --ink-3: rgba(255, 255, 255, .6);
   --ink-4: rgba(255, 255, 255, .4);
   --line: rgba(255, 255, 255, .12);
-  --line-2: rgba(255, 255, 255, .24);
+  --line-2: rgba(255, 255, 255, .22);
   --panel: #14121d;
   --capsule: #120f1b;
   --accent: #d9a441;
@@ -39,19 +39,25 @@
   --on-accent: #1a1206;
   --font-ui: "Vazirmatn", Tahoma, system-ui, sans-serif;
   --ease: cubic-bezier(.16, 1, .3, 1);
-  /* the geometry shared by the header, the rail and every scene */
+  /* the geometry of the bento */
   --pad-t: max(calc(var(--u) * 1.2), env(safe-area-inset-top, 0px));
-  --pad-r: max(calc(var(--u) * 2.6), env(safe-area-inset-right, 0px));
-  --pad-b: calc(var(--u) * 1.2);
-  --pad-l: max(calc(var(--u) * 4.2), env(safe-area-inset-left, 0px));
-  --nav-h: max(54px, calc(var(--u) * 3.3));
-  --rail-w: calc(var(--u) * 15.5);
-  --dock-h: max(60px, calc(var(--u) * 4.8));
-  --gap-x: calc(var(--u) * 3);
-  --gap-y: calc(var(--u) * 1.4);
-  --r1: max(9px, calc(var(--u) * .5));
-  --r2: max(12px, calc(var(--u) * .75));
-  --r3: max(14px, calc(var(--u) * 1.05));
+  --pad-r: max(calc(var(--u) * 1.2), env(safe-area-inset-right, 0px));
+  --pad-b: max(calc(var(--u) * 1.2), env(safe-area-inset-bottom, 0px));
+  --pad-l: max(calc(var(--u) * 1.2), env(safe-area-inset-left, 0px));
+  --gap: calc(var(--u) * .8);
+  --nav-h: max(50px, calc(var(--u) * 3.3));
+  --rail-w: calc(var(--u) * 17);
+  --dock-h: max(56px, calc(var(--u) * 4.8));
+  --r: max(12px, calc(var(--u) * 1));
+  /* the banner column: the room it has, and the width it takes for a 16:9 banner plus the facts under it;
+     the rail lines up with that. (--col is for the hero's own grid, which has no container to measure;
+     the others are for everything inside the hero.) */
+  --ratio-n: 1.7778;
+  --main-w: calc(100cqw - var(--rail-w) - var(--gap));
+  --main-h: calc(100cqh - var(--nav-h) - var(--gap));
+  --col-w: min(var(--main-w), calc((var(--main-h) - var(--dock-h) - var(--gap)) * var(--ratio-n)));
+  --room-h: calc(max(440px, 100svh) - var(--pad-t) - var(--pad-b) - var(--nav-h) - var(--gap));
+  --col: minmax(0, min(calc(100% - var(--rail-w) - var(--gap)), calc((var(--room-h) - var(--dock-h) - var(--gap)) * var(--ratio-n))));
   color-scheme: dark;
 }
 
@@ -67,37 +73,46 @@ a { color: inherit; }
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 
-/* ── hero, scenes and the safe-area guide: one grid ─────────────── */
-.hero, .scene, .guides {
+/* ── hero and scenes: one grid ──────────────────────────────────── */
+.hero, .scene {
   display: grid;
-  grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  grid-template-columns: var(--rail-w) var(--col);
   grid-template-rows: var(--nav-h) minmax(0, 1fr);
   grid-template-areas: "nav nav" "rail main";
-  column-gap: var(--gap-x); row-gap: var(--gap-y);
+  justify-content: center;
+  gap: var(--gap);
   padding: var(--pad-t) var(--pad-r) var(--pad-b) var(--pad-l);
 }
-.hero { position: relative; height: 100svh; min-height: 600px; overflow: hidden; isolation: isolate; background: var(--bg); }
+.hero.rail-left, .hero.rail-left .scene { grid-template-columns: var(--col) var(--rail-w); grid-template-areas: "nav nav" "main rail"; }
+.hero { position: relative; height: 100svh; min-height: 440px; overflow: hidden; isolation: isolate; background: var(--bg); container: hero / size; }
 
 /* scenes: one per show, stacked; the new one fades in over the old one */
 .scenes { position: absolute; inset: 0; z-index: 0; background: var(--bg); }
 .scene { position: absolute; inset: 0; z-index: 0; isolation: isolate; overflow: hidden; background: var(--bg); opacity: 0; visibility: hidden; }
 .scene.is-on { visibility: visible; }
 
-/* the ambient: the show's own picture, tiny and soft, stretched over the whole screen (it shows
-   only where the banner doesn't cover the screen: the narrow layout) */
+/* the ambient: the show's own banner, tiny and soft, stretched over the whole hero behind the panels */
 .amb { position: absolute; inset: 0; z-index: -2; background: var(--amb, none) center / cover no-repeat, var(--bg); }
 .amb::after { content: ""; position: absolute; inset: 0; background:
-  radial-gradient(66% 78% at 42% 52%, color-mix(in oklab, var(--accent) 30%, transparent), transparent 74%),
-  linear-gradient(to bottom, rgba(7, 6, 12, .6) 0%, rgba(7, 6, 12, .3) 34%, rgba(7, 6, 12, .42) 70%, rgba(7, 6, 12, .84) 100%); }
+  radial-gradient(66% 78% at 50% 52%, color-mix(in oklab, var(--accent) 24%, transparent), transparent 74%),
+  linear-gradient(to bottom, rgba(7, 6, 12, .5) 0%, rgba(7, 6, 12, .28) 40%, rgba(7, 6, 12, .5) 100%); }
 
-/* ── the picture ─────────────────────────────────────────────────── */
-.stage { grid-area: main; position: relative; min-width: 0; min-height: 0; }
-.frame { position: relative; display: block; overflow: hidden; background: #0c0a14; text-decoration: none; cursor: pointer; }
-.frame img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--op, 50% 50%); transform-origin: var(--o, 50% 50%); }
-.frame:focus-visible { outline-offset: -3px; }
+/* every panel: a solid frame, soft corners */
+.nav, .rail, .dock { background: var(--capsule); border: 1px solid var(--line-2); border-radius: var(--r); box-shadow: 0 14px 40px -20px rgba(0, 0, 0, .8); }
 
-/* ── the facts: a capsule (bar) ──────────────────────────────────── */
-.dock { position: relative; display: flex; align-items: center; gap: calc(var(--u) * 1.5); height: var(--dock-h); padding-inline: calc(var(--u) * 1.7) calc(var(--u) * 1.5); container: dock / inline-size; }
+/* ── the banner's panel ──────────────────────────────────────────── */
+.stage { grid-area: main; min-width: 0; min-height: 0; display: grid; place-items: center; }
+/* the banner's column: as wide as the room allows and as tall as the room allows (minus the facts),
+   always in the banner's own proportions, so nothing is cut off */
+.tk { --tk-w: min(var(--col-w), calc((var(--main-h) - var(--dock-h) - var(--gap)) * var(--ratio, 1.7778))); display: grid; row-gap: var(--gap); width: var(--tk-w); }
+.frame { position: relative; display: block; overflow: hidden; isolation: isolate; border-radius: var(--r); background: #0c0a14; border: 1px solid var(--line-2); box-shadow: 0 18px 50px -24px rgba(0, 0, 0, .9); }
+.scene[data-mode="bar"] .frame { aspect-ratio: var(--ratio, 1.7778); }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--op, 50% 50%); transform-origin: var(--o, 50% 50%); will-change: transform; }
+.frame-link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.frame-link:focus-visible { outline-offset: -3px; }
+
+/* ── the facts' panel (bar) ──────────────────────────────────────── */
+.dock { position: relative; display: flex; align-items: center; gap: calc(var(--u) * 1.5); height: var(--dock-h); padding-inline: calc(var(--u) * 1.7) calc(var(--u) * 1.5); overflow: hidden; container: dock / inline-size; }
 .dock::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 2px; background: linear-gradient(to left, var(--accent), color-mix(in oklab, var(--accent) 0%, transparent) 62%); }
 .d-cell { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: .05em; align-content: center; }
 .d-main { flex: 1.45 1 0; }
@@ -117,32 +132,37 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .price b { font-size: max(14px, calc(var(--u) * 1.05)); }
 .price b small { font-size: .62em; margin-inline-start: .3em; }
 
-.kick { display: inline-flex; align-items: center; gap: .6em; font-size: max(11.5px, calc(var(--u) * .7)); font-weight: 700; line-height: 1.5; color: var(--ink-2); white-space: nowrap; }
+.kick { display: inline-flex; align-items: center; gap: .6em; min-width: 0; font-size: max(11.5px, calc(var(--u) * .7)); font-weight: 700; line-height: 1.5; color: var(--ink-2); white-space: nowrap; }
+.kick > .dot, .kick > .badge { flex: none; }
 .kick .dot { width: .55em; height: .55em; border-radius: 50%; background: var(--accent); box-shadow: 0 0 .9em var(--accent); }
 .badge { font-style: normal; padding: .02em .7em; border-radius: 999px; font-size: .94em; font-weight: 800; color: var(--accent-l); background: color-mix(in oklab, var(--accent) 20%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 52%, transparent); }
 .d-name { font-size: max(14px, calc(var(--u) * 1.02)); }
-.kick > .dot, .kick > .badge { flex: none; }
 .kv { display: none; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 /* the buy button (as in v7) */
-.buy { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: inline-flex; align-items: center; justify-content: center; height: max(44px, calc(var(--u) * 3.1)); min-width: calc(var(--u) * 9); padding-inline: calc(var(--u) * 2); border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: max(14px, calc(var(--u) * .92)); font-weight: 800; white-space: nowrap; box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.2) calc(var(--u) * -.5) color-mix(in oklab, var(--accent) 78%, transparent); transition: transform .4s var(--ease), filter .3s; }
+.buy { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: inline-flex; align-items: center; justify-content: center; height: max(40px, calc(var(--u) * 3.1)); min-width: calc(var(--u) * 9); padding-inline: calc(var(--u) * 2); border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: max(14px, calc(var(--u) * .92)); font-weight: 800; white-space: nowrap; box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.2) calc(var(--u) * -.5) color-mix(in oklab, var(--accent) 78%, transparent); transition: transform .4s var(--ease), filter .3s; }
 .buy:hover { transform: translateY(-2px); filter: brightness(1.06); }
 .buy:active { transform: scale(.98); }
 .buy:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 
-/* when the capsule is narrow it drops its least useful parts */
+/* when the panel is narrow it drops its least useful parts */
 @container dock (max-width: 800px) { .d-when span { display: none; } }
 @container dock (max-width: 660px) { .d-venue, .d-sep:nth-of-type(2) { display: none; } }
 
-/* ── layout text (a photo; as in v7) ─────────────────────────────── */
-.scene[data-mode="text"] { grid-template-columns: var(--rail-w) minmax(0, 1fr) minmax(0, calc(var(--u) * 36)); grid-template-areas: "nav nav nav" "rail . copy"; }
-.photo { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
-.photo img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--op, 50% 50%); transform-origin: var(--o, 50% 50%); will-change: transform; }
-.shade { position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
-  linear-gradient(to right, rgba(7, 6, 14, .8) 0%, rgba(7, 6, 14, .62) 26%, rgba(7, 6, 14, .22) 50%, rgba(7, 6, 14, 0) 64%),
-  linear-gradient(to bottom, rgba(7, 6, 14, .5) 0%, rgba(7, 6, 14, 0) 18%),
-  linear-gradient(to top, rgba(7, 6, 14, .45) 0%, rgba(7, 6, 14, 0) 22%); }
-.copy { grid-area: copy; position: relative; z-index: 3; align-self: center; display: grid; justify-items: start; margin-top: calc(var(--u) * .4); }
+/* ── layout text (a photo; as in v7, but inside its panel) ──────── */
+/* a photo's panel is as tall as the banner's and the facts' together, so the rail lines up with it too */
+.scene[data-mode="text"] .tk { display: block; height: calc(var(--tk-w) / var(--ratio, 1.7778) + var(--gap) + var(--dock-h)); }
+.scene[data-mode="text"] .frame { height: 100%; display: flex; align-items: center; justify-content: flex-start; padding-inline: calc(var(--u) * 3.4); }
+.hero:not(.rail-left) .scene[data-mode="text"] .frame { justify-content: flex-end; }
+.shade { position: absolute; inset: 0; pointer-events: none; background:
+  linear-gradient(to left, rgba(7, 6, 14, .84) 0%, rgba(7, 6, 14, .66) 28%, rgba(7, 6, 14, .22) 52%, rgba(7, 6, 14, 0) 68%),
+  linear-gradient(to bottom, rgba(7, 6, 14, .4) 0%, rgba(7, 6, 14, 0) 20%),
+  linear-gradient(to top, rgba(7, 6, 14, .4) 0%, rgba(7, 6, 14, 0) 24%); }
+.hero:not(.rail-left) .shade { background:
+  linear-gradient(to right, rgba(7, 6, 14, .84) 0%, rgba(7, 6, 14, .66) 28%, rgba(7, 6, 14, .22) 52%, rgba(7, 6, 14, 0) 68%),
+  linear-gradient(to bottom, rgba(7, 6, 14, .4) 0%, rgba(7, 6, 14, 0) 20%),
+  linear-gradient(to top, rgba(7, 6, 14, .4) 0%, rgba(7, 6, 14, 0) 24%); }
+.copy { position: relative; z-index: 2; width: min(calc(var(--u) * 34), 100%); display: grid; justify-items: start; }
 .copy > * { will-change: transform, opacity; }
 .copy .kick { margin-bottom: calc(var(--u) * .7); font-size: max(12.5px, calc(var(--u) * .78)); }
 .title { margin: 0; font-size: max(22px, calc(var(--u) * 1.95)); font-weight: 800; line-height: 1.6; color: #fff; text-wrap: balance; text-shadow: 0 2px 18px rgba(0, 0, 0, .35); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
@@ -152,8 +172,8 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .buyrow .price { display: grid; line-height: 1.5; }
 .buyrow .price b { font-size: max(15px, calc(var(--u) * 1.2)); font-weight: 800; }
 
-/* ── the header: a floating capsule with softly rounded corners ── */
-.nav { grid-area: nav; position: relative; z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * 2.2); height: var(--nav-h); padding-inline: calc(var(--u) * 1.3) calc(var(--u) * .6); border-radius: var(--r2); background: var(--capsule); border: 1px solid var(--line-2); box-shadow: 0 14px 40px -20px rgba(0, 0, 0, .8); }
+/* ── the header ─────────────────────────────────────────────────── */
+.nav { grid-area: nav; position: relative; z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * 2.2); height: var(--nav-h); padding-inline: calc(var(--u) * 1.3) calc(var(--u) * .6); }
 .brand { display: inline-flex; align-items: center; gap: calc(var(--u) * .55); text-decoration: none; font-weight: 800; font-size: max(17px, calc(var(--u) * 1.25)); line-height: 1; color: #fff; }
 .bars { display: flex; align-items: center; gap: max(2px, calc(var(--u) * .16)); height: max(17px, calc(var(--u) * 1.3)); direction: ltr; }
 .bars i { width: max(2.5px, calc(var(--u) * .19)); height: 100%; border-radius: 9px; background: var(--accent); transform: scaleY(var(--s)); will-change: transform; transition: background-color .8s; }
@@ -221,21 +241,22 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .add-song input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .add-song:focus-within { outline: 2px solid #fff; outline-offset: 2px; }
 
-/* ── the rail, on the right ─────────────────────────────────────── */
-.rail { grid-area: rail; position: relative; z-index: 4; align-self: center; width: var(--rail-w); max-height: 100%; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--u) * .75); }
-.c-arrow { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: grid; place-items: center; height: max(30px, calc(var(--u) * 1.85)); border-radius: 999px; background: rgba(255, 255, 255, .09); color: #fff; transition: background .3s; }
+/* ── the rail: a panel with all the shows ───────────────────────── */
+/* its height is the banner column's (the banner at its nominal 16:9 plus the facts), so the two line up */
+.rail { grid-area: rail; position: relative; z-index: 4; align-self: center; width: var(--rail-w); height: min(var(--main-h), calc(var(--col-w) / var(--ratio-n) + var(--gap) + var(--dock-h))); min-height: 0; display: flex; flex-direction: column; justify-content: space-between; gap: calc(var(--u) * .6); padding: calc(var(--u) * .75); }
+.c-arrow { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: grid; place-items: center; height: max(28px, calc(var(--u) * 1.85)); border-radius: 999px; background: rgba(255, 255, 255, .09); color: #fff; transition: background .3s; }
 .c-arrow:hover { background: rgba(255, 255, 255, .18); }
 .c-arrow:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .c-arrow svg.i { width: max(16px, calc(var(--u) * .95)); height: max(16px, calc(var(--u) * .95)); }
 .c-foot { flex: none; display: flex; gap: calc(var(--u) * .5); }
 .c-foot .c-arrow:first-child { flex: 1; }
-.c-pause { width: max(30px, calc(var(--u) * 1.85)); }
+.c-pause { width: max(28px, calc(var(--u) * 1.85)); }
 .c-pause svg.i { width: 40%; height: 40%; }
 #autoBtn .i-play, #autoBtn[aria-pressed="true"] .i-pause { display: none; }
 #autoBtn[aria-pressed="true"] .i-play { display: block; }
-.c-list { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--u) * .75); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 3px; margin: -3px; }
+.c-list { flex: 0 1 auto; min-height: 0; margin-block: auto; display: flex; flex-direction: column; gap: calc(var(--u) * .6); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 3px; margin-inline: -3px; }
 .c-list::-webkit-scrollbar { display: none; }
-.card { all: unset; box-sizing: border-box; position: relative; flex: none; display: block; aspect-ratio: 16 / 9; border-radius: max(10px, calc(var(--u) * .6)); overflow: hidden; isolation: isolate; cursor: pointer; background: #14121d; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16); transition: box-shadow .6s, opacity .6s; -webkit-tap-highlight-color: transparent; }
+.card { all: unset; box-sizing: border-box; position: relative; flex: none; display: block; aspect-ratio: 16 / 9; border-radius: max(9px, calc(var(--u) * .6)); overflow: hidden; isolation: isolate; cursor: pointer; background: #14121d; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16); transition: box-shadow .6s, opacity .6s; -webkit-tap-highlight-color: transparent; }
 .card img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
 .card:hover img { transform: scale(1.05); }
 .card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(7, 6, 14, .72), rgba(7, 6, 14, 0) 55%); }
@@ -246,86 +267,43 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .c-bar { position: absolute; z-index: 2; inset-inline: 0; bottom: 0; height: 3px; background: rgba(255, 255, 255, .2); pointer-events: none; }
 .c-bar i { position: absolute; inset: 0; background: var(--accent); transform-origin: right center; transform: scaleX(0); }
 
-/* ── the safe-area guide (a demo aid: where the interface sits over the banner) ── */
-.guides { position: absolute; inset: 0; z-index: 7; pointer-events: none; display: none; }
-.hero.show-guides .guides { display: grid; }
-.guides i { display: grid; place-items: center; font-style: normal; font-size: max(11px, calc(var(--u) * .66)); font-weight: 700; color: #fff; text-shadow: 0 1px 6px #000; border: 1.5px dashed rgba(255, 105, 150, .95); border-radius: var(--r2); background: repeating-linear-gradient(135deg, rgba(255, 70, 120, .24) 0 7px, rgba(255, 70, 120, .07) 7px 14px); }
-.g-nav { grid-area: nav; }
-.g-rail { grid-area: rail; }
-.g-dock { grid-area: main; align-self: end; height: var(--dock-h); }
-.hero[data-layout="text"] .g-dock { display: none; }
-
-/* ═══ the banner covers the screen (a wide screen) ═══════════════════ */
-@media (min-width: 761px) and (min-aspect-ratio: 1.34) {
-  .scene[data-mode="bar"] :is(.stage, .tk, .tk-card) { display: contents; }
-  .scene[data-mode="bar"] .tk-glow { display: none; }
-  .scene[data-mode="bar"] .frame { position: absolute; inset: 0; z-index: -1; }
-  .scene[data-mode="bar"] .frame img { will-change: transform; }
-  .scene[data-mode="bar"] .dock { grid-area: main; align-self: end; z-index: 3; border-radius: var(--r2); overflow: hidden; background: var(--capsule); border: 1px solid var(--line-2); box-shadow: 0 14px 40px -18px rgba(0, 0, 0, .85); }
-  /* the rail on the left (an option; the owner's reference has it on the right) */
-  .hero.rail-left, .hero.rail-left .scene, .hero.rail-left .guides { grid-template-columns: minmax(0, 1fr) var(--rail-w); grid-template-areas: "nav nav" "main rail"; }
-  .hero.rail-left { --pad-r: max(calc(var(--u) * 4.2), env(safe-area-inset-right, 0px)); --pad-l: max(calc(var(--u) * 2.6), env(safe-area-inset-left, 0px)); }
-  .hero.rail-left .scene[data-mode="text"] { grid-template-columns: minmax(0, calc(var(--u) * 36)) minmax(0, 1fr) var(--rail-w); grid-template-areas: "nav nav nav" "copy . rail"; }
-  /* the words are on the right then, so the dark side of the picture is the right one */
-  .hero.rail-left .scene[data-mode="text"] .shade { background:
-    linear-gradient(to left, rgba(7, 6, 14, .8) 0%, rgba(7, 6, 14, .62) 26%, rgba(7, 6, 14, .22) 50%, rgba(7, 6, 14, 0) 64%),
-    linear-gradient(to bottom, rgba(7, 6, 14, .5) 0%, rgba(7, 6, 14, 0) 18%),
-    linear-gradient(to top, rgba(7, 6, 14, .45) 0%, rgba(7, 6, 14, 0) 22%); }
-}
-
-/* ═══ a narrow or tall screen: the banner whole, in a frame, on its own ambient ═══ */
-@media (max-width: 760px), (max-aspect-ratio: 1.339) {
-  .scene { --dock-h: max(66px, calc(var(--u) * 5.4)); }
-  .stage { container-type: size; display: grid; place-items: center; }
-  /* the frame is as wide as the stage allows and as tall as the stage allows (minus the capsule),
-     always in the picture's own proportions, so nothing is cut off */
-  .tk { --fw: min(100cqw, calc((100cqh - var(--dock-h)) * var(--ratio, 1.7778))); position: relative; isolation: isolate; width: var(--fw); will-change: transform; transform-origin: 50% 46%; }
-  .tk-glow { position: absolute; z-index: -1; inset: -7% -4.5%; border-radius: calc(var(--r3) * 2); background: var(--amb, none) center / cover no-repeat; filter: blur(calc(var(--u) * 2.4)) saturate(1.5); opacity: .62; }
-  .tk-card { position: relative; border-radius: var(--r3); overflow: hidden; background: #0c0a14; box-shadow: 0 0 0 1px rgba(255, 255, 255, .15), 0 calc(var(--u) * 2.6) calc(var(--u) * 6.4) calc(var(--u) * -1.6) rgba(0, 0, 0, .82), 0 0 calc(var(--u) * 5) calc(var(--u) * -.6) color-mix(in oklab, var(--accent) 30%, transparent); }
-  .frame { aspect-ratio: var(--ratio, 1.7778); }
-  .frame img { transition: transform 1.4s var(--ease); }
-  .frame:hover img { transform: scale(1.012); }
-  .frame::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); pointer-events: none; }
-  .dock { background: linear-gradient(to bottom, rgba(21, 19, 31, .985), rgba(14, 12, 22, .985)); }
-  .guides { display: none !important; }
-}
-
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
-  .scene[data-mode="text"] { grid-template-columns: var(--rail-w) minmax(0, 1fr) minmax(0, calc(var(--u) * 42)); }
 }
-/* ── phones: the picture on top, the facts under it, the shows in a row ── */
+/* ── phones: the banner on top, the facts under it, the shows in a row ── */
 @media (max-width: 760px) {
   :root {
-    --pad-t: max(10px, env(safe-area-inset-top, 0px)); --pad-r: 12px; --pad-l: 12px; --pad-b: max(16px, env(safe-area-inset-bottom, 0px));
-    --gap-x: 0px; --gap-y: 14px; --rail-h: 54px; --r3: 14px;
+    --pad-t: max(10px, env(safe-area-inset-top, 0px)); --pad-r: 10px; --pad-l: 10px; --pad-b: max(12px, env(safe-area-inset-bottom, 0px));
+    --gap: 10px; --rail-h: 58px; --r: 14px;
+    --main-w: 100cqw; --main-h: calc(100cqh - var(--nav-h) - var(--rail-h) - 2 * var(--gap)); --col-w: var(--main-w);
   }
-  .hero, .scene, .guides, .scene[data-mode="text"] { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--nav-h) minmax(0, 1fr) var(--rail-h); grid-template-areas: "nav" "main" "rail"; }
-  .scene[data-mode="text"] { grid-template-areas: "nav" "copy" "rail"; }
-  .hero { min-height: 640px; }
+  .hero, .hero.rail-left, .scene, .hero.rail-left .scene { grid-template-columns: minmax(0, 1fr); justify-content: stretch; grid-template-rows: var(--nav-h) minmax(0, 1fr) var(--rail-h); grid-template-areas: "nav" "main" "rail"; }
+  .hero { min-height: 600px; }
   .nav { gap: 10px; padding-inline: 14px 6px; }
   .mu-meta, .mu-eq, .login { display: none; }
   .menu-btn { display: grid; }
-  .rail { align-self: stretch; width: auto; flex-direction: row; align-items: center; gap: 8px; }
+  .rail { width: auto; height: var(--rail-h); flex-direction: row; align-items: center; gap: 8px; padding: 6px; }
   .c-arrow:not(.c-pause), .c-foot .c-arrow:first-child { display: none; }
-  .c-list { flex: 1; flex-direction: row; gap: 8px; overflow: visible; height: 100%; }
-  .card { flex: 1 1 0; min-width: 0; height: 100%; aspect-ratio: auto; border-radius: 10px; }
+  .c-list { flex: 1; flex-direction: row; gap: 8px; overflow: visible; height: 100%; margin: 0; padding: 0; }
+  .card { flex: 1 1 0; min-width: 0; height: 100%; aspect-ratio: auto; border-radius: 9px; }
   .card-name, .card::after { display: none; }
   .c-pause { width: 34px; height: 34px; }
-  .scene { --dock-h: auto; }
-  .tk { --fw: min(100cqw, calc((100cqh - 150px) * var(--ratio, 1.7778))); }
+  .scene[data-mode="bar"] .tk { width: min(var(--main-w), calc((var(--main-h) - 150px - var(--gap)) * var(--ratio, 1.7778))); }
+  .scene[data-mode="text"] .tk { width: var(--main-w); height: var(--main-h); }
   .dock { height: auto; flex-wrap: wrap; gap: 10px 12px; padding: 14px 14px 14px; }
   .d-main { flex: 1 1 100%; }
   .d-sep, .d-venue { display: none; }
   .kv { display: inline; }
   .d-date { flex: 1 1 auto; }
   .dock .buy { margin-inline-start: auto; }
-  .scene[data-mode="text"] .copy { align-self: end; padding-inline: 4px; }
-  .shade { background:
+  .scene[data-mode="text"] .frame { align-items: flex-end; justify-content: stretch; padding: 14px; }
+  .hero:not(.rail-left) .scene[data-mode="text"] .frame { justify-content: stretch; }
+  .shade, .hero:not(.rail-left) .shade { background:
     linear-gradient(to top, rgba(7, 6, 14, .95) 0%, rgba(7, 6, 14, .72) 34%, rgba(7, 6, 14, .15) 58%, rgba(7, 6, 14, 0) 70%),
-    linear-gradient(to bottom, rgba(7, 6, 14, .5) 0%, rgba(7, 6, 14, 0) 16%); }
-  .photo img { object-position: var(--mop, var(--op, 50% 50%)); }
+    linear-gradient(to bottom, rgba(7, 6, 14, .4) 0%, rgba(7, 6, 14, 0) 16%); }
+  .copy { width: 100%; }
+  .frame img { object-position: var(--mop, var(--op, 50% 50%)); }
   .title { font-size: 21px; line-height: 1.65; }
   .sub { font-size: 14px; margin-top: 6px; }
   .desc { font-size: 13.5px; line-height: 1.9; margin-top: 6px; min-height: 3.8em; }
@@ -337,13 +315,13 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   .buy { min-width: 104px; padding-inline: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .card img, .buy, .login, .frame img { transition: none; }
+  .card img, .buy, .login { transition: none; }
 }
 
 /* ── prototype panel and toast (not part of the site) ──────────── */
-.proto-fab { position: fixed; z-index: 40; bottom: max(4px, env(safe-area-inset-bottom, 0px)); left: max(4px, env(safe-area-inset-left, 0px)); display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink-2); cursor: pointer; box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .8); transition: color .3s; }
+.proto-fab { position: fixed; z-index: 40; bottom: max(3px, env(safe-area-inset-bottom, 0px)); left: max(3px, env(safe-area-inset-left, 0px)); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line-2); background: var(--panel); color: var(--ink-2); cursor: pointer; box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .8); transition: color .3s; }
 .proto-fab:hover { color: #fff; }
-.proto-fab svg.i { width: 17px; height: 17px; }
+.proto-fab svg.i { width: 15px; height: 15px; }
 @media (max-width: 760px) { .proto-fab { top: calc(50% - 19px); bottom: auto; } }
 .proto-panel { position: fixed; z-index: 41; bottom: max(14px, env(safe-area-inset-bottom, 0px)); left: max(14px, env(safe-area-inset-left, 0px)); width: min(376px, calc(100vw - 28px)); max-height: calc(100svh - 28px); overflow: auto; padding: 18px; display: grid; gap: 16px; background: var(--panel); border: 1px solid var(--line-2); border-radius: 18px; box-shadow: 0 30px 70px -24px rgba(0, 0, 0, .85); font-size: 13.5px; line-height: 1.7; }
 .pp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
@@ -477,80 +455,70 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
         <button type="button" class="c-arrow c-pause" id="autoBtn" aria-pressed="false" aria-label="توقف نمایش خودکار"><svg class="i i-pause"><use href="#i-pause"/></svg><svg class="i i-play"><use href="#i-play"/></svg></button>
       </div>
     </div>
-    <div class="guides" aria-hidden="true"><i class="g-nav">هدر</i><i class="g-rail">کارت‌ها</i><i class="g-dock">اطلاعات</i></div>
     <p class="sr" id="live" role="status" aria-live="polite"></p>
   </section>
 
   <section class="notes" aria-labelledby="notes-h">
     <div>
       <h2 id="notes-h">یادداشت‌های طراحی · نسخه‌ی ۸، جایگاه ویژه</h2>
-      <p class="lead">این بخش جزو سایت نیست. بنر ۱۶:۹ که برگزارکننده می‌ده پس‌زمینه‌ی کل هیرو می‌شه، مثل عکس تمام‌صفحه‌ی نسخه‌ی ۷. بنر واقعی متن خودش رو داره، پس تیتر درشتی روش نمی‌نویسیم؛ فقط هدر، ستون کارت‌ها و یه کپسول کوچیک با اطلاعات و دکمه‌ی خرید روش می‌شینه. پوستر عمودی اینجا جا نداره، جاش قفسه‌ی پوستره. دکمه‌ی پایین‌چپ همین صفحه (پنل مدیریت نمونه) رو بزن: عکس خودت رو بنداز، رنگ و نوشته‌ها رو عوض کن، جای ستون کارت‌ها رو عوض کن و «ناحیه‌ی امن» رو روشن کن تا ببینی رابط کجای بنر می‌شینه.</p>
+      <p class="lead">این بخش جزو سایت نیست. هیرو چند کادر جداست، هر کدوم با گوشه‌ی نرم و یه فاصله‌ی کم از بقیه: هدر، کادر کارت‌ها (همه‌ی اجراها)، کادر خودِ بنر و کادر اطلاعات. هیچ‌چیز روی بنر نمی‌افته، پس هر چی طراح بنر گذاشته (عنوان، تاریخ، سالن) کامل دیده می‌شه. پشت کادرها همون بنر خیلی محو شده پخش می‌شه تا صفحه رنگ بنر رو بگیره. بنر واقعی متن خودش رو داره، پس تیتر درشتی هم روش نمی‌نویسیم. پوستر عمودی اینجا جا نداره، جاش قفسه‌ی پوستره. دکمه‌ی پایین‌چپ (تنظیمات نمونه) رو بزن: بین نسخه‌ها جابه‌جا شو، عکس خودت رو بنداز، رنگ و نوشته‌ها رو عوض کن.</p>
     </div>
 
     <div class="cols" aria-label="چیدمان‌ها">
       <article style="--accent:#d9a441">
         <div class="wf" aria-hidden="true">
-          <i class="g" style="inset:0;border-radius:0"></i>
-          <i class="r" style="left:3%;top:3%;width:94%;height:8%;border-radius:5px;background:rgba(255,255,255,.2)"></i>
-          <i class="r" style="left:81%;top:17%;width:16%;height:70%;border-radius:5px;background:rgba(255,255,255,.2)"></i>
-          <i class="r" style="left:4%;top:84%;width:73%;height:11%;border-radius:6px;background:rgba(10,8,18,.78)"></i>
-          <i class="a" style="left:6%;top:87%;width:11%;height:5%;border-radius:99px"></i>
+          <i class="m" style="inset:0"></i>
+          <i class="r" style="left:2%;top:2%;width:96%;height:9%;border-radius:5px;background:rgba(255,255,255,.16)"></i>
+          <i class="r" style="left:2%;top:14%;width:19%;height:84%;border-radius:6px;background:rgba(255,255,255,.16)"></i>
+          <i class="g" style="left:23%;top:14%;width:75%;height:68%;border-radius:6px"></i>
+          <i class="r" style="left:23%;top:85%;width:75%;height:13%;border-radius:6px;background:rgba(255,255,255,.16)"></i>
+          <i class="a" style="left:26%;top:89%;width:11%;height:5%;border-radius:99px"></i>
         </div>
-        <h3>۱ · بنر و کپسول اطلاعات</h3>
-        <p>برای بنری که طراحش متن (عنوان، تاریخ، سالن) رو توش گذاشته. بنر کل صفحه رو می‌پوشونه و اطلاعات تو یه کپسول کوچیک پایین میاد: دسته، عنوان، کارت تاریخ، مکان، قیمت و دکمه‌ی خرید.</p>
+        <h3>۱ · بنر و کادر اطلاعات</h3>
+        <p>برای بنری که طراحش متن (عنوان، تاریخ، سالن) رو توش گذاشته. بنر تو کادر خودش و با نسبت خودش (بدون هیچ برشی) می‌شینه و کادر اطلاعات زیرشه: دسته، عنوان، کارت تاریخ، مکان، قیمت و دکمه‌ی خرید.</p>
         <p class="when"><b>کی؟</b> بیشتر وقت‌ها. پیش‌فرضه.</p>
       </article>
       <article style="--accent:#3b82f6">
         <div class="wf" aria-hidden="true">
-          <i class="g" style="inset:0;border-radius:0"></i>
-          <i class="m" style="left:0;top:0;width:55%;height:100%;border-radius:0;background:linear-gradient(to right,rgba(0,0,0,.55),transparent)"></i>
-          <i class="r" style="left:8%;top:34%;width:30%;height:7%"></i>
-          <i class="r" style="left:8%;top:46%;width:24%;height:4%"></i>
-          <i class="a" style="left:8%;top:62%;width:14%;height:9%;border-radius:99px"></i>
-          <i class="r" style="left:84%;top:10%;width:12%;height:20%"></i>
-          <i class="r" style="left:84%;top:34%;width:12%;height:20%"></i>
+          <i class="m" style="inset:0"></i>
+          <i class="r" style="left:2%;top:2%;width:96%;height:9%;border-radius:5px;background:rgba(255,255,255,.16)"></i>
+          <i class="r" style="left:2%;top:14%;width:19%;height:84%;border-radius:6px;background:rgba(255,255,255,.16)"></i>
+          <i class="g" style="left:23%;top:14%;width:75%;height:84%;border-radius:6px"></i>
+          <i class="r" style="left:66%;top:36%;width:26%;height:7%"></i>
+          <i class="r" style="left:70%;top:48%;width:22%;height:4%"></i>
+          <i class="a" style="left:78%;top:62%;width:14%;height:8%;border-radius:99px"></i>
         </div>
         <h3>۲ · عکس و متن</h3>
-        <p>برای عکس بدون نوشته. عکس کل صفحه رو می‌گیره، آروم زوم‌اوت می‌شه و روی بعدی محو می‌شه (مثل نسخه‌ی ۷). عنوان و توضیح رو خود سایت روش می‌نویسه.</p>
-        <p class="when"><b>کی؟</b> عکس خوب و بدون نوشته، سوژه وسط یا راست.</p>
+        <p>برای عکس بدون نوشته. عکس کل کادر وسط رو می‌گیره، آروم زوم‌اوت می‌شه و روی بعدی محو می‌شه (مثل نسخه‌ی ۷). عنوان، توضیح و دکمه رو خود سایت روی عکس می‌نویسه و کادر اطلاعات جدا نداره.</p>
+        <p class="when"><b>کی؟</b> عکس خوب و بدون نوشته، سوژه سمت کارت‌ها.</p>
       </article>
       <article style="--accent:#e11d48">
         <div class="wf" aria-hidden="true">
           <i class="m" style="inset:0"></i>
-          <i class="g" style="left:34%;top:6%;width:32%;height:44%;border-radius:5px"></i>
-          <i class="r" style="left:34%;top:50%;width:32%;height:12%;border-radius:0 0 5px 5px"></i>
-          <i class="a" style="left:34%;top:50%;width:32%;height:2%;border-radius:0"></i>
-          <i class="r" style="left:8%;top:80%;width:84%;height:14%"></i>
+          <i class="r" style="left:30%;top:4%;width:40%;height:9%;border-radius:5px;background:rgba(255,255,255,.16)"></i>
+          <i class="g" style="left:30%;top:16%;width:40%;height:34%;border-radius:6px"></i>
+          <i class="r" style="left:30%;top:53%;width:40%;height:14%;border-radius:6px;background:rgba(255,255,255,.16)"></i>
+          <i class="r" style="left:30%;top:70%;width:40%;height:24%;border-radius:6px;background:rgba(255,255,255,.16)"></i>
         </div>
-        <h3>۳ · موبایل و صفحه‌ی باریک</h3>
-        <p>اینجا یه بنر ۱۶:۹ کل صفحه رو که پر کنه فقط یه تکه‌ی باریکش دیده می‌شه. پس بنر کامل تو قاب می‌شینه، پشتش همون بنر محو شده، اطلاعات زیرش و کارت‌ها تو یه ردیف.</p>
-        <p class="when"><b>کی؟</b> عرض زیر ۷۶۱ پیکسل، یا صفحه‌ای که از ۴:۳ باریک‌تره.</p>
+        <h3>۳ · موبایل</h3>
+        <p>همه‌ی کادرها زیر هم میان: هدر، بنر، اطلاعات و یه ردیف کارت. بنر باز هم کامل و بدون برش دیده می‌شه.</p>
+        <p class="when"><b>کی؟</b> عرض زیر ۷۶۱ پیکسل.</p>
       </article>
     </div>
 
     <div>
-      <h3>ناحیه‌ی امن: متن مهم بنر کجا باشه</h3>
-      <p>هدر، ستون کارت‌ها و کپسول اطلاعات روی بنر می‌شینن و جاهایی از بنر رو می‌پوشونن. اگه متن مهم بنر تو این جاها بیفته، دیده نمی‌شه. پیش‌فرض کارت‌ها سمت چپ‌ان، چون متن بنرهای فارسی معمولاً سمت راسته. این درصدها برای صفحه‌ی ۱۹۲۰×۱۰۸۰ـه و تو اندازه‌های دیگه هم با همین نسبت‌ان.</p>
-      <div class="cols safe">
-        <div class="wf wf-safe" aria-hidden="true">
-          <i class="g" style="inset:0;border-radius:0"></i>
-          <i class="z" style="left:0;top:0;width:100%;height:9%"><span>بالا ۹٪: هدر</span></i>
-          <i class="z" style="left:0;top:16%;width:19%;height:76%"><span>چپ ۱۹٪: کارت‌ها</span></i>
-          <i class="z" style="left:21%;top:89%;width:75%;height:9%"><span>پایین ۱۱٪: کپسول</span></i>
-          <i class="ok" style="left:21%;top:11%;width:75%;height:76%"><span>اینجا متن مهم بنر بمونه</span></i>
-        </div>
-        <div class="tablewrap">
-          <table class="spec">
-            <tbody>
-              <tr><th>اندازه و نسبت</th><td>۱۶:۹، دست‌کم ۱۶۰۰×۹۰۰ (بهتر ۱۹۲۰×۱۰۸۰ یا بیشتر)</td></tr>
-              <tr><th>متن مهم بنر</th><td>کارت‌ها چپ (پیش‌فرض): از ۲۱٪ تا ۹۶٪ عرض. کارت‌ها راست: از ۴٪ تا ۷۹٪ عرض. در هر دو حالت از ۱۱٪ تا ۸۷٪ ارتفاع</td></tr>
-              <tr><th>صفحه‌ی غیر ۱۶:۹</th><td>بنر کل صفحه رو می‌پوشونه، پس روی صفحه‌ی پهن‌تر (مثلاً ۱۹۲۰×۹۴۰) حدود ۱۳٪ از ارتفاع (بالا و پایین) و روی صفحه‌ی باریک‌تر (مثلاً ۱۶:۱۰) حدود ۱۰٪ از عرض (دو طرف) بریده می‌شه. اول هر اجرا هم عکس چند درصد زوم‌شده‌ست (بنر ۶٪، عکس ۱۵٪) و آروم زوم‌اوت می‌شه</td></tr>
-              <tr><th>بنری که ۱۶:۹ نیست</th><td>می‌شه بذاری، ولی پنل مدیریت می‌گه چند درصدش بریده می‌شه (مثلاً ۳:۱ حدود ۴۱٪ از دو طرف)</td></tr>
-              <tr><th>پوستر عمودی</th><td>قبول نمی‌شه (پنل مدیریت رد می‌کنه). جای پوستر قفسه‌ی پوستره، نه این بخش</td></tr>
-              <tr><th>فایل</th><td>JPEG، PNG یا WebP تا ۱۰ مگابایت. سرور WebP و چند اندازه (۶۴۰، ۱۰۲۴، ۱۶۷۲ یا ۱۹۲۰) و تصویر محو و کوچیک (برای موبایل) و رنگ پیشنهادی رو می‌سازه</td></tr>
-            </tbody>
-          </table>
-        </div>
+      <h3>چی از برگزارکننده بخوایم</h3>
+      <div class="tablewrap">
+        <table class="spec">
+          <tbody>
+            <tr><th>اندازه و نسبت</th><td>۱۶:۹، دست‌کم ۱۶۰۰×۹۰۰ (بهتر ۱۹۲۰×۱۰۸۰ یا بیشتر)</td></tr>
+            <tr><th>متن تو بنر</th><td>هر جای بنر می‌تونه باشه، چون چیزی روش نمی‌افته. فقط اول هر اجرا عکس حدود ۵٪ زوم‌شده‌ست و آروم زوم‌اوت می‌شه، پس متن رو از لبه‌ها دست‌کم ۴٪ دور نگه دارن</td></tr>
+            <tr><th>بنری که ۱۶:۹ نیست</th><td>می‌شه بذاری. بنر کامل و با نسبت خودش دیده می‌شه، ولی قابش کم‌ارتفاع‌تر یا باریک‌تر می‌شه (پنل مدیریت می‌گه)</td></tr>
+            <tr><th>پوستر عمودی</th><td>قبول نمی‌شه (پنل مدیریت رد می‌کنه). جای پوستر قفسه‌ی پوستره، نه این بخش</td></tr>
+            <tr><th>عکس (چیدمان متن)</th><td>۱۶:۹، دست‌کم ۱۹۲۰×۱۰۸۰ (بهتر ۲۵۶۰)، بدون نوشته، سوژه سمت کارت‌ها؛ طرف دیگه زیر نوشته‌ست</td></tr>
+            <tr><th>فایل</th><td>JPEG، PNG یا WebP تا ۱۰ مگابایت. سرور WebP و چند اندازه (۶۴۰، ۱۰۲۴، ۱۶۷۲ یا ۱۹۲۰) و تصویر محو و کوچیک پس‌زمینه و رنگ پیشنهادی رو می‌سازه</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -558,6 +526,8 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
   <button type="button" class="proto-fab" id="protoFab" aria-expanded="false" aria-controls="protoPanel" aria-label="پنل مدیریت (نمونه)"><svg class="i"><use href="#i-sliders"/></svg></button>
   <div class="proto-panel" id="protoPanel" role="dialog" aria-label="پنل مدیریت · نمونه" hidden>
     <div class="pp-head"><div><b>پنل مدیریت · نمونه</b><span>جایگاه ویژه · <bdi id="ppWho"></bdi></span></div><button type="button" class="ghost" id="protoClose" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button></div>
+
+    <div class="pp-group" id="cmpGroup" hidden><span>مقایسه‌ی نسخه‌ها</span><div class="seg" id="cmpSeg" role="group" aria-label="نسخه‌ها"></div></div>
 
     <div class="pp-group">
       <span>تصویر</span>
@@ -568,10 +538,10 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
     </div>
 
     <fieldset class="pp-group">
-      <legend>اطلاعات روی بنر</legend>
+      <legend>اطلاعات</legend>
       <div class="tpl tpl-2" id="ppLay">
-        <button type="button" data-v="bar" aria-pressed="true"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="3" y="3" width="50" height="30" rx="3"/><rect class="f" x="10" y="24" width="34" height="6" rx="2"/></svg><b>کپسول پایین</b><em>بنر نوشته داره</em></button>
-        <button type="button" data-v="text" aria-pressed="false"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="3" y="3" width="50" height="30" rx="3"/><rect class="f" x="3" y="3" width="22" height="30" rx="3"/><path d="M8 14h12M8 20h9"/></svg><b>متن سمت چپ</b><em>عکس بدون نوشته</em></button>
+        <button type="button" data-v="bar" aria-pressed="true"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="3" y="3" width="50" height="30" rx="3"/><rect class="f" x="10" y="24" width="34" height="6" rx="2"/></svg><b>کادر پایین</b><em>بنر نوشته داره</em></button>
+        <button type="button" data-v="text" aria-pressed="false"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="3" y="3" width="50" height="30" rx="3"/><rect class="f" x="3" y="3" width="22" height="30" rx="3"/><path d="M8 14h12M8 20h9"/></svg><b>متن روی عکس</b><em>عکس بدون نوشته</em></button>
       </div>
     </fieldset>
 
@@ -591,9 +561,8 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
     </div>
 
     <div class="pp-group">
-      <span>صفحه</span>
+      <span>جای کادر کارت‌ها</span>
       <div class="seg" data-ctrl="rail" role="group" aria-label="جای ستون کارت‌ها"><button type="button" data-v="left" aria-pressed="true">کارت‌ها چپ</button><button type="button" data-v="right" aria-pressed="false">کارت‌ها راست (مثل نمونه‌ی ۷)</button></div>
-      <label class="chk"><input type="checkbox" id="ppGuides"> ناحیه‌ی امن رو نشون بده (جاهایی که رابط روی بنر می‌شینه)</label>
     </div>
 
     <details class="pp-more">
@@ -629,14 +598,10 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (typeof window.gsap === 'undefined') { root.classList.remove('is-intro'); return; }
 
 // zoomLvl: how far a picture starts, per layout (a banner with words in it gets a gentler zoom than a
-// photo, so its words aren't cut at the start); settle: how far a banner in its narrow-screen frame
-// starts (it never crops, the whole frame just settles); dur: seconds per show; fade: seconds of
-// the fade into the next
-const ZOOM = { bar: { low: 1.03, mid: 1.06, high: 1.1 }, text: { low: 1.08, mid: 1.15, high: 1.24 } };
-// the same test as the CSS: on a narrow or tall screen the banner is shown whole, in a frame
-const FRAMED = '(max-width: 760px), (max-aspect-ratio: 1.339)';
-const framed = () => matchMedia(FRAMED).matches;
-const state = { i: 0, zoomLvl: 'mid', settle: 1.04, dur: 7, fade: 1.2, react: 'pulse', userPaused: false, hover: false, visible: true, intro: true, admin: false };
+// photo, so its words aren't cut at the start); dur: seconds per show; fade: seconds of the fade into
+// the next
+const ZOOM = { bar: { low: 1.02, mid: 1.05, high: 1.09 }, text: { low: 1.08, mid: 1.15, high: 1.24 } };
+const state = { i: 0, zoomLvl: 'mid', dur: 7, fade: 1.2, react: 'pulse', userPaused: false, hover: false, visible: true, intro: true, admin: false };
 
 /* ════════════════════════════════════════════════════════════════
    the fixed palette: eight colour sets. Each show uses one; it is suggested from the picture
@@ -1045,23 +1010,23 @@ const altOf = (e) => `${e.title} · ${e.venue} · ${e.w.short}`;
 const MODES = {
   bar: (e) => `
     <div class="stage"><div class="tk">
-      <div class="tk-glow" aria-hidden="true"></div>
-      <div class="tk-card">
-        <a class="frame" href="#" aria-label="${esc(e.title)}، صفحه‌ی اجرا"><img class="art" alt="${esc(altOf(e))}"></a>
-        <div class="dock">${dockHTML(e)}</div>
-      </div>
+      <div class="frame"><img class="art" alt="${esc(altOf(e))}"><a class="frame-link" href="#" aria-label="${esc(e.title)}، صفحه‌ی اجرا"></a></div>
+      <div class="dock">${dockHTML(e)}</div>
     </div></div>
     <h1 class="sr">${esc(e.title)}</h1>`,
   text: (e) => `
-    <div class="photo" aria-hidden="true"><img class="art" alt=""></div><div class="shade" aria-hidden="true"></div>
-    <div class="copy">${copyHTML(e)}</div>`,
+    <div class="stage"><div class="tk"><div class="frame">
+      <img class="art" alt=""><div class="shade" aria-hidden="true"></div>
+      <a class="frame-link" href="#" aria-label="${esc(e.title)}، صفحه‌ی اجرا"></a>
+      <div class="copy">${copyHTML(e)}</div>
+    </div></div></div>`,
 };
 function paint(el, e) {
   const s = el.style, p = PALETTE[e.pal] || PALETTE.violet;
   s.setProperty('--accent', p.accent); s.setProperty('--accent-l', p.light); s.setProperty('--on-accent', p.onAccent);
 }
 async function buildScene(e) {
-  const mode = e.layout === 'text' ? 'text' : 'bar', pic = e.banner, ratio = clamp(pic.w / pic.h, 1, 3.4);
+  const mode = e.layout === 'text' ? 'text' : 'bar', pic = e.banner, ratio = mode === 'text' ? 16 / 9 : clamp(pic.w / pic.h, 1, 3.4);
   const el = document.createElement('article');
   el.className = 'scene'; el.dataset.mode = mode; el.dataset.id = e.id; el.inert = true;
   el.setAttribute('aria-hidden', 'true'); el.setAttribute('role', 'group'); el.setAttribute('aria-roledescription', 'اجرا');
@@ -1073,17 +1038,10 @@ async function buildScene(e) {
   const amb = ambientOf(img);
   if (amb) el.style.setProperty('--amb', `url("${amb}")`);
   return {
-    e, ver: e.ver, el, mode, img, amb, busy: false, pk: '', fadeTw: null, zoomTw: null, framed: false, zoomEl: img, pulse: null,
-    tk: $('.tk', el), tkCard: $('.tk-card', el), frame: $('.frame', el), photo: $('.photo', el),
-    glow: $('.tk-glow', el), parts: $$('[data-part]', el), buy: $('.buy', el), art: mode === 'bar' ? $('.stage', el) : null,
+    e, ver: e.ver, el, mode, img, amb, busy: false, pk: '', fadeTw: null, zoomTw: null,
+    frame: $('.frame', el), zoomEl: img, pulse: $('.frame', el),
+    parts: $$('[data-part]', el), buy: $('.buy', el), art: $('.stage', el),
   };
-}
-// what moves, for the layout the screen has right now: the picture itself when it covers the screen,
-// the whole frame when the banner is shown whole
-function aim(s) {
-  s.framed = s.mode === 'bar' && framed();
-  s.zoomEl = s.framed ? s.tk : s.img;
-  s.pulse = s.mode === 'text' ? s.photo : s.framed ? s.tkCard : s.frame;
 }
 const partsOut = (s) => { if (s) gsap.to(s.parts, { opacity: 0, y: reduceMotion ? 0 : -8, duration: 0.35, ease: 'power2.in', stagger: 0.03, overwrite: true }); };
 const partsIn = (s, delay = 0) => { if (s) gsap.fromTo(s.parts, { opacity: 0, y: reduceMotion ? 0 : 14 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', stagger: 0.07, delay, overwrite: true, clearProps: 'transform' }); };
@@ -1102,29 +1060,27 @@ const stage = {
     if (s.fadeTw) s.fadeTw.kill(); if (s.zoomTw) s.zoomTw.kill(); s.fadeTw = s.zoomTw = null;
     gsap.killTweensOf(s.parts); if (s.art) { gsap.killTweensOf(s.art); gsap.set(s.art, { clearProps: 'opacity' }); }
     s.busy = false; gsap.set(s.el, { opacity: 0 }); s.el.classList.remove('is-on'); s.el.inert = true; s.el.setAttribute('aria-hidden', 'true');
-    gsap.set([s.img, s.tk].filter(Boolean), { clearProps: 'transform' }); gsap.set(s.parts, { clearProps: 'opacity,transform' });
-    [s.frame, s.tkCard, s.photo].forEach((x) => { if (x) x.style.transform = ''; }); s.pk = ''; if (s.glow) s.glow.style.opacity = '';
+    gsap.set(s.img, { clearProps: 'transform' }); gsap.set(s.parts, { clearProps: 'opacity,transform' });
+    s.frame.style.transform = ''; s.pk = '';
     // keep one free scene per show; drop the ones whose show has changed since
     if (s.ver !== s.e.ver || this.pool.filter((x) => !x.busy).length > EVENTS.length + 1) { s.el.remove(); this.pool.splice(this.pool.indexOf(s), 1); }
   },
-  // the show's picture zooms out (it covers the screen) or settles (a banner shown whole in its frame)
-  // over its time and the fade after it, so it is still moving while the next one fades in over it
+  // the show's picture zooms out inside its panel over its time and the fade after it, so it is still
+  // moving while the next one fades in over it
   async show(i, { instant = false } = {}) {
     const token = ++this.token, e = EVENTS[i], s = await this.acquire(e);
     if (token !== this.token) { this.release(s); return null; }
     const prev = this.top;
     if (prev && prev !== s) { prev.el.inert = true; prev.el.setAttribute('aria-hidden', 'true'); }
     s.el.style.zIndex = ++this.z; s.el.classList.add('is-on'); s.el.inert = false; s.el.setAttribute('aria-hidden', 'false'); this.top = s;
-    aim(s);
-    const fade = reduceMotion ? 0.4 : state.fade, from = reduceMotion ? 1 : (s.framed ? state.settle : ZOOM[s.mode][state.zoomLvl]);
+    const fade = reduceMotion ? 0.4 : state.fade, from = reduceMotion ? 1 : ZOOM[s.mode][state.zoomLvl];
     s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: state.dur + fade, ease: 'none', paused: !timer.running() && !instant && !state.intro });
     const done = () => { this.pool.slice().forEach((o) => { if (o !== s && o.busy && +o.el.style.zIndex < +s.el.style.zIndex) this.release(o); }); };
     if (instant) { gsap.set(s.el, { opacity: 1 }); done(); return s; }
-    // a banner shown whole: the ambient dissolves over the old one, and the banner itself is out quickly
-    // and in late, so for a moment there is only the soft colour between two designed pictures (no
-    // words on words). A banner that covers the screen fades as in v7.
-    if (prev && prev !== s && prev.framed && prev.art) gsap.to(prev.art, { opacity: 0, duration: fade * 0.32, ease: 'sine.out', overwrite: true });
-    if (s.framed && s.art) gsap.fromTo(s.art, { opacity: 0 }, { opacity: 1, duration: fade * 0.7, delay: fade * 0.3, ease: 'power2.out', overwrite: true });
+    // the ambient dissolves over the old one, and the panels' content is out quickly and in late, so for
+    // a moment there is only the soft colour between two designed banners (no words on words)
+    if (prev && prev !== s && prev.art) gsap.to(prev.art, { opacity: 0, duration: fade * 0.32, ease: 'sine.out', overwrite: true });
+    if (s.art) gsap.fromTo(s.art, { opacity: 0 }, { opacity: 1, duration: fade * 0.7, delay: fade * 0.3, ease: 'power2.out', overwrite: true });
     s.fadeTw = gsap.fromTo(s.el, { opacity: 0 }, { opacity: 1, duration: fade, ease: 'sine.inOut', onComplete: done });
     return s;
   },
@@ -1194,7 +1150,7 @@ const timer = {
 /* ════════════════════════════════════════════════════════════════
    a change: the rail, the picture and the words
    ════════════════════════════════════════════════════════════════ */
-function setAccent(e) { const s = hero.style; s.setProperty('--accent', e.accent); s.setProperty('--accent-l', e.accentL); s.setProperty('--on-accent', e.onAccent); hero.dataset.layout = e.layout; player.draw(); }
+function setAccent(e) { const s = hero.style; s.setProperty('--accent', e.accent); s.setProperty('--accent-l', e.accentL); s.setProperty('--on-accent', e.onAccent); player.draw(); }
 const live = $('#live');
 let swapCall = null;
 function go(i, source = 'user') {
@@ -1328,8 +1284,8 @@ const player = {
 };
 
 
-/* the beat: the logo's bars and the player's bars are small equalisers; with "تپش" the whole frame
-   (or photo) swells a little on each beat and the light around it breathes */
+/* the beat: the logo's bars and the player's bars are small equalisers; with "تپش" the banner's panel
+   swells a little on each beat */
 const meters = {
   bars: $$('.bars i'), base: [0.38, 0.72, 1, 0.6, 0.34], eq: $$('.mu-eq i'), rest: true, pk: '', play: $('#muPlay'), avg: new Float32Array(48).fill(0.3),
   frame(dt) {
@@ -1346,9 +1302,8 @@ const meters = {
     }
     const s = stage.top, on = !!s && state.react === 'pulse' && !reduceMotion && lvl > 0.01;
     if (s) {
-      const sc = on ? (1 + (A.kick * 0.01 + A.down * 0.005) * lvl).toFixed(4) : '1';
+      const sc = on ? (1 + (A.kick * 0.006 + A.down * 0.003) * lvl).toFixed(4) : '1';
       if (sc !== s.pk) { s.pk = sc; s.pulse.style.transform = sc === '1' ? '' : `scale(${sc})`; }
-      if (s.glow) s.glow.style.opacity = on ? (0.62 + A.kick * 0.28 * lvl).toFixed(3) : '';
     }
     const p = (1 + A.kick * 0.22 * lvl).toFixed(3);
     if (p !== this.pk) { this.pk = p; this.play.style.setProperty('--pulse', p); }
@@ -1390,12 +1345,11 @@ async function warm() {
 /* ════════════════════════════════════════════════════════════════
    the admin panel (a demo of what the real one does; not part of the site)
    ════════════════════════════════════════════════════════════════ */
-// what the picture will do on the 16:9 screen, said in words
+// what the banner will look like in its panel, said in words
 function fitNote(w, h) {
   const r = w / h, T = 16 / 9, size = `${fa(w)}×${fa(h)}`;
-  if (Math.abs(Math.log(r / T)) < 0.035) return `<b>بنر ۱۶:۹</b> · ${size} · کل صفحه رو بدون برش می‌پوشونه`;
-  const cut = Math.round((r > T ? 1 - T / r : 1 - r / T) * 100);
-  return `<b>نسبت ${fa(r.toFixed(2)).replace('.', '٫')} به ۱</b> · ${size} · برای پوشش کامل صفحه حدود ${fa(cut)}٪ از ${r > T ? 'دو طرف' : 'بالا و پایین'} بریده می‌شه. بنر ۱۶:۹ بذار`;
+  if (Math.abs(Math.log(r / T)) < 0.035) return `<b>بنر ۱۶:۹</b> · ${size} · تو قابش کامل و بدون برش دیده می‌شه`;
+  return `<b>نسبت ${fa(r.toFixed(2)).replace('.', '٫')} به ۱</b> · ${size} · کامل دیده می‌شه، ولی قابش ${r > T ? 'کم‌ارتفاع‌تر' : 'باریک‌تر'} می‌شه. بنر ۱۶:۹ بهتره`;
 }
 const panel = {
   fab: $('#protoFab'), el: $('#protoPanel'),
@@ -1414,7 +1368,6 @@ const panel = {
     drop.addEventListener('drop', (ev) => { const f = ev.dataTransfer.files[0]; if (f && /^image\//.test(f.type)) this.useFile(f); });
     $('#ppPhoto').addEventListener('click', () => this.usePhoto());
     $('#ppReset').addEventListener('click', () => this.reset());
-    $('#ppGuides').addEventListener('change', (ev) => hero.classList.toggle('show-guides', ev.target.checked));
     const fields = { fTitle: 'title', fVenue: 'venue', fPrice: 'price' };
     Object.entries(fields).forEach(([id, key]) => $('#' + id).addEventListener('input', (ev) => { const e = EVENTS[state.i]; e[key] = ev.target.value; e.w = when(e); this.texts(); }));
     $('#fBadge').addEventListener('change', (ev) => { EVENTS[state.i].badge = ev.target.value; this.texts(); });
@@ -1540,7 +1493,27 @@ if (reduceMotion) { state.userPaused = true; $('#autoBtn').setAttribute('aria-pr
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, player, meters, panel, audioSys, A, analyseTrack, TRACKS, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, framed };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, player, meters, panel, audioSys, A, analyseTrack, TRACKS, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when };
+})();
+</script>
+<script>
+/* compare: inside the comparison page (which has no bar of its own, so a sample opens at full size)
+   the settings panel lists the versions and switches between them */
+(function () {
+  var group = document.getElementById('cmpGroup'), seg = document.getElementById('cmpSeg');
+  if (!group || !seg || window.parent === window) return;
+  window.addEventListener('message', function (ev) {
+    var d = ev.data; if (!d || !d.heroVersions) return;
+    seg.textContent = '';
+    d.heroVersions.forEach(function (v) {
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = v.label; b.title = v.name;
+      b.setAttribute('aria-pressed', v.id === d.current ? 'true' : 'false');
+      b.addEventListener('click', function () { if (v.id !== d.current) window.parent.postMessage({ heroSwitch: v.id }, '*'); });
+      seg.appendChild(b);
+    });
+    group.hidden = false;
+  });
+  window.parent.postMessage({ heroReady: true }, '*');
 })();
 </script>
 </body>
