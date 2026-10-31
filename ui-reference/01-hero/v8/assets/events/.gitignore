@@ -1,0 +1,6 @@
+# Not committed: the real posters and banners are other people's artwork (organisers, artists,
+# a ticketing site's logos) and this repository is public. The private hosted preview carries them.
+*.webp
+*.jpg
+*.png
+!README.md

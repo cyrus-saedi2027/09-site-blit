@@ -13,13 +13,13 @@ Then open http://localhost:8000/01-hero/ to compare the hero versions. Use a loc
 
 Hosted previews (private to the owner; the hero preview includes the songs):
 - Moodboard of 16 international ticketing, festival and theatre sites: https://claude.ai/artifact/G67hnwxgRA75NhkLfJZUAP
-- Hero, all versions on one page (tabs 1–7): https://claude.ai/artifact/FMdoTVhR22nUCmfX76FvjU
+- Hero, all versions on one page (tabs 1–7, the first owner's account): https://claude.ai/artifact/FMdoTVhR22nUCmfX76FvjU
 
 ## بخش‌ها · Sections
 
 | # | بخش | Section | Status | Refs |
 |---|---|---|---|---|
-| 1 | هیرو (صحنه) | Hero: seven versions side by side (v1 WebGL stage, v2 photo + featured rail, v3 posters, v4 formal and alive, v5 cut-out performer and striped halo after references A and B, v6 = v5 working with posters, banners, photos or nothing, plus a demo admin panel, v7 after the owner's reference screenshot: a full-screen photo that slowly zooms out and fades into the next, cards on the right and a capsule header) | **v7 new, waiting for feedback; v5 liked** → [`01-hero`](01-hero/) | الف، ب، ۱۰، ۱۵، leemeenal.app |
+| 1 | هیرو · جایگاه ویژه | Hero: eight versions side by side (v1 WebGL stage, v2 photo + featured rail, v3 posters, v4 formal and alive, v5 cut-out performer and striped halo, v6 = v5 working with posters, banners, photos or nothing, plus a demo admin panel, v7 after the owner's reference screenshot: a full-screen photo that slowly zooms out and fades into the next, cards on the right and a capsule header, **v8 the featured slot: any banner or poster the organiser uploads is shown whole, in one of three templates (banner, poster, photo), with a strip of facts and a demo admin panel**) | **v8 new, waiting for feedback; v6 and v7 liked, v5 liked** → [`01-hero`](01-hero/) | الف، ب، ۱۰، ۱۵، leemeenal.app |
 | 2 | جستجو با حال‌وهوا | Mood search ("something funny", "date night", "this weekend") | next | ۳، ۵ |
 | 3 | پرفروش‌های هفته | Weekly best sellers with giant numbers | later | ۳ |
 | 4 | قفسه‌ی تئاتر | Theatre poster shelf | later | ۵، ۱۴ |
