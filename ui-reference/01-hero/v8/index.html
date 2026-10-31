@@ -4,23 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>بلیت · هیرو ۸</title>
-<meta name="description" content="نمونه‌ی هیروی صفحه‌ی اصلی بلیت، نسخه‌ی ۸: جایگاه ویژه. هر بنر یا پوستری که مدیریت بگذارد کامل و بدون برش نشان داده می‌شود؛ سه قالب: بنر کامل، پوستر، عکس و متن.">
+<meta name="description" content="نمونه‌ی هیروی صفحه‌ی اصلی بلیت، نسخه‌ی ۸: جایگاه ویژه. بنر ۱۶:۹ برگزارکننده پس‌زمینه‌ی کل هیرو می‌شود؛ اطلاعات در یک کپسول پایین، یا عکس و متن مثل نسخه‌ی ۷.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&family=Lalezar&display=swap">
-<link rel="preload" as="image" href="assets/events/skykings-banner-1672.webp" imagesrcset="assets/events/skykings-banner-1024.webp 1024w, assets/events/skykings-banner-1672.webp 1672w" imagesizes="78vw" fetchpriority="high">
+<link rel="preload" as="image" href="assets/events/skykings-banner-1672.webp" imagesrcset="assets/events/skykings-banner-1024.webp 1024w, assets/events/skykings-banner-1672.webp 1672w" imagesizes="100vw" fetchpriority="high">
 <script>document.documentElement.classList.add('is-intro');setTimeout(function(){document.documentElement.classList.remove('is-intro')},4000);</script>
 <style>
-/* Version 8: "the featured slot". One hero, three ways to place what an organiser sends:
-     banner : a finished 16:9 banner (with its own words) is shown whole, in a frame, with the
-              show's facts in a strip under it. Nothing is drawn over the banner.
-     poster : a tall poster is shown whole, with the words next to it.
-     photo  : a plain photo (no words in it) fills the screen, zooms out and fades, as in v7.
-   Behind a banner or a poster sits the same picture, tiny and blurred ("ambient"), so any shape
-   fills the screen and the page takes the picture's colours.
+/* Version 8, second round: "the featured slot". The organiser's banner (16:9, with its own words)
+   is the background of the whole hero, the way the photo is in v7. Nothing but the header, the rail
+   and one small capsule with the facts sits over it. Two ways to give the facts:
+     bar  : a floating capsule at the bottom (for a banner that has its words baked in)
+     text : the words on the left over a dark gradient (for a photo with no words in it, as in v7)
+   On a narrow or tall screen a 16:9 picture can't cover the screen without losing most of itself, so
+   there the banner is shown whole in a frame, on its own blurred copy ("ambient"), with the facts
+   under it.
    Every size follows one unit, --u (1% of the width on a 16:9 screen, smaller on wider ones), so
-   the composition is the same on any desktop screen and never overflows. The header, the rail and
-   every scene share one geometry (the --pad-*, --nav-h and --rail-w values), so they never overlap. */
+   the composition is the same on any desktop screen and never overflows. The header, the rail, the
+   capsule and every scene share one geometry (the --pad-*, --nav-h and --rail-w values and the grid
+   areas nav / rail / main / copy), so the pieces never overlap each other. */
 :root {
   --u: clamp(11px, min(1vw, 1.7778svh), 26px);
   --bg: #07060c;
@@ -31,6 +33,7 @@
   --line: rgba(255, 255, 255, .12);
   --line-2: rgba(255, 255, 255, .24);
   --panel: #14121d;
+  --capsule: #120f1b;
   --accent: #d9a441;
   --accent-l: #f5d48b;
   --on-accent: #1a1206;
@@ -39,10 +42,11 @@
   /* the geometry shared by the header, the rail and every scene */
   --pad-t: max(calc(var(--u) * 1.2), env(safe-area-inset-top, 0px));
   --pad-r: max(calc(var(--u) * 2.6), env(safe-area-inset-right, 0px));
-  --pad-b: calc(var(--u) * 2.4);
+  --pad-b: calc(var(--u) * 1.2);
   --pad-l: max(calc(var(--u) * 4.2), env(safe-area-inset-left, 0px));
   --nav-h: max(54px, calc(var(--u) * 3.3));
   --rail-w: calc(var(--u) * 15.5);
+  --dock-h: max(60px, calc(var(--u) * 4.8));
   --gap-x: calc(var(--u) * 3);
   --gap-y: calc(var(--u) * 1.4);
   --r1: max(9px, calc(var(--u) * .5));
@@ -63,69 +67,53 @@ a { color: inherit; }
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 
-/* ── hero ──────────────────────────────────────────────────────── */
-.hero {
-  position: relative; height: 100svh; min-height: 600px; overflow: hidden; isolation: isolate; background: var(--bg);
+/* ── hero, scenes and the safe-area guide: one grid ─────────────── */
+.hero, .scene, .guides {
   display: grid;
   grid-template-columns: var(--rail-w) minmax(0, 1fr);
   grid-template-rows: var(--nav-h) minmax(0, 1fr);
+  grid-template-areas: "nav nav" "rail main";
   column-gap: var(--gap-x); row-gap: var(--gap-y);
   padding: var(--pad-t) var(--pad-r) var(--pad-b) var(--pad-l);
 }
+.hero { position: relative; height: 100svh; min-height: 600px; overflow: hidden; isolation: isolate; background: var(--bg); }
 
-/* ── scenes: one per show, stacked; the new one fades in over the old one ── */
+/* scenes: one per show, stacked; the new one fades in over the old one */
 .scenes { position: absolute; inset: 0; z-index: 0; background: var(--bg); }
-.scene {
-  position: absolute; inset: 0; z-index: 0; isolation: isolate; overflow: hidden; background: var(--bg);
-  display: grid;
-  grid-template-columns: var(--rail-w) minmax(0, 1fr);
-  grid-template-rows: var(--nav-h) minmax(0, 1fr);
-  column-gap: var(--gap-x); row-gap: var(--gap-y);
-  padding: var(--pad-t) var(--pad-r) var(--pad-b) var(--pad-l);
-  opacity: 0; visibility: hidden;
-}
+.scene { position: absolute; inset: 0; z-index: 0; isolation: isolate; overflow: hidden; background: var(--bg); opacity: 0; visibility: hidden; }
 .scene.is-on { visibility: visible; }
 
-/* the ambient: the show's own picture, tiny and soft, stretched over the whole screen */
+/* the ambient: the show's own picture, tiny and soft, stretched over the whole screen (it shows
+   only where the banner doesn't cover the screen: the narrow layout) */
 .amb { position: absolute; inset: 0; z-index: -2; background: var(--amb, none) center / cover no-repeat, var(--bg); }
 .amb::after { content: ""; position: absolute; inset: 0; background:
   radial-gradient(66% 78% at 42% 52%, color-mix(in oklab, var(--accent) 30%, transparent), transparent 74%),
   linear-gradient(to bottom, rgba(7, 6, 12, .6) 0%, rgba(7, 6, 12, .3) 34%, rgba(7, 6, 12, .42) 70%, rgba(7, 6, 12, .84) 100%); }
 
-.scene[data-mode="poster"] .amb::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to right, rgba(7, 6, 12, .5), rgba(7, 6, 12, 0) 56%); }
-/* the stage: the space between the header and the bottom edge, left of the rail */
-.stage { grid-column: 2; grid-row: 2; position: relative; min-width: 0; min-height: 0; container-type: size; display: grid; place-items: center; }
-
-/* ── mode: banner ───────────────────────────────────────────────── */
-/* the frame is as wide as the stage allows and as tall as the stage allows (minus the strip),
-   always in the picture's own proportions, so nothing is cut off */
-.tk { --dock-h: max(66px, calc(var(--u) * 5.4)); --fw: min(100cqw, calc((100cqh - var(--dock-h)) * var(--ratio, 1.7778))); position: relative; isolation: isolate; width: var(--fw); container: tk / inline-size; will-change: transform; transform-origin: 50% 46%; }
-.tk-glow { position: absolute; z-index: -1; inset: -7% -4.5%; border-radius: calc(var(--r3) * 2); background: var(--amb, none) center / cover no-repeat; filter: blur(calc(var(--u) * 2.4)) saturate(1.5); opacity: .62; }
-.tk-card { position: relative; border-radius: var(--r3); overflow: hidden; background: #0c0a14; box-shadow: 0 0 0 1px rgba(255, 255, 255, .15), 0 calc(var(--u) * 2.6) calc(var(--u) * 6.4) calc(var(--u) * -1.6) rgba(0, 0, 0, .82), 0 0 calc(var(--u) * 5) calc(var(--u) * -.6) color-mix(in oklab, var(--accent) 30%, transparent); }
-.frame { position: relative; display: block; aspect-ratio: var(--ratio, 1.7778); overflow: hidden; background: #0c0a14; text-decoration: none; cursor: pointer; }
-.frame img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--op, 50% 50%); transition: transform 1.4s var(--ease); }
-.frame:hover img { transform: scale(1.012); }
-.frame::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); pointer-events: none; }
+/* ── the picture ─────────────────────────────────────────────────── */
+.stage { grid-area: main; position: relative; min-width: 0; min-height: 0; }
+.frame { position: relative; display: block; overflow: hidden; background: #0c0a14; text-decoration: none; cursor: pointer; }
+.frame img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--op, 50% 50%); transform-origin: var(--o, 50% 50%); }
 .frame:focus-visible { outline-offset: -3px; }
 
-/* the strip under the banner: what the visitor needs to decide */
-.dock { position: relative; display: flex; align-items: center; gap: calc(var(--u) * 1.5); height: var(--dock-h); padding-inline: calc(var(--u) * 1.7) calc(var(--u) * 1.5); background: linear-gradient(to bottom, rgba(21, 19, 31, .985), rgba(14, 12, 22, .985)); }
+/* ── the facts: a capsule (bar) ──────────────────────────────────── */
+.dock { position: relative; display: flex; align-items: center; gap: calc(var(--u) * 1.5); height: var(--dock-h); padding-inline: calc(var(--u) * 1.7) calc(var(--u) * 1.5); container: dock / inline-size; }
 .dock::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 2px; background: linear-gradient(to left, var(--accent), color-mix(in oklab, var(--accent) 0%, transparent) 62%); }
-.d-cell { min-width: 0; display: grid; gap: .05em; align-content: center; }
+.d-cell { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: .05em; align-content: center; }
 .d-main { flex: 1.45 1 0; }
 .d-venue { flex: 1 1 0; }
 .d-date, .d-price { flex: none; }
 .d-lab { display: block; font-size: max(11px, calc(var(--u) * .66)); line-height: 1.5; color: var(--ink-3); white-space: nowrap; }
 .d-cell b { display: block; font-size: max(13.5px, calc(var(--u) * .94)); font-weight: 800; line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .d-cell small { font-size: .82em; font-weight: 500; color: var(--ink-3); }
-.d-sep { flex: none; align-self: stretch; width: 1px; margin-block: calc(var(--u) * 1.15); background: var(--line); }
+.d-sep { flex: none; align-self: stretch; width: 1px; margin-block: calc(var(--u) * 1.05); background: var(--line); }
 .d-date { display: flex; align-items: center; gap: calc(var(--u) * .75); }
 .d-when { min-width: 0; display: grid; align-content: center; line-height: 1.5; }
 .d-when b { font-size: max(13px, calc(var(--u) * .9)); line-height: 1.5; }
 .d-when span { font-size: max(11.5px, calc(var(--u) * .7)); color: var(--ink-3); white-space: nowrap; }
-.cal { flex: none; display: grid; grid-template-rows: auto 1fr; min-width: calc(var(--u) * 3.4); height: calc(var(--u) * 3.6); border-radius: calc(var(--u) * .5); overflow: hidden; text-align: center; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .13); }
-.cal em { display: block; padding-inline: .55em; font-style: normal; font-size: max(10.5px, calc(var(--u) * .62)); font-weight: 800; line-height: calc(var(--u) * 1.3); background: var(--accent); color: var(--on-accent); transition: background-color .8s, color .8s; }
-.cal b { align-self: center; padding-inline: .5em; font-size: max(15px, calc(var(--u) * 1.4)); font-weight: 800; line-height: 1; letter-spacing: -.02em; overflow: visible; }
+.cal { flex: none; display: grid; grid-template-rows: auto 1fr; min-width: calc(var(--u) * 3.3); height: calc(var(--u) * 3.3); border-radius: calc(var(--u) * .5); overflow: hidden; text-align: center; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .13); }
+.cal em { display: block; padding-inline: .55em; font-style: normal; font-size: max(10.5px, calc(var(--u) * .6)); font-weight: 800; line-height: calc(var(--u) * 1.15); background: var(--accent); color: var(--on-accent); transition: background-color .8s, color .8s; }
+.cal b { align-self: center; padding-inline: .5em; font-size: max(15px, calc(var(--u) * 1.3)); font-weight: 800; line-height: 1; letter-spacing: -.02em; overflow: visible; }
 .price b { font-size: max(14px, calc(var(--u) * 1.05)); }
 .price b small { font-size: .62em; margin-inline-start: .3em; }
 
@@ -133,7 +121,8 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .kick .dot { width: .55em; height: .55em; border-radius: 50%; background: var(--accent); box-shadow: 0 0 .9em var(--accent); }
 .badge { font-style: normal; padding: .02em .7em; border-radius: 999px; font-size: .94em; font-weight: 800; color: var(--accent-l); background: color-mix(in oklab, var(--accent) 20%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--accent) 52%, transparent); }
 .d-name { font-size: max(14px, calc(var(--u) * 1.02)); }
-.kv { display: none; }
+.kick > .dot, .kick > .badge { flex: none; }
+.kv { display: none; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 /* the buy button (as in v7) */
 .buy { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: inline-flex; align-items: center; justify-content: center; height: max(44px, calc(var(--u) * 3.1)); min-width: calc(var(--u) * 9); padding-inline: calc(var(--u) * 2); border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: max(14px, calc(var(--u) * .92)); font-weight: 800; white-space: nowrap; box-shadow: 0 calc(var(--u) * .8) calc(var(--u) * 2.2) calc(var(--u) * -.5) color-mix(in oklab, var(--accent) 78%, transparent); transition: transform .4s var(--ease), filter .3s; }
@@ -141,33 +130,19 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .buy:active { transform: scale(.98); }
 .buy:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 
-/* when the frame is narrow, the strip drops its least useful part */
-@container tk (max-width: 800px) { .d-when span { display: none; } }
-@container tk (max-width: 660px) { .d-venue, .d-sep:nth-of-type(2) { display: none; } }
+/* when the capsule is narrow it drops its least useful parts */
+@container dock (max-width: 800px) { .d-when span { display: none; } }
+@container dock (max-width: 660px) { .d-venue, .d-sep:nth-of-type(2) { display: none; } }
 
-/* ── mode: poster ───────────────────────────────────────────────── */
-.scene[data-mode="poster"] .stage { display: flex; align-items: center; justify-content: center; gap: calc(var(--u) * 5.5); }
-.pfig { --ph: min(100cqh, calc(var(--u) * 35 / var(--ratio, .6667))); position: relative; flex: none; height: var(--ph); aspect-ratio: var(--ratio, .6667); isolation: isolate; will-change: transform; transform-origin: 50% 50%; }
-.pfig .tk-glow { inset: -5% -9%; }
-.pfig-card { position: relative; display: block; height: 100%; border-radius: var(--r3); overflow: hidden; background: #0c0a14; cursor: pointer; text-decoration: none; box-shadow: 0 0 0 1px rgba(255, 255, 255, .15), 0 calc(var(--u) * 2.6) calc(var(--u) * 6.4) calc(var(--u) * -1.6) rgba(0, 0, 0, .82), 0 0 calc(var(--u) * 5) calc(var(--u) * -.6) color-mix(in oklab, var(--accent) 30%, transparent); }
-.pfig-card img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--op, 50% 50%); transition: transform 1.4s var(--ease); }
-.pfig-card:hover img { transform: scale(1.012); }
-.pfig-card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); pointer-events: none; }
-.scene[data-mode="poster"] .copy { flex: 0 1 calc(var(--u) * 37); min-width: 0; }
-.scene[data-mode="poster"] .title { font-size: max(26px, calc(var(--u) * 2.45)); }
-
-/* ── mode: photo (as in v7) ─────────────────────────────────────── */
-.scene[data-mode="photo"] { grid-template-columns: var(--rail-w) minmax(0, 1fr) minmax(0, calc(var(--u) * 36)); }
+/* ── layout text (a photo; as in v7) ─────────────────────────────── */
+.scene[data-mode="text"] { grid-template-columns: var(--rail-w) minmax(0, 1fr) minmax(0, calc(var(--u) * 36)); grid-template-areas: "nav nav nav" "rail . copy"; }
 .photo { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
 .photo img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--op, 50% 50%); transform-origin: var(--o, 50% 50%); will-change: transform; }
 .shade { position: absolute; inset: 0; z-index: -1; pointer-events: none; background:
   linear-gradient(to right, rgba(7, 6, 14, .8) 0%, rgba(7, 6, 14, .62) 26%, rgba(7, 6, 14, .22) 50%, rgba(7, 6, 14, 0) 64%),
   linear-gradient(to bottom, rgba(7, 6, 14, .5) 0%, rgba(7, 6, 14, 0) 18%),
   linear-gradient(to top, rgba(7, 6, 14, .45) 0%, rgba(7, 6, 14, 0) 22%); }
-.scene[data-mode="photo"] .copy { grid-column: 3; grid-row: 2; margin-top: calc(var(--u) * .4); }
-
-/* ── the words (photo and poster) ───────────────────────────────── */
-.copy { position: relative; z-index: 3; align-self: center; display: grid; justify-items: start; }
+.copy { grid-area: copy; position: relative; z-index: 3; align-self: center; display: grid; justify-items: start; margin-top: calc(var(--u) * .4); }
 .copy > * { will-change: transform, opacity; }
 .copy .kick { margin-bottom: calc(var(--u) * .7); font-size: max(12.5px, calc(var(--u) * .78)); }
 .title { margin: 0; font-size: max(22px, calc(var(--u) * 1.95)); font-weight: 800; line-height: 1.6; color: #fff; text-wrap: balance; text-shadow: 0 2px 18px rgba(0, 0, 0, .35); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
@@ -178,7 +153,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .buyrow .price b { font-size: max(15px, calc(var(--u) * 1.2)); font-weight: 800; }
 
 /* ── the header: a floating capsule with softly rounded corners ── */
-.nav { grid-column: 1 / -1; grid-row: 1; position: relative; z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * 2.2); height: var(--nav-h); padding-inline: calc(var(--u) * 1.3) calc(var(--u) * .6); border-radius: var(--r2); background: rgba(16, 14, 26, .66); border: 1px solid var(--line); box-shadow: 0 14px 40px -20px rgba(0, 0, 0, .8); }
+.nav { grid-area: nav; position: relative; z-index: 6; display: flex; align-items: center; gap: calc(var(--u) * 2.2); height: var(--nav-h); padding-inline: calc(var(--u) * 1.3) calc(var(--u) * .6); border-radius: var(--r2); background: var(--capsule); border: 1px solid var(--line-2); box-shadow: 0 14px 40px -20px rgba(0, 0, 0, .8); }
 .brand { display: inline-flex; align-items: center; gap: calc(var(--u) * .55); text-decoration: none; font-weight: 800; font-size: max(17px, calc(var(--u) * 1.25)); line-height: 1; color: #fff; }
 .bars { display: flex; align-items: center; gap: max(2px, calc(var(--u) * .16)); height: max(17px, calc(var(--u) * 1.3)); direction: ltr; }
 .bars i { width: max(2.5px, calc(var(--u) * .19)); height: 100%; border-radius: 9px; background: var(--accent); transform: scaleY(var(--s)); will-change: transform; transition: background-color .8s; }
@@ -247,7 +222,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .add-song:focus-within { outline: 2px solid #fff; outline-offset: 2px; }
 
 /* ── the rail, on the right ─────────────────────────────────────── */
-.rail { grid-column: 1; grid-row: 2; position: relative; z-index: 4; align-self: center; width: var(--rail-w); max-height: 100%; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--u) * .75); }
+.rail { grid-area: rail; position: relative; z-index: 4; align-self: center; width: var(--rail-w); max-height: 100%; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--u) * .75); }
 .c-arrow { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: grid; place-items: center; height: max(30px, calc(var(--u) * 1.85)); border-radius: 999px; background: rgba(255, 255, 255, .09); color: #fff; transition: background .3s; }
 .c-arrow:hover { background: rgba(255, 255, 255, .18); }
 .c-arrow:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
@@ -260,12 +235,10 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 #autoBtn[aria-pressed="true"] .i-play { display: block; }
 .c-list { flex: 0 1 auto; min-height: 0; display: flex; flex-direction: column; gap: calc(var(--u) * .75); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 3px; margin: -3px; }
 .c-list::-webkit-scrollbar { display: none; }
-.card { all: unset; box-sizing: border-box; position: relative; flex: none; display: block; aspect-ratio: 16 / 9; border-radius: max(10px, calc(var(--u) * .6)); overflow: hidden; isolation: isolate; cursor: pointer; background: var(--amb, #14121d) center / cover no-repeat; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16); transition: box-shadow .6s, opacity .6s; -webkit-tap-highlight-color: transparent; }
+.card { all: unset; box-sizing: border-box; position: relative; flex: none; display: block; aspect-ratio: 16 / 9; border-radius: max(10px, calc(var(--u) * .6)); overflow: hidden; isolation: isolate; cursor: pointer; background: #14121d; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16); transition: box-shadow .6s, opacity .6s; -webkit-tap-highlight-color: transparent; }
 .card img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
-.card[data-fit="contain"] img { object-fit: contain; }
 .card:hover img { transform: scale(1.05); }
 .card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(7, 6, 14, .72), rgba(7, 6, 14, 0) 55%); }
-.card[data-fit="contain"]::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(7, 6, 14, .42); }
 .card-name { position: absolute; z-index: 1; inset-inline: calc(var(--u) * .7); bottom: calc(var(--u) * .5); font-size: max(11.5px, calc(var(--u) * .78)); font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .card.is-active { box-shadow: 0 0 0 2px var(--accent), 0 calc(var(--u) * .6) calc(var(--u) * 1.8) calc(var(--u) * -.4) color-mix(in oklab, var(--accent) 70%, transparent); }
@@ -273,10 +246,54 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .c-bar { position: absolute; z-index: 2; inset-inline: 0; bottom: 0; height: 3px; background: rgba(255, 255, 255, .2); pointer-events: none; }
 .c-bar i { position: absolute; inset: 0; background: var(--accent); transform-origin: right center; transform: scaleX(0); }
 
+/* ── the safe-area guide (a demo aid: where the interface sits over the banner) ── */
+.guides { position: absolute; inset: 0; z-index: 7; pointer-events: none; display: none; }
+.hero.show-guides .guides { display: grid; }
+.guides i { display: grid; place-items: center; font-style: normal; font-size: max(11px, calc(var(--u) * .66)); font-weight: 700; color: #fff; text-shadow: 0 1px 6px #000; border: 1.5px dashed rgba(255, 105, 150, .95); border-radius: var(--r2); background: repeating-linear-gradient(135deg, rgba(255, 70, 120, .24) 0 7px, rgba(255, 70, 120, .07) 7px 14px); }
+.g-nav { grid-area: nav; }
+.g-rail { grid-area: rail; }
+.g-dock { grid-area: main; align-self: end; height: var(--dock-h); }
+.hero[data-layout="text"] .g-dock { display: none; }
+
+/* ═══ the banner covers the screen (a wide screen) ═══════════════════ */
+@media (min-width: 761px) and (min-aspect-ratio: 1.34) {
+  .scene[data-mode="bar"] :is(.stage, .tk, .tk-card) { display: contents; }
+  .scene[data-mode="bar"] .tk-glow { display: none; }
+  .scene[data-mode="bar"] .frame { position: absolute; inset: 0; z-index: -1; }
+  .scene[data-mode="bar"] .frame img { will-change: transform; }
+  .scene[data-mode="bar"] .dock { grid-area: main; align-self: end; z-index: 3; border-radius: var(--r2); overflow: hidden; background: var(--capsule); border: 1px solid var(--line-2); box-shadow: 0 14px 40px -18px rgba(0, 0, 0, .85); }
+  /* the rail on the left (an option; the owner's reference has it on the right) */
+  .hero.rail-left, .hero.rail-left .scene, .hero.rail-left .guides { grid-template-columns: minmax(0, 1fr) var(--rail-w); grid-template-areas: "nav nav" "main rail"; }
+  .hero.rail-left { --pad-r: max(calc(var(--u) * 4.2), env(safe-area-inset-right, 0px)); --pad-l: max(calc(var(--u) * 2.6), env(safe-area-inset-left, 0px)); }
+  .hero.rail-left .scene[data-mode="text"] { grid-template-columns: minmax(0, calc(var(--u) * 36)) minmax(0, 1fr) var(--rail-w); grid-template-areas: "nav nav nav" "copy . rail"; }
+  /* the words are on the right then, so the dark side of the picture is the right one */
+  .hero.rail-left .scene[data-mode="text"] .shade { background:
+    linear-gradient(to left, rgba(7, 6, 14, .8) 0%, rgba(7, 6, 14, .62) 26%, rgba(7, 6, 14, .22) 50%, rgba(7, 6, 14, 0) 64%),
+    linear-gradient(to bottom, rgba(7, 6, 14, .5) 0%, rgba(7, 6, 14, 0) 18%),
+    linear-gradient(to top, rgba(7, 6, 14, .45) 0%, rgba(7, 6, 14, 0) 22%); }
+}
+
+/* ═══ a narrow or tall screen: the banner whole, in a frame, on its own ambient ═══ */
+@media (max-width: 760px), (max-aspect-ratio: 1.339) {
+  .scene { --dock-h: max(66px, calc(var(--u) * 5.4)); }
+  .stage { container-type: size; display: grid; place-items: center; }
+  /* the frame is as wide as the stage allows and as tall as the stage allows (minus the capsule),
+     always in the picture's own proportions, so nothing is cut off */
+  .tk { --fw: min(100cqw, calc((100cqh - var(--dock-h)) * var(--ratio, 1.7778))); position: relative; isolation: isolate; width: var(--fw); will-change: transform; transform-origin: 50% 46%; }
+  .tk-glow { position: absolute; z-index: -1; inset: -7% -4.5%; border-radius: calc(var(--r3) * 2); background: var(--amb, none) center / cover no-repeat; filter: blur(calc(var(--u) * 2.4)) saturate(1.5); opacity: .62; }
+  .tk-card { position: relative; border-radius: var(--r3); overflow: hidden; background: #0c0a14; box-shadow: 0 0 0 1px rgba(255, 255, 255, .15), 0 calc(var(--u) * 2.6) calc(var(--u) * 6.4) calc(var(--u) * -1.6) rgba(0, 0, 0, .82), 0 0 calc(var(--u) * 5) calc(var(--u) * -.6) color-mix(in oklab, var(--accent) 30%, transparent); }
+  .frame { aspect-ratio: var(--ratio, 1.7778); }
+  .frame img { transition: transform 1.4s var(--ease); }
+  .frame:hover img { transform: scale(1.012); }
+  .frame::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); pointer-events: none; }
+  .dock { background: linear-gradient(to bottom, rgba(21, 19, 31, .985), rgba(14, 12, 22, .985)); }
+  .guides { display: none !important; }
+}
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
-  .scene[data-mode="photo"] { grid-template-columns: var(--rail-w) minmax(0, 1fr) minmax(0, calc(var(--u) * 42)); }
+  .scene[data-mode="text"] { grid-template-columns: var(--rail-w) minmax(0, 1fr) minmax(0, calc(var(--u) * 42)); }
 }
 /* ── phones: the picture on top, the facts under it, the shows in a row ── */
 @media (max-width: 760px) {
@@ -284,31 +301,27 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
     --pad-t: max(10px, env(safe-area-inset-top, 0px)); --pad-r: 12px; --pad-l: 12px; --pad-b: max(16px, env(safe-area-inset-bottom, 0px));
     --gap-x: 0px; --gap-y: 14px; --rail-h: 54px; --r3: 14px;
   }
-  .hero, .scene { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--nav-h) minmax(0, 1fr) var(--rail-h); }
+  .hero, .scene, .guides, .scene[data-mode="text"] { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--nav-h) minmax(0, 1fr) var(--rail-h); grid-template-areas: "nav" "main" "rail"; }
+  .scene[data-mode="text"] { grid-template-areas: "nav" "copy" "rail"; }
   .hero { min-height: 640px; }
-  .scene[data-mode="photo"] { grid-template-columns: minmax(0, 1fr); }
-  .stage { grid-column: 1; }
   .nav { gap: 10px; padding-inline: 14px 6px; }
   .mu-meta, .mu-eq, .login { display: none; }
   .menu-btn { display: grid; }
-  .rail { grid-column: 1; grid-row: 3; width: auto; align-self: stretch; flex-direction: row; align-items: center; gap: 8px; }
+  .rail { align-self: stretch; width: auto; flex-direction: row; align-items: center; gap: 8px; }
   .c-arrow:not(.c-pause), .c-foot .c-arrow:first-child { display: none; }
   .c-list { flex: 1; flex-direction: row; gap: 8px; overflow: visible; height: 100%; }
   .card { flex: 1 1 0; min-width: 0; height: 100%; aspect-ratio: auto; border-radius: 10px; }
   .card-name, .card::after { display: none; }
   .c-pause { width: 34px; height: 34px; }
-  .tk { --dock-h: auto; --fw: min(100cqw, calc((100cqh - 150px) * var(--ratio, 1.7778))); }
+  .scene { --dock-h: auto; }
+  .tk { --fw: min(100cqw, calc((100cqh - 150px) * var(--ratio, 1.7778))); }
   .dock { height: auto; flex-wrap: wrap; gap: 10px 12px; padding: 14px 14px 14px; }
   .d-main { flex: 1 1 100%; }
   .d-sep, .d-venue { display: none; }
   .kv { display: inline; }
   .d-date { flex: 1 1 auto; }
-  .tk .buy { margin-inline-start: auto; }
-  .scene[data-mode="poster"] .stage { flex-direction: column; justify-content: center; gap: 14px; }
-  .pfig { --ph: min(calc(100cqh - 230px), calc(100cqw * .72 / var(--ratio, .6667))); }
-  .scene[data-mode="poster"] .copy { flex: none; width: 100%; justify-items: center; text-align: center; }
-  .scene[data-mode="poster"] .title { font-size: 20px; }
-  .scene[data-mode="photo"] .copy { grid-column: 1; grid-row: 2; align-self: end; margin: 0; padding-inline: 4px; }
+  .dock .buy { margin-inline-start: auto; }
+  .scene[data-mode="text"] .copy { align-self: end; padding-inline: 4px; }
   .shade { background:
     linear-gradient(to top, rgba(7, 6, 14, .95) 0%, rgba(7, 6, 14, .72) 34%, rgba(7, 6, 14, .15) 58%, rgba(7, 6, 14, 0) 70%),
     linear-gradient(to bottom, rgba(7, 6, 14, .5) 0%, rgba(7, 6, 14, 0) 16%); }
@@ -319,8 +332,12 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   .buyrow { margin-top: 14px; }
   .buy { height: 44px; min-width: 120px; }
 }
+@media (max-width: 400px) {
+  .d-when span { display: none; }
+  .buy { min-width: 104px; padding-inline: 14px; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .card img, .buy, .login, .frame img, .pfig-card img { transition: none; }
+  .card img, .buy, .login, .frame img { transition: none; }
 }
 
 /* ── prototype panel and toast (not part of the site) ──────────── */
@@ -337,6 +354,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .pp-group small { color: var(--ink-3); font-size: 11.5px; margin-inline-start: .4em; }
 fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 .tpl { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.tpl.tpl-2 { grid-template-columns: repeat(2, 1fr); }
 .tpl button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; justify-items: center; align-content: start; gap: 4px; padding: 10px 6px 9px; border-radius: 12px; border: 1px solid var(--line-2); text-align: center; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); transition: background .3s, color .3s, border-color .3s; }
 .tpl button:hover { border-color: var(--ink-3); color: #fff; }
 .tpl button[aria-pressed="true"] { background: rgba(255, 255, 255, .09); border-color: #fff; color: #fff; }
@@ -403,6 +421,11 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 .spec td { color: var(--ink-2); line-height: 1.8; }
 .spec thead th { color: var(--ink-3); font-size: 12.5px; }
 .tablewrap { overflow-x: auto; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .08); background: rgba(255, 255, 255, .025); }
+.cols.safe { grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); align-items: start; margin-top: 14px; }
+.wf-safe { margin-bottom: 0; }
+.wf i.z { background: repeating-linear-gradient(135deg, rgba(255, 70, 120, .3) 0 6px, rgba(255, 70, 120, .1) 6px 12px); border: 1px dashed rgba(255, 105, 150, .95); border-radius: 0; display: grid; place-items: center; }
+.wf i.ok { background: rgba(80, 220, 150, .1); border: 1px dashed rgba(100, 240, 170, .9); border-radius: 0; display: grid; place-items: center; }
+.wf i span { font-style: normal; font-size: 11px; line-height: 1.3; color: #fff; text-shadow: 0 1px 4px #000; text-align: center; padding: 2px 6px; }
 </style>
 </head>
 <body>
@@ -420,7 +443,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 </svg>
 
 <div class="app">
-  <section class="hero" id="hero" aria-roledescription="carousel" aria-label="جایگاه ویژه · اجراهای ویژه">
+  <section class="hero rail-left" id="hero" aria-roledescription="carousel" aria-label="جایگاه ویژه · اجراهای ویژه">
     <header class="nav">
       <a class="brand" href="#hero" aria-label="بلیت، صفحه‌ی اصلی"><span class="bars" aria-hidden="true"><i style="--s:.38"></i><i style="--s:.72"></i><i style="--s:1"></i><i style="--s:.6"></i><i style="--s:.34"></i></span>بلیت</a>
       <nav class="links" aria-label="دسته‌ها">
@@ -454,40 +477,28 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
         <button type="button" class="c-arrow c-pause" id="autoBtn" aria-pressed="false" aria-label="توقف نمایش خودکار"><svg class="i i-pause"><use href="#i-pause"/></svg><svg class="i i-play"><use href="#i-play"/></svg></button>
       </div>
     </div>
+    <div class="guides" aria-hidden="true"><i class="g-nav">هدر</i><i class="g-rail">کارت‌ها</i><i class="g-dock">اطلاعات</i></div>
     <p class="sr" id="live" role="status" aria-live="polite"></p>
   </section>
 
   <section class="notes" aria-labelledby="notes-h">
     <div>
       <h2 id="notes-h">یادداشت‌های طراحی · نسخه‌ی ۸، جایگاه ویژه</h2>
-      <p class="lead">این بخش جزو سایت نیست. هر برگزارکننده یه بنر یا پوستر می‌ده و شکل و اندازه‌ش تو دست ما نیست. برای همین این نسخه هیچ‌چیز روی بنر نمی‌کشه و هیچ‌جاش رو نمی‌بره: بنر یا پوستر کامل و تو قاب خودش نشون داده می‌شه و اطلاعات (تاریخ، مکان، قیمت، دکمه) کنارش یا زیرش میاد. مدیریت فقط یکی از سه قالب زیر رو انتخاب می‌کنه. دکمه‌ی پایین‌چپ همین صفحه (پنل مدیریت نمونه) این رو زنده نشون می‌ده: قالب رو عوض کن، عکس خودت رو بنداز، رنگ رو عوض کن.</p>
+      <p class="lead">این بخش جزو سایت نیست. بنر ۱۶:۹ که برگزارکننده می‌ده پس‌زمینه‌ی کل هیرو می‌شه، مثل عکس تمام‌صفحه‌ی نسخه‌ی ۷. بنر واقعی متن خودش رو داره، پس تیتر درشتی روش نمی‌نویسیم؛ فقط هدر، ستون کارت‌ها و یه کپسول کوچیک با اطلاعات و دکمه‌ی خرید روش می‌شینه. پوستر عمودی اینجا جا نداره، جاش قفسه‌ی پوستره. دکمه‌ی پایین‌چپ همین صفحه (پنل مدیریت نمونه) رو بزن: عکس خودت رو بنداز، رنگ و نوشته‌ها رو عوض کن، جای ستون کارت‌ها رو عوض کن و «ناحیه‌ی امن» رو روشن کن تا ببینی رابط کجای بنر می‌شینه.</p>
     </div>
 
-    <div class="cols" aria-label="سه قالب">
+    <div class="cols" aria-label="چیدمان‌ها">
       <article style="--accent:#d9a441">
         <div class="wf" aria-hidden="true">
-          <i class="m" style="inset:0"></i>
-          <i class="g" style="left:15%;top:9%;width:70%;height:61%;border-radius:7px"></i>
-          <i class="r" style="left:15%;top:70%;width:70%;height:14%;border-radius:0 0 7px 7px"></i>
-          <i class="a" style="left:15%;top:70%;width:70%;height:2%;border-radius:0"></i>
-          <i class="a" style="left:22%;top:74%;width:13%;height:6%;border-radius:99px"></i>
+          <i class="g" style="inset:0;border-radius:0"></i>
+          <i class="r" style="left:3%;top:3%;width:94%;height:8%;border-radius:5px;background:rgba(255,255,255,.2)"></i>
+          <i class="r" style="left:81%;top:17%;width:16%;height:70%;border-radius:5px;background:rgba(255,255,255,.2)"></i>
+          <i class="r" style="left:4%;top:84%;width:73%;height:11%;border-radius:6px;background:rgba(10,8,18,.78)"></i>
+          <i class="a" style="left:6%;top:87%;width:11%;height:5%;border-radius:99px"></i>
         </div>
-        <h3>۱ · بنر کامل</h3>
-        <p>برای بنری که طراحش همه‌چیز (عنوان، تاریخ، سالن) رو توش گذاشته. بنر با همون نسبت خودش و بدون برش تو قاب می‌شینه، پشتش همون بنر خیلی محو شده پخش می‌شه و صفحه رنگ بنر رو می‌گیره. اطلاعات تو نوار زیر قاب میاد، نه روی بنر.</p>
-        <p class="when"><b>کی؟</b> بیشتر وقت‌ها. این قالب پیش‌فرضه.</p>
-      </article>
-      <article style="--accent:#f97316">
-        <div class="wf" aria-hidden="true">
-          <i class="m" style="inset:0"></i>
-          <i class="g" style="left:56%;top:8%;width:25%;height:84%;border-radius:6px"></i>
-          <i class="r" style="left:12%;top:26%;width:34%;height:7%"></i>
-          <i class="r" style="left:12%;top:38%;width:26%;height:4%"></i>
-          <i class="r" style="left:12%;top:47%;width:30%;height:4%"></i>
-          <i class="a" style="left:12%;top:62%;width:16%;height:9%;border-radius:99px"></i>
-        </div>
-        <h3>۲ · پوستر</h3>
-        <p>برای پوستر عمودی. پوستر کامل و بزرگ کنار نوشته‌ها می‌شینه (نه وسط یه صحنه‌ی خالی). پشتش همون پوستر محو شده.</p>
-        <p class="when"><b>کی؟</b> وقتی برگزارکننده فقط پوستر داره.</p>
+        <h3>۱ · بنر و کپسول اطلاعات</h3>
+        <p>برای بنری که طراحش متن (عنوان، تاریخ، سالن) رو توش گذاشته. بنر کل صفحه رو می‌پوشونه و اطلاعات تو یه کپسول کوچیک پایین میاد: دسته، عنوان، کارت تاریخ، مکان، قیمت و دکمه‌ی خرید.</p>
+        <p class="when"><b>کی؟</b> بیشتر وقت‌ها. پیش‌فرضه.</p>
       </article>
       <article style="--accent:#3b82f6">
         <div class="wf" aria-hidden="true">
@@ -499,24 +510,47 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
           <i class="r" style="left:84%;top:10%;width:12%;height:20%"></i>
           <i class="r" style="left:84%;top:34%;width:12%;height:20%"></i>
         </div>
-        <h3>۳ · عکس و متن</h3>
+        <h3>۲ · عکس و متن</h3>
         <p>برای عکس بدون نوشته. عکس کل صفحه رو می‌گیره، آروم زوم‌اوت می‌شه و روی بعدی محو می‌شه (مثل نسخه‌ی ۷). عنوان و توضیح رو خود سایت روش می‌نویسه.</p>
-        <p class="when"><b>کی؟</b> عکس خوب و بدون نوشته، سوژه سمت راست یا وسط.</p>
+        <p class="when"><b>کی؟</b> عکس خوب و بدون نوشته، سوژه وسط یا راست.</p>
+      </article>
+      <article style="--accent:#e11d48">
+        <div class="wf" aria-hidden="true">
+          <i class="m" style="inset:0"></i>
+          <i class="g" style="left:34%;top:6%;width:32%;height:44%;border-radius:5px"></i>
+          <i class="r" style="left:34%;top:50%;width:32%;height:12%;border-radius:0 0 5px 5px"></i>
+          <i class="a" style="left:34%;top:50%;width:32%;height:2%;border-radius:0"></i>
+          <i class="r" style="left:8%;top:80%;width:84%;height:14%"></i>
+        </div>
+        <h3>۳ · موبایل و صفحه‌ی باریک</h3>
+        <p>اینجا یه بنر ۱۶:۹ کل صفحه رو که پر کنه فقط یه تکه‌ی باریکش دیده می‌شه. پس بنر کامل تو قاب می‌شینه، پشتش همون بنر محو شده، اطلاعات زیرش و کارت‌ها تو یه ردیف.</p>
+        <p class="when"><b>کی؟</b> عرض زیر ۷۶۱ پیکسل، یا صفحه‌ای که از ۴:۳ باریک‌تره.</p>
       </article>
     </div>
 
     <div>
-      <h3>چی از برگزارکننده بخوایم</h3>
-      <div class="tablewrap">
-        <table class="spec">
-          <thead><tr><th></th><th>بنر</th><th>پوستر</th><th>عکس</th></tr></thead>
-          <tbody>
-            <tr><th>نسبت و اندازه</th><td>۱۶:۹، دست‌کم ۱۶۰۰×۹۰۰ (بهتر: ۱۹۲۰×۱۰۸۰)</td><td>۲:۳ یا ۴:۵، دست‌کم ۸۰۰×۱۲۰۰</td><td>۱۶:۹، دست‌کم ۱۹۲۰×۱۰۸۰ (بهتر: ۲۵۶۰)</td></tr>
-            <tr><th>نوشته تو تصویر</th><td>آره. فقط ۴٪ از هر لبه خالی بمونه (تا تو قاب و با زوم کم نبُرِد)</td><td>آره، همین‌طور</td><td>نه. نوشته رو سایت می‌ذاره</td></tr>
-            <tr><th>سوژه کجا باشه</th><td>هرجا. چیزی روی بنر نمی‌افته</td><td>هرجا</td><td>وسط یا راست. ۴۰٪ چپ زیر نوشته‌ست</td></tr>
-            <tr><th>فایل</th><td colspan="3">JPEG، PNG یا WebP؛ تا ۱۰ مگابایت. سرور خودش WebP می‌سازه و چند اندازه (۶۴۰، ۱۰۲۴، ۱۶۷۲ یا ۲۵۶۰) و تصویر محو و کوچیک پس‌زمینه و رنگ پیشنهادی رو ذخیره می‌کنه</td></tr>
-          </tbody>
-        </table>
+      <h3>ناحیه‌ی امن: متن مهم بنر کجا باشه</h3>
+      <p>هدر، ستون کارت‌ها و کپسول اطلاعات روی بنر می‌شینن و جاهایی از بنر رو می‌پوشونن. اگه متن مهم بنر تو این جاها بیفته، دیده نمی‌شه. پیش‌فرض کارت‌ها سمت چپ‌ان، چون متن بنرهای فارسی معمولاً سمت راسته. این درصدها برای صفحه‌ی ۱۹۲۰×۱۰۸۰ـه و تو اندازه‌های دیگه هم با همین نسبت‌ان.</p>
+      <div class="cols safe">
+        <div class="wf wf-safe" aria-hidden="true">
+          <i class="g" style="inset:0;border-radius:0"></i>
+          <i class="z" style="left:0;top:0;width:100%;height:9%"><span>بالا ۹٪: هدر</span></i>
+          <i class="z" style="left:0;top:16%;width:19%;height:76%"><span>چپ ۱۹٪: کارت‌ها</span></i>
+          <i class="z" style="left:21%;top:89%;width:75%;height:9%"><span>پایین ۱۱٪: کپسول</span></i>
+          <i class="ok" style="left:21%;top:11%;width:75%;height:76%"><span>اینجا متن مهم بنر بمونه</span></i>
+        </div>
+        <div class="tablewrap">
+          <table class="spec">
+            <tbody>
+              <tr><th>اندازه و نسبت</th><td>۱۶:۹، دست‌کم ۱۶۰۰×۹۰۰ (بهتر ۱۹۲۰×۱۰۸۰ یا بیشتر)</td></tr>
+              <tr><th>متن مهم بنر</th><td>کارت‌ها چپ (پیش‌فرض): از ۲۱٪ تا ۹۶٪ عرض. کارت‌ها راست: از ۴٪ تا ۷۹٪ عرض. در هر دو حالت از ۱۱٪ تا ۸۷٪ ارتفاع</td></tr>
+              <tr><th>صفحه‌ی غیر ۱۶:۹</th><td>بنر کل صفحه رو می‌پوشونه، پس روی صفحه‌ی پهن‌تر (مثلاً ۱۹۲۰×۹۴۰) حدود ۱۳٪ از ارتفاع (بالا و پایین) و روی صفحه‌ی باریک‌تر (مثلاً ۱۶:۱۰) حدود ۱۰٪ از عرض (دو طرف) بریده می‌شه. اول هر اجرا هم عکس چند درصد زوم‌شده‌ست (بنر ۶٪، عکس ۱۵٪) و آروم زوم‌اوت می‌شه</td></tr>
+              <tr><th>بنری که ۱۶:۹ نیست</th><td>می‌شه بذاری، ولی پنل مدیریت می‌گه چند درصدش بریده می‌شه (مثلاً ۳:۱ حدود ۴۱٪ از دو طرف)</td></tr>
+              <tr><th>پوستر عمودی</th><td>قبول نمی‌شه (پنل مدیریت رد می‌کنه). جای پوستر قفسه‌ی پوستره، نه این بخش</td></tr>
+              <tr><th>فایل</th><td>JPEG، PNG یا WebP تا ۱۰ مگابایت. سرور WebP و چند اندازه (۶۴۰، ۱۰۲۴، ۱۶۷۲ یا ۱۹۲۰) و تصویر محو و کوچیک (برای موبایل) و رنگ پیشنهادی رو می‌سازه</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </section>
@@ -525,22 +559,21 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
   <div class="proto-panel" id="protoPanel" role="dialog" aria-label="پنل مدیریت · نمونه" hidden>
     <div class="pp-head"><div><b>پنل مدیریت · نمونه</b><span>جایگاه ویژه · <bdi id="ppWho"></bdi></span></div><button type="button" class="ghost" id="protoClose" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button></div>
 
-    <fieldset class="pp-group">
-      <legend>قالب این جایگاه</legend>
-      <div class="tpl" id="ppTpl">
-        <button type="button" data-v="banner" aria-pressed="true"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="6" y="3" width="44" height="22" rx="3"/><rect class="f" x="6" y="27" width="44" height="6" rx="2"/></svg><b>بنر کامل</b><em>نوشته تو خود بنر</em></button>
-        <button type="button" data-v="poster" aria-pressed="false"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="31" y="3" width="18" height="30" rx="3"/><path d="M7 12h15M7 18h11M7 24h13"/></svg><b>پوستر</b><em>عمودی</em></button>
-        <button type="button" data-v="photo" aria-pressed="false"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="3" y="3" width="50" height="30" rx="3"/><rect class="f" x="3" y="3" width="22" height="30" rx="3"/><path d="M8 14h12M8 20h9"/></svg><b>عکس و متن</b><em>بدون نوشته</em></button>
-      </div>
-    </fieldset>
-
     <div class="pp-group">
       <span>تصویر</span>
-      <label class="drop" id="drop"><input type="file" id="ppFile" accept="image/*"><svg class="i"><use href="#i-upload"/></svg>بنر یا پوستر خودت رو اینجا بنداز</label>
-      <label class="chk"><input type="checkbox" id="ppText" checked> روی تصویر نوشته (عنوان، تاریخ…) هست</label>
+      <label class="drop" id="drop"><input type="file" id="ppFile" accept="image/*"><svg class="i"><use href="#i-upload"/></svg>بنر ۱۶:۹ خودت رو اینجا بنداز</label>
+      <label class="chk"><input type="checkbox" id="ppText" checked> روی بنر نوشته (عنوان، تاریخ…) هست</label>
       <div class="pp-note" id="ppNote" role="status" aria-live="polite"></div>
       <div class="pp-row"><button type="button" class="pill" id="ppPhoto">عکس نمونه، بدون نوشته</button><button type="button" class="pill" id="ppReset">بازگردانی این جایگاه</button></div>
     </div>
+
+    <fieldset class="pp-group">
+      <legend>اطلاعات روی بنر</legend>
+      <div class="tpl tpl-2" id="ppLay">
+        <button type="button" data-v="bar" aria-pressed="true"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="3" y="3" width="50" height="30" rx="3"/><rect class="f" x="10" y="24" width="34" height="6" rx="2"/></svg><b>کپسول پایین</b><em>بنر نوشته داره</em></button>
+        <button type="button" data-v="text" aria-pressed="false"><svg viewBox="0 0 56 36" aria-hidden="true"><rect x="3" y="3" width="50" height="30" rx="3"/><rect class="f" x="3" y="3" width="22" height="30" rx="3"/><path d="M8 14h12M8 20h9"/></svg><b>متن سمت چپ</b><em>عکس بدون نوشته</em></button>
+      </div>
+    </fieldset>
 
     <div class="pp-group">
       <span>رنگ <small id="ppSug"></small></span>
@@ -557,12 +590,18 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
       </div>
     </div>
 
+    <div class="pp-group">
+      <span>صفحه</span>
+      <div class="seg" data-ctrl="rail" role="group" aria-label="جای ستون کارت‌ها"><button type="button" data-v="left" aria-pressed="true">کارت‌ها چپ</button><button type="button" data-v="right" aria-pressed="false">کارت‌ها راست (مثل نمونه‌ی ۷)</button></div>
+      <label class="chk"><input type="checkbox" id="ppGuides"> ناحیه‌ی امن رو نشون بده (جاهایی که رابط روی بنر می‌شینه)</label>
+    </div>
+
     <details class="pp-more">
       <summary>حرکت و موزیک</summary>
-      <div class="pp-group"><span>زوم اول عکس (قالب عکس)</span><div class="seg" data-ctrl="zoom"><button type="button" data-v="1.08" aria-pressed="false">کم</button><button type="button" data-v="1.15" aria-pressed="true">متوسط</button><button type="button" data-v="1.24" aria-pressed="false">زیاد</button></div></div>
+      <div class="pp-group"><span>زوم اول تصویر</span><div class="seg" data-ctrl="zoom"><button type="button" data-v="low" aria-pressed="false">کم</button><button type="button" data-v="mid" aria-pressed="true">متوسط</button><button type="button" data-v="high" aria-pressed="false">زیاد</button></div></div>
       <div class="pp-group"><span>زمان هر اجرا</span><div class="seg" data-ctrl="dur"><button type="button" data-v="5" aria-pressed="false">۵ ثانیه</button><button type="button" data-v="7" aria-pressed="true">۷ ثانیه</button><button type="button" data-v="10" aria-pressed="false">۱۰ ثانیه</button></div></div>
       <div class="pp-group"><span>محو شدن روی بعدی</span><div class="seg" data-ctrl="fade"><button type="button" data-v="0.8" aria-pressed="false">تند</button><button type="button" data-v="1.2" aria-pressed="true">معمولی</button><button type="button" data-v="1.8" aria-pressed="false">آروم</button></div></div>
-      <div class="pp-group"><span>واکنش به موزیک</span><div class="seg" data-ctrl="react"><button type="button" data-v="pulse" aria-pressed="true">تپش آروم قاب</button><button type="button" data-v="calm" aria-pressed="false">فقط میله‌ها</button></div></div>
+      <div class="pp-group"><span>واکنش به موزیک</span><div class="seg" data-ctrl="react"><button type="button" data-v="pulse" aria-pressed="true">تپش آروم تصویر</button><button type="button" data-v="calm" aria-pressed="false">فقط میله‌ها</button></div></div>
     </details>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -589,9 +628,15 @@ const hero = $('#hero');
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (typeof window.gsap === 'undefined') { root.classList.remove('is-intro'); return; }
 
-// zoom: how far a photo starts; settle: how far a banner or poster starts (it never crops, the whole
-// frame just settles); dur: seconds per show; fade: seconds of the fade into the next
-const state = { i: 0, zoom: 1.15, settle: 1.04, dur: 7, fade: 1.2, react: 'pulse', userPaused: false, hover: false, visible: true, intro: true, admin: false };
+// zoomLvl: how far a picture starts, per layout (a banner with words in it gets a gentler zoom than a
+// photo, so its words aren't cut at the start); settle: how far a banner in its narrow-screen frame
+// starts (it never crops, the whole frame just settles); dur: seconds per show; fade: seconds of
+// the fade into the next
+const ZOOM = { bar: { low: 1.03, mid: 1.06, high: 1.1 }, text: { low: 1.08, mid: 1.15, high: 1.24 } };
+// the same test as the CSS: on a narrow or tall screen the banner is shown whole, in a frame
+const FRAMED = '(max-width: 760px), (max-aspect-ratio: 1.339)';
+const framed = () => matchMedia(FRAMED).matches;
+const state = { i: 0, zoomLvl: 'mid', settle: 1.04, dur: 7, fade: 1.2, react: 'pulse', userPaused: false, hover: false, visible: true, intro: true, admin: false };
 
 /* ════════════════════════════════════════════════════════════════
    the fixed palette: eight colour sets. Each show uses one; it is suggested from the picture
@@ -611,29 +656,32 @@ function setPal(e, key) { const p = PALETTE[key] || PALETTE.violet; e.pal = key 
 
 /* ════════════════════════════════════════════════════════════════
    content (sample data — in production this comes from the admin panel)
-   template: 'banner' | 'poster' | 'photo'. banner and poster are the organiser's files; a show can
-   have both, and the template says which one is shown. Prices and some dates are made up.
+   banner: the organiser's 16:9 banner; it is the background of the whole hero.
+   layout: 'bar' (the facts in a capsule at the bottom; the banner has its own words) or 'text' (the
+   words on the left over the picture, as in v7; for a photo with no words in it).
+   Prices and some dates are made up.
    ════════════════════════════════════════════════════════════════ */
-const art = (slug, bw, bh, pw, ph) => ({
+const art = (slug, bw, bh) => ({
   banner: { src: `assets/events/${slug}-banner-1672.webp`, srcset: `assets/events/${slug}-banner-1024.webp 1024w, assets/events/${slug}-banner-1672.webp 1672w`, thumb: `assets/events/${slug}-banner-640.webp`, w: bw, h: bh },
-  poster: { src: `assets/events/${slug}-poster-800.webp`, thumb: `assets/events/${slug}-poster-400.webp`, w: pw, h: ph },
 });
 const EVENTS = [
-  { id: 'skykings', pal: 'gold', template: 'banner', type: 'کنسرت', name: 'SkyKings', title: 'کنسرت موسیقی SkyKings',
+  { id: 'skykings', pal: 'gold', layout: 'bar', type: 'کنسرت', name: 'SkyKings', title: 'کنسرت موسیقی SkyKings',
     desc: 'شبی با گیتار و صدای زنده‌ی گروه SkyKings، در سالن پاسارگاد اریکه ایرانیان.',
-    venue: 'سالن پاسارگاد اریکه ایرانیان', startsAt: '2026-10-29T19:00:00+03:30', price: '۶۵۰ هزار', badge: 'پیش‌فروش', track: 0, ...art('skykings', 1672, 941, 800, 1067) },
-  { id: 'zendegi-shayad', pal: 'crimson', template: 'banner', type: 'تئاتر', name: 'زندگی شاید…', title: 'نمایش «زندگی شاید…»',
+    venue: 'سالن پاسارگاد اریکه ایرانیان', startsAt: '2026-10-29T19:00:00+03:30', price: '۶۵۰ هزار', badge: 'پیش‌فروش', track: 0, ...art('skykings', 1672, 941) },
+  { id: 'zendegi-shayad', pal: 'crimson', layout: 'bar', type: 'تئاتر', name: 'زندگی شاید…', title: 'نمایش «زندگی شاید…»',
     desc: 'نمایشی به نویسندگی، طراحی و کارگردانی محمدجواد ملک‌محمودی.',
-    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', track: 2, ...art('zendegi-shayad', 1672, 941, 800, 1198) },
-  { id: 'do-daghighe', pal: 'orange', template: 'poster', type: 'تئاتر', name: 'دو دقیقه به هشت', title: 'نمایش «دو دقیقه به هشت»',
+    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', track: 2, ...art('zendegi-shayad', 1672, 941) },
+  { id: 'do-daghighe', pal: 'orange', layout: 'bar', type: 'تئاتر', name: 'دو دقیقه به هشت', title: 'نمایش «دو دقیقه به هشت»',
     desc: 'نمایشی به نویسندگی و کارگردانی علی اصغری، با تهیه‌کنندگی فاطمه مجریان.',
-    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: 'ظرفیت رو به اتمام', track: 1, ...art('do-daghighe', 1672, 941, 800, 1224) },
-  { id: 'dokhtar-pesar', pal: 'crimson', template: 'banner', type: 'تئاتر', name: 'دختر بودن یا پسر نبودن', title: 'دختر بودن یا پسر نبودن، مسئله این است',
+    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: 'ظرفیت رو به اتمام', track: 1, ...art('do-daghighe', 1672, 941) },
+  { id: 'dokhtar-pesar', pal: 'crimson', layout: 'bar', type: 'تئاتر', name: 'دختر بودن یا پسر نبودن', title: 'دختر بودن یا پسر نبودن، مسئله این است',
     desc: 'اجرای گروه تئاتر فردا؛ نویسنده فرهاد نقدعلی، کارگردان شیوا علیخانیان.',
-    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', track: 1, ...art('dokhtar-pesar', 1672, 941, 800, 1200) },
+    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', track: 1, ...art('dokhtar-pesar', 1672, 941) },
 ];
-const PHOTO = { src: 'assets/photos/pop-frequency-1920.webp', srcset: 'assets/photos/pop-frequency-1920.webp 1920w, assets/photos/pop-frequency-2560.webp 2560w', thumb: 'assets/photos/pop-frequency-640.webp', w: 1920, h: 1283 };
-const PHOTO_FP = { o: '55% 40%', op: '50% 30%', mop: '44% 50%' };
+// the sample photo for the "text" layout: the words sit on the side away from the cards, so the singers
+// stand on the cards' side (the flipped copy when the cards are on the left)
+const photoSet = (left) => { const n = left ? 'pop-frequency-flip' : 'pop-frequency'; return { src: `assets/photos/${n}-1920.webp`, srcset: `assets/photos/${n}-1920.webp 1920w, assets/photos/${n}-2560.webp 2560w`, thumb: `assets/photos/${n}-640.webp`, w: 1920, h: 1283, sample: true }; };
+const photoFp = (left) => (left ? { o: '45% 40%', op: '50% 30%', mop: '56% 50%' } : { o: '55% 40%', op: '50% 30%', mop: '44% 50%' });
 
 // Persian calendar, Tehran time. A run ("۲۳ تا ۲۶ مهر") shows its first and last day.
 const TZ = { timeZone: 'Asia/Tehran' };
@@ -654,7 +702,7 @@ function when(e) {
   const wk = F.week.format(a);
   return { calDay: d1, calMonth: m1, top: wk, sub: `ساعت ${t}`, short: `${wk} ${d1} ${m1}`, time: t };
 }
-EVENTS.forEach((e) => { setPal(e, e.pal); e.ver = 0; e.w = when(e); e.orig = JSON.parse(JSON.stringify({ pal: e.pal, template: e.template, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner, poster: e.poster, fp: null })); });
+EVENTS.forEach((e) => { setPal(e, e.pal); e.ver = 0; e.w = when(e); e.orig = JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner })); });
 const label = (e) => `${e.type} ${e.name}`;
 
 /* playlist: managed in the admin panel; `analysis` is stored on upload (see SPEC §6) */
@@ -916,14 +964,14 @@ function suggestPalette(img) {
 /* ════════════════════════════════════════════════════════════════
    pictures: loading, a stand-in when the file is missing, and the ambient
    ════════════════════════════════════════════════════════════════ */
-// a stand-in banner or poster, drawn from the show's title and colour, for when the file isn't there
-// (the real posters aren't in git; see assets/events/README.md). In production a missing file is a
-// validation error at upload, so this only keeps the prototype readable.
+// a stand-in banner, drawn from the show's title and colour, for when the file isn't there (the real
+// banners aren't in git; see assets/events/README.md). In production a missing file is a validation
+// error at upload, so this only keeps the prototype readable.
 const fakes = new Map();
-function fakeArt(e, kind, a) {
-  const key = `${e.id}|${kind}|${e.pal}|${e.title}`;
+function fakeArt(e, a) {
+  const key = `${e.id}|${e.pal}|${e.title}`;
   if (fakes.has(key)) return fakes.get(key);
-  const p = PALETTE[e.pal] || PALETTE.violet, tall = kind === 'poster', W = tall ? 800 : 1344, H = Math.round(W / clamp(a.w / a.h, 0.5, 3.4));
+  const p = PALETTE[e.pal] || PALETTE.violet, tall = false, W = 1344, H = Math.round(W / clamp(a.w / a.h, 1, 3.4));
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d'), rgba = (hex, al) => { const v = rgb(hex); return `rgba(${v[0]},${v[1]},${v[2]},${al})`; };
   let g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, p.deep); g.addColorStop(1, '#07060c'); x.fillStyle = g; x.fillRect(0, 0, W, H);
@@ -940,17 +988,17 @@ function fakeArt(e, kind, a) {
   lines.push(line);
   const lh = big * 1.3, y0 = H * 0.5 - (lines.length - 1) * lh / 2 + big * 0.3;
   lines.forEach((t, k) => x.fillText(t, cx, y0 + k * lh, maxW));
-  x.font = `600 ${Math.round(big * 0.4)}px Vazirmatn, Tahoma, sans-serif`; x.globalAlpha = 0.8; x.fillText(`${e.venue} · ${e.w.short}`, cx, H * 0.86, W * 0.86);
-  x.font = `600 ${Math.round(big * 0.3)}px Vazirmatn, Tahoma, sans-serif`; x.globalAlpha = 0.45; x.fillText('تصویر نمونه', cx, H * 0.95);
+  x.font = `600 ${Math.round(big * 0.4)}px Vazirmatn, Tahoma, sans-serif`; x.globalAlpha = 0.8; x.fillText(`${e.venue} · ${e.w.short}`, cx, H * 0.78, W * 0.8);
+  x.font = `600 ${Math.round(big * 0.3)}px Vazirmatn, Tahoma, sans-serif`; x.globalAlpha = 0.45; x.fillText('تصویر نمونه', cx, H * 0.86);
   const url = c.toDataURL('image/jpeg', 0.88); fakes.set(key, url); return url;
 }
-async function loadArt(img, a, e, kind, sizes) {
+async function loadArt(img, a, e, sizes) {
   img.decoding = 'async';
   if (a.srcset && !a.fake) { img.sizes = sizes; img.srcset = a.srcset; }
   img.src = a.fake || a.src;
   try { await img.decode(); }
   catch (err) {
-    const url = fakeArt(e, kind, a); a.fake = url;
+    const url = fakeArt(e, a); a.fake = url;
     img.removeAttribute('srcset'); img.src = url;
     try { await img.decode(); } catch (err2) { /* nothing more to do */ }
   }
@@ -969,8 +1017,8 @@ function ambientOf(img) {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   scenes: one per show. A scene is its own layout (the ambient, the picture and the words), so
-   the change from one show to the next works between any two templates
+   scenes: one per show. A scene is its own layout (the picture, the ambient and the words), so
+   the change from one show to the next works between any two layouts
    ════════════════════════════════════════════════════════════════ */
 function dockHTML(e) {
   const w = e.w, buyLabel = `خرید بلیت ${e.title}، از ${e.price} تومان`;
@@ -995,7 +1043,7 @@ function copyHTML(e) {
 }
 const altOf = (e) => `${e.title} · ${e.venue} · ${e.w.short}`;
 const MODES = {
-  banner: (e) => `
+  bar: (e) => `
     <div class="stage"><div class="tk">
       <div class="tk-glow" aria-hidden="true"></div>
       <div class="tk-card">
@@ -1004,40 +1052,38 @@ const MODES = {
       </div>
     </div></div>
     <h1 class="sr">${esc(e.title)}</h1>`,
-  poster: (e) => `
-    <div class="stage">
-      <div class="pfig"><div class="tk-glow" aria-hidden="true"></div><a class="pfig-card" href="#" aria-label="${esc(e.title)}، صفحه‌ی اجرا"><img class="art" alt="${esc(altOf(e))}"></a></div>
-      <div class="copy">${copyHTML(e)}</div>
-    </div>`,
-  photo: (e) => `
+  text: (e) => `
     <div class="photo" aria-hidden="true"><img class="art" alt=""></div><div class="shade" aria-hidden="true"></div>
     <div class="copy">${copyHTML(e)}</div>`,
 };
-const SIZES = { banner: '(max-width: 760px) 100vw, 78vw', poster: '(max-width: 760px) 60vw, 40vw', photo: '100vw' };
 function paint(el, e) {
   const s = el.style, p = PALETTE[e.pal] || PALETTE.violet;
   s.setProperty('--accent', p.accent); s.setProperty('--accent-l', p.light); s.setProperty('--on-accent', p.onAccent);
 }
 async function buildScene(e) {
-  const mode = MODES[e.template] ? e.template : 'banner';
-  const a = mode === 'poster' ? (e.poster || e.banner) : (e.banner || e.poster), kind = a === e.poster ? 'poster' : 'banner';
-  const ratio = clamp(a.w / a.h, 0.5, 3.4);
+  const mode = e.layout === 'text' ? 'text' : 'bar', pic = e.banner, ratio = clamp(pic.w / pic.h, 1, 3.4);
   const el = document.createElement('article');
   el.className = 'scene'; el.dataset.mode = mode; el.dataset.id = e.id; el.inert = true;
   el.setAttribute('aria-hidden', 'true'); el.setAttribute('role', 'group'); el.setAttribute('aria-roledescription', 'اجرا');
   paint(el, e); el.style.setProperty('--ratio', ratio.toFixed(4));
-  if (mode === 'photo' && e.fp) { el.style.setProperty('--o', e.fp.o); el.style.setProperty('--op', e.fp.op); el.style.setProperty('--mop', e.fp.mop); }
+  if (e.fp) { el.style.setProperty('--o', e.fp.o); el.style.setProperty('--op', e.fp.op); el.style.setProperty('--mop', e.fp.mop); }
   el.innerHTML = `<div class="amb" aria-hidden="true"></div>${MODES[mode](e)}`;
   const img = $('img.art', el);
-  await loadArt(img, a, e, kind, SIZES[mode]);
+  await loadArt(img, pic, e, '100vw');
   const amb = ambientOf(img);
   if (amb) el.style.setProperty('--amb', `url("${amb}")`);
-  const zoomEl = mode === 'photo' ? img : mode === 'banner' ? $('.tk', el) : $('.pfig', el);
   return {
-    e, ver: e.ver, el, mode, img, amb, zoomEl, busy: false, pk: '', fadeTw: null, zoomTw: null,
-    pulse: mode === 'photo' ? $('.photo', el) : mode === 'banner' ? $('.tk-card', el) : $('.pfig-card', el),
-    glow: $('.tk-glow', el), parts: $$('[data-part]', el), buy: $('.buy', el), art: mode === 'photo' ? null : $('.stage', el),
+    e, ver: e.ver, el, mode, img, amb, busy: false, pk: '', fadeTw: null, zoomTw: null, framed: false, zoomEl: img, pulse: null,
+    tk: $('.tk', el), tkCard: $('.tk-card', el), frame: $('.frame', el), photo: $('.photo', el),
+    glow: $('.tk-glow', el), parts: $$('[data-part]', el), buy: $('.buy', el), art: mode === 'bar' ? $('.stage', el) : null,
   };
+}
+// what moves, for the layout the screen has right now: the picture itself when it covers the screen,
+// the whole frame when the banner is shown whole
+function aim(s) {
+  s.framed = s.mode === 'bar' && framed();
+  s.zoomEl = s.framed ? s.tk : s.img;
+  s.pulse = s.mode === 'text' ? s.photo : s.framed ? s.tkCard : s.frame;
 }
 const partsOut = (s) => { if (s) gsap.to(s.parts, { opacity: 0, y: reduceMotion ? 0 : -8, duration: 0.35, ease: 'power2.in', stagger: 0.03, overwrite: true }); };
 const partsIn = (s, delay = 0) => { if (s) gsap.fromTo(s.parts, { opacity: 0, y: reduceMotion ? 0 : 14 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', stagger: 0.07, delay, overwrite: true, clearProps: 'transform' }); };
@@ -1056,34 +1102,36 @@ const stage = {
     if (s.fadeTw) s.fadeTw.kill(); if (s.zoomTw) s.zoomTw.kill(); s.fadeTw = s.zoomTw = null;
     gsap.killTweensOf(s.parts); if (s.art) { gsap.killTweensOf(s.art); gsap.set(s.art, { clearProps: 'opacity' }); }
     s.busy = false; gsap.set(s.el, { opacity: 0 }); s.el.classList.remove('is-on'); s.el.inert = true; s.el.setAttribute('aria-hidden', 'true');
-    gsap.set(s.zoomEl, { clearProps: 'transform' }); gsap.set(s.parts, { clearProps: 'opacity,transform' });
-    s.pulse.style.transform = ''; s.pk = ''; if (s.glow) s.glow.style.opacity = '';
+    gsap.set([s.img, s.tk].filter(Boolean), { clearProps: 'transform' }); gsap.set(s.parts, { clearProps: 'opacity,transform' });
+    [s.frame, s.tkCard, s.photo].forEach((x) => { if (x) x.style.transform = ''; }); s.pk = ''; if (s.glow) s.glow.style.opacity = '';
     // keep one free scene per show; drop the ones whose show has changed since
     if (s.ver !== s.e.ver || this.pool.filter((x) => !x.busy).length > EVENTS.length + 1) { s.el.remove(); this.pool.splice(this.pool.indexOf(s), 1); }
   },
-  // the show's picture zooms out (a photo) or settles (a banner or poster) over its time and the fade
-  // after it, so it is still moving while the next one fades in over it
+  // the show's picture zooms out (it covers the screen) or settles (a banner shown whole in its frame)
+  // over its time and the fade after it, so it is still moving while the next one fades in over it
   async show(i, { instant = false } = {}) {
     const token = ++this.token, e = EVENTS[i], s = await this.acquire(e);
     if (token !== this.token) { this.release(s); return null; }
     const prev = this.top;
     if (prev && prev !== s) { prev.el.inert = true; prev.el.setAttribute('aria-hidden', 'true'); }
     s.el.style.zIndex = ++this.z; s.el.classList.add('is-on'); s.el.inert = false; s.el.setAttribute('aria-hidden', 'false'); this.top = s;
-    const fade = reduceMotion ? 0.4 : state.fade, from = reduceMotion ? 1 : (s.mode === 'photo' ? state.zoom : state.settle);
+    aim(s);
+    const fade = reduceMotion ? 0.4 : state.fade, from = reduceMotion ? 1 : (s.framed ? state.settle : ZOOM[s.mode][state.zoomLvl]);
     s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: state.dur + fade, ease: 'none', paused: !timer.running() && !instant && !state.intro });
     const done = () => { this.pool.slice().forEach((o) => { if (o !== s && o.busy && +o.el.style.zIndex < +s.el.style.zIndex) this.release(o); }); };
     if (instant) { gsap.set(s.el, { opacity: 1 }); done(); return s; }
-    // the ambient dissolves over the old one; a banner or poster itself is out quickly and in late, so
-    // for a moment there is only the soft colour between two designed pictures (no words on words)
-    if (prev && prev !== s && prev.art) gsap.to(prev.art, { opacity: 0, duration: fade * 0.32, ease: 'sine.out', overwrite: true });
-    if (s.art) gsap.fromTo(s.art, { opacity: 0 }, { opacity: 1, duration: fade * 0.7, delay: fade * 0.3, ease: 'power2.out', overwrite: true });
+    // a banner shown whole: the ambient dissolves over the old one, and the banner itself is out quickly
+    // and in late, so for a moment there is only the soft colour between two designed pictures (no
+    // words on words). A banner that covers the screen fades as in v7.
+    if (prev && prev !== s && prev.framed && prev.art) gsap.to(prev.art, { opacity: 0, duration: fade * 0.32, ease: 'sine.out', overwrite: true });
+    if (s.framed && s.art) gsap.fromTo(s.art, { opacity: 0 }, { opacity: 1, duration: fade * 0.7, delay: fade * 0.3, ease: 'power2.out', overwrite: true });
     s.fadeTw = gsap.fromTo(s.el, { opacity: 0 }, { opacity: 1, duration: fade, ease: 'sine.inOut', onComplete: done });
     return s;
   },
 };
 
 /* ════════════════════════════════════════════════════════════════
-   the rail on the right: a card per show, with the time left on the active one
+   the rail: a card per show, with the time left on the active one
    ════════════════════════════════════════════════════════════════ */
 const cards = {
   list: $('#cardList'), els: [], bar: null,
@@ -1101,15 +1149,12 @@ const cards = {
     box.addEventListener('focusin', () => { state.hover = true; timer.sync(); });
     box.addEventListener('focusout', () => { state.hover = false; timer.sync(); });
   },
-  // a banner (or a photo) fills its card; a poster sits whole on its own ambient
   fill(b, e) {
-    const poster = e.template === 'poster', a = poster ? (e.poster || e.banner) : (e.banner || e.poster), kind = a === e.poster ? 'poster' : 'banner';
-    const bar = this.bar && b.contains(this.bar) ? this.bar : null;
-    b.textContent = ''; b.dataset.fit = poster ? 'contain' : 'cover'; b.style.removeProperty('--amb');
+    const pic = e.banner, bar = this.bar && b.contains(this.bar) ? this.bar : null;
+    b.textContent = '';
     const im = new Image(); im.alt = ''; im.decoding = 'async';
-    im.onload = () => { if (poster && !b.style.getPropertyValue('--amb')) { const u = ambientOf(im); if (u) b.style.setProperty('--amb', `url("${u}")`); } };
-    im.onerror = () => { if (!a.fake) a.fake = fakeArt(e, kind, a); im.onerror = null; im.src = a.fake; };
-    im.src = a.fake || a.thumb;
+    im.onerror = () => { if (!pic.fake) pic.fake = fakeArt(e, pic); im.onerror = null; im.src = pic.fake; };
+    im.src = pic.fake || pic.thumb;
     const nm = document.createElement('span'); nm.className = 'card-name'; nm.textContent = label(e);
     b.append(im, nm); if (bar) b.appendChild(bar);
     b.setAttribute('aria-label', `${label(e)}، ${e.venue}، ${e.w.short}`);
@@ -1149,7 +1194,7 @@ const timer = {
 /* ════════════════════════════════════════════════════════════════
    a change: the rail, the picture and the words
    ════════════════════════════════════════════════════════════════ */
-function setAccent(e) { const s = hero.style; s.setProperty('--accent', e.accent); s.setProperty('--accent-l', e.accentL); s.setProperty('--on-accent', e.onAccent); player.draw(); }
+function setAccent(e) { const s = hero.style; s.setProperty('--accent', e.accent); s.setProperty('--accent-l', e.accentL); s.setProperty('--on-accent', e.onAccent); hero.dataset.layout = e.layout; player.draw(); }
 const live = $('#live');
 let swapCall = null;
 function go(i, source = 'user') {
@@ -1322,7 +1367,7 @@ function toast(msg) {
 $('#scenes').addEventListener('click', (ev) => {
   const e = EVENTS[state.i];
   if (ev.target.closest('.buy')) toast(`اینجا صفحه‌ی انتخاب صندلی «${label(e)}» باز می‌شه.`);
-  else if (ev.target.closest('.frame, .pfig-card')) { ev.preventDefault(); toast(`اینجا صفحه‌ی «${e.title}» باز می‌شه.`); }
+  else if (ev.target.closest('.frame')) { ev.preventDefault(); toast(`اینجا صفحه‌ی «${e.title}» باز می‌شه.`); }
 });
 $$('#loginBtn, #menuBtn').forEach((b) => b.addEventListener('click', () => toast('این بخش هنوز ساخته نشده.')));
 $$('.links a').forEach((a) => a.addEventListener('click', (ev) => ev.preventDefault()));
@@ -1345,17 +1390,22 @@ async function warm() {
 /* ════════════════════════════════════════════════════════════════
    the admin panel (a demo of what the real one does; not part of the site)
    ════════════════════════════════════════════════════════════════ */
-const TPL_NAME = { banner: 'بنر کامل', poster: 'پوستر', photo: 'عکس و متن' };
-const shapeOf = (r) => (r >= 2.3 ? 'بنر خیلی عریض' : r >= 1.5 ? 'بنر عریض' : r >= 1.15 ? 'تصویر افقی' : r >= 0.85 ? 'تصویر مربع' : 'پوستر عمودی');
+// what the picture will do on the 16:9 screen, said in words
+function fitNote(w, h) {
+  const r = w / h, T = 16 / 9, size = `${fa(w)}×${fa(h)}`;
+  if (Math.abs(Math.log(r / T)) < 0.035) return `<b>بنر ۱۶:۹</b> · ${size} · کل صفحه رو بدون برش می‌پوشونه`;
+  const cut = Math.round((r > T ? 1 - T / r : 1 - r / T) * 100);
+  return `<b>نسبت ${fa(r.toFixed(2)).replace('.', '٫')} به ۱</b> · ${size} · برای پوشش کامل صفحه حدود ${fa(cut)}٪ از ${r > T ? 'دو طرف' : 'بالا و پایین'} بریده می‌شه. بنر ۱۶:۹ بذار`;
+}
 const panel = {
-  fab: $('#protoFab'), el: $('#protoPanel'), suggested: null,
+  fab: $('#protoFab'), el: $('#protoPanel'),
   init() {
     const sw = $('#ppSw');
     Object.entries(PALETTE).forEach(([k, p]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.v = k; b.title = p.label; b.setAttribute('aria-label', p.label); b.setAttribute('aria-pressed', 'false'); b.style.background = p.accent; sw.appendChild(b); });
     this.fab.addEventListener('click', () => this.open(true));
     $('#protoClose').addEventListener('click', () => { this.open(false); this.fab.focus(); });
     this.el.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { this.open(false); this.fab.focus(); } });
-    $('#ppTpl').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (b) this.setTemplate(b.dataset.v); });
+    $('#ppLay').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (b) this.setLayout(b.dataset.v); });
     sw.addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (b) this.setColor(b.dataset.v); });
     $('#ppFile').addEventListener('change', (ev) => { const f = ev.target.files[0]; if (f) this.useFile(f); ev.target.value = ''; });
     const drop = $('#drop');
@@ -1364,6 +1414,7 @@ const panel = {
     drop.addEventListener('drop', (ev) => { const f = ev.dataTransfer.files[0]; if (f && /^image\//.test(f.type)) this.useFile(f); });
     $('#ppPhoto').addEventListener('click', () => this.usePhoto());
     $('#ppReset').addEventListener('click', () => this.reset());
+    $('#ppGuides').addEventListener('change', (ev) => hero.classList.toggle('show-guides', ev.target.checked));
     const fields = { fTitle: 'title', fVenue: 'venue', fPrice: 'price' };
     Object.entries(fields).forEach(([id, key]) => $('#' + id).addEventListener('input', (ev) => { const e = EVENTS[state.i]; e[key] = ev.target.value; e.w = when(e); this.texts(); }));
     $('#fBadge').addEventListener('change', (ev) => { EVENTS[state.i].badge = ev.target.value; this.texts(); });
@@ -1371,10 +1422,11 @@ const panel = {
       const b = ev.target.closest('button'); if (!b) return;
       $$('button', g).forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
       const v = b.dataset.v, k = g.dataset.ctrl;
-      if (k === 'zoom') { state.zoom = +v; rebuild(state.i); }
+      if (k === 'rail') this.setRail(v === 'left');
+      if (k === 'zoom') { state.zoomLvl = v; rebuild(state.i); }
       if (k === 'dur') { state.dur = +v; timer.start(); }
       if (k === 'fade') { state.fade = +v; next('user'); }
-      if (k === 'react') { state.react = v; if (v === 'pulse' && !player.playing()) toast('یه آهنگ از دکمه‌ی پخش تو هدر پخش کن تا قاب با ضربش بتپه.'); }
+      if (k === 'react') { state.react = v; if (v === 'pulse' && !player.playing()) toast('یه آهنگ از دکمه‌ی پخش تو هدر پخش کن تا تصویر با ضربش بتپه.'); }
     }));
     this.sync();
   },
@@ -1387,47 +1439,59 @@ const panel = {
   sync() {
     const e = EVENTS[state.i];
     $('#ppWho').textContent = label(e);
-    $$('#ppTpl button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === e.template ? 'true' : 'false'));
+    $$('#ppLay button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === e.layout ? 'true' : 'false'));
     $$('#ppSw button').forEach((b) => { b.setAttribute('aria-pressed', b.dataset.v === e.pal ? 'true' : 'false'); b.classList.toggle('is-sug', b.dataset.v === e.suggested); });
     $('#ppSug').textContent = e.suggested ? `پیشنهاد از روی تصویر: ${PALETTE[e.suggested].label}` : '';
     const set = (id, v) => { const el = $('#' + id); if (document.activeElement !== el) el.value = v; };
     set('fTitle', e.title); set('fVenue', e.venue); set('fPrice', e.price); set('fBadge', e.badge || '');
-    const a = e.template === 'poster' ? (e.poster || e.banner) : (e.banner || e.poster);
-    $('#ppNote').innerHTML = `<b>${shapeOf(a.w / a.h)}</b> · ${fa(a.w)}×${fa(a.h)}${a.custom ? '' : ' · از فایل‌های نمونه'}`;
+    $('#ppNote').innerHTML = fitNote(e.banner.w, e.banner.h) + (e.banner.custom ? '' : ' · از فایل‌های نمونه');
   },
-  async setTemplate(t) { const e = EVENTS[state.i]; if (e.template === t) return; e.template = t; await rebuild(state.i); this.sync(); },
+  // the cards change side; a sample photo changes with them (the words go to the other side)
+  async setRail(left) {
+    hero.classList.toggle('rail-left', left);
+    EVENTS.forEach((e) => { if (e.banner.sample) { e.banner = photoSet(left); e.fp = photoFp(left); e.ver++; } });
+    cards.els.forEach((_, k) => { if (EVENTS[k].banner.sample) cards.refresh(k); });
+    if (EVENTS[state.i].banner.sample) await rebuild(state.i);
+    this.sync();
+  },
+  async setLayout(t) { const e = EVENTS[state.i]; if (e.layout === t) return; e.layout = t; if (t === 'text' && !e.fp) e.fp = { o: '50% 45%', op: '50% 40%', mop: '50% 50%' }; await rebuild(state.i); setAccent(e); this.sync(); },
   async setColor(k) { const e = EVENTS[state.i]; setPal(e, k); e.ver++; await rebuild(state.i); setAccent(e); this.sync(); },
   // the words change in place, without a fade
   texts() {
     const e = EVENTS[state.i], s = stage.top; e.ver++;
     cards.els[state.i].setAttribute('aria-label', `${label(e)}، ${e.venue}، ${e.w.short}`);
     if (!s || s.e !== e) return;
-    const host = s.mode === 'banner' ? $('.dock', s.el) : $('.copy', s.el);
-    host.innerHTML = s.mode === 'banner' ? dockHTML(e) : copyHTML(e);
+    const host = s.mode === 'bar' ? $('.dock', s.el) : $('.copy', s.el);
+    host.innerHTML = s.mode === 'bar' ? dockHTML(e) : copyHTML(e);
     s.parts = $$('[data-part]', s.el); s.buy = $('.buy', s.el);
   },
   async useFile(file) {
     const url = URL.createObjectURL(file), im = new Image(); im.src = url;
     try { await im.decode(); } catch (err) { toast('این فایل تصویر نیست یا خوانده نشد.'); return; }
-    const e = EVENTS[state.i], w = im.naturalWidth, h = im.naturalHeight, r = w / h, hasText = $('#ppText').checked;
-    const tpl = r < 1.15 ? 'poster' : (hasText ? 'banner' : 'photo');
-    const asset = { src: url, thumb: url, w, h, custom: true };
-    if (tpl === 'poster') e.poster = asset; else { e.banner = asset; if (tpl === 'photo') e.fp = { o: '55% 45%', op: '50% 40%', mop: '50% 50%' }; }
-    e.template = tpl; e.suggested = suggestPalette(im); setPal(e, e.suggested); e.ver++;
+    const w = im.naturalWidth, h = im.naturalHeight;
+    if (w / h < 1.15) {
+      // a tall poster is not a background: the hero is wide
+      toast('این تصویر عمودی یا مربعه (پوستر). برای جایگاه ویژه بنر افقی ۱۶:۹ لازمه.');
+      $('#ppNote').innerHTML = `<b>پذیرفته نشد</b> · ${fa(w)}×${fa(h)} · پوستر عمودی جای خودش رو تو قفسه‌ی پوستر داره، نه اینجا`;
+      URL.revokeObjectURL(url); return;
+    }
+    const e = EVENTS[state.i], hasText = $('#ppText').checked;
+    e.banner = { src: url, thumb: url, w, h, custom: true };
+    e.layout = hasText ? 'bar' : 'text'; e.fp = hasText ? null : { o: '50% 45%', op: '50% 40%', mop: '50% 50%' };
+    e.suggested = suggestPalette(im); setPal(e, e.suggested); e.ver++;
     await rebuild(state.i); setAccent(e); this.sync();
-    $('#ppNote').innerHTML = `<b>${shapeOf(r)}</b> · ${fa(w)}×${fa(h)} · قالب پیشنهادی: <b>${TPL_NAME[tpl]}</b>`;
   },
   async usePhoto() {
-    const e = EVENTS[state.i]; e.banner = { ...PHOTO }; e.fp = PHOTO_FP; e.template = 'photo'; e.suggested = null; setPal(e, 'blue'); e.ver++;
+    const e = EVENTS[state.i], left = hero.classList.contains('rail-left'); e.banner = photoSet(left); e.fp = photoFp(left); e.layout = 'text'; e.suggested = null; setPal(e, 'blue'); e.ver++;
     await rebuild(state.i); setAccent(e); this.sync();
   },
   async reset() {
-    const e = EVENTS[state.i], o = e.orig; Object.assign(e, JSON.parse(JSON.stringify({ template: o.template, title: o.title, venue: o.venue, price: o.price, badge: o.badge, banner: o.banner, poster: o.poster })));
+    const e = EVENTS[state.i], o = e.orig; Object.assign(e, JSON.parse(JSON.stringify({ layout: o.layout, title: o.title, venue: o.venue, price: o.price, badge: o.badge, banner: o.banner })));
     e.fp = null; e.suggested = null; setPal(e, o.pal); e.w = when(e); e.ver++;
     await rebuild(state.i); setAccent(e); this.sync();
   },
 };
-// after a change to the active show's template, picture or colour: build its scene again and fade
+// after a change to the active show's layout, picture or colour: build its scene again and fade
 // it in over the current one
 async function rebuild(i) {
   const e = EVENTS[i]; e.ver++;
@@ -1476,7 +1540,7 @@ if (reduceMotion) { state.userPaused = true; $('#autoBtn').setAttribute('aria-pr
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, player, meters, panel, audioSys, A, analyseTrack, TRACKS, EVENTS, PALETTE, state, go, next, prev, rebuild, suggestPalette, when };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, player, meters, panel, audioSys, A, analyseTrack, TRACKS, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, framed };
 })();
 </script>
 </body>
