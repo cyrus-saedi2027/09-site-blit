@@ -13,12 +13,14 @@
 <link rel="stylesheet" href="lab/lab.css">
 <link rel="stylesheet" href="widgets/01-budget/widget.css">
 <link rel="stylesheet" href="widgets/02-market-size/widget.css">
+<link rel="stylesheet" href="widgets/03-revenue/widget.css">
 <!-- /bundle:css -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <!-- bundle:js -->
 <script defer src="lab/lab.js"></script>
 <script defer src="widgets/01-budget/widget.js"></script>
 <script defer src="widgets/02-market-size/widget.js"></script>
+<script defer src="widgets/03-revenue/widget.js"></script>
 <!-- /bundle:js -->
 </head>
 <body>
@@ -64,6 +66,7 @@
     <nav class="index" aria-label="فهرست ویجت‌ها">
       <a href="#w01"><b>01</b>بودجه‌ی هفتگی</a>
       <a href="#w02"><b>02</b>اندازه‌ی بازار</a>
+      <a href="#w03"><b>03</b>تحلیل درآمد</a>
     </nav>
   </section>
 
@@ -125,6 +128,36 @@
       <div class="stage-show">
         <span class="stage-tag" aria-hidden="true"><i></i>W · 02</span>
         <div class="stage-mount is-wide" data-mount="2"></div>
+      </div>
+    </article>
+
+    <article class="stage" id="w03" aria-labelledby="w03-title">
+      <div class="stage-info">
+        <div class="stage-id">
+          <p class="stage-num" aria-hidden="true"><span>0</span><span>3</span></p>
+          <p class="stage-kicker"><b>ویجت شماره‌ی ۳</b><span>Widget · 03</span></p>
+        </div>
+        <h2 class="stage-title" id="w03-title">تحلیل درآمد</h2>
+        <p class="stage-en">Revenue analytics · monthly chart</p>
+        <p class="stage-desc">کارت شیشه‌ای با لبه‌ی نئونی بنفش، همون زاویه‌ی سه‌بعدی و نور کف طرح؛ درآمد ماه، تغییرش نسبت به ماه قبل و نمودار روزانه.</p>
+        <ul class="hints">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.8 3.8 7.4v9.2L12 21.2l8.2-4.6V7.4z"/><path d="M3.8 7.4 12 12l8.2-4.6"/><path d="M12 12v9.2"/></svg><span><b>ماوس رو روی کارت ببر.</b> کارت از زاویه‌ی طرح می‌چرخه رو به تو، کمی دنبال ماوس می‌ره و لبه‌ی نئونی زیر نشانگر روشن‌تر می‌شه.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg><span><b>روی نمودار بکش.</b> یه نقطه‌ی نورانی روی منحنی سُر می‌خوره، خط راهنما تا محور پایین میاد و یه کارت شیشه‌ای روز، مبلغ و تغییر روزانه رو نشون می‌ده.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"/></svg><span><b>منوها کار می‌کنن.</b> «<bdi dir="ltr">This Month</bdi>» نمودار رو روی ۷ روز آخر زوم می‌کنه، «<bdi dir="ltr">Apr 2025</bdi>» ماه رو عوض می‌کنه (منحنی شکل عوض می‌کنه و عددها می‌چرخن) و «<bdi dir="ltr">⋯</bdi>» خط‌چین ماه قبل رو برای مقایسه می‌کشه.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M7.5 14h9"/></svg><span>با کیبورد: Tab تا نمودار، بعد ← و →؛ منوها با Enter و فلش‌ها.</span></li>
+        </ul>
+        <div class="stage-actions">
+          <button class="btn primary" type="button" data-act="replay">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.2V9h4.8"/></svg>
+            از اول
+          </button>
+          <button class="btn" type="button" data-act="live" aria-pressed="false"><i class="dot" aria-hidden="true"></i>داده‌ی زنده</button>
+        </div>
+        <code class="stage-path">widgets/03-revenue/</code>
+      </div>
+      <div class="stage-show">
+        <span class="stage-tag" aria-hidden="true"><i></i>W · 03</span>
+        <div class="stage-mount is-wide" data-mount="3"></div>
       </div>
     </article>
   </main>

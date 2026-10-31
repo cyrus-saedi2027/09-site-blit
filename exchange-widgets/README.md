@@ -22,7 +22,8 @@ cd exchange-widgets && npx http-server -p 8000
 | # | ویجت | Widget | Folder | Status |
 |---|---|---|---|---|
 | 01 | بودجه‌ی هفتگی | Budget · weekly chart, from the owner's reference shot: rolling numbers, scrub the chart, throw the bills, 3D tilt | [`widgets/01-budget`](widgets/01-budget/) | first version |
-| 02 | اندازه‌ی بازار | Market size · quarterly chart, from the owner's reference shot: dark card with blue light, the white/grey split follows the scrub, red/green tooltip, ⋮ menu (quarterly / yearly, forecast on/off), pointer-lit rim | [`widgets/02-market-size`](widgets/02-market-size/) | **new, waiting for feedback** |
+| 02 | اندازه‌ی بازار | Market size · quarterly chart, from the owner's reference shot: dark card with blue light, the white/grey split follows the scrub, red/green tooltip, ⋮ menu (quarterly / yearly, forecast on/off), pointer-lit rim | [`widgets/02-market-size`](widgets/02-market-size/) | first version |
+| 03 | تحلیل درآمد | Revenue analytics · monthly chart, from the owner's reference shot: glass card with a neon rim kept at the shot's 3D angle and floor light; it turns to face you, the rim follows the pointer, a probe and glass tooltip ride the curve, working "This Month" (zoom to 7 days), month and "⋯" (compare with last month) menus | [`widgets/03-revenue`](widgets/03-revenue/) | **new, waiting for feedback** |
 
 ## ساختار · Structure
 
@@ -33,6 +34,7 @@ exchange-widgets/
   lab/lab.js            registry, theme and slow-motion tools, background, plays each intro when the widget comes into view
   widgets/01-budget/    widget.js (markup and behaviour), widget.css, SPEC.md
   widgets/02-market-size/  the same three files
+  widgets/03-revenue/      the same three files
   tools/bundle.mjs      builds single-file copies into dist/ (one to send, one for a claude.ai Artifact)
 ```
 
