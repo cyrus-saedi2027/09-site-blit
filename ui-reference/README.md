@@ -14,6 +14,7 @@ Then open http://localhost:8000/01-hero/ to compare the hero versions. Use a loc
 Hosted previews (private to the owner; the hero preview includes the songs):
 - Moodboard of 16 international ticketing, festival and theatre sites: https://claude.ai/artifact/G67hnwxgRA75NhkLfJZUAP
 - Hero, all versions on one page (tabs 1–7, the first owner's account): https://claude.ai/artifact/FMdoTVhR22nUCmfX76FvjU
+- Hero, versions 6, 7 and 8 on one page (new account, with the real posters and banners; no songs): https://claude.ai/artifact/SWmrAjx1oGu4Lj6zokerLp
 
 ## بخش‌ها · Sections
 
