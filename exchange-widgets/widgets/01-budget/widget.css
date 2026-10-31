@@ -61,6 +61,7 @@
   border-radius: calc(96 * var(--u));
   background: #fff;
   overflow: hidden;
+  overflow: clip;
   box-shadow:
     0 calc(20 * var(--u)) calc(40 * var(--u)) rgba(18, 20, 52, .2),
     0 calc(2 * var(--u)) calc(5 * var(--u)) rgba(18, 20, 52, .07);

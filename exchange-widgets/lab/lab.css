@@ -330,6 +330,7 @@ body {
   background: linear-gradient(180deg, var(--panel-a), var(--panel-b));
   box-shadow: 0 30px 80px -40px rgba(0, 0, 0, .55);
   overflow: hidden;
+  overflow: clip;
   isolation: isolate;
   scroll-margin-top: 24px;
 }
@@ -472,6 +473,7 @@ body {
 }
 .stage-tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
 .stage-mount { width: min(100%, 500px); }
+.stage-mount.is-wide { width: min(100%, 640px); }
 
 .foot {
   max-width: var(--max);
