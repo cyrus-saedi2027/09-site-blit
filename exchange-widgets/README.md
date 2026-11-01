@@ -15,7 +15,7 @@ cd exchange-widgets && npx http-server -p 8000
 
 - Private preview (owner only): https://claude.ai/artifact/BTiquurgTiZ1PMPsitsU8i
 - `index.html?still` shows the final frame with no motion (for screenshots).
-- Top bar: **حرکت آهسته** slows every motion to a quarter of its speed; the sun/moon button switches the background between dark and light (widgets keep their own colours).
+- Top bar: **ویجت‌ها / بک‌گراندها** switches between the two sections; **حرکت آهسته** slows every motion to a quarter of its speed; the sun/moon button switches the background between dark and light (widgets keep their own colours).
 
 ## ویجت‌ها · Widgets
 
@@ -29,6 +29,31 @@ cd exchange-widgets && npx http-server -p 8000
 | 06 | بینش و نرخ تبدیل (مجموعه، ۲ کارت) | Insights pager · **06·1** Insights (revenue growth, orange) and **06·2** Conversion (blue). In the shot they are pages 4 and 5 of one deck; here each card is its own six-page deck: dashes, swipe or keys turn pages (charts morph, numbers roll), a working Daily / Weekly / Monthly menu, the marker and the glowing dot scrub their charts, "Explore more +" opens a glass panel, the fitted background lights lean toward the pointer | [`widgets/06-insights`](widgets/06-insights/) | **new, waiting for feedback** |
 | 07 | کارت‌های پوشه‌ای (مجموعه، ۶ کارت) | Folder cards · six black folder-shaped widgets: **07·1** clock & sleep, **07·2** flight, **07·3** walking, **07·4** stock, **07·5** recorder, **07·6** radio. All controls work: the clock runs, the recorder records / pauses / flags, the radio tunes by dragging the dial and seeks stations, the stock ticks and converts currencies, the flight swaps direction, every strip scrubs | [`widgets/07-folders`](widgets/07-folders/) | **new, waiting for feedback** |
 | 08 | درآمد زنده | Live earnings · rewards and APR, from the owner's shot (one design, so 08 is one card): the rewards count up live, the chart flows and scrubs, the yellow APR knob drags and recomputes the totals, the "24h" chip turns through 7d / 30d / 1y | [`widgets/08-earnings`](widgets/08-earnings/) | **new, waiting for feedback** |
+
+## بک‌گراندها · Backgrounds
+
+بخش جدای بک‌گراندها: [`backgrounds/index.html`](backgrounds/) (از نوار بالای گالری هم می‌شه رفت). هفت تای اول همون بک‌گراندهای ویجت‌هان، جدا و تمام‌صفحه؛ بقیه یه سری تازه با همون هارمونی‌ها. همه زنده‌ان، تمام‌صفحه دیده می‌شن و برای موبایل و دسکتاپ دانلود می‌شن (PNG).
+
+The backgrounds section, a page of its own. Each background is a live colour field: it flows, follows the pointer, ripples when clicked and pulls in while held; open it full screen (← / → between them) or download it at phone (1179 × 2556) or desktop (2560 × 1440) size. The handoff is [`backgrounds/SPEC.md`](backgrounds/SPEC.md).
+
+| # | بک‌گراند | Background | From | Status |
+|---|---|---|---|---|
+| 01 | منشور | Prism | widget 05's colour panel (the owner's favourite) | **new, waiting for feedback** |
+| 02 | جریان عمیق | Deep Current | card 06·2 (Conversion) | **new** |
+| 03 | اخگر | Ember | card 06·1 (Insights) | **new** |
+| 04 | شیشه‌ی بنفش | Violet Glass | widget 03's glass and floor light | **new** |
+| 05 | ساعت آبی | Blue Hour | widget 02's blue light | **new** |
+| 06 | شفق شب | Night Aurora | the gallery page's own aurora | **new** |
+| 07 | مه | Fog | the wall behind set 04 | **new** |
+| 08 | ابریشم منشوری | Prism Silk | new · 05's colours, folded | **new** |
+| 09 | مد کهربایی | Amber Tide | new · 05's harmony in sunset colours | **new** |
+| 10 | تالاب | Lagoon | new · 05's harmony in teal and magenta | **new** |
+| 11 | شاهانه | Royal | new · 05's harmony in violet and orange | **new** |
+| 12 | رزکوارتز | Rose Quartz | new · 05's harmony, light pastel | **new** |
+| 13 | جریان زمردی | Emerald Current | new · 06·2's lights in emerald | **new** |
+| 14 | اخگر سرخابی | Fuchsia Ember | new · 06·1's lights in fuchsia | **new** |
+| 15 | دو شعله | Twin Flame | new · 06·1 and 06·2 together | **new** |
+| 16 | کسوف | Eclipse | new · 03's violet light behind a planet | **new** |
 
 ## ساختار · Structure
 
@@ -46,12 +71,16 @@ exchange-widgets/
   widgets/06-insights/     the same three files (a full-width set: `.stage.is-full`)
   widgets/07-folders/      the same three files (full width; uses Oswald for the numbers)
   widgets/08-earnings/     the same three files (one card)
-  tools/bundle.mjs      builds single-file copies into dist/ (one to send, one for a claude.ai Artifact)
+  backgrounds/          the backgrounds section: index.html, engine.js (every background and the
+                        renderer), page.js (tiles, viewer, downloads), page.css, SPEC.md
+  tools/bundle.mjs      builds single-file copies of both pages into dist/ (one to send, one for a claude.ai Artifact)
 ```
 
 ```bash
 node tools/bundle.mjs
 ```
+
+It writes `widget-lab.html` and `backgrounds.html` (standalone; kept side by side they link to each other) and `artifact.html` and `backgrounds-artifact.html` (for Artifacts; `--link widgets=<url> --link backgrounds=<url>` points their section switch at the published pages).
 
 ## اضافه کردن ویجت تازه · Adding a widget
 
