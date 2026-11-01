@@ -67,7 +67,7 @@ Design units are the source widget's shot units (1u = 1px of that shot).
 
 | Moment | What happens |
 |---|---|
-| A tile scrolls in | it rises 28px and fades in; its colours open from black (1.4 s) with a ring from the centre and a pinch that springs back |
+| A tile scrolls in | every tile already shows a still frame; the first time it is in view its colours pinch, ring out from the centre and spring back (1.6 s) |
 | Hover (mouse) | swell and sweep; the page glow takes the tile's most vivid colour |
 | Press / hold / drag | ring; pull in (released with a wobble); stir |
 | Touch | tap = ring; horizontal drags stir (vertical ones scroll the page) |
@@ -75,13 +75,13 @@ Design units are the source widget's shot units (1u = 1px of that shot).
 | Viewer | ← next, → previous (right-to-left order), Space pause, F real fullscreen where allowed, Esc close; a quick swipe changes background on touch; the bar hides after 2.8 s of stillness |
 | Next / previous | the old frame fades out over the new one (0.9 s) and a ring starts on the side you came from |
 
-- **Downloads.** Phone 1179 × 2556, desktop 2560 × 1440, PNG, named `bg-<nn>-<slug>-<phone|desktop>-<w>x<h>.png`, rendered at the tile's current moment (without the pointer). Inside claude.ai the page uses the Artifact `downloads` capability (the viewer confirms each file); if it is not available in a framed view, the buttons hide. Opened as a file or from any site, a plain download link is used. The button fills as the file renders (0.4–1.6 s).
+- **Downloads.** Phone 1179 × 2556, desktop 2560 × 1440, PNG, named `bg-<nn>-<slug>-<phone|desktop>-<w>x<h>.png`, rendered at the tile's current moment (without the pointer). Inside claude.ai the page uses the Artifact `downloads` capability (the viewer confirms each file); where it is not available the buttons hide, because a download the page starts itself does nothing there. Opened as a saved file or from any other site, a plain download link is used. The button fills as the file renders (0.4–1.6 s).
 - **Numbers.** Chips read `BG·01`; captions say «بک‌گراند ۱ · از ویجت ۰۵», a set's card stays left to right (`06·2`).
 
 ## 5. Accessibility
 
 - Each live frame is `role="img"` with the background's name; buttons have Persian labels; the viewer is a modal dialog that holds focus (Tab cycles its buttons) and returns it to the tile's open button.
-- **Reduced motion** (and `?still`): one still frame per tile, no flow, rings or swell; tiles appear without the rise; the viewer opens without growing.
+- **Reduced motion** (and `?still`): one still frame per tile, no flow, rings or swell; the viewer opens without growing.
 
 ## 6. Performance
 

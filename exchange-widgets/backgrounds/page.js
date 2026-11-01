@@ -19,7 +19,6 @@
   const fa = s => String(s).replace(/\d/g, d => FA[d]);
   const two = n => String(n).padStart(2, '0');
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-  const easeOut = t => 1 - Math.pow(1 - t, 3);
   const SVG = d => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${d}</svg>`;
   const ICON = {
     open: SVG('<path d="M14 4h6v6M10 20H4v-6M20 4l-6.5 6.5M4 20l6.5-6.5"/>'),
@@ -174,11 +173,7 @@
   function tick(item, painter, dt, every, canvas, scene) {
     const motion = Lab.reduced ? 0 : 1;
     const busy = painter.step(dt, motion);
-    if (item && item.introT >= 0) {
-      item.introT += dt;
-      painter.s.expo = easeOut(clamp(item.introT / 1.4, 0, 1));
-      if (item.introT > 1.6) { item.introT = -1; painter.s.expo = 1; }
-    }
+    if (item && item.introT >= 0) { item.introT += dt; if (item.introT > 1.6) item.introT = -1; }
     if (Lab.reduced && !(item ? item.dirty : V.dirty)) return;
     if (busy || every || (item && item.introT >= 0) || (frameNo + (item ? item.phase : 0)) % 2 === 0) {
       painter.draw();
@@ -206,12 +201,12 @@
     saverP = (async () => {
       const c = window.claude;
       if (c && typeof c.use === 'function') {
+        // served by claude.ai: only the capability can save (a link the page starts is inert there)
         let dl = null;
         try { dl = await c.use('downloads'); } catch (e) { dl = null; }
-        if (dl) return { kind: 'claude', save: (filename, blob) => dl.save({ filename, data: blob }) };
-        if (window.top !== window) return null;   // framed without the capability: nowhere to save
+        return dl ? { kind: 'claude', save: (filename, blob) => dl.save({ filename, data: blob }) } : null;
       }
-      return {
+      return {   // a saved copy or any other host: a plain download link
         kind: 'link',
         save: async (filename, blob) => {
           const url = URL.createObjectURL(blob), a = document.createElement('a');
@@ -443,20 +438,20 @@
 
     const ro = new ResizeObserver(entries => entries.forEach(en => {
       const item = items.find(it => it.frame === en.target);
-      if (item) { sizeItem(item, en.contentRect.width, en.contentRect.height); if (Lab.reduced || Lab.still) { item.painter.draw(); drawOverlay(item); } }
+      if (item) { sizeItem(item, en.contentRect.width, en.contentRect.height); item.painter.draw(); drawOverlay(item); item.dirty = false; }
     }));
     const io = new IntersectionObserver(entries => entries.forEach(en => {
       const item = items.find(it => it.frame === en.target);
       if (!item) return;
       item.visible = en.isIntersecting;
       if (en.isIntersecting) shown.add(item); else shown.delete(item);
+      // first time in view: the colours pinch, ring out from the centre and spring back
       if (en.isIntersecting && !item.played && (en.intersectionRatio >= .3 || en.intersectionRect.height > innerHeight * .3)) {
         item.played = true;
-        item.el.classList.add('is-in');
         if (!Lab.reduced && !Lab.still) {
-          item.introT = 0; item.painter.s.expo = 0;
+          item.introT = 0;
           item.painter.s.lens.v = -.5;
-          setTimeout(() => item.painter.ripple(item.painter.cssW / 2, item.painter.cssH / 2, 1.3), 120);
+          item.painter.ripple(item.painter.cssW / 2, item.painter.cssH / 2, 1.3);
         }
       }
       kick();
@@ -473,7 +468,7 @@
       item.el.querySelector('.bgl-open').addEventListener('click', () => openViewer(item.index, item.frame));
       item.el.querySelectorAll('.js-dl').forEach(b => b.addEventListener('click', () => download(item.scene, b.dataset.kind, b, item.painter.t)));
     });
-    if (Lab.still) items.forEach(it => { it.played = true; it.el.classList.add('is-in'); });
+    if (Lab.still) items.forEach(it => { it.played = true; });
 
     document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
     mqReduce.addEventListener('change', () => { items.forEach(it => { it.dirty = true; }); V.dirty = true; kick(); });
