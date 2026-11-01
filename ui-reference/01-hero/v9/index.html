@@ -536,6 +536,10 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 .drop:hover, .drop.is-over { color: #fff; border-color: rgba(255, 255, 255, .55); background: rgba(255, 255, 255, .04); }
 .drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .drop:focus-within { outline: 2px solid #fff; outline-offset: 2px; }
+.need { display: grid; gap: 2px; padding: 10px 12px; border-radius: 12px; background: rgba(167, 139, 250, .1); border: 1px solid rgba(167, 139, 250, .35); font-size: 12.5px; line-height: 1.8; color: var(--pp-ink2); }
+.need b { color: #fff; font-weight: 800; }
+.need .big { font-size: 22px; line-height: 1.4; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.need .sm { font-size: 11.5px; color: var(--pp-ink3); }
 .pp-note { min-height: 1.7em; font-size: 12px; color: var(--pp-ink3); }
 .pp-note b { color: #fff; font-weight: 700; }
 .chk { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--pp-ink2); cursor: pointer; }
@@ -770,7 +774,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
       <div class="tablewrap">
         <table class="spec">
           <tbody>
-            <tr><th>اندازه و نسبت</th><td>نسبت ۱٫۷۴ به اندازه‌ی <b>۱۶۷۲×۹۶۰</b> (یا دو برابرش). کادر بنر با تنظیمات پیش‌فرض روی مانیتور ۱۹۲۰×۱۰۸۰ حدود ۱۵۵۴×۸۹۳ می‌شه. ۱۶:۹ هم (مثل ۱۹۲۰×۱۰۸۰) کادر رو پر می‌کنه. تو تب «اندازه‌ها» ی تنظیمات می‌بینی بنر الان تو چه اندازه‌ای نشون داده می‌شه</td></tr>
+            <tr><th>اندازه و نسبت</th><td>کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: با پنجره‌ی ۱۹۲۰×۱۰۸۰ حدود <b>۱۵۵۳×۸۹۳</b> (نسبت ۱٫۷۴)، با ۱۹۲۰×۸۶۰ حدود ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. عدد دقیق پنجره‌ی خودت بالای تب «جایگاه» (تنظیمات) نوشته شده</td></tr>
             <tr><th>متن تو بنر</th><td>هر جای بنر می‌تونه باشه، چون چیزی روش نمی‌افته. فقط اول هر اجرا عکس حدود ۵٪ زوم‌شده‌ست و تو ۷۰٪ وقت اجرا آروم زوم‌اوت می‌شه؛ بعدش بنر کامل و ثابت می‌ایسته. پس متن رو از لبه‌ها دست‌کم ۴٪ دور نگه دارن</td></tr>
             <tr><th>بنری با نسبت دورتر</th><td>می‌شه بذاری. نسبتش تا ۲٫۵٪ با کادر فرق داشته باشه کادر رو پر می‌کنه؛ بیشتر از اون بنر کامل و با نسبت خودش دیده می‌شه، و جای خالی دو طرفش یا بالا و پایینش سیاهه (یا لبه‌ی محوشده‌ی خود بنر؛ تو تنظیمات انتخاب می‌شه)</td></tr>
             <tr><th>پوستر عمودی</th><td>قبول نمی‌شه (پنل مدیریت رد می‌کنه). جای پوستر قفسه‌ی پوستره، نه این بخش</td></tr>
@@ -811,7 +815,9 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
       <section class="pp-pane" data-pane="slot">
         <div class="pp-group">
           <span>تصویر</span>
-          <label class="drop" id="drop"><input type="file" id="ppFile" accept="image/*"><svg class="i"><use href="#i-upload"/></svg>بنر ۱۶:۹ خودت رو اینجا بنداز</label>
+          <div class="need" id="ppNeed" role="status" aria-live="polite"></div>
+          <label class="drop" id="drop"><input type="file" id="ppFile" accept="image/*" multiple><svg class="i"><use href="#i-upload"/></svg>بنر خودت رو اینجا بنداز یا انتخاب کن</label>
+          <div class="seg" id="ppWhere" role="group" aria-label="بنر کجا بره"><button type="button" data-v="replace" aria-pressed="true">جای بنر این اجرا</button><button type="button" data-v="add" aria-pressed="false">اجرای جدید، آخر لیست</button></div>
           <label class="chk"><input type="checkbox" id="ppText" checked> روی بنر نوشته (عنوان، تاریخ…) هست</label>
           <div class="pp-note" id="ppNote" role="status" aria-live="polite"></div>
           <div class="pp-row"><button type="button" class="pill" id="ppPhoto">عکس نمونه، بدون نوشته</button><button type="button" class="pill" id="ppReset">بازگردانی این جایگاه</button></div>
@@ -1272,7 +1278,7 @@ const cards = {
     this.bar = document.createElement('span'); this.bar.className = 'c-bar'; this.bar.setAttribute('aria-hidden', 'true'); this.bar.innerHTML = '<i></i>';
     this.ring = document.createElementNS(NS, 'svg'); this.ring.setAttribute('class', 'c-ring'); this.ring.setAttribute('viewBox', '0 0 100 56.25'); this.ring.setAttribute('preserveAspectRatio', 'none'); this.ring.setAttribute('aria-hidden', 'true');
     this.ring.innerHTML = '<rect x="1.2" y="1.2" width="97.6" height="53.85" rx="5" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" vector-effect="non-scaling-stroke"/>';
-    EVENTS.forEach((e, k) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', 'false'); b.setAttribute('aria-controls', 'scenes'); b.tabIndex = -1; this.fill(b, e); b.addEventListener('click', () => { if (k === state.i) { if (stage.top && stage.top.buy) stage.top.buy.focus(); } else go(k, 'user'); }); this.list.appendChild(b); this.els.push(b); });
+    EVENTS.forEach((e, k) => this.add(e, k));
     this.list.addEventListener('keydown', (ev) => {
       const k = { ArrowDown: 1, ArrowLeft: 1, ArrowUp: -1, ArrowRight: -1 }[ev.key];
       if (k) { ev.preventDefault(); ev.stopPropagation(); go((state.i + k + EVENTS.length) % EVENTS.length, 'user'); this.els[state.i].focus(); }
@@ -1283,6 +1289,12 @@ const cards = {
     box.addEventListener('pointerleave', () => { state.hover = false; timer.sync(); });
     box.addEventListener('focusin', () => { state.hover = true; timer.sync(); });
     box.addEventListener('focusout', () => { state.hover = false; timer.sync(); });
+  },
+  // one card (a show the owner added later gets one too)
+  add(e, k) {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', 'false'); b.setAttribute('aria-controls', 'scenes'); b.tabIndex = -1; this.fill(b, e);
+    b.addEventListener('click', () => { if (k === state.i) { if (stage.top && stage.top.buy) stage.top.buy.focus(); } else go(k, 'user'); });
+    this.list.appendChild(b); this.els.push(b);
   },
   fill(b, e) {
     const pic = e.banner, bar = this.bar && b.contains(this.bar) ? this.bar : null, ring = this.ring && b.contains(this.ring) ? this.ring : null;
@@ -1640,7 +1652,7 @@ const look = {
     $$('#ppTabs [data-tab]').forEach((b) => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
     $$('#ppBody [data-pane]').forEach((p) => { p.hidden = p.dataset.pane !== name; });
     $('#ppBody').scrollTop = 0;
-    if (name === 'sizes') this.renderSizes();
+    if (name === 'sizes') this.renderSizes(); else if (name === 'slot') panel.need();
   },
   buildPanes() {
     for (const [pane, secs] of Object.entries(UI)) {
@@ -1709,7 +1721,7 @@ const look = {
   refreshPane() { for (const f of Object.values(this.ctl)) f(); if (this.tabName === 'sizes') this.renderSizes(); },
 
   /* ── the sizes tab: what each panel measures now, the banner, and the size to ask the organiser for ── */
-  sizesTick() { if (this.ready && !$('#protoPanel').hidden && this.tabName === 'sizes') this.renderSizes(); },
+  sizesTick() { if (!this.ready || $('#protoPanel').hidden) return; if (this.tabName === 'sizes') this.renderSizes(); else if (this.tabName === 'slot') panel.need(); },
   renderSizes() {
     const host = $('#ppBody [data-pane="sizes"]'), s = stage.top; if (!s) return;
     const r = (el) => el.getBoundingClientRect(), box = (b) => `${faP(Math.round(b.width))}×${faP(Math.round(b.height))}`;
@@ -1719,9 +1731,9 @@ const look = {
     const pw = cover ? iw : Math.min(iw, ih * ar), ph = cover ? ih : Math.min(ih, iw / ar);
     const row = (a, b2) => `<div><b>${a}</b><output>${b2}</output></div>`;
     const stacked = innerWidth <= 760 || innerWidth / innerHeight <= 1.25;
-    const need = `${faP(Math.ceil(pw * dpr))}×${faP(Math.ceil(ph * dpr))}`;
+    const need = `${faP(Math.ceil(s.frame.clientWidth * dpr))}×${faP(Math.ceil(s.frame.clientHeight * dpr))}`;
     const e = s.e, bn = e.banner;
-    const sizesList = [[1920, 1080], [1920, 937], [1536, 864], [1440, 900], [1366, 768], [2560, 1440]];
+    const sizesList = [[1920, 1080], [1920, 937], [1920, 860], [1536, 864], [1440, 900], [1366, 768], [2560, 1440]];
     let tbl = '<div class="hd"><span>اندازه‌ی پنجره</span><span>کادر بنر · خودِ بنر</span></div>';
     sizesList.forEach(([w, h]) => { const g = geom(w, h); tbl += `<div><b>${faP(w)}×${faP(h)}</b><output>${g.stacked ? '—' : `${faP(Math.round(g.frame.w))}×${faP(Math.round(g.frame.h))}  /  ${faP(Math.round(g.pic.w))}×${faP(Math.round(g.pic.h))}`}</output></div>`; });
     host.innerHTML = `
@@ -1737,9 +1749,9 @@ const look = {
       </div>${stacked ? '<p>این پنجره چیدمان زیرهمه (موبایل یا پنجره‌ی بلند)؛ عددهای جدول پایین برای چیدمان کنار همه.</p>' : ''}</div>
       <div class="pp-sec"><h4>بنر این اجرا</h4><div class="szt">
         ${row('فایل', `${faP(bn.w)}×${faP(bn.h)}  ( نسبت ${faP((bn.w / bn.h).toFixed(2)).replace('.', '٫')} )`)}
-        ${row('برای تیز بودن روی همین پنجره', need + ' یا بیشتر')}
+        ${row('بنر برای پر کردن کادرِ همین پنجره', need)}
       </div>
-      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>• بنر (چیدمان کادر پایین): با تنظیمات پیش‌فرض، کادر بنر روی مانیتور ۱۹۲۰×۱۰۸۰ حدود ۱۵۵۴×۸۹۳ می‌شه (نسبت ۱٫۷۴)، پس <b>۱۶۷۲×۹۶۰</b> (یا دو برابرش ۳۳۴۴×۱۹۲۰) می‌خوایم. ۱۶:۹ مثل ۱۹۲۰×۱۰۸۰ هم کادر رو پر می‌کنه (کمتر از ۲٫۵٪ کشیده می‌شه که دیده نمی‌شه). متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
+      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>• بنر (چیدمان کادر پایین): کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: عدد بالا (<b>«بنر برای پر کردن کادرِ همین پنجره»</b>) برای پنجره‌ی الانه؛ با پنجره‌ی ۱۹۲۰×۱۰۸۰ و تنظیمات پیش‌فرض ≈ ۱۵۵۳×۸۹۳ (نسبت ۱٫۷۴) و با ۱۹۲۰×۸۶۰ ≈ ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
       <div class="pp-sec"><h4>بنر تو پنجره‌های رایج</h4><p>برای چیدمان فعلی (فاصله‌ها و ارتفاع‌های تنظیم‌شده). عدد اول کادر بنره، عدد دوم خودِ بنر تو کادرش.</p><div class="szt">${tbl}</div></div>
       <div class="pp-sec"><h4>نشون دادن اندازه‌ها روی صفحه</h4>
         <label class="sw2"><span>اندازه‌ی کادرها، فاصله‌ها و حاشیه‌ها رو روی صفحه بکش</span><input type="checkbox" role="switch" id="ppDims"${LOOK.dims ? ' checked' : ''}><i></i></label>
@@ -1956,7 +1968,7 @@ const s2 = {
     EVENTS.forEach((e, i) => {
       const c = document.createElement('article'); c.className = 'panel s2-card'; c.dataset.type = e.type; c.dataset.i = i;
       c.style.setProperty('--accent', e.accent); c.style.setProperty('--accent-l', e.accentL); c.style.setProperty('--on-accent', e.onAccent); c.style.setProperty('--ring', e.ring || e.accent);
-      c.innerHTML = `<button type="button" class="s2-thumb" aria-label="${esc(e.title)}، نمایش در بالای صفحه"><img alt="" ${e.banner.fake ? `src="${esc(e.banner.fake)}"` : `src="${esc(e.banner.thumb)}" srcset="${esc(e.banner.srcset)}" sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw"`}></button>
+      c.innerHTML = `<button type="button" class="s2-thumb" aria-label="${esc(e.title)}، نمایش در بالای صفحه"><img alt="" ${e.banner.fake ? `src="${esc(e.banner.fake)}"` : `src="${esc(e.banner.thumb)}"${e.banner.srcset ? ` srcset="${esc(e.banner.srcset)}" sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw"` : ''}`}></button>
         <div class="s2-body"><span class="kick"><i class="dot"></i>${esc(e.type)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}</span><h3>${esc(e.title)}</h3>
           <div class="s2-meta"><span><svg class="i"><use href="#i-calendar"/></svg>${esc(e.w.short)}</span><span><svg class="i"><use href="#i-pin"/></svg>${esc(e.venue)}</span></div>
           <div class="s2-foot"><span class="price"><span class="d-lab">${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="buy">${esc(TXT.buy)}</button></div></div>`;
@@ -2136,12 +2148,12 @@ const dims = {
 function fitNote(w, h) {
   // the shape the banner is compared with is the panel's own (so it follows the look's gaps and heights), 16:9 if there is none
   const f = stage.top && stage.top.mode === 'bar' ? stage.top.frame : null, T = f && f.clientHeight ? f.clientWidth / f.clientHeight : 16 / 9;
-  const r = w / h, size = `${fa(w)}×${fa(h)}`, rs = fa(r.toFixed(2)).replace('.', '٫'), ts = fa(T.toFixed(2)).replace('.', '٫');
+  const r = w / h, size = `${fa(w)}×${fa(h)}`, rs = fa(r.toFixed(2)).replace('.', '٫'), ts = f && f.clientWidth ? `${fa(f.clientWidth)}×${fa(f.clientHeight)}` : '';
   if (Math.abs(Math.log(r / T)) < FILL_TOL) return `<b>نسبت ${rs} به ۱</b> · ${size} · کادر رو کامل پر می‌کنه و چیزی ازش بریده نمی‌شه`;
-  return `<b>نسبت ${rs} به ۱</b> · ${size} · کامل دیده می‌شه، ولی ${r > T ? 'بالا و پایینش' : 'دو طرفش'} خالی می‌مونه (${LOOK.fill === 'edge' ? 'با لبه‌ی محوشده‌ی خودش پر می‌شه' : 'سیاهه'}). بنری با نسبت نزدیک به ${ts} بهتره`;
+  return `<b>نسبت ${rs} به ۱</b> · ${size} · کامل دیده می‌شه، ولی ${r > T ? 'بالا و پایینش' : 'دو طرفش'} خالی می‌مونه (${LOOK.fill === 'edge' ? 'با لبه‌ی محوشده‌ی خودش پر می‌شه' : 'سیاهه'})${ts ? `. برای اینکه کادر رو پر کنه <bdi dir="ltr">${ts}</bdi> بساز` : ''}`;
 }
 const panel = {
-  fab: $('#protoFab'), el: $('#protoPanel'),
+  fab: $('#protoFab'), el: $('#protoPanel'), where: 'replace', needRaf: 0,
   init() {
     const sw = $('#ppSw');
     Object.entries(PALETTE).forEach(([k, p]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.v = k; b.title = p.label; b.setAttribute('aria-label', p.label); b.setAttribute('aria-pressed', 'false'); b.style.background = p.accent; sw.appendChild(b); });
@@ -2151,11 +2163,14 @@ const panel = {
     $('#ppLay').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (b) this.setLayout(b.dataset.v); });
     sw.addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (b) this.setColor(b.dataset.v); });
     $('#ppCustom').addEventListener('input', (ev) => this.setColor('custom', ev.target.value));
-    $('#ppFile').addEventListener('change', (ev) => { const f = ev.target.files[0]; if (f) this.useFile(f); ev.target.value = ''; });
+    $('#ppFile').addEventListener('change', (ev) => { const fs = [...ev.target.files]; ev.target.value = ''; this.take(fs); });
     const drop = $('#drop');
     ['dragenter', 'dragover'].forEach((t) => drop.addEventListener(t, (ev) => { ev.preventDefault(); drop.classList.add('is-over'); }));
     ['dragleave', 'drop'].forEach((t) => drop.addEventListener(t, (ev) => { ev.preventDefault(); drop.classList.remove('is-over'); }));
-    drop.addEventListener('drop', (ev) => { const f = ev.dataTransfer.files[0]; if (f && /^image\//.test(f.type)) this.useFile(f); });
+    drop.addEventListener('drop', (ev) => this.take([...ev.dataTransfer.files].filter((f) => /^image\//.test(f.type))));
+    $('#ppWhere').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (!b) return; this.where = b.dataset.v; $$('#ppWhere button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); });
+    // the size to make follows the window
+    addEventListener('resize', () => { if (this.needRaf) return; this.needRaf = requestAnimationFrame(() => { this.needRaf = 0; if (!this.el.hidden) this.need(); }); });
     $('#ppPhoto').addEventListener('click', () => this.usePhoto());
     $('#ppReset').addEventListener('click', () => this.reset());
     $('#ppNotes').addEventListener('click', (ev) => { ev.preventDefault(); this.open(false); $('#notes-h').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); });
@@ -2180,6 +2195,7 @@ const panel = {
     const set = (id, v) => { const el = $('#' + id); if (document.activeElement !== el) el.value = v; };
     set('fTitle', e.title); set('fVenue', e.venue); set('fPrice', e.price); set('fBadge', e.badge || ''); set('fType', e.type); set('fName', e.name);
     $('#ppNote').innerHTML = fitNote(e.banner.w, e.banner.h) + (e.banner.custom ? '' : ' · از فایل‌های نمونه');
+    this.need();
     look.sizesTick();
   },
   tab(name) { look.tab(name); },
@@ -2203,21 +2219,56 @@ const panel = {
     host.innerHTML = s.mode === 'bar' ? dockHTML(e) : copyHTML(e);
     s.parts = $$('[data-part]', s.el); s.buy = $('.buy', s.el);
   },
-  async useFile(file) {
+  // the size that fills the banner's panel in this window (what to make), and in a 1920×1080 one
+  need() {
+    const box = $('#ppNeed'), s = stage.top; if (!box || !s) return;
+    const f = s.frame, w = f.clientWidth, h = f.clientHeight; if (!w || !h) return;
+    const stacked = STK.matches, bw = Math.max(parseFloat(getComputedStyle(f).borderTopWidth) || 0, 0), r = (w / h).toFixed(2).replace('.', '٫');
+    let big = '';
+    if (!stacked) { const g = geom(1920, 1080); big = ` · با پنجره‌ی ۱۹۲۰×۱۰۸۰ می‌شه <bdi dir="ltr">${fa(Math.round(g.frame.w - 2 * bw))}×${fa(Math.round(g.frame.h - 2 * bw))}</bdi>`; }
+    box.innerHTML = `<span>اندازه‌ی بنری که کادر همین پنجره رو کامل پر می‌کنه</span><b class="big"><bdi dir="ltr">${fa(w)}×${fa(h)}</bdi></b><span>نسبت ${fa(r)} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(w * 2)}×${fa(h * 2)}</bdi></span><span class="sm">پنجره‌ی الان ${fa(innerWidth)}×${fa(innerHeight)}. کادر هر چی از پنجره می‌مونه رو می‌گیره، پس با ارتفاع پنجره عدد هم عوض می‌شه${big}.</span>`;
+  },
+  // a picture read from a file; a tall one (a poster) is refused
+  async readImage(file) {
     const url = URL.createObjectURL(file), im = new Image(); im.src = url;
-    try { await im.decode(); } catch (err) { toast('این فایل تصویر نیست یا خوانده نشد.'); return; }
+    try { await im.decode(); } catch (err) { URL.revokeObjectURL(url); toast('این فایل تصویر نیست یا خوانده نشد.'); return null; }
     const w = im.naturalWidth, h = im.naturalHeight;
     if (w / h < 1.15) {
       // a tall poster is not a background: the hero is wide
-      toast('این تصویر عمودی یا مربعه (پوستر). برای جایگاه ویژه بنر افقی ۱۶:۹ لازمه.');
+      toast('این تصویر عمودی یا مربعه (پوستر). برای جایگاه ویژه بنر افقی لازمه.');
       $('#ppNote').innerHTML = `<b>پذیرفته نشد</b> · ${fa(w)}×${fa(h)} · پوستر عمودی جای خودش رو تو قفسه‌ی پوستر داره، نه اینجا`;
-      URL.revokeObjectURL(url); return;
+      URL.revokeObjectURL(url); return null;
     }
-    const e = EVENTS[state.i], hasText = $('#ppText').checked;
+    return { url, im, w, h };
+  },
+  // the files the owner dropped or picked: in the place of this show's banner, or each as a new show at the end of the list
+  async take(files) {
+    if (!files.length) return;
+    if (this.where === 'add') { for (const f of files) await this.addFile(f); } else await this.useFile(files[0]);
+  },
+  async useFile(file) {
+    const rd = await this.readImage(file); if (!rd) return;
+    const { url, im, w, h } = rd, e = EVENTS[state.i], hasText = $('#ppText').checked;
     e.banner = { src: url, thumb: url, w, h, custom: true };
     e.layout = hasText ? 'bar' : 'text'; e.fp = hasText ? null : { o: '50% 45%', op: '50% 40%', mop: '50% 50%' };
     e.suggested = suggestPalette(im); setPal(e, e.suggested); e.ver++;
     await rebuild(state.i); setAccent(e); s2.refresh(); this.sync();
+  },
+  // a new show at the end of the list, with this picture and words to change in the fields below (kept until the page is reloaded)
+  async addFile(file) {
+    const rd = await this.readImage(file); if (!rd) return;
+    const { url, im, w, h } = rd, hasText = $('#ppText').checked, n = EVENTS.filter((x) => x.mine).length + 1;
+    const d = new Date(Date.now() + 7 * 864e5), e = {
+      id: `mine-${n}-${Date.now()}`, mine: true, layout: hasText ? 'bar' : 'text', type: 'تئاتر', name: `اجرای من ${fa(n)}`, title: `اجرای من ${fa(n)}`,
+      desc: 'یه توضیح کوتاه از اجرا، تا دو خط.', venue: 'تهران · سالن نمایش', startsAt: `${d.toISOString().slice(0, 10)}T20:00:00+03:30`, price: '۲۰۰ هزار', badge: 'جدید',
+      banner: { src: url, thumb: url, w, h, custom: true }, fp: hasText ? null : { o: '50% 45%', op: '50% 40%', mop: '50% 50%' }, ver: 0,
+    };
+    e.suggested = suggestPalette(im); setPal(e, e.suggested); e.w = when(e);
+    e.orig = JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner }));
+    EVENTS.push(e);
+    root.style.setProperty('--n', Math.min(EVENTS.length, VIS));
+    cards.add(e, EVENTS.length - 1); s2.refresh(); look.sizesTick();
+    go(EVENTS.length - 1, 'user');
   },
   async usePhoto() {
     const e = EVENTS[state.i], left = hero.classList.contains('rail-left'); e.banner = photoSet(left); e.fp = photoFp(left); e.layout = 'text'; e.suggested = null; setPal(e, 'blue'); e.ver++;
