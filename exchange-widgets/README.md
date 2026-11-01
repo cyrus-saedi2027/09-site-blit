@@ -1,8 +1,8 @@
 # ویجت‌های اپلیکیشن صرافی · Exchange Widget Lab
 
-این پوشه کتابخونه‌ی ویجت‌های اپلیکیشن صرافیه. هر ویجت یه **شماره** داره (۰۱، ۰۲، …) که هم تو صفحه کنار خودش نوشته شده و هم اسم پوشه‌ش با همون شروع می‌شه. هر وقت درباره‌ی یه ویجت حرف می‌زنیم، فقط شماره‌ش رو می‌گیم.
+این پوشه کتابخونه‌ی ویجت‌های اپلیکیشن صرافیه. هر ویجت یه **شماره** داره (۰۱، ۰۲، …) که هم تو صفحه کنار خودش نوشته شده و هم اسم پوشه‌ش با همون شروع می‌شه. از ۰۴ به بعد هر شماره یه **مجموعه**‌ست: همه‌ی طرح‌های یه عکس که هارمونی یکسانی دارن، و هر کارتش یه زیرشماره داره (مثلاً ۰۴·۲). هر وقت درباره‌ی یه ویجت حرف می‌زنیم، فقط شماره‌ش رو می‌گیم.
 
-This folder is the widget library for the exchange app. Every widget has a **number** (01, 02, …) that is printed on its stage in the gallery and starts its folder name. The gallery page shows all widgets on one background, live, with their motion and interaction. Each widget's `SPEC.md` is the handoff for building it in the real app. This is separate from `ui-reference/` (the ticketing site).
+This folder is the widget library for the exchange app. Every widget has a **number** (01, 02, …) that is printed on its stage in the gallery and starts its folder name. From 04 on, a number is a **set**: all the designs of one reference shot, which share one look; each card in it has a sub-number (04·1, 04·2, …) printed above it. The gallery page shows all widgets on one background, live, with their motion and interaction. Each widget's `SPEC.md` is the handoff for building it in the real app. This is separate from `ui-reference/` (the ticketing site).
 
 ## چطور ببینی · How to view
 
@@ -23,7 +23,8 @@ cd exchange-widgets && npx http-server -p 8000
 |---|---|---|---|---|
 | 01 | بودجه‌ی هفتگی | Budget · weekly chart, from the owner's reference shot: rolling numbers, scrub the chart, throw the bills, 3D tilt | [`widgets/01-budget`](widgets/01-budget/) | first version |
 | 02 | اندازه‌ی بازار | Market size · quarterly chart, from the owner's reference shot: dark card with blue light, the white/grey split follows the scrub, red/green tooltip, ⋮ menu (quarterly / yearly, forecast on/off), pointer-lit rim | [`widgets/02-market-size`](widgets/02-market-size/) | first version |
-| 03 | تحلیل درآمد | Revenue analytics · monthly chart, from the owner's reference shot: glass card with a neon rim kept at the shot's 3D angle and floor light; it turns to face you, the rim follows the pointer, a probe and glass tooltip ride the curve, working "This Month" (zoom to 7 days), month and "⋯" (compare with last month) menus | [`widgets/03-revenue`](widgets/03-revenue/) | **new, waiting for feedback** |
+| 03 | تحلیل درآمد | Revenue analytics · monthly chart, from the owner's reference shot: glass card with a neon rim kept at the shot's 3D angle and floor light; it turns to face you, the rim follows the pointer, a probe and glass tooltip ride the curve, working "This Month" (zoom to 7 days), month and "⋯" (compare with last month) menus | [`widgets/03-revenue`](widgets/03-revenue/) | first version |
+| 04 | سلامت روزانه (مجموعه، ۵ کارت) | Daily health · a set of five dot-matrix cards from one shot: **04·1** Activity, **04·2** Sleep time, **04·3** Heart Rate, **04·4** Stress, **04·5** Energy. The dot font is read off the shot; numbers ripple dot by dot, every chart scrubs (the rest of the day dims behind a moving edge), the side pills switch the measure, the heart beats at its bpm | [`widgets/04-health`](widgets/04-health/) | **new, waiting for feedback** |
 
 ## ساختار · Structure
 
@@ -32,9 +33,11 @@ exchange-widgets/
   index.html            the gallery: masthead, then one stage per widget
   lab/lab.css           background, layout, dark (default) and light themes
   lab/lab.js            registry, theme and slow-motion tools, background, plays each intro when the widget comes into view
+  lab/kit.js            helpers the sets share: springs, rolling digits, monotone curves, pointer
   widgets/01-budget/    widget.js (markup and behaviour), widget.css, SPEC.md
   widgets/02-market-size/  the same three files
   widgets/03-revenue/      the same three files
+  widgets/04-health/       a set: set.js, set.css, SPEC.md
   tools/bundle.mjs      builds single-file copies into dist/ (one to send, one for a claude.ai Artifact)
 ```
 
@@ -49,6 +52,7 @@ node tools/bundle.mjs
 3. In `index.html`: add the two files inside the `bundle:css` and `bundle:js` blocks, copy the `<article class="stage" id="w01">` block, change the number everywhere in it (`id`, the big number, the kicker, `data-mount`, the corner tag, the folder path) and add a chip to the `.index` list.
 4. Prefix every class with the widget's number (`.w02-…`) so widgets never collide, and size everything from the container (`--u`), so a widget looks the same at any width.
 5. Shared rules: continuous motion only on `transform` and `opacity`; always a reduced-motion path; stop the loop when off screen; GSAP 3.13 is the only library.
+6. **A set** (one shot with several designs) works the same way with `set.js` / `set.css`, a `.stage.is-set` stage and a `.stage-subs` list of chips (`data-sub="0"`, …). Print each card's sub-number (`05·1`, …) next to it inside the set, and return `focus(i)` from `mount` so the chips can point at a card.
 
 ## قواعد مشترک · Shared rules
 

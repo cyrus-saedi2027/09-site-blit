@@ -190,6 +190,25 @@
         live.setAttribute('aria-pressed', String(on));
         api.setLive(on);
       });
+      // a set's sub-number chips point at one of its cards
+      if (api.focus) {
+        let hold = 0;
+        const point = i => { clearTimeout(hold); api.focus(i); stage.querySelectorAll('[data-sub]').forEach(b => b.classList.toggle('is-on', Number(b.dataset.sub) === i)); };
+        const release = delay => { clearTimeout(hold); hold = setTimeout(() => point(null), delay); };
+        stage.querySelectorAll('[data-sub]').forEach(chip => {
+          const i = Number(chip.dataset.sub);
+          chip.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') point(i); });
+          chip.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') release(90); });
+          chip.addEventListener('focus', () => point(i));
+          chip.addEventListener('blur', () => release(90));
+          chip.addEventListener('click', e => {
+            point(i);
+            const r = host.getBoundingClientRect();
+            if (r.top < 0 || r.bottom > innerHeight) host.scrollIntoView({ behavior: Lab.reduced ? 'auto' : 'smooth', block: 'center' });
+            if (e.pointerType !== 'mouse') release(2400);   // touch and keyboard: show it for a moment
+          });
+        });
+      }
     });
 
     document.addEventListener('visibilitychange', () => {

@@ -14,13 +14,16 @@
 <link rel="stylesheet" href="widgets/01-budget/widget.css">
 <link rel="stylesheet" href="widgets/02-market-size/widget.css">
 <link rel="stylesheet" href="widgets/03-revenue/widget.css">
+<link rel="stylesheet" href="widgets/04-health/set.css">
 <!-- /bundle:css -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <!-- bundle:js -->
 <script defer src="lab/lab.js"></script>
+<script defer src="lab/kit.js"></script>
 <script defer src="widgets/01-budget/widget.js"></script>
 <script defer src="widgets/02-market-size/widget.js"></script>
 <script defer src="widgets/03-revenue/widget.js"></script>
+<script defer src="widgets/04-health/set.js"></script>
 <!-- /bundle:js -->
 </head>
 <body>
@@ -62,11 +65,12 @@
   <section class="intro" aria-labelledby="lab-title">
     <p class="eyebrow">اپلیکیشن صرافی · کتابخانه‌ی ویجت</p>
     <h1 id="lab-title">ویجت‌های اپ صرافی، <span class="grad">یکی‌یکی و شماره‌دار</span></h1>
-    <p class="lead">هر ویجت یه شماره داره و پوشه‌ی کدش هم با همون شماره شروع می‌شه. باهاشون بازی کن (بکش، پرت کن، ماوس رو تکون بده) و هر جا نظری داشتی، فقط بگو «ویجت ۰۱».</p>
+    <p class="lead">هر ویجت یه شماره داره و پوشه‌ی کدش هم با همون شماره شروع می‌شه. از ۰۴ به بعد هر شماره یه <b>مجموعه</b>‌ست: چند کارت هم‌خانواده از یه طرح، که هر کدوم شماره‌ی خودش رو داره (مثلاً <bdi dir="ltr">04·2</bdi>). باهاشون بازی کن و هر جا نظری داشتی، فقط بگو «ویجت ۰۱» یا «۰۴·۲».</p>
     <nav class="index" aria-label="فهرست ویجت‌ها">
       <a href="#w01"><b>01</b>بودجه‌ی هفتگی</a>
       <a href="#w02"><b>02</b>اندازه‌ی بازار</a>
       <a href="#w03"><b>03</b>تحلیل درآمد</a>
+      <a href="#w04"><b>04</b>سلامت روزانه · ۵ کارت</a>
     </nav>
   </section>
 
@@ -158,6 +162,42 @@
       <div class="stage-show">
         <span class="stage-tag" aria-hidden="true"><i></i>W · 03</span>
         <div class="stage-mount is-wide" data-mount="3"></div>
+      </div>
+    </article>
+    <article class="stage is-set" id="w04" aria-labelledby="w04-title">
+      <div class="stage-info">
+        <div class="stage-id">
+          <p class="stage-num" aria-hidden="true"><span>0</span><span>4</span></p>
+          <p class="stage-kicker"><b>مجموعه‌ی شماره‌ی ۴</b><span>Set · 04 · 5 cards</span></p>
+        </div>
+        <h2 class="stage-title" id="w04-title">سلامت روزانه</h2>
+        <p class="stage-en">Daily health · dot-matrix cards</p>
+        <p class="stage-desc">پنج کارت سیاه با عددهای نقطه‌ای، مثل طرح. فونت نقطه‌ای هم نقطه‌به‌نقطه از روی عکس خونده شده. هر کارت شماره‌ی خودش رو داره؛ روی شماره‌ها ببر تا کارتش رو نشون بده:</p>
+        <ol class="stage-subs" aria-label="کارت‌های مجموعه‌ی ۴">
+          <li><button type="button" data-sub="0"><b>04·1</b><span>فعالیت<i>Activity</i></span></button></li>
+          <li><button type="button" data-sub="1"><b>04·2</b><span>زمان خواب<i>Sleep time</i></span></button></li>
+          <li><button type="button" data-sub="2"><b>04·3</b><span>ضربان قلب<i>Heart Rate</i></span></button></li>
+          <li><button type="button" data-sub="3"><b>04·4</b><span>استرس<i>Stress</i></span></button></li>
+          <li><button type="button" data-sub="4"><b>04·5</b><span>انرژی<i>Energy</i></span></button></li>
+        </ol>
+        <ul class="hints">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg><span><b>روی ردیف نمودار هر کارت بکش.</b> عدد نقطه‌ای همون لحظه رو نشون می‌ده و نقطه‌به‌نقطه موج برمی‌داره، زیرعنوان ساعت رو می‌گه و باقی روز پشت یه لبه‌ی متحرک کم‌رنگ می‌شه.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="7" y="2.5" width="10" height="19" rx="5"/><path d="M12 7v3"/><path d="M10 15h4"/></svg><span><b>روی دکمه‌ی کنار عدد بزن.</b> دقیقه ⇄ کالری، خواب ⇄ زمان در رخت‌خواب، ضربان ⇄ <bdi dir="ltr">HRV</bdi>، الان ⇄ میانگین روز.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/><circle cx="9" cy="11" r=".8"/><circle cx="13" cy="11" r=".8"/></svg><span><b>ماوس رو روی عددها ببر.</b> نقطه‌ها زیر نشانگر درشت می‌شن و کارت کمی به سمتت خم می‌شه. قلب با همون ضربانی که نشون می‌ده می‌زنه.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M7.5 14h9"/></svg><span>با کیبورد: Tab تا نمودار هر کارت، بعد ← و → (با Shift یک ساعت)؛ Esc برمی‌گرده به الان.</span></li>
+        </ul>
+        <div class="stage-actions">
+          <button class="btn primary" type="button" data-act="replay">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.2V9h4.8"/></svg>
+            از اول
+          </button>
+          <button class="btn" type="button" data-act="live" aria-pressed="false"><i class="dot" aria-hidden="true"></i>داده‌ی زنده</button>
+        </div>
+        <code class="stage-path">widgets/04-health/</code>
+      </div>
+      <div class="stage-show">
+        <span class="stage-tag" aria-hidden="true"><i></i>SET · 04</span>
+        <div class="stage-mount is-tall" data-mount="4"></div>
       </div>
     </article>
   </main>
