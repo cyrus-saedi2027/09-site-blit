@@ -26,6 +26,7 @@ cd exchange-widgets && npx http-server -p 8000
 | 03 | تحلیل درآمد | Revenue analytics · monthly chart, from the owner's reference shot: glass card with a neon rim kept at the shot's 3D angle and floor light; it turns to face you, the rim follows the pointer, a probe and glass tooltip ride the curve, working "This Month" (zoom to 7 days), month and "⋯" (compare with last month) menus | [`widgets/03-revenue`](widgets/03-revenue/) | first version |
 | 04 | سلامت روزانه (مجموعه، ۵ کارت) | Daily health · a set of five dot-matrix cards from one shot: **04·1** Activity, **04·2** Sleep time, **04·3** Heart Rate, **04·4** Stress, **04·5** Energy. The dot font is read off the shot; numbers ripple dot by dot, every chart scrubs (the rest of the day dims behind a moving edge), the side pills switch the measure, the heart beats at its bpm | [`widgets/04-health`](widgets/04-health/) | **new, waiting for feedback** |
 | 05 | گزارش پیشرفت | Progress Report · weekly steps, from the owner's shot (it had one design, so 05 is one card): the panel's colours are sampled from the shot and live (they drift, follow the pointer, ring when pressed); "+" turns into × and opens seven daily goal capsules to scrub; the red pill flips between steps and percent | [`widgets/05-progress`](widgets/05-progress/) | **new, waiting for feedback** |
+| 06 | بینش و نرخ تبدیل (مجموعه، ۲ کارت) | Insights pager · **06·1** Insights (revenue growth, orange) and **06·2** Conversion (blue). In the shot they are pages 4 and 5 of one deck; here each card is its own six-page deck: dashes, swipe or keys turn pages (charts morph, numbers roll), a working Daily / Weekly / Monthly menu, the marker and the glowing dot scrub their charts, "Explore more +" opens a glass panel, the fitted background lights lean toward the pointer | [`widgets/06-insights`](widgets/06-insights/) | **new, waiting for feedback** |
 
 ## ساختار · Structure
 
@@ -40,6 +41,7 @@ exchange-widgets/
   widgets/03-revenue/      the same three files
   widgets/04-health/       a set: set.js, set.css, SPEC.md
   widgets/05-progress/     the same three files (a set of one card)
+  widgets/06-insights/     the same three files (a full-width set: `.stage.is-full`)
   tools/bundle.mjs      builds single-file copies into dist/ (one to send, one for a claude.ai Artifact)
 ```
 

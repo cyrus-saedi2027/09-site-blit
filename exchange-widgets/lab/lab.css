@@ -475,6 +475,18 @@ body {
 .stage-mount { width: min(100%, 500px); }
 .stage-mount.is-wide { width: min(100%, 640px); }
 .stage-mount.is-tall { width: min(100%, 460px); }
+.stage-mount.is-full { width: min(100%, 1100px); }
+
+/* a set wider than the stage's right column: notes on top, the set below at full width */
+.stage.is-full { grid-template-columns: minmax(0, 1fr); }
+.stage.is-full .stage-show { border-inline-start: 0; border-top: 1px solid var(--edge); min-height: 0; padding-top: clamp(56px, 6vw, 72px); }
+@media (min-width: 941px) {
+  .stage.is-full .stage-info { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(32px, 5vw, 72px); row-gap: 14px; align-content: start; }
+  .stage.is-full .stage-info > * { grid-column: 1; }
+  .stage.is-full .hints { grid-column: 2; grid-row: 1 / span 5; align-self: start; margin-top: 0; }
+  .stage.is-full .stage-actions { grid-column: 2; grid-row: 6; }
+  .stage.is-full .stage-path { grid-column: 2; grid-row: 7; }
+}
 
 /* rolling digits from lab/kit.js (the sets use them) */
 .kit-odo { display: inline-flex; height: 1.2em; line-height: 1.2em; white-space: nowrap; vertical-align: baseline; }

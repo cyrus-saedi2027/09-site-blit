@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="widgets/03-revenue/widget.css">
 <link rel="stylesheet" href="widgets/04-health/set.css">
 <link rel="stylesheet" href="widgets/05-progress/set.css">
+<link rel="stylesheet" href="widgets/06-insights/set.css">
 <!-- /bundle:css -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <!-- bundle:js -->
@@ -26,6 +27,7 @@
 <script defer src="widgets/03-revenue/widget.js"></script>
 <script defer src="widgets/04-health/set.js"></script>
 <script defer src="widgets/05-progress/set.js"></script>
+<script defer src="widgets/06-insights/set.js"></script>
 <!-- /bundle:js -->
 </head>
 <body>
@@ -74,6 +76,7 @@
       <a href="#w03"><b>03</b>تحلیل درآمد</a>
       <a href="#w04"><b>04</b>سلامت روزانه · ۵ کارت</a>
       <a href="#w05"><b>05</b>گزارش پیشرفت</a>
+      <a href="#w06"><b>06</b>بینش و تبدیل · ۲ کارت</a>
     </nav>
   </section>
 
@@ -230,6 +233,39 @@
       <div class="stage-show">
         <span class="stage-tag" aria-hidden="true"><i></i>W · 05</span>
         <div class="stage-mount is-wide" data-mount="5"></div>
+      </div>
+    </article>
+    <article class="stage is-set is-full" id="w06" aria-labelledby="w06-title">
+      <div class="stage-info">
+        <div class="stage-id">
+          <p class="stage-num" aria-hidden="true"><span>0</span><span>6</span></p>
+          <p class="stage-kicker"><b>مجموعه‌ی شماره‌ی ۶</b><span>Set · 06 · 2 cards</span></p>
+        </div>
+        <h2 class="stage-title" id="w06-title">بینش و نرخ تبدیل</h2>
+        <p class="stage-en">Insights pager · revenue growth and conversion</p>
+        <p class="stage-desc">دو کارت تیره با نور نارنجی و آبی، مثل طرح. تو عکس این دو تا صفحه‌ی ۴ و ۵ از یه دسته‌ی ورق‌خوردنی بودن؛ اینجا هر کارت دسته‌ی شش‌صفحه‌ای خودش رو داره. نور پس‌زمینه از روی عکس اندازه گرفته شده و دنبال ماوس می‌آد.</p>
+        <ol class="stage-subs" aria-label="کارت‌های مجموعه‌ی ۶">
+          <li><button type="button" data-sub="0"><b>06·1</b><span>بینش، رشد درآمد<i>Insights</i></span></button></li>
+          <li><button type="button" data-sub="1"><b>06·2</b><span>نرخ تبدیل<i>Conversion</i></span></button></li>
+        </ol>
+        <ul class="hints">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg><span><b>روی نمودار بکش.</b> تو ۰۶·۱ نشانگر نارنجی روی خط سُر می‌خوره و خط‌چینش دنبالش می‌آد؛ تو ۰۶·۲ نقطه‌ی نورانی روی موج حرکت می‌کنه. عدد هر لحظه رو نشون می‌ده.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12h4M17 12h4"/><path d="M10 12h4" stroke-width="3"/></svg><span><b>روی خط‌های پایین بزن یا کارت رو بکش به چپ و راست.</b> صفحه عوض می‌شه: عنوان سُر می‌خوره، عدد می‌غلته و نمودار به شکل صفحه‌ی تازه درمیاد.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"/></svg><span><b>«<bdi dir="ltr">Weekly</bdi>» رو باز کن.</b> روزانه، هفتگی یا ماهانه؛ داده‌ها و نمودار عوض می‌شن.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span><b>تو ۰۶·۲ روی «<bdi dir="ltr">Explore more +</bdi>» بزن.</b> شیشه بالا میاد و منبع تبدیل‌ها رو نشون می‌ده. با کیبورد: Tab، فلش‌ها روی خط‌ها و نمودار، Esc.</span></li>
+        </ul>
+        <div class="stage-actions">
+          <button class="btn primary" type="button" data-act="replay">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.2V9h4.8"/></svg>
+            از اول
+          </button>
+          <button class="btn" type="button" data-act="live" aria-pressed="false"><i class="dot" aria-hidden="true"></i>داده‌ی زنده</button>
+        </div>
+        <code class="stage-path">widgets/06-insights/</code>
+      </div>
+      <div class="stage-show">
+        <span class="stage-tag" aria-hidden="true"><i></i>SET · 06</span>
+        <div class="stage-mount is-full" data-mount="6"></div>
       </div>
     </article>
   </main>
