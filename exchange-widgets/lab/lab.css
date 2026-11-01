@@ -476,6 +476,23 @@ body {
 .stage-mount.is-wide { width: min(100%, 640px); }
 .stage-mount.is-tall { width: min(100%, 460px); }
 
+/* rolling digits from lab/kit.js (the sets use them) */
+.kit-odo { display: inline-flex; height: 1.2em; line-height: 1.2em; white-space: nowrap; vertical-align: baseline; }
+.kit-odo .odo-c {
+  display: inline-block;
+  position: relative;
+  flex: none;
+  height: 1.2em;
+  margin-inline: -.1em;
+  padding-inline: .1em;
+  overflow: hidden;
+  box-sizing: border-box;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 20%, #000 84%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 20%, #000 84%, transparent 100%);
+}
+.kit-odo .odo-c.is-glyph { overflow: visible; -webkit-mask-image: none; mask-image: none; }
+.kit-odo .odo-s { display: block; white-space: pre; line-height: 1.2em; text-align: left; will-change: transform; }
+
 /* a set's sub-numbers: each chip points at one card of the set */
 .stage-subs {
   list-style: none;

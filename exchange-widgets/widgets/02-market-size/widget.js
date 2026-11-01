@@ -407,7 +407,7 @@
     const lift = e => { if (!S.pressed) return; S.pressed = false; backSoon(e && e.pointerType === 'mouse' ? 1400 : 1100); };
     el.scrub.addEventListener('pointerup', lift);
     el.scrub.addEventListener('pointercancel', () => { S.pressed = false; backSoon(300); });
-    el.scrub.addEventListener('pointerleave', () => { if (!S.pressed) backSoon(650); });
+    el.scrub.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !S.pressed) backSoon(650); });   // touch: pointerup decides
     el.scrub.addEventListener('keydown', e => {
       const cur = shown();
       if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setPick(Math.max(1, cur - 1)); }

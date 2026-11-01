@@ -575,7 +575,7 @@
     el.scrub.addEventListener('pointermove', e => { if (S.menu) return; if (e.pointerType === 'mouse' || S.pressed) { clearTimeout(leaveTimer); setPick(dayAt(e)); } });
     el.scrub.addEventListener('pointerup', e => { S.pressed = false; if (e.pointerType !== 'mouse') { leaveTimer = setTimeout(() => setPick(null), 1400); } });
     el.scrub.addEventListener('pointercancel', () => { S.pressed = false; setPick(null); });
-    el.scrub.addEventListener('pointerleave', () => { if (!S.pressed) { clearTimeout(leaveTimer); leaveTimer = setTimeout(() => setPick(null), 350); } });
+    el.scrub.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !S.pressed) { clearTimeout(leaveTimer); leaveTimer = setTimeout(() => setPick(null), 350); } });   // touch: pointerup decides
     el.scrub.addEventListener('keydown', e => {
       const n = MONTHS[S.month].days, lo = Math.max(1, Math.ceil(V.w0 - .01)), cur = S.pick ?? n;
       if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { e.preventDefault(); setPick(Math.max(lo, cur - 1)); }

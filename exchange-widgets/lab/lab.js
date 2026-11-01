@@ -26,7 +26,7 @@
   /* fonts the widgets measure with (rolling digits need real glyph widths) */
   Lab.fonts = new Promise(resolve => {
     if (!document.fonts || !document.fonts.load) { resolve(); return; }
-    const faces = ['400 40px Outfit', '500 40px Outfit', '600 40px Outfit'];
+    const faces = ['400 40px Outfit', '500 40px Outfit', '600 40px Outfit', '300 40px Inter', '400 40px Inter', '500 40px Inter'];
     Promise.all(faces.map(f => document.fonts.load(f))).then(() => resolve(), () => resolve());
     setTimeout(resolve, 2200);
   });

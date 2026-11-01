@@ -339,7 +339,7 @@
       c.scrubEl.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || pressed) { clearTimeout(leave); pick(snap(toX(e))); } });
       c.scrubEl.addEventListener('pointerup', e => { pressed = false; if (e.pointerType !== 'mouse') leave = setTimeout(() => pick(null), 1400); });
       c.scrubEl.addEventListener('pointercancel', () => { pressed = false; pick(null); });
-      c.scrubEl.addEventListener('pointerleave', () => { if (!pressed) { clearTimeout(leave); leave = setTimeout(() => pick(null), 260); } });
+      c.scrubEl.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse' && !pressed) { clearTimeout(leave); leave = setTimeout(() => pick(null), 260); } });
       c.scrubEl.addEventListener('keydown', e => {
         const [a, b] = c.range, cur = c.pick ?? b;
         const unit = id === 'heart' ? 1 : id === 'stress' ? gx(1) - GRID.x0 : STEP5 * (e.shiftKey ? 12 : 3);
@@ -425,7 +425,7 @@
         const focus = S.focus === ci ? 1 : 0;
         step(c.tiltX, dt); step(c.tiltY, dt); step(c.lift, dt); step(c.glow, dt);
         const lift = reduced ? 0 : Math.max(c.lift.v, focus);
-        W.tf(c.el, `perspective(${(1000 * k).toFixed(0)}px) rotateX(${c.tiltX.v.toFixed(3)}deg) rotateY(${c.tiltY.v.toFixed(3)}deg) translate3d(0,${(-lift * 3 * k).toFixed(2)}px,0)`);
+        if (!introTl) W.tf(c.el, `perspective(${(1000 * k).toFixed(0)}px) rotateX(${c.tiltX.v.toFixed(3)}deg) rotateY(${c.tiltY.v.toFixed(3)}deg) translate3d(0,${(-lift * 3 * k).toFixed(2)}px,0)`);
         if (c.glow.v > .002 || c.glow.t > 0) {
           W.tf(c.glare, `translate3d(${((P.x - d.x) * k).toFixed(1)}px,${((P.y - d.y) * k).toFixed(1)}px,0)`);
           W.style(c.glare, 'opacity', c.glow.v.toFixed(3));
