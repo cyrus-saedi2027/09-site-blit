@@ -13,7 +13,7 @@ This folder is the widget library for the exchange app. Every widget has a **num
 cd exchange-widgets && npx http-server -p 8000
 ```
 
-- Private preview (owner only): https://claude.ai/artifact/BTiquurgTiZ1PMPsitsU8i
+- Private preview (owner only): https://claude.ai/artifact/BTiquurgTiZ1PMPsitsU8i (widgets) · https://claude.ai/artifact/W5SxtGw9fLPSDXqFDxQVvu (backgrounds)
 - `index.html?still` shows the final frame with no motion (for screenshots).
 - Top bar: **ویجت‌ها / بک‌گراندها** switches between the two sections; **حرکت آهسته** slows every motion to a quarter of its speed; the sun/moon button switches the background between dark and light (widgets keep their own colours).
 
