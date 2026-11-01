@@ -1,7 +1,7 @@
 # Hero · نسخه‌ی ۹ · جایگاه ویژه، دقیقاً اندازه‌ی دسکتاپ، همه‌چیز قابل‌تنظیم · handoff spec
 
 > **خلاصه برای خودت:** نسخه‌ی ۹ همون نسخه‌ی ۸ است (چند کادر جدای نرم‌گوشه با فاصله‌ی کم: **هدر**، **کادر کارت‌ها**، **کادر خودِ بنر**، **کادر اطلاعات**) که سه دور کار روش شده:
-> 1. **دقیقاً اندازه‌ی دسکتاپ:** کادرها کل پنجره رو لبه‌به‌لبه پر می‌کنن (حاشیه‌ی برابر از چهار طرف، فاصله‌ی برابر بینشون)، روی هر دسکتاپی از ۱۲۸۰×۶۰۰ تا ۲۵۶۰×۱۴۴۰ و عریض‌تر. بنر همیشه کامل و بی‌برش وسط کادرش می‌شینه؛ جای خالی کنارش (وقتی شکل پنجره فرق داره) **سیاهه**.
+> 1. **دقیقاً اندازه‌ی دسکتاپ:** کادرها کل پنجره رو لبه‌به‌لبه پر می‌کنن (حاشیه‌ی برابر از چهار طرف، فاصله‌ی برابر بینشون)، روی هر دسکتاپی از ۱۲۸۰×۶۰۰ تا ۲۵۶۰×۱۴۴۰ و عریض‌تر. بنر همیشه کامل و بی‌برش وسط کادرش می‌شینه؛ اگه شکل کادر تا ۲٫۵٪ با بنر فرق داشته باشه کادر رو کامل پر می‌کنه (کشیدگی‌اش دیده نمی‌شه)، وگرنه جای خالی کنارش **سیاهه**.
 > 2. **همه‌چیز تو «تنظیمات نمونه» (دکمه‌ی گرد پایین‌چپ) قابل‌تنظیمه:** فاصله‌ی بین کادرها و تا لبه‌ها، ارتفاع‌ها، گردی گوشه‌ها، خط دور، سایه، رنگ کادرها (حتی سفید)، رنگ نوشته‌ها، فونت، اندازه‌ی هر دسته نوشته، نوشته‌های ثابت (اسم سایت، دسته‌ها، دکمه‌ها…)، آیتم‌های هدر، شدت و نوع حرکت. ۱۰ «حالت آماده» (فشرده، باز، گرد، تیز، چسبیده، سفید…) و «کپی تنظیمات» که متنش رو می‌شه برای ما فرستاد تا همون بشه پیش‌فرض. تب «اندازه‌ها»: اندازه‌ی هر کادر و خودِ بنر به پیکسل، اندازه‌ای که از برگزارکننده می‌خوایم، و یه لایه که اندازه‌ها و فاصله‌ها رو روی صفحه می‌کشه.
 > 3. **حرفه‌ای‌تر:** هدر ثابته و با اسکرول یه کپسول کوچیک وسط‌چین می‌شه (با حرکت)؛ هیرو سرجاش می‌مونه و **بخش دوم** مثل ورقه از روش رد می‌شه؛ جستجوی پنجره‌ای (`/` یا Ctrl+K)، منوی شهر، لینک‌هایی که پیل زیرشون می‌لغزه، نور دنبال‌کننده‌ی موس روی کادرها، دکمه‌ی خرید آهنربایی با موج، کشیدن بنر برای عوض کردن اجرا، چهار نوع جابه‌جایی بین اجراها (محو، کشویی، زوم، پرده)، ۱۶ رنگ + رنگ دلخواه.
 >
@@ -9,11 +9,13 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, the fifth owner round (the fourth round of version 9 itself). History of v9:
+**Status:** v9, the sixth owner round (the third round of version 9 itself). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
-The owner sent four real shows, each with a 16:9 banner and a tall poster, all with their words baked in. The sample data in `index.html` uses the **banners**. They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
+- *Round C*: the owner's own settings became the defaults (gap and margins 9, header 71, facts panel 80, rail up to 480, thumbs' radius 7, 0.5 px line at 8 %, shadow 91 %, panels `#0d0d0d`, the small header 1400 wide); **six new banners** in a given order (the first one's name is the show «دختر بودن یا پسر نبودن، مسئله این است»; then «هانی نظریان»; «زندگی شاید…»; «برفاب»; «دو دقیقه به هشت»; «امان»), sized to fill the banner's panel; «when the zoom-out ends the banner must be completely visible».
+
+The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
 What comes from where:
 
@@ -66,7 +68,7 @@ Every number is a variable, and the settings panel writes them (§11). `--px` is
 --pad-t/b  max(edgeT / edgeB · px, safe-area)            --gap  gap · px
 --nav-h    max(50px, navH·px)      --dock-h  max(56px, dockH·px)      --r  max(radius·px, min(12px, radius))
 --hero-h   max(440px, 100svh)      --main-h  hero-h − pad-t − pad-b − nav-h − gap
---n        the number of shows (the script sets it)
+--n        min(the number of shows, 4): the rail has room for four cards; the script sets it
 --rail-pad .75u   --arrow-h max(28px, 1.85u)   --card-gap .6u   --cap-h max(22px, 1.3u)   --cap-gap .35u   (0 when the captions are over the picture or off)
 --cell-h   (main-h − 2·rail-pad − 2·border − 2·arrow-h − (n + 1)·card-gap) / n
 --thumb-w  (cell-h − cap-h − cap-gap) × 16/9
@@ -75,7 +77,7 @@ Every number is a variable, and the settings panel writes them (§11). `--px` is
 
 - **The grid** (hero and every scene): columns `--rail-w` and `1fr` (swapped with the cards on the left), rows `--nav-h` and `1fr`, areas `"nav nav" "rail main"` or `"nav nav" "main rail"`, `gap`, and the page margins as padding. The rail and the banner column take **all** the width, so nothing is left over at the sides.
 - **The banner column** (`.tk`): rows `1fr` and `--dock-h`, so the banner's panel is `main-h − dock-h − gap` tall and as wide as the column.
-- **At 1920×1080 with the defaults:** margin 23 px, gap 15 px, rail 326 px, banner panel 1533×849, the banner 1505×847. `geom(W, H)` in the script is this same arithmetic for any window (the sizes tab uses it; a test checks it against the page at 22 sizes).
+- **At 1920×1080 with the defaults:** margin 9 px, gap 9 px, rail 339.5 px, banner panel 1553.5×893 (inside the 0.5 px line: 1552.5×892, a ratio of 1.7404), the banner fills it. `geom(W, H)` in the script is this same arithmetic for any window (the sizes tab uses it; a test checks it against the page at 22 sizes).
 - **In production** the hero is a size container (`container-type: size`) and the page's `100vw` / `100svh` become `100cqw` / `100cqh` of the hero; declare the variables on the hero element, not on `:root`.
 
 ---
@@ -102,14 +104,14 @@ Every number is a variable, and the settings panel writes them (§11). `--px` is
 
 The banner is **never cut and never covered** (unless the owner asks for «پر کردن کادر»). It is drawn with `object-fit: contain` in a panel that takes whatever room is left, so:
 
-- if the panel has the banner's own shape (to within 0.4 %), the banner fills it;
-- otherwise the banner sits whole in the middle and the rest of the panel is **black** (`fill: black`, the default) or **the banner's own edge, mirrored and blurred** (`fill: edge`): two copies of the same picture, one on each side (class `is-h`) or one above and one below (`is-v`), flipped so the column of pixels next to the picture is the picture's own edge column, blurred with `blur(1.4u)` and darkened by 26 %. The script measures the panel (`ResizeObserver`) and writes the picture's size as `--pw` and `--ph`; the CSS places the copies from those;
+- if the panel's shape is the banner's own to within **2.5 %** (`FILL_TOL`, the script's `is-fill`), the banner **fills the panel**: `object-fit: fill`, so nothing is cut and no bar is left; the stretch is less than 2.5 % (the six sample banners are 1.7417, the panel at 1920×1080 is 1.7404: 0.07 %), which the eye can't see. A 16:9 banner (1.7778) is 2.1 % off and fills as well;
+- otherwise (a wider difference: a 16:10 window, an ultra-wide one, a banner of 3:1) the banner sits whole in the middle and the rest of the panel is **black** (`fill: black`, the default) or **the banner's own edge, mirrored and blurred** (`fill: edge`): two copies of the same picture, one on each side (class `is-h`) or one above and one below (`is-v`), flipped so the column of pixels next to the picture is the picture's own edge column, blurred with `blur(1.4u)` and darkened by 26 %. The script measures the panel (`ResizeObserver`) and writes the picture's size as `--pw` and `--ph`; the CSS places the copies from those;
 - `fit: cover` fills the panel and cuts the banner (to compare);
 - the picture and its extension are one layer (`.pic`), so the zoom-out moves them together.
 
 **The page behind** is black (`bg: black`), a colour of the owner's (`bg: color`), or, as an option, the banner's own colours tiny and blurred (`bg: glow`: a 64×36 version, `blur 2.5px saturate 1.45`, made once on upload by the server).
 
-**Why not crop or leave margins:** cropping would cut the baked words (the sample «SkyKings» is half a per cent from the edge); leaving margins is the v8 problem (§2).
+**Why a stretch and not a crop:** cropping would cut the baked words (the samples have credits, logos and dates one or two per cent from an edge); a stretch of under 2.5 % cuts nothing; leaving margins is the v8 problem (§2).
 
 ---
 
@@ -121,14 +123,15 @@ The banner is **never cut and never covered** (unless the owner asks for «پر 
 | 0 | The next scene is built or taken from the pool, its picture decoded (`img.decode()`), and put on top at `opacity 0`. |
 | 0 → 0.38 | The old panels' content fades out (`0.32 × fade`). |
 | 0.36 → 1.2 | The new panels' content fades in (starts at `0.3 × fade`, lasts `0.7 × fade`, `power2.out`). |
-| 0 → 8.2 | The picture (and its extension, as one layer) zooms out inside its panel (linearly) over the show's 7 s plus the next fade's 1.2 s. |
+| 0 → 4.9 | A banner (and its extension, as one layer) zooms out inside its panel (`sine.out`: it slows down into its place) over 70 % of the show's time (`ZOOM_SHARE`). |
+| 4.9 → 7 | **The banner stands still, whole and at its full size**, so its words can be read; the time bar goes on. (A photo with the words over it, the text layout, keeps zooming out linearly over 8.2 s, until the next fade has finished.) |
 | 0.42 → | The new words fade in from 14px below (0.85 s, `power3.out`, stagger 0.07). |
 | 0.4 | The accent (the colour of the buy button, the ring, the hairline) changes. |
 | 7 | The next show starts. |
 
 - **Four styles** («جابه‌جایی بین اجراها»): *fade*; *slide* (the new panel rises from below when going down the rail, from above when going up, `expo.out`); *zoom* (the old one shrinks away, the new one settles from 1.07); *wipe* (a clip opens from the start side, `expo.inOut`). Each leaves nothing behind (a test checks the opacity, the transform and the clip after each).
 - **Intensity** («شدت حرکت»: آروم 0.6 / متعادل 1 / قوی 1.6) multiplies the distances, the zoom and the hover lifts. Reduced motion makes it 0 and the change a 0.4 s fade.
-- **The zoom** starts small, because the banner's words are near its edges: banner 1.02 / **1.05** / 1.09, photo 1.08 / **1.15** / 1.24.
+- **The zoom** starts small, because the banner's words are near its edges: banner 1.02 / **1.05** / 1.09, photo 1.08 / **1.15** / 1.24. A banner's zoom ends at 1 after `dur × 0.7` seconds (4.9 s of 7) and the banner then rests whole for the rest of its time; it is paused with the timer.
 - **Pausing** (the timer, the time sign and the picture's motion pause together): the pointer over the rail or a drag in progress, focus inside the rail, the pause button, the settings panel open, the search window open, the hero covered by the second section, the tab hidden.
 - **Quick clicking:** a scene is never reused while it is still fading, and a scene is let go once a newer one has fully faded in. After five clicks 120 ms apart and after fourteen changes in a row exactly one scene is showing, with the right words and the right active card.
 - **Entrance:** the header drops in, the rail's pieces slide in one by one, the banner's panel opens from the start side (a clip, `expo.out`, 1.4 s) while the first scene fades in already zooming out, the facts panel rises, then the words.
@@ -140,9 +143,9 @@ The banner is **never cut and never covered** (unless the owner asks for «پر 
 
 A panel with one card per show, the up and down bars and the pause button. It is as tall as the banner column.
 
-- **A card** is a 16:9 picture (the banner's 640 px version) with one line under it: «کنسرت SkyKings» on the start side and the short day («۷ آبان», «۲۵–۳۰ مهر») on the end side. The line can be under the picture, over it (on a gradient) or off; the day can be left out; it goes by itself when the picture is narrower than 190 px.
+- **A card** is a 16:9 picture (the banner's 640 px version) with one line under it: «تئاتر برفاب» on the start side and the short day («۱۲–۱۷ آبان», «۲۵–۳۰ مهر») on the end side. The line can be under the picture, over it (on a gradient) or off; the day can be left out; it goes by itself when the picture is narrower than 190 px.
 - **The cards share the height equally** (`--cell-h`), centred in their cell; the rail's width follows from the picture's (at most `railMax`).
-- **More cards than fit:** each cell keeps a minimum height and the list scrolls inside the panel.
+- **More cards than fit:** the rail has room for four cards (`VIS`; `--n` = min(shows, 4); every row is exactly `--cell-h`, so the width the owner tuned doesn't change with the number of shows). With six shows the list scrolls inside the panel in **whole cards**: the window shows four cards, the active one second from the top (`scrollTo` on the list, `scroll-snap`, so no card is left cut at rest), and slides when the active card leaves it (smooth; the page doesn't move). The bars, the arrow keys and the timer move the show and the window follows. The wheel over the rail scrolls the list and, at its end, the page.
 - **States:** the active card has a 2px ring in the show's ring colour and a glow, its words are white; the others are dimmed by `dim` % (14 by default) and come back on hover (and lift a little); focus has a ring; keys, `role="tab"`, hover pause: as v7.
 - **The time left on this show** («نشونه‌ی زمان باقی‌مونده»): a 3px bar at the bottom of the active picture that grows from the right, or a line that draws itself round the picture, or nothing. It is the timer itself; only the visible sign is written each frame.
 - **Side:** `.hero.rail-left` (the default) or not. With the cards on the left the pause button sits on the banner's side of the footer, so the prototype's settings button (bottom left) can float over the end of the down bar.
@@ -197,13 +200,13 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 
 | کلید | چی رو عوض می‌کنه | مقدارها | پیش‌فرض |
 |---|---|---|---|
-| `gap` | فاصله‌ها · فاصله‌ی بین کادرها | 0–60 px | 15 |
-| `edgeX` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی چپ و راست | 0–140 px | 23 |
-| `edgeT` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی بالا | 0–140 px | 23 |
-| `edgeB` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی پایین | 0–140 px | 23 |
-| `navH` | اندازه‌ی کادرها · ارتفاع هدر | 44–110 px | 63 |
-| `dockH` | اندازه‌ی کادرها · ارتفاع کادر اطلاعات | 56–200 px | 92 |
-| `railMax` | اندازه‌ی کادرها · حداکثر عرض ستون کارت‌ها | 160–480 px | 326 |
+| `gap` | فاصله‌ها · فاصله‌ی بین کادرها | 0–60 px | 9 |
+| `edgeX` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی چپ و راست | 0–140 px | 9 |
+| `edgeT` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی بالا | 0–140 px | 9 |
+| `edgeB` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی پایین | 0–140 px | 9 |
+| `navH` | اندازه‌ی کادرها · ارتفاع هدر | 44–110 px | 71 |
+| `dockH` | اندازه‌ی کادرها · ارتفاع کادر اطلاعات | 56–200 px | 80 |
+| `railMax` | اندازه‌ی کادرها · حداکثر عرض ستون کارت‌ها | 160–480 px | 480 |
 | `rail` | اندازه‌ی کادرها · جای ستون کارت‌ها | left / right | left |
 | `fit` | بنر · نمایش بنر | contain / cover | contain |
 | `fill` | بنر · جای خالی کنار بنر | black / edge | black |
@@ -220,12 +223,12 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 | کلید | چی رو عوض می‌کنه | مقدارها | پیش‌فرض |
 |---|---|---|---|
 | `radius` | گوشه‌ها و لبه‌ها · گردی گوشه‌ی کادرها | 0–60 px | 19 |
-| `radiusThumb` | گوشه‌ها و لبه‌ها · گردی کارت‌ها و عکس‌ها | 0–40 px | 10.5 |
+| `radiusThumb` | گوشه‌ها و لبه‌ها · گردی کارت‌ها و عکس‌ها | 0–40 px | 7 |
 | `btn` | گوشه‌ها و لبه‌ها · شکل دکمه‌ها | pill / soft / sharp | pill |
-| `borderW` | گوشه‌ها و لبه‌ها · ضخامت خط دور کادرها | 0–4 px | 1 |
-| `borderO` | گوشه‌ها و لبه‌ها · پررنگی خط دور کادرها | 0–100 ٪ | 22 |
-| `shadow` | گوشه‌ها و لبه‌ها · سایه‌ی کادرها | 0–100 ٪ | 80 |
-| `panelColor` | رنگ‌ها · رنگ کادرها | رنگ | #120f1b |
+| `borderW` | گوشه‌ها و لبه‌ها · ضخامت خط دور کادرها | 0–4 px | 0.5 |
+| `borderO` | گوشه‌ها و لبه‌ها · پررنگی خط دور کادرها | 0–100 ٪ | 8 |
+| `shadow` | گوشه‌ها و لبه‌ها · سایه‌ی کادرها | 0–100 ٪ | 91 |
+| `panelColor` | رنگ‌ها · رنگ کادرها | رنگ | #0d0d0d |
 | `textColor` | رنگ‌ها · رنگ نوشته‌ها | auto / white / black / custom | auto |
 | `textCustom` | رنگ‌ها · رنگ دلخواهِ نوشته‌ها | رنگ | #ffffff |
 | `font` | نوشته‌ها · فونت | vazir / plex / noto / system | vazir |
@@ -249,7 +252,7 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 | `hdLogin` | هدر · دکمه‌ی ورود | روشن / خاموش | روشن |
 | `hdWidth` | هدر · عرض هدر بالای صفحه | 60–100 ٪ | 100 |
 | `hdCompact` | هدر · هدر با اسکرول کوچیک بشه | روشن / خاموش | روشن |
-| `hdCompactW` | هدر · عرض هدر کوچیک‌شده | 760–1400 px | 920 |
+| `hdCompactW` | هدر · عرض هدر کوچیک‌شده | 760–1400 px | 1400 |
 | `hdHover` | هدر · نشونه‌ی لینک‌ها | pill / line / off | pill |
 | `hdProg` | هدر · خط پیشرفت اسکرول رو هدر | روشن / خاموش | روشن |
 | `brand` | نوشته‌های ثابت · اسم سایت | متن | بلیت |
@@ -288,7 +291,7 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 
 ## 12. Colours
 
-Sixteen sets (`PALETTE`): violet, blue, teal, green, gold, orange, crimson, pink, **white, silver, black**, cyan, lime, yellow, indigo, brown, and a colour of the owner's (`custom`, the other values are made from it). A set is: `accent` (the buy button's fill, the date's band), `light` (the badge's text), `onAccent` (the text on the fill), `ring` (the thin things: the active card's ring and glow, the hairline, the dot, the time sign, the logo's bars; the accent itself unless the accent is too dark to be seen on a dark panel, as black is: then white). The picture suggests one of the first eight on upload (`suggestPalette()`); on the four sample banners it gives gold, crimson, orange and crimson.
+Sixteen sets (`PALETTE`): violet, blue, teal, green, gold, orange, crimson, pink, **white, silver, black**, cyan, lime, yellow, indigo, brown, and a colour of the owner's (`custom`, the other values are made from it). A set is: `accent` (the buy button's fill, the date's band), `light` (the badge's text), `onAccent` (the text on the fill), `ring` (the thin things: the active card's ring and glow, the hairline, the dot, the time sign, the logo's bars; the accent itself unless the accent is too dark to be seen on a dark panel, as black is: then white). The picture suggests one of the first eight on upload (`suggestPalette()`); on the six sample banners it gives crimson, orange, crimson, violet, orange and violet (a black-and-white picture gets the brand violet); the sample data hand-picks gold for the golden concert banner and white for the black-and-white one.
 
 ---
 
@@ -305,11 +308,11 @@ slot {
 }
 // global (the look, one setting for the whole hero): see §11
 ```
-- `title` is the full line (also the `<h1>`; in the bar layout a visually hidden one). `type` and `name` label the rail card («کنسرت SkyKings»). `desc` is two lines, used by the text layout.
+- `title` is the full line (also the `<h1>`; in the bar layout a visually hidden one). `type` and `name` label the rail card («کنسرت هانی نظریان»). `desc` is two lines, used by the text layout.
 - `startsAt`, `endsAt`: ISO with +03:30. `price` is the lowest price in toman. `badge` is one of: پیش‌فروش، پرفروش، ظرفیت رو به اتمام، اجرای ویژه، جدید (or none). The short day under a rail card comes from `startsAt` / `endsAt`.
-- Banners: 640, 1024 and 1672 (or 1920) wide; `srcset` + `sizes="(min-width: 761px) 82vw, 100vw"`. Photos: 640, 1920, 2560.
+- Banners: 640, 1024 and 1672 (or 1920) wide, **ratio about 1.74** (the sample: 1672×960, 1024×588, 640×368); `srcset` + `sizes="(min-width: 761px) 82vw, 100vw"`. Photos: 640, 1920, 2560.
 - **No poster field.** A show's tall poster belongs to the poster shelf, not here. **No track field** (no music).
-- The sample's prices, the three numbers in the second section, and the dates and venues the banners don't state, are made up.
+- The sample's prices, the three numbers in the second section, and the dates, times and venues the banners don't state, are made up. («برفاب» says 1404 on its banner; the sample puts it in 1405, 12–17 Aban, so it is «this week»; the concert's hall, which the banner prints with a word the page can't read, is left out.)
 
 ---
 
@@ -317,10 +320,10 @@ slot {
 
 The panel in `index.html` («تنظیمات نمونه», the round button at the bottom left) has seven tabs: **نسخه‌ها** (only inside the comparison page: the versions and the preview sizes), **جایگاه** (this show), **چیدمان**, **سبک**, **هدر و متن**, **حرکت** (§11) and **اندازه‌ها** (§15). It can move to the other side of the screen. The «جایگاه» tab is the one the real admin would have:
 
-1. **Image:** drop or pick a file; the box «روی بنر نوشته (عنوان، تاریخ…) هست» picks the layout: ticked → *bar*, unticked → *text*. The panel says what it found: «بنر ۱۶:۹ · ۱۶۷۲×۹۴۱ · تو قابش کامل و بدون برش دیده می‌شه», or «نسبت ۳٫۰۰ به ۱ … کامل دیده می‌شه، ولی بالا و پایینش خالی می‌مونه (سیاهه)». **A tall or square picture (ratio under 1.15) is refused** («پوستر عمودی جای خودش رو تو قفسه‌ی پوستر داره، نه اینجا»), and the slot stays as it was. «عکس نمونه، بدون نوشته» puts a text-free photo in the slot.
+1. **Image:** drop or pick a file; the box «روی بنر نوشته (عنوان، تاریخ…) هست» picks the layout: ticked → *bar*, unticked → *text*. The panel says what it found: «بنر ۱۶:۹ · ۱۶۷۲×۹۴۱ · تو قابش کامل و بدون برش دیده می‌شه» (or that it fills the panel), or «نسبت ۳٫۰۰ به ۱ … کامل دیده می‌شه، ولی بالا و پایینش خالی می‌مونه (سیاهه)». **A tall or square picture (ratio under 1.15) is refused** («پوستر عمودی جای خودش رو تو قفسه‌ی پوستر داره، نه اینجا»), and the slot stays as it was. «عکس نمونه، بدون نوشته» puts a text-free photo in the slot.
 2. **Info:** کادر پایین / متن روی عکس. 3. **Colour:** 16 swatches (the one suggested from the picture is marked) and a colour of one's own. 4. **Texts:** title, kind, short name, venue, price from, badge. 5. **Reset** puts the slot back as it was.
 
-Validation worth having in the real one: at least 1600×900 (warn below 1920×1080); JPEG, PNG or WebP up to 10 MB; refuse a ratio under 1.15; warn how the panel will look for a ratio other than 16:9; warn if the banner's words come closer than 4 % to an edge (the zoom clips them for a moment).
+Validation worth having in the real one: at least 1600×900 (warn below 1920×1080); JPEG, PNG or WebP up to 10 MB; refuse a ratio under 1.15; warn how the panel will look for a ratio that isn't the panel's own (about 1.74 with the default look; within 2.5 % it fills the panel); warn if the banner's words come closer than 4 % to an edge (the zoom clips them for a moment).
 
 ---
 
@@ -330,13 +333,15 @@ The tab «اندازه‌ها» says, for the window it is in: the window and it
 
 | Window | Banner's panel | The banner | Rail | Gap | Margin |
 |---|---|---|---|---|---|
-| 2560×1440 | 2044×1132 | 2007×1130 | 435 | 20 | 31 |
-| **1920×1080** | **1533×849** | **1505×847** | 326 | 15 | 23 |
-| 1920×937 | 1584×737 | 1305×735 | 283 | 13 | 20 |
-| 1536×864 | 1228×679 | 1203×677 | 259 | 12 | 18 |
-| 1440×900 | 1150×724 | 1148×646 | 245 | 11 | 17 |
-| 1366×768 | 1101×599 | 1060×597 | 222 | 11 | 16 |
-| 1280×720 | 1037×558 | 988×556 | 202 | 10 | 15 |
+| 2560×1440 | 2072×1191 | 2071×1190 | 452 | 12 | 12 |
+| **1920×1080** | **1553×893** | **1552×892** | 340 | 9 | 9 |
+| 1920×937 | 1603×775 | 1349×774 | 294 | 8 | 8 |
+| 1536×864 | 1246×714 | 1245×713 | 268 | 7 | 7 |
+| 1440×900 | 1132×760 | 1131×649 | 288 | 7 | 7 |
+| 1366×768 | 1115×635 | 1114×634 | 232 | 6 | 6 |
+| 1280×720 | 1050×590 | 1049×589 | 212 | 6 | 6 |
+
+On every 16:9 window the panel is 1.74 : 1, so the banner (inside the 0.5 px line) fills it. A 16:10 window (1440×900) or a wide one (1920×937) leaves bars (here 55 px above and below, or 127 px at each side) — black, or the banner's mirrored edge.
 
 The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌ها رو روی صفحه بکش» draws a layer over the page: each panel's outline with its size, each gap in pink with its number, each margin in blue with its number, and the banner's own size. It follows the window, the scroll and every change of the look.
 
@@ -346,7 +351,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 
 | Step | Detail |
 |---|---|
-| Ask for | a **16:9 banner of 1920×1080** (at least 1600×900), JPEG, PNG or WebP up to 10 MB, with the important words at least 4 % from the edges (the picture starts 5 % zoomed in); for the text layout a **2560×1440** photo with no words. Another shape is accepted whole (with black beside it); a poster (ratio under 1.15) is refused |
+| Ask for | a banner of **1672×960** (ratio 1.74: the shape of the banner's panel at 1920×1080 with the default look; **3344×1920** for sharp high-density screens), JPEG, PNG or WebP up to 10 MB, with the important words at least 4 % from the edges (the picture starts 5 % zoomed in). A 16:9 banner (1920×1080) fills the panel too, stretched by 2 %. For the text layout a **2560×1440** photo with no words. A shape further off than 2.5 % is accepted whole (with black beside it); a poster (ratio under 1.15) is refused |
 | Make the sizes | WebP: 640 (the cards), 1024 and 1672 (or 1920 if the source has it); photos 640, 1920, 2560. Never upscale |
 | Make the ambient | 64 × 36, cover-fitted with a little bleed, `blur 2.5px saturate 1.45`, ~1 KB WebP (only used when the page's background is the glow) |
 | Suggest the colour | `suggestPalette()`: shrink to 64 px, skip transparent, grey (saturation < .28) and dark (value < .2) pixels, a 36-bin hue histogram weighted by `s²·v`, smoothed, the peak snapped to the nearest of the first eight colours; a black-and-white picture gets violet |
@@ -386,9 +391,10 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 
 - **Fit:** 22 window sizes × cards on both sides × bar and text layouts = 132 checks, all passing (2560×1440 … 1280×520, 3440×1440, 1024×768, 1280×1024, 820×1180, 390×844, 360×700): no horizontal scroll; header, rail, banner and facts reach the same margin on every side to within 1 px; the gaps equal `--gap`; the rail's top and bottom are the banner column's; no overlap; corners soft and panels opaque; no clipped text; the banner's rectangle has the banner's ratio and lies inside its panel; the cards are 16:9, inside the rail, evenly spaced; no text under 10.4 px; `geom()` equals the page to within 1.5 px.
 - **The look:** each setting changes the page by the amount it says (gap 30 → 30.0 px, margins 60/10/40 → 60.0 / 10.0 / 40.0, radius, border); white panels turn the text dark; the texts reach the header, the dock and the cards; a reload keeps the look; copy then paste brings it back; reset restores the defaults.
-- **Scrolling:** at the top the header is the full bar exactly on the grid's first row; at 400 px it is a pill centred to 0.02 px, top 10, width 767 and height 42 at 1600×900; the sheet rises over a pinned, shrinking hero; at one screen it covers it (top 0) and the show's timer is paused; at the bottom the progress line is full; back at the top everything is as it was.
+- **Scrolling:** at the top the header is the full bar exactly on the grid's first row; at 400 px it is a pill centred to 0.02 px, top 10, width 1167 and height 47 at 1600×900 (the default small header is 1400 px of the 1920 design); the sheet rises over a pinned, shrinking hero; at one screen it covers it (top 0) and the show's timer is paused; at the bottom the progress line is full; back at the top everything is as it was.
 - **Interactions:** search by kind, by name and by venue, a miss, Enter, `/`, Esc and Ctrl+K; the city menu; the highlight sliding to within 0.2 px; every header piece switched off; the second section's filter and numbers; the measuring layer's twelve labels; the arrow keys; dragging left and right; the lean (x 8.4 px) and its return; the four changes between shows each ending with opacity 1 and no transform or clip left; the ring and the bar; captions over, under, off; English digits; the title at 140 %; sharp buttons; the mode «چسبیده» (0 margin, 0 gap, 0 radius).
 - **Behaviour:** one scene after five quick clicks and after fourteen changes in a row; the timer pauses over the rail; the panel pauses the show; a 16:9 file is accepted, a poster refused, a 3:1 file accepted whole; no audio element, no player, no equaliser anywhere; reduced motion: paused, no zoom, shown.
+- **Six banners (round C):** fit 132 of 132 again, with six shows and the owner's defaults (the rail shows four whole cards in every window, 1920×1080: banner 1553.5×893, rail 339.5, `is-fill`, a stretch of 0.2 %); each of the six banners fills that panel (object-fit fill, picture 1552×891 in a 1553.5×893 panel); at 1920×937 the banner stays whole with black beside it (`contain`); the zoom is 1.027 at 1.5 s, 1.009 at 3 s and **exactly 1.0000 at 5.6 s and at 6.5 s**, when the banner's layer is the panel's size; the rail's window starts at card 0 0 1 2 2 2 for the six shows, each active card whole between the bars; the second section lays six cards in three columns; the measuring layer draws its twelve labels; the six files (18 sizes) load with no stand-in picture; no script errors.
 - **The comparison page:** the sample fills the window exactly; `1920x1080` makes the page inside exactly 1920×1080; the size and the version survive each other; v1 gets the capsule.
 - **Cost** (1920×1080, software rendering, per second of wall time): paused 0–1 ms of script; running (zoom + the time sign) 9 ms of script, 13 ms of style, 1 ms of layout; during a change 11 ms of script, 46 ms of style, 6 ms of layout.
 

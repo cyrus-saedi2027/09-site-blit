@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..900&display=swap">
-<link rel="preload" as="image" href="assets/events/skykings-banner-1672.webp" imagesrcset="assets/events/skykings-banner-1024.webp 1024w, assets/events/skykings-banner-1672.webp 1672w" imagesizes="(min-width: 761px) 82vw, 100vw" fetchpriority="high">
+<link rel="preload" as="image" href="assets/events/dokhtar-pesar-banner-1672.webp" imagesrcset="assets/events/dokhtar-pesar-banner-1024.webp 1024w, assets/events/dokhtar-pesar-banner-1672.webp 1672w" imagesizes="(min-width: 761px) 82vw, 100vw" fetchpriority="high">
 <script>document.documentElement.classList.add('is-intro');setTimeout(function(){document.documentElement.classList.remove('is-intro')},4000);</script>
 <style>
 /* Version 9: version 8 made to fit the desktop exactly, then made controllable.
@@ -34,20 +34,20 @@
   --ease: cubic-bezier(.16, 1, .3, 1);
   /* colour: the page, the panels, the text (as r, g, b so lines and washes can be made from it) */
   --bg: #000000;
-  --capsule: #120f1b;
+  --capsule: #0d0d0d;
   --fg: 255, 255, 255;
-  --bo: .22;
+  --bo: .08;
   --accent: #d9a441;
   --accent-l: #f5d48b;
   --on-accent: #1a1206;
   --ring: #d9a441;
   /* the look (the settings panel writes these) */
-  --gap-n: 15; --edge-x-n: 23; --edge-t-n: 23; --edge-b-n: 23; --nav-n: 63; --dock-n: 92; --rail-max-n: 326;
-  --r-n: 19; --rt-n: 10.5; --rb: 999px; --bw: 1px; --shadow: .8;
+  --gap-n: 9; --edge-x-n: 9; --edge-t-n: 9; --edge-b-n: 9; --nav-n: 71; --dock-n: 80; --rail-max-n: 480;
+  --r-n: 19; --rt-n: 7; --rb: 999px; --bw: .5px; --shadow: .91;
   --tx: 1; --tx-nav: 1; --tx-main: 1; --tx-small: 1; --tx-cap: 1; --tx-copy: 1;
   --fwb: 800; --fwm: 700;
   --dim: .14;
-  --hd-w: 100; --hd-cw: 920;
+  --hd-w: 100; --hd-cw: 1400;
   --mot: 1;
   /* the geometry */
   --hero-h: max(440px, 100svh);
@@ -158,9 +158,10 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .frame.is-v .ext img { width: var(--pw); height: calc(var(--ph) + var(--bx)); left: calc(50% - var(--pw) / 2); transform: scaleY(-1); }
 .frame.is-v .ext .ea { top: calc(50% - var(--ph) * 1.5); }
 .frame.is-v .ext .eb { top: calc(50% + var(--ph) / 2 - var(--bx)); }
-/* when the panel has the banner's own shape (to within half a per cent) the banner fills it; the look can also ask
-   for the banner to fill the panel always (it is then cut) */
-.frame.is-cover .pic img.art, :root[data-fit="cover"] .pic img.art { object-fit: cover; }
+/* when the panel has the banner's own shape (to within 2.5 %, set in the script) the banner fills it, stretched by less
+   than that; the look can also ask for the banner to fill the panel always (it is then cut) */
+.frame.is-fill .pic img.art { object-fit: fill; }
+:root[data-fit="cover"] .pic img.art { object-fit: cover; }
 :root[data-fit="cover"] .ext { display: none !important; }
 .frame-link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; cursor: pointer; }
 .frame-link:focus-visible { outline-offset: -3px; }
@@ -339,9 +340,9 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .c-pause svg.i { width: 40%; height: 40%; }
 #autoBtn .i-play, #autoBtn[aria-pressed="true"] .i-pause { display: none; }
 #autoBtn[aria-pressed="true"] .i-play { display: block; }
-.c-list { flex: 1 1 0; min-height: 0; display: grid; grid-auto-rows: minmax(calc(var(--cap-h) + var(--cap-gap) + var(--u) * 6), 1fr); gap: var(--card-gap); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 3px; margin: -3px; }
+.c-list { flex: 1 1 0; min-height: 0; display: grid; grid-auto-rows: var(--cell-h); gap: var(--card-gap); overflow-y: auto; scroll-snap-type: y proximity; scroll-padding-top: 3px; scrollbar-width: none; padding: 3px; margin: -3px; }
 .c-list::-webkit-scrollbar { display: none; }
-.card { all: unset; box-sizing: border-box; min-width: 0; min-height: 0; display: grid; place-items: center; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.card { all: unset; box-sizing: border-box; min-width: 0; min-height: 0; display: grid; place-items: center; cursor: pointer; scroll-snap-align: start; -webkit-tap-highlight-color: transparent; }
 .c-box { width: min(100%, var(--thumb-w)); min-width: 0; display: grid; row-gap: var(--cap-gap); container: cap / inline-size; transition: transform .5s var(--ease); }
 .card:hover .c-box { transform: translateY(calc(var(--u) * -.14 * var(--mot))); }
 .c-thumb { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--rt); overflow: hidden; isolation: isolate; background: #14121d; box-shadow: 0 0 0 1px rgba(var(--fg), .16); transition: box-shadow .6s; }
@@ -391,7 +392,9 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .chips button[aria-pressed="true"] { background: rgb(var(--fg)); color: var(--capsule); border-color: transparent; }
 .chips button:active { transform: scale(.95); }
 .chips button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
-.s2-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--px) * 330)), 1fr)); }
+/* six shows: three across (two rows), two across on a narrower window, one on a phone */
+.s2-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1100px) { .s2-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .s2-card { display: grid; grid-template-rows: auto 1fr; gap: calc(var(--u) * .5); padding: calc(var(--u) * .6); transition: transform .6s var(--ease), border-color .4s; }
 .s2-card:hover { transform: translateY(calc(var(--u) * -.34 * var(--mot))); border-color: rgba(var(--fg), .4); }
 .s2-card.is-out { display: none; }
@@ -767,9 +770,9 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
       <div class="tablewrap">
         <table class="spec">
           <tbody>
-            <tr><th>اندازه و نسبت</th><td>۱۶:۹، دست‌کم ۱۶۰۰×۹۰۰ (بهتر ۱۹۲۰×۱۰۸۰ یا بیشتر). تو تب «اندازه‌ها» ی تنظیمات می‌بینی بنر الان تو چه اندازه‌ای نشون داده می‌شه</td></tr>
-            <tr><th>متن تو بنر</th><td>هر جای بنر می‌تونه باشه، چون چیزی روش نمی‌افته. فقط اول هر اجرا عکس حدود ۵٪ زوم‌شده‌ست و آروم زوم‌اوت می‌شه، پس متن رو از لبه‌ها دست‌کم ۴٪ دور نگه دارن</td></tr>
-            <tr><th>بنری که ۱۶:۹ نیست</th><td>می‌شه بذاری. بنر کامل و با نسبت خودش دیده می‌شه، و جای خالی دو طرفش یا بالا و پایینش سیاهه (یا لبه‌ی محوشده‌ی خود بنر؛ تو تنظیمات انتخاب می‌شه)</td></tr>
+            <tr><th>اندازه و نسبت</th><td>نسبت ۱٫۷۴ به اندازه‌ی <b>۱۶۷۲×۹۶۰</b> (یا دو برابرش). کادر بنر با تنظیمات پیش‌فرض روی مانیتور ۱۹۲۰×۱۰۸۰ حدود ۱۵۵۴×۸۹۳ می‌شه. ۱۶:۹ هم (مثل ۱۹۲۰×۱۰۸۰) کادر رو پر می‌کنه. تو تب «اندازه‌ها» ی تنظیمات می‌بینی بنر الان تو چه اندازه‌ای نشون داده می‌شه</td></tr>
+            <tr><th>متن تو بنر</th><td>هر جای بنر می‌تونه باشه، چون چیزی روش نمی‌افته. فقط اول هر اجرا عکس حدود ۵٪ زوم‌شده‌ست و تو ۷۰٪ وقت اجرا آروم زوم‌اوت می‌شه؛ بعدش بنر کامل و ثابت می‌ایسته. پس متن رو از لبه‌ها دست‌کم ۴٪ دور نگه دارن</td></tr>
+            <tr><th>بنری با نسبت دورتر</th><td>می‌شه بذاری. نسبتش تا ۲٫۵٪ با کادر فرق داشته باشه کادر رو پر می‌کنه؛ بیشتر از اون بنر کامل و با نسبت خودش دیده می‌شه، و جای خالی دو طرفش یا بالا و پایینش سیاهه (یا لبه‌ی محوشده‌ی خود بنر؛ تو تنظیمات انتخاب می‌شه)</td></tr>
             <tr><th>پوستر عمودی</th><td>قبول نمی‌شه (پنل مدیریت رد می‌کنه). جای پوستر قفسه‌ی پوستره، نه این بخش</td></tr>
             <tr><th>عکس (چیدمان متن)</th><td>۱۶:۹، دست‌کم ۱۹۲۰×۱۰۸۰ (بهتر ۲۵۶۰)، بدون نوشته، سوژه سمت کارت‌ها؛ طرف دیگه زیر نوشته‌ست</td></tr>
             <tr><th>فایل</th><td>JPEG، PNG یا WebP تا ۱۰ مگابایت. سرور WebP و چند اندازه (۶۴۰، ۱۰۲۴، ۱۶۷۲ یا ۱۹۲۰) و تصویر محو و کوچیک پس‌زمینه و رنگ پیشنهادی رو می‌سازه</td></tr>
@@ -894,15 +897,15 @@ if (typeof window.gsap === 'undefined') { root.classList.remove('is-intro'); ret
    ════════════════════════════════════════════════════════════════ */
 const LOOK_DEF = {
   // layout
-  gap: 15, edgeX: 23, edgeT: 23, edgeB: 23, navH: 63, dockH: 92, railMax: 326, rail: 'left',
+  gap: 9, edgeX: 9, edgeT: 9, edgeB: 9, navH: 71, dockH: 80, railMax: 480, rail: 'left',
   fit: 'contain', fill: 'black', bg: 'black', bgColor: '#000000',
   caps: 'under', capDate: true, dim: 14, progress: 'bar',
   // style
-  radius: 19, radiusThumb: 10.5, btn: 'pill', borderW: 1, borderO: 22, shadow: 80,
-  panelColor: '#120f1b', textColor: 'auto', textCustom: '#ffffff',
+  radius: 19, radiusThumb: 7, btn: 'pill', borderW: 0.5, borderO: 8, shadow: 91,
+  panelColor: '#0d0d0d', textColor: 'auto', textCustom: '#ffffff',
   font: 'vazir', weight: 'normal', tx: 100, txNav: 100, txMain: 100, txSmall: 100, txCap: 100, txCopy: 100, digits: 'fa',
   // the header
-  hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdWidth: 100, hdCompact: true, hdCompactW: 920, hdHover: 'pill', hdProg: true,
+  hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdWidth: 100, hdCompact: true, hdCompactW: 1400, hdHover: 'pill', hdProg: true,
   // motion
   mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, swipe: true, story: true, intro: true,
   // tools
@@ -923,6 +926,15 @@ const dg = (s) => (LOOK.digits === 'en' ? String(s).replace(/[۰-۹]/g, (d) => '
 // photo, so its words aren't cut at the start); dur: seconds per show; fade: seconds of the fade into
 // the next
 const ZOOM = { bar: { low: 1.02, mid: 1.05, high: 1.09 }, text: { low: 1.08, mid: 1.15, high: 1.24 } };
+// a banner zooms out in the first 70 % of its time and then stands still, whole, so its words can be read at their
+// full size before the next show comes (a photo with the words over it keeps zooming to the end)
+const ZOOM_SHARE = 0.7;
+// how many cards the rail shows at once (its width is worked out for this many); more shows scroll inside it
+const VIS = 4;
+// a banner whose shape is within 2.5 % of its panel's fills the panel (it is stretched by less than that, which the
+// eye can't see): no bars, nothing cut. A wider difference leaves the banner whole, with black (or its mirrored
+// edge) in the rest.
+const FILL_TOL = 0.025;
 const state = { i: 0, userPaused: false, hover: false, visible: true, intro: true, admin: false, palette: false };
 
 /* ════════════════════════════════════════════════════════════════
@@ -976,18 +988,24 @@ const art = (slug, bw, bh) => ({
   banner: { src: `assets/events/${slug}-banner-1672.webp`, srcset: `assets/events/${slug}-banner-1024.webp 1024w, assets/events/${slug}-banner-1672.webp 1672w`, thumb: `assets/events/${slug}-banner-640.webp`, w: bw, h: bh },
 });
 const EVENTS = [
-  { id: 'skykings', pal: 'gold', layout: 'bar', type: 'کنسرت', name: 'SkyKings', title: 'کنسرت موسیقی SkyKings',
-    desc: 'شبی با گیتار و صدای زنده‌ی گروه SkyKings، در سالن پاسارگاد اریکه ایرانیان.',
-    venue: 'سالن پاسارگاد اریکه ایرانیان', startsAt: '2026-10-29T19:00:00+03:30', price: '۶۵۰ هزار', badge: 'پیش‌فروش', ...art('skykings', 1672, 941) },
+  { id: 'dokhtar-pesar', pal: 'crimson', layout: 'bar', type: 'تئاتر', name: 'دختر بودن یا پسر نبودن', title: 'دختر بودن یا پسر نبودن، مسئله این است',
+    desc: 'اجرای گروه تئاتر فردا؛ نویسنده فرهاد تقدعلی، کارگردان شیوا علیخانیان.',
+    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', ...art('dokhtar-pesar', 1672, 960) },
+  { id: 'hani-nazarian', pal: 'gold', layout: 'bar', type: 'کنسرت', name: 'هانی نظریان', title: 'اجرای زنده‌ی هانی نظریان با ارکستر سینمایی Sequence',
+    desc: 'شبی با موسیقی فیلم، به رهبری هانی نظریان و با ارکستر سینمایی Sequence.',
+    venue: 'سالن اصلی اداره فرهنگ و ارشاد', startsAt: '2026-11-19T20:00:00+03:30', endsAt: '2026-11-20T20:00:00+03:30', price: '۸۵۰ هزار', badge: 'پیش‌فروش', ...art('hani-nazarian', 1672, 960) },
   { id: 'zendegi-shayad', pal: 'crimson', layout: 'bar', type: 'تئاتر', name: 'زندگی شاید…', title: 'نمایش «زندگی شاید…»',
     desc: 'نمایشی به نویسندگی، طراحی و کارگردانی محمدجواد ملک‌محمودی.',
-    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', ...art('zendegi-shayad', 1672, 941) },
+    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', ...art('zendegi-shayad', 1672, 960) },
+  { id: 'barfab', pal: 'violet', layout: 'bar', type: 'تئاتر', name: 'برفاب', title: 'نمایش «برفاب» · Mebwater',
+    desc: 'نمایش درام مدرن از گروه نمایشی صنم؛ نویسنده و کارگردان میثم رایکا.',
+    venue: 'مجتمع فرهنگی هنری آزادشاد، ساری', startsAt: '2026-11-03T20:00:00+03:30', endsAt: '2026-11-08T20:00:00+03:30', price: '۳۲۰ هزار', badge: 'اجرای جدید', ...art('barfab', 1672, 960) },
   { id: 'do-daghighe', pal: 'orange', layout: 'bar', type: 'تئاتر', name: 'دو دقیقه به هشت', title: 'نمایش «دو دقیقه به هشت»',
     desc: 'نمایشی به نویسندگی و کارگردانی علی اصغری، با تهیه‌کنندگی فاطمه مجریان.',
-    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: 'ظرفیت رو به اتمام', ...art('do-daghighe', 1672, 941) },
-  { id: 'dokhtar-pesar', pal: 'crimson', layout: 'bar', type: 'تئاتر', name: 'دختر بودن یا پسر نبودن', title: 'دختر بودن یا پسر نبودن، مسئله این است',
-    desc: 'اجرای گروه تئاتر فردا؛ نویسنده فرهاد نقدعلی، کارگردان شیوا علیخانیان.',
-    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', ...art('dokhtar-pesar', 1672, 941) },
+    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: 'ظرفیت رو به اتمام', ...art('do-daghighe', 1672, 960) },
+  { id: 'aman', pal: 'white', layout: 'bar', type: 'تئاتر', name: 'امان', title: 'نمایش «امان»',
+    desc: 'نمایشی به کارگردانی مجتبی جدی و تهیه‌کنندگی فرید مقدم.',
+    venue: 'تهران · سالن نمایش', startsAt: '2026-11-09T20:00:00+03:30', price: '۲۸۰ هزار', badge: 'تک‌اجرا', ...art('aman', 1672, 960) },
 ];
 // the sample photo for the "text" layout: the words sit on the side away from the cards, so the singers
 // stand on the cards' side (the flipped copy when the cards are on the left)
@@ -1018,6 +1036,7 @@ function when(e) {
   return { calDay: d1, calMonth: m1, top: wk, sub: `ساعت ${t}`, short: `${wk} ${d1} ${m1}`, tiny: `${d1} ${m1}`, time: t };
 }
 EVENTS.forEach((e) => { setPal(e, e.pal); e.ver = 0; e.w = when(e); e.orig = JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner })); });
+root.style.setProperty('--n', Math.min(EVENTS.length, VIS));   // the rail's room is worked out for this many cards
 const label = (e) => `${e.type} ${e.name}`;
 
 /* ════════════════════════════════════════════════════════════════
@@ -1171,16 +1190,16 @@ async function buildScene(e) {
   };
   // the banner's panel takes all the room that is left. It is shown whole, in the middle; when the panel's
   // shape isn't the banner's own, black (or, as an option, the banner's mirrored, blurred edge) fills the rest
-  // (is-h: at the sides, is-v: above and below). Only a shape that agrees to within half a per cent lets the
-  // banner fill the panel.
+  // (is-h: at the sides, is-v: above and below). A shape that agrees to within FILL_TOL lets the banner fill the
+  // panel (is-fill), with nothing cut.
   if (mode === 'bar') {
     $$('.ext img', el).forEach((x) => { x.decoding = 'async'; x.src = img.currentSrc || img.src; });
     const ar = img.naturalWidth && img.naturalHeight ? img.naturalWidth / img.naturalHeight : pic.w / pic.h, f = s.frame;
     const fit = () => {
       const w = f.clientWidth, h = f.clientHeight; if (!w || !h) return;
-      const cover = Math.abs(Math.log(w / h / ar)) < 0.004, pw = Math.min(w, h * ar), ph = Math.min(h, w / ar);
+      const fill = Math.abs(Math.log(w / h / ar)) < FILL_TOL, pw = fill ? w : Math.min(w, h * ar), ph = fill ? h : Math.min(h, w / ar);
       f.style.setProperty('--pw', `${pw.toFixed(1)}px`); f.style.setProperty('--ph', `${ph.toFixed(1)}px`);
-      f.classList.toggle('is-cover', cover); f.classList.toggle('is-h', !cover && w - pw >= h - ph); f.classList.toggle('is-v', !cover && w - pw < h - ph);
+      f.classList.toggle('is-fill', fill); f.classList.toggle('is-h', !fill && w - pw >= h - ph); f.classList.toggle('is-v', !fill && w - pw < h - ph);
     };
     if ('ResizeObserver' in window) { s.ro = new ResizeObserver(fit); s.ro.observe(f); } else fit();
   }
@@ -1207,8 +1226,8 @@ const stage = {
     // keep one free scene per show; drop the ones whose show has changed since
     if (s.ver !== s.e.ver || this.pool.filter((x) => !x.busy).length > EVENTS.length + 1) { if (s.ro) s.ro.disconnect(); s.el.remove(); this.pool.splice(this.pool.indexOf(s), 1); }
   },
-  // the show's picture zooms out inside its panel over its time and the fade after it, so it is still
-  // moving while the next one fades in over it. dir: +1 going down the rail, -1 going up; style: how the
+  // the show's picture zooms out inside its panel (a banner: in the first 70 % of its time, then it stands still
+  // and whole; a photo: all the time and the fade after it). dir: +1 going down the rail, -1 going up; style: how the
   // change looks (the look's choice unless the caller says otherwise)
   async show(i, { instant = false, dir = 1, style } = {}) {
     const token = ++this.token, e = EVENTS[i], s = await this.acquire(e);
@@ -1217,7 +1236,8 @@ const stage = {
     if (prev && prev !== s) { prev.el.inert = true; prev.el.setAttribute('aria-hidden', 'true'); }
     s.el.style.zIndex = ++this.z; s.el.classList.add('is-on'); s.el.inert = false; s.el.setAttribute('aria-hidden', 'false'); this.top = s;
     const k = MOTK(), fade = reduceMotion ? 0.4 : LOOK.fade, from = reduceMotion ? 1 : 1 + (ZOOM[s.mode][LOOK.zoom] - 1) * (0.6 + 0.4 * k);
-    s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: LOOK.dur + fade, ease: 'none', paused: !timer.running() && !instant && !state.intro });
+    const still = s.mode === 'bar' && !reduceMotion;   // a banner finishes its zoom (and then stands still, whole) before its time is up
+    s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: still ? LOOK.dur * ZOOM_SHARE : LOOK.dur + fade, ease: still ? 'sine.out' : 'none', paused: !timer.running() && !instant && !state.intro });
     const done = () => { this.pool.slice().forEach((o) => { if (o !== s && o.busy && +o.el.style.zIndex < +s.el.style.zIndex) this.release(o); }); };
     if (instant) { gsap.set(s.el, { opacity: 1 }); done(); return s; }
     const T = reduceMotion ? 'fade' : style || LOOK.trans, old = prev && prev !== s && prev.art ? prev.art : null;
@@ -1281,10 +1301,11 @@ const cards = {
   set(i) {
     this.els.forEach((b, k) => { const on = k === i; b.classList.toggle('is-active', on); b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
     const th = $('.c-thumb', this.els[i]); th.appendChild(this.bar); th.appendChild(this.ring);
-    // keep the active card in view when the column is shorter than the list (without moving the page)
-    const c = this.els[i], l = this.list;
-    if (l.scrollHeight > l.clientHeight + 1) {
-      const top = c.offsetTop - l.offsetTop, want = clamp(top - (l.clientHeight - c.offsetHeight) / 2, 0, l.scrollHeight - l.clientHeight);
+    // when there are more shows than the rail has room for, show a whole window of cards (never a cut one) with the
+    // active card second from the top, and slide the window when the active card leaves it (without moving the page)
+    const l = this.list, n = this.els.length;
+    if (n > VIS && l.scrollHeight > l.clientHeight + 1) {
+      const first = clamp(i - 1, 0, n - VIS), want = this.els[first].offsetTop - this.els[0].offsetTop;
       l.scrollTo({ top: want, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
   },
@@ -1432,7 +1453,7 @@ const PRESETS = [
   { id: 'bigtext', label: 'نوشته‌ی درشت', v: { tx: 118, txSmall: 118, dockH: 108, navH: 70 } },
   { id: 'strong', label: 'حرکت قوی', v: { mot: 'strong', trans: 'wipe', progress: 'ring' } },
 ];
-const PANEL_SW = [['#120f1b', 'بنفش تیره'], ['#000000', 'سیاه'], ['#0d0d12', 'گرافیت'], ['#1b1b23', 'خاکستری تیره'], ['#10192f', 'سرمه‌ای'], ['#ffffff', 'سفید'], ['#f3efe6', 'کرم']];
+const PANEL_SW = [['#0d0d0d', 'سیاه ملایم'], ['#120f1b', 'بنفش تیره'], ['#000000', 'سیاه'], ['#0d0d12', 'گرافیت'], ['#1b1b23', 'خاکستری تیره'], ['#10192f', 'سرمه‌ای'], ['#ffffff', 'سفید'], ['#f3efe6', 'کرم']];
 const BG_SW = [['#000000', 'سیاه'], ['#0a0a10', 'سیاه مایل به آبی'], ['#161616', 'خاکستری تیره'], ['#f4f4f6', 'خاکستری روشن'], ['#ffffff', 'سفید']];
 const TX_SW = [['#ffffff', 'سفید'], ['#e9e2d0', 'کرم'], ['#f5d48b', 'طلایی'], ['#11101a', 'سیاه']];
 
@@ -1694,7 +1715,7 @@ const look = {
     const r = (el) => el.getBoundingClientRect(), box = (b) => `${faP(Math.round(b.width))}×${faP(Math.round(b.height))}`;
     const cs = getComputedStyle(hero), dpr = window.devicePixelRatio || 1;
     const bw = parseFloat(getComputedStyle(s.frame).borderTopWidth) || 0, fr = r(s.frame), ar = s.img.naturalWidth && s.img.naturalHeight ? s.img.naturalWidth / s.img.naturalHeight : s.e.banner.w / s.e.banner.h;
-    const iw = fr.width - 2 * bw, ih = fr.height - 2 * bw, cover = s.frame.classList.contains('is-cover') || LOOK.fit === 'cover' || s.mode === 'text';
+    const iw = fr.width - 2 * bw, ih = fr.height - 2 * bw, cover = s.frame.classList.contains('is-fill') || LOOK.fit === 'cover' || s.mode === 'text';
     const pw = cover ? iw : Math.min(iw, ih * ar), ph = cover ? ih : Math.min(ih, iw / ar);
     const row = (a, b2) => `<div><b>${a}</b><output>${b2}</output></div>`;
     const stacked = innerWidth <= 760 || innerWidth / innerHeight <= 1.25;
@@ -1718,7 +1739,7 @@ const look = {
         ${row('فایل', `${faP(bn.w)}×${faP(bn.h)}  ( نسبت ${faP((bn.w / bn.h).toFixed(2)).replace('.', '٫')} )`)}
         ${row('برای تیز بودن روی همین پنجره', need + ' یا بیشتر')}
       </div>
-      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>• بنر (چیدمان کادر پایین): ۱۶:۹ به اندازه‌ی <b>۱۹۲۰×۱۰۸۰</b>، دست‌کم ۱۶۰۰×۹۰۰. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• بنری که ۱۶:۹ نیست هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
+      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>• بنر (چیدمان کادر پایین): با تنظیمات پیش‌فرض، کادر بنر روی مانیتور ۱۹۲۰×۱۰۸۰ حدود ۱۵۵۴×۸۹۳ می‌شه (نسبت ۱٫۷۴)، پس <b>۱۶۷۲×۹۶۰</b> (یا دو برابرش ۳۳۴۴×۱۹۲۰) می‌خوایم. ۱۶:۹ مثل ۱۹۲۰×۱۰۸۰ هم کادر رو پر می‌کنه (کمتر از ۲٫۵٪ کشیده می‌شه که دیده نمی‌شه). متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
       <div class="pp-sec"><h4>بنر تو پنجره‌های رایج</h4><p>برای چیدمان فعلی (فاصله‌ها و ارتفاع‌های تنظیم‌شده). عدد اول کادر بنره، عدد دوم خودِ بنر تو کادرش.</p><div class="szt">${tbl}</div></div>
       <div class="pp-sec"><h4>نشون دادن اندازه‌ها روی صفحه</h4>
         <label class="sw2"><span>اندازه‌ی کادرها، فاصله‌ها و حاشیه‌ها رو روی صفحه بکش</span><input type="checkbox" role="switch" id="ppDims"${LOOK.dims ? ' checked' : ''}><i></i></label>
@@ -1935,11 +1956,11 @@ const s2 = {
     EVENTS.forEach((e, i) => {
       const c = document.createElement('article'); c.className = 'panel s2-card'; c.dataset.type = e.type; c.dataset.i = i;
       c.style.setProperty('--accent', e.accent); c.style.setProperty('--accent-l', e.accentL); c.style.setProperty('--on-accent', e.onAccent); c.style.setProperty('--ring', e.ring || e.accent);
-      c.innerHTML = `<button type="button" class="s2-thumb" aria-label="${esc(e.title)}، نمایش در بالای صفحه"><img alt="" src="${esc(e.banner.fake || e.banner.thumb)}"></button>
+      c.innerHTML = `<button type="button" class="s2-thumb" aria-label="${esc(e.title)}، نمایش در بالای صفحه"><img alt="" ${e.banner.fake ? `src="${esc(e.banner.fake)}"` : `src="${esc(e.banner.thumb)}" srcset="${esc(e.banner.srcset)}" sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw"`}></button>
         <div class="s2-body"><span class="kick"><i class="dot"></i>${esc(e.type)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}</span><h3>${esc(e.title)}</h3>
           <div class="s2-meta"><span><svg class="i"><use href="#i-calendar"/></svg>${esc(e.w.short)}</span><span><svg class="i"><use href="#i-pin"/></svg>${esc(e.venue)}</span></div>
           <div class="s2-foot"><span class="price"><span class="d-lab">${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="buy">${esc(TXT.buy)}</button></div></div>`;
-      const im = $('img', c); im.onerror = () => { im.onerror = null; im.src = e.banner.fake || fakeArt(e, e.banner); };
+      const im = $('img', c); im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); im.src = e.banner.fake || fakeArt(e, e.banner); };
       $('.s2-thumb', c).addEventListener('click', () => { scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); go(i, 'user'); });
       $('.buy', c).addEventListener('click', () => toast(`اینجا صفحه‌ی انتخاب صندلی «${label(e)}» باز می‌شه.`));
       this.grid.appendChild(c);
@@ -2060,12 +2081,12 @@ function geom(W, H, L = LOOK) {
   if (stacked) { const w = W - 20, h = w / ar; return { stacked, u, px, frame: { w, h }, pic: { w, h } }; }
   const heroH = Math.max(440, H), edgeX = Math.max(px * L.edgeX, (W - heroH * 2.25) / 2), padT = px * L.edgeT, padB = px * L.edgeB, gap = px * L.gap;
   const navH = Math.max(50, px * L.navH), dockH = Math.max(56, px * L.dockH), mainH = heroH - padT - padB - navH - gap;
-  const n = EVENTS.length, railPad = u * 0.75, arrow = Math.max(28, u * 1.85), cardGap = u * 0.6;
+  const n = Math.min(EVENTS.length, VIS), railPad = u * 0.75, arrow = Math.max(28, u * 1.85), cardGap = u * 0.6;
   const capH = L.caps === 'under' ? Math.max(22, u * 1.3) : 0, capGap = L.caps === 'under' ? u * 0.35 : 0;
   const cell = (mainH - 2 * railPad - 2 * bw - 2 * arrow - (n + 1) * cardGap) / n, thumbW = (cell - capH - capGap) * 1.7778;
   const railW = cssClamp(u * 11, thumbW + 2 * railPad + 2 * bw, px * L.railMax);
   const colW = W - 2 * edgeX - railW - gap, frameH = EVENTS[state.i].layout === 'text' ? mainH : mainH - dockH - gap;
-  const iw = colW - 2 * bw, ih = frameH - 2 * bw, cover = L.fit === 'cover' || EVENTS[state.i].layout === 'text' || Math.abs(Math.log(iw / ih / ar)) < 0.004;
+  const iw = colW - 2 * bw, ih = frameH - 2 * bw, cover = L.fit === 'cover' || EVENTS[state.i].layout === 'text' || Math.abs(Math.log(iw / ih / ar)) < FILL_TOL;
   const pic = cover ? { w: iw, h: ih } : { w: Math.min(iw, ih * ar), h: Math.min(ih, iw / ar) };
   return { stacked, u, px, gap, edgeX, padT, padB, navH, dockH, mainH, railW, frame: { w: colW, h: frameH }, pic, rail: { w: railW, h: mainH }, dock: { w: colW, h: dockH }, nav: { w: W - 2 * edgeX, h: navH } };
 }
@@ -2092,7 +2113,7 @@ const dims = {
     [['هدر', n], ['کارت‌ها', k], ['بنر', f], ['اطلاعات', d]].forEach(([name, r]) => { if (!r) return; out.push(rect('pn', r.left, r.top, r.width, r.height)); out.push(chip('pn-l', r.left + r.width / 2, r.top + Math.min(16, r.height / 2), `${name} ${fa2(r.width)}×${fa2(r.height)}`)); });
     // the picture inside the banner's panel
     const bw = parseFloat(getComputedStyle(s.frame).borderTopWidth) || 0, iw = f.width - 2 * bw, ih = f.height - 2 * bw, ar = s.img.naturalWidth / s.img.naturalHeight;
-    if (s.mode === 'bar' && !s.frame.classList.contains('is-cover') && LOOK.fit !== 'cover') { const pw = Math.min(iw, ih * ar), ph = Math.min(ih, iw / ar); out.push(chip('pn-l', f.left + f.width / 2, f.top + f.height / 2, `خودِ بنر ${fa2(pw)}×${fa2(ph)}`)); }
+    if (s.mode === 'bar' && LOOK.fit !== 'cover') { const fill = s.frame.classList.contains('is-fill'), pw = fill ? iw : Math.min(iw, ih * ar), ph = fill ? ih : Math.min(ih, iw / ar); out.push(chip('pn-l', f.left + f.width / 2, f.top + f.height / 2, `خودِ بنر ${fa2(pw)}×${fa2(ph)}`)); }
     // the gaps
     out.push(rect('gp', n.left, n.bottom, n.width, Math.min(k.top, f.top) - n.bottom)); out.push(chip('gp-l', n.left + n.width / 2, n.bottom + (Math.min(k.top, f.top) - n.bottom) / 2, fa2(Math.min(k.top, f.top) - n.bottom)));
     const rl = k.left < f.left, gx = rl ? k.right : f.right, gw = rl ? f.left - k.right : k.left - f.right;
@@ -2113,9 +2134,11 @@ const dims = {
    ════════════════════════════════════════════════════════════════ */
 // what the banner will look like in its panel, said in words
 function fitNote(w, h) {
-  const r = w / h, T = 16 / 9, size = `${fa(w)}×${fa(h)}`;
-  if (Math.abs(Math.log(r / T)) < 0.035) return `<b>بنر ۱۶:۹</b> · ${size} · تو قابش کامل و بدون برش دیده می‌شه`;
-  return `<b>نسبت ${fa(r.toFixed(2)).replace('.', '٫')} به ۱</b> · ${size} · کامل دیده می‌شه، ولی ${r > T ? 'بالا و پایینش' : 'دو طرفش'} خالی می‌مونه (${LOOK.fill === 'edge' ? 'با لبه‌ی محوشده‌ی خودش پر می‌شه' : 'سیاهه'}). بنر ۱۶:۹ بهتره`;
+  // the shape the banner is compared with is the panel's own (so it follows the look's gaps and heights), 16:9 if there is none
+  const f = stage.top && stage.top.mode === 'bar' ? stage.top.frame : null, T = f && f.clientHeight ? f.clientWidth / f.clientHeight : 16 / 9;
+  const r = w / h, size = `${fa(w)}×${fa(h)}`, rs = fa(r.toFixed(2)).replace('.', '٫'), ts = fa(T.toFixed(2)).replace('.', '٫');
+  if (Math.abs(Math.log(r / T)) < FILL_TOL) return `<b>نسبت ${rs} به ۱</b> · ${size} · کادر رو کامل پر می‌کنه و چیزی ازش بریده نمی‌شه`;
+  return `<b>نسبت ${rs} به ۱</b> · ${size} · کامل دیده می‌شه، ولی ${r > T ? 'بالا و پایینش' : 'دو طرفش'} خالی می‌مونه (${LOOK.fill === 'edge' ? 'با لبه‌ی محوشده‌ی خودش پر می‌شه' : 'سیاهه'}). بنری با نسبت نزدیک به ${ts} بهتره`;
 }
 const panel = {
   fab: $('#protoFab'), el: $('#protoPanel'),
