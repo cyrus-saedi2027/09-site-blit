@@ -27,6 +27,7 @@ cd exchange-widgets && npx http-server -p 8000
 | 04 | سلامت روزانه (مجموعه، ۵ کارت) | Daily health · a set of five dot-matrix cards from one shot: **04·1** Activity, **04·2** Sleep time, **04·3** Heart Rate, **04·4** Stress, **04·5** Energy. The dot font is read off the shot; numbers ripple dot by dot, every chart scrubs (the rest of the day dims behind a moving edge), the side pills switch the measure, the heart beats at its bpm | [`widgets/04-health`](widgets/04-health/) | **new, waiting for feedback** |
 | 05 | گزارش پیشرفت | Progress Report · weekly steps, from the owner's shot (it had one design, so 05 is one card): the panel's colours are sampled from the shot and live (they drift, follow the pointer, ring when pressed); "+" turns into × and opens seven daily goal capsules to scrub; the red pill flips between steps and percent | [`widgets/05-progress`](widgets/05-progress/) | **new, waiting for feedback** |
 | 06 | بینش و نرخ تبدیل (مجموعه، ۲ کارت) | Insights pager · **06·1** Insights (revenue growth, orange) and **06·2** Conversion (blue). In the shot they are pages 4 and 5 of one deck; here each card is its own six-page deck: dashes, swipe or keys turn pages (charts morph, numbers roll), a working Daily / Weekly / Monthly menu, the marker and the glowing dot scrub their charts, "Explore more +" opens a glass panel, the fitted background lights lean toward the pointer | [`widgets/06-insights`](widgets/06-insights/) | **new, waiting for feedback** |
+| 07 | کارت‌های پوشه‌ای (مجموعه، ۶ کارت) | Folder cards · six black folder-shaped widgets: **07·1** clock & sleep, **07·2** flight, **07·3** walking, **07·4** stock, **07·5** recorder, **07·6** radio. All controls work: the clock runs, the recorder records / pauses / flags, the radio tunes by dragging the dial and seeks stations, the stock ticks and converts currencies, the flight swaps direction, every strip scrubs | [`widgets/07-folders`](widgets/07-folders/) | **new, waiting for feedback** |
 
 ## ساختار · Structure
 
@@ -42,6 +43,7 @@ exchange-widgets/
   widgets/04-health/       a set: set.js, set.css, SPEC.md
   widgets/05-progress/     the same three files (a set of one card)
   widgets/06-insights/     the same three files (a full-width set: `.stage.is-full`)
+  widgets/07-folders/      the same three files (full width; uses Oswald for the numbers)
   tools/bundle.mjs      builds single-file copies into dist/ (one to send, one for a claude.ai Artifact)
 ```
 

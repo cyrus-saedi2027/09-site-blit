@@ -8,7 +8,7 @@
 <meta name="description" content="ویجت‌های شماره‌دار اپلیکیشن صرافی، با موشن و تعامل کامل.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Outfit:wght@300..700&family=Unbounded:wght@500..800&family=Vazirmatn:wght@300..800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Oswald:wght@300..500&family=Outfit:wght@300..700&family=Unbounded:wght@500..800&family=Vazirmatn:wght@300..800&display=swap">
 <!-- bundle:css -->
 <link rel="stylesheet" href="lab/lab.css">
 <link rel="stylesheet" href="widgets/01-budget/widget.css">
@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="widgets/04-health/set.css">
 <link rel="stylesheet" href="widgets/05-progress/set.css">
 <link rel="stylesheet" href="widgets/06-insights/set.css">
+<link rel="stylesheet" href="widgets/07-folders/set.css">
 <!-- /bundle:css -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <!-- bundle:js -->
@@ -28,6 +29,7 @@
 <script defer src="widgets/04-health/set.js"></script>
 <script defer src="widgets/05-progress/set.js"></script>
 <script defer src="widgets/06-insights/set.js"></script>
+<script defer src="widgets/07-folders/set.js"></script>
 <!-- /bundle:js -->
 </head>
 <body>
@@ -77,6 +79,7 @@
       <a href="#w04"><b>04</b>سلامت روزانه · ۵ کارت</a>
       <a href="#w05"><b>05</b>گزارش پیشرفت</a>
       <a href="#w06"><b>06</b>بینش و تبدیل · ۲ کارت</a>
+      <a href="#w07"><b>07</b>کارت‌های پوشه‌ای · ۶ کارت</a>
     </nav>
   </section>
 
@@ -266,6 +269,43 @@
       <div class="stage-show">
         <span class="stage-tag" aria-hidden="true"><i></i>SET · 06</span>
         <div class="stage-mount is-full" data-mount="6"></div>
+      </div>
+    </article>
+    <article class="stage is-set is-full" id="w07" aria-labelledby="w07-title">
+      <div class="stage-info">
+        <div class="stage-id">
+          <p class="stage-num" aria-hidden="true"><span>0</span><span>7</span></p>
+          <p class="stage-kicker"><b>مجموعه‌ی شماره‌ی ۷</b><span>Set · 07 · 6 cards</span></p>
+        </div>
+        <h2 class="stage-title" id="w07-title">کارت‌های پوشه‌ای</h2>
+        <p class="stage-en">Folder cards · clock, flight, walking, stock, recorder, radio</p>
+        <p class="stage-desc">شش کارت سیاه به شکل پوشه، هر کدوم با یه رنگ، مثل طرح. همه‌شون کار می‌کنن: ساعت راه می‌ره، ضبط‌کننده واقعاً ضبط و مکث و پرچم داره، رادیو با کشیدن موج‌یاب تنظیم می‌شه و قیمت سهم زنده‌ست. روی شماره‌ها ببر تا کارتش رو نشون بده:</p>
+        <ol class="stage-subs" aria-label="کارت‌های مجموعه‌ی ۷">
+          <li><button type="button" data-sub="0"><b>07·1</b><span>ساعت و خواب<i>Clock &amp; sleep</i></span></button></li>
+          <li><button type="button" data-sub="1"><b>07·2</b><span>پرواز<i>Flight</i></span></button></li>
+          <li><button type="button" data-sub="2"><b>07·3</b><span>پیاده‌روی<i>Walking</i></span></button></li>
+          <li><button type="button" data-sub="3"><b>07·4</b><span>سهم<i>Stock</i></span></button></li>
+          <li><button type="button" data-sub="4"><b>07·5</b><span>ضبط صدا<i>Recorder</i></span></button></li>
+          <li><button type="button" data-sub="5"><b>07·6</b><span>رادیو<i>Radio</i></span></button></li>
+        </ol>
+        <ul class="hints">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg><span><b>روی نوارهای رنگی بکش.</b> ۰۷·۱ ساعت و مرحله‌ی خواب، ۰۷·۲ پیشرفت پرواز (هواپیما دنبال انگشت میاد)، ۰۷·۳ هر پیاده‌روی، ۰۷·۴ قیمت هر لحظه. تو ۰۷·۶ موج‌یاب رو بکش و ول کن تا روی ایستگاه بشینه.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.5"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/></svg><span><b>دکمه‌ها همه کار می‌کنن.</b> وای‌فای و بلوتوث، تعویض مسیر پرواز با هواپیمای بالا، توقف/ضبط، مکث و پرچم، ستاره، ایستگاه قبلی و بعدی، AM و FM، «<bdi dir="ltr">10 Sec</bdi>» و «<bdi dir="ltr">USD</bdi>» (تبدیل ارز).</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/></svg><span><b>«•••» هر کارت رو از اول اجرا می‌کنه.</b> رو عددهای پایین ۰۷·۳ و روی دما بزن تا واحدشون عوض بشه.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M7.5 14h9"/></svg><span>با کیبورد: Tab، فلش‌ها روی نوارها، PageUp/PageDown برای ایستگاه‌ها، Esc.</span></li>
+        </ul>
+        <div class="stage-actions">
+          <button class="btn primary" type="button" data-act="replay">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.2V9h4.8"/></svg>
+            از اول
+          </button>
+          <button class="btn" type="button" data-act="live" aria-pressed="false"><i class="dot" aria-hidden="true"></i>داده‌ی زنده</button>
+        </div>
+        <code class="stage-path">widgets/07-folders/</code>
+      </div>
+      <div class="stage-show">
+        <span class="stage-tag" aria-hidden="true"><i></i>SET · 07</span>
+        <div class="stage-mount is-full" data-mount="7"></div>
       </div>
     </article>
   </main>
