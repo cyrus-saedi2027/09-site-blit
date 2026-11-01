@@ -309,6 +309,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   <div class="proto-panel" id="protoPanel" role="dialog" aria-label="تنظیمات نمونه" hidden>
     <div class="pp-head"><div><b>تنظیمات نمونه</b><span>برای مقایسه؛ جزو سایت نیست</span></div><button type="button" class="ghost" id="protoClose" aria-label="بستن"><svg class="i"><use href="#i-x"/></svg></button></div>
     <div class="pp-group" id="cmpGroup" hidden><span>مقایسه‌ی نسخه‌ها</span><div class="seg" id="cmpSeg" role="group" aria-label="نسخه‌ها"></div></div>
+    <div class="pp-group" id="szGroup" hidden><span>اندازه‌ی نمایش <small id="szNote"></small></span><div class="seg" id="szSeg" role="group" aria-label="اندازه‌ی نمایش"></div></div>
     <div class="pp-group"><span>زوم اول هر عکس</span><div class="seg" data-ctrl="zoom"><button type="button" data-v="1.08" aria-pressed="false">کم</button><button type="button" data-v="1.15" aria-pressed="true">متوسط</button><button type="button" data-v="1.24" aria-pressed="false">زیاد</button></div></div>
     <div class="pp-group"><span>زمان هر اجرا</span><div class="seg" data-ctrl="dur"><button type="button" data-v="5" aria-pressed="false">۵ ثانیه</button><button type="button" data-v="7" aria-pressed="true">۷ ثانیه</button><button type="button" data-v="10" aria-pressed="false">۱۰ ثانیه</button></div></div>
     <div class="pp-group"><span>محو شدن روی بعدی</span><div class="seg" data-ctrl="fade"><button type="button" data-v="0.8" aria-pressed="false">تند</button><button type="button" data-v="1.2" aria-pressed="true">معمولی</button><button type="button" data-v="1.8" aria-pressed="false">آروم</button></div></div>
@@ -963,10 +964,12 @@ if (/[?&]debug/.test(location.search)) window.__hero = { bg, cards, copy, timer,
 </script>
 <script>
 /* compare: inside the comparison page (which has no bar of its own, so a sample opens at full size)
-   the settings panel lists the versions and switches between them */
+   the settings panel lists the versions and the preview sizes, and asks the page to switch */
 (function () {
   var group = document.getElementById('cmpGroup'), seg = document.getElementById('cmpSeg');
+  var sg = document.getElementById('szGroup'), ss = document.getElementById('szSeg'), note = document.getElementById('szNote');
   if (!group || !seg || window.parent === window) return;
+  var fa = function (s) { return String(s).replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; }); };
   window.addEventListener('message', function (ev) {
     var d = ev.data; if (!d || !d.heroVersions) return;
     seg.textContent = '';
@@ -977,6 +980,17 @@ if (/[?&]debug/.test(location.search)) window.__hero = { bg, cards, copy, timer,
       seg.appendChild(b);
     });
     group.hidden = false;
+    if (sg && ss && d.sizes) {
+      ss.textContent = '';
+      d.sizes.forEach(function (z) {
+        var b = document.createElement('button'); b.type = 'button'; b.textContent = z.label;
+        b.setAttribute('aria-pressed', z.id === d.size ? 'true' : 'false');
+        b.addEventListener('click', function () { if (z.id !== d.size) window.parent.postMessage({ heroSize: z.id }, '*'); });
+        ss.appendChild(b);
+      });
+      if (note) note.textContent = d.size !== 'auto' && d.scale < 0.995 ? '· با مقیاس ' + fa(Math.round(d.scale * 100)) + '٪' : '';
+      sg.hidden = false;
+    }
   });
   window.parent.postMessage({ heroReady: true }, '*');
 })();

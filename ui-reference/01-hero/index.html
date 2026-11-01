@@ -10,13 +10,18 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap">
 <style>
 /* One page to compare the hero versions. There is no bar: the chosen version fills the whole window, so it
-   opens at its own size. Each version carries a "مقایسه‌ی نسخه‌ها" group in its settings panel (the round
-   button at the bottom left); it asks this page to switch (postMessage). A page without that group gets a
-   tiny floating capsule of ours instead. */
+   opens at its own size. Each version carries a "مقایسه‌ی نسخه‌ها" group (and an "اندازه‌ی نمایش" group) in its
+   settings panel (the round button at the bottom left); they ask this page to switch (postMessage). A page
+   without those groups gets a tiny floating capsule of ours instead.
+   The preview size: "auto" is the real window. A fixed size (1920×1080 …) puts the page in a frame of exactly
+   that many pixels, scaled down to fit when the window is smaller, so the desktop design can be seen at the
+   desktop size even in a small window. */
 :root { --fg: #f4f1f8; --fg-2: rgba(244, 241, 248, .72); --fg-3: rgba(244, 241, 248, .46); --line: rgba(255, 255, 255, .18); --pill: #14121d; color-scheme: dark; }
 html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color: var(--fg); font-family: "Vazirmatn", Tahoma, system-ui, sans-serif; font-size: 14px; }
 .view { position: fixed; inset: 0; background: #000; }
-.view iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #000; }
+.view iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: #000; transform-origin: 50% 50%; }
+.view.is-sized { background: #07060b; }
+.view.is-sized iframe { inset: auto; left: 50%; top: 50%; box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 40px 100px -40px #000; }
 .loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--fg-3); pointer-events: none; transition: opacity .3s; }
 .view.is-ready .loading { opacity: 0; }
 .fb { position: fixed; z-index: 5; right: 8px; bottom: 8px; display: grid; justify-items: end; gap: 8px; }
@@ -30,6 +35,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color:
 .fb-menu button { padding: 6px 12px; border-radius: 9px; color: var(--fg-2); font-size: 13px; white-space: nowrap; }
 .fb-menu button:hover { background: rgba(255, 255, 255, .07); color: var(--fg); }
 .fb-menu button[aria-current="true"] { background: rgba(255, 255, 255, .12); color: var(--fg); font-weight: 700; }
+.fb-menu hr { width: 100%; margin: 4px 0; border: 0; border-top: 1px solid var(--line); }
 .fb-btn:focus-visible, .fb-menu button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
 </style>
 
@@ -46,23 +52,50 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color:
 
 <script>
 (() => {
-  const VERSIONS = [{"id": "v1", "label": "۱ · صحنه‌ی WebGL", "name": "نسخه‌ی اول · صحنه‌ی WebGL و دسته‌ی بلیت"}, {"id": "v2", "label": "۲ · عکس و جایگاه ویژه", "name": "عکس و جایگاه ویژه"}, {"id": "v3", "label": "۳ · پوستر گرافیکی", "name": "پوستر گرافیکی"}, {"id": "v4", "label": "۴ · رسمی و زنده", "name": "رسمی و زنده"}, {"id": "v5", "label": "۵ · صحنه و هاله", "name": "صحنه و هاله، از روی نمونه‌ها"}, {"id": "v6", "label": "۶ · پنل مدیریت", "name": "پوستر، بنر یا عکس · پنل مدیریت"}, {"id": "v7", "label": "۷ · زوم‌اوت و محو", "name": "زوم‌اوت و محو · کارت‌ها سمت راست"}, {"id": "v8", "label": "۸ · جایگاه ویژه", "name": "جایگاه ویژه · کادرها"}];
+  const VERSIONS = [{"id": "v1", "label": "۱ · صحنه‌ی WebGL", "name": "نسخه‌ی اول · صحنه‌ی WebGL و دسته‌ی بلیت"}, {"id": "v2", "label": "۲ · عکس و جایگاه ویژه", "name": "عکس و جایگاه ویژه"}, {"id": "v3", "label": "۳ · پوستر گرافیکی", "name": "پوستر گرافیکی"}, {"id": "v4", "label": "۴ · رسمی و زنده", "name": "رسمی و زنده"}, {"id": "v5", "label": "۵ · صحنه و هاله", "name": "صحنه و هاله، از روی نمونه‌ها"}, {"id": "v6", "label": "۶ · پنل مدیریت", "name": "پوستر، بنر یا عکس · پنل مدیریت"}, {"id": "v7", "label": "۷ · زوم‌اوت و محو", "name": "زوم‌اوت و محو · کارت‌ها سمت راست"}, {"id": "v8", "label": "۸ · جایگاه ویژه", "name": "جایگاه ویژه · کادرها"}, {"id": "v9", "label": "۹ · جایگاه ویژه، دقیق دسکتاپ", "name": "جایگاه ویژه · کادرها که کل پنجره را پر می‌کنند"}];
+  const SIZES = [
+    { id: 'auto', label: 'پنجره‌ی خودت' },
+    { id: '1920x1080', label: 'دسکتاپ ۱۹۲۰×۱۰۸۰' },
+    { id: '1536x864', label: 'لپ‌تاپ ۱۵۳۶×۸۶۴' },
+    { id: '1440x900', label: '۱۴۴۰×۹۰۰' },
+    { id: '1366x768', label: '۱۳۶۶×۷۶۸' },
+    { id: '1024x768', label: 'تبلت ۱۰۲۴×۷۶۸' },
+    { id: '390x844', label: 'موبایل ۳۹۰×۸۴۴' },
+  ];
   const DEFAULT = VERSIONS[VERSIONS.length - 1].id;
   const frame = document.getElementById('frame'), view = document.getElementById('view'), fb = document.getElementById('fb'), fbBtn = document.getElementById('fbBtn'), fbMenu = document.getElementById('fbMenu'), fbCur = document.getElementById('fbCur');
   const faDigit = (s) => s.replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
-  let current = null, ready = false, timer = 0;
-  const send = () => { try { frame.contentWindow.postMessage({ heroVersions: VERSIONS, current }, '*'); } catch (e) { /* the page isn't ours */ } };
+  let current = null, ready = false, timer = 0, size = 'auto', scale = 1;
+  const send = () => { try { frame.contentWindow.postMessage({ heroVersions: VERSIONS, current, sizes: SIZES, size, scale }, '*'); } catch (e) { /* the page isn't ours */ } };
+  // a fixed size: a frame of exactly W×H pixels in the middle, scaled down when the window is smaller
+  const layout = () => {
+    const m = /^(\d+)x(\d+)$/.exec(size);
+    if (!m) { view.classList.remove('is-sized'); frame.style.cssText = ''; scale = 1; return; }
+    const W = +m[1], H = +m[2]; scale = Math.min(1, innerWidth / W, innerHeight / H);
+    view.classList.add('is-sized');
+    frame.style.width = W + 'px'; frame.style.height = H + 'px'; frame.style.transform = `translate(-50%, -50%) scale(${scale.toFixed(4)})`;
+  };
+  const hashOf = (v) => '#' + v + (size === 'auto' ? '' : '@' + size);
+  const setSize = (id, push = true) => {
+    if (!SIZES.some((z) => z.id === id)) id = 'auto';
+    size = id; layout(); send(); markSizes();
+    if (push) { try { history.replaceState(null, '', hashOf(current)); } catch (e) { /* the address stays */ } }
+  };
   const menu = (open) => { fbMenu.hidden = !open; fbBtn.setAttribute('aria-expanded', open); };
   const show = (v, push = true) => {
     if (!VERSIONS.some((x) => x.id === v)) v = DEFAULT;
     current = v; ready = false; fb.hidden = true; menu(false); clearTimeout(timer);
     fbCur.textContent = faDigit(v.slice(1));
-    [...fbMenu.children].forEach((b) => b.setAttribute('aria-current', b.dataset.v === v));
+    [...fbMenu.querySelectorAll('[data-v]')].forEach((b) => b.setAttribute('aria-current', b.dataset.v === v));
     const src = v + '/index.html';
     if (frame.getAttribute('src') !== src) { view.classList.remove('is-ready'); frame.setAttribute('src', src); }
-    if (push && location.hash !== '#' + v) { try { history.replaceState(null, '', '#' + v); } catch (e) { location.hash = v; } }
+    if (push && location.hash !== hashOf(v)) { try { history.replaceState(null, '', hashOf(v)); } catch (e) { location.hash = hashOf(v); } }
   };
+  const markSizes = () => [...fbMenu.querySelectorAll('[data-s]')].forEach((b) => b.setAttribute('aria-current', b.dataset.s === size));
   VERSIONS.forEach((v) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem'); b.dataset.v = v.id; b.textContent = v.label; b.title = v.name; b.addEventListener('click', () => show(v.id)); fbMenu.appendChild(b); });
+  fbMenu.appendChild(document.createElement('hr'));
+  SIZES.forEach((z) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem'); b.dataset.s = z.id; b.textContent = z.label; b.addEventListener('click', () => setSize(z.id)); fbMenu.appendChild(b); });
+  markSizes();
   fbBtn.addEventListener('click', () => menu(fbMenu.hidden));
   frame.addEventListener('load', () => {
     view.classList.add('is-ready'); send();
@@ -74,14 +107,18 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #000; color:
     const d = ev.data || {};
     if (d.heroReady) { ready = true; fb.hidden = true; send(); }
     if (d.heroSwitch) show(d.heroSwitch);
+    if (d.heroSize) setSize(d.heroSize);
   });
+  window.addEventListener('resize', () => { if (size !== 'auto') { layout(); send(); } });
   document.addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === 'Escape') { menu(false); return; }
     const v = 'v' + e.key; if (VERSIONS.some((x) => x.id === v)) show(v);
   });
-  window.addEventListener('hashchange', () => show(location.hash.slice(1), false));
-  show(location.hash.slice(1) || DEFAULT, false);
+  // the address is #v9, or #v9@1920x1080 for a fixed preview size
+  const fromHash = () => { const [v, z] = location.hash.slice(1).split('@'); if (SIZES.some((x) => x.id === z)) { size = z; layout(); markSizes(); } else if (!z && size !== 'auto') { size = 'auto'; layout(); markSizes(); } show(v || DEFAULT, false); };
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
 })();
 </script>
 <!-- artifact:end -->
