@@ -1,0 +1,89 @@
+/* ==========================================================================
+   Set 08 · Live Earnings (one card)
+   1u = 1px of the shot. The card is 434 × 434 u (radius 80) at (53, 43) in
+   a 540 × 520 u stage on the shot's pale grey. Scales with the width.
+   ========================================================================== */
+.w08 {
+  container-type: inline-size;
+  position: relative;
+  font-family: "Inter", "Outfit", system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.w08-stage { --u: calc(100cqi / 540); position: relative; width: 100%; aspect-ratio: 540 / 520; }
+.w08-back { position: absolute; inset: 0; border-radius: calc(30 * var(--u)); background: radial-gradient(80% 70% at 50% 40%, #e2e2e2, #d9d9d9 70%, #d0d0d0); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5); }
+.w08-intro { position: absolute; inset: 0; }
+.w08-card {
+  position: absolute;
+  left: calc(53 * var(--u));
+  top: calc(43 * var(--u));
+  width: calc(434 * var(--u));
+  height: calc(434 * var(--u));
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.w08-shadow { position: absolute; inset: 0; border-radius: calc(80 * var(--u)); box-shadow: 0 calc(26 * var(--u)) calc(44 * var(--u)) calc(-18 * var(--u)) rgba(0, 0, 0, .38); }
+.w08-in {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(80 * var(--u));
+  background: #121212;
+  box-shadow: inset 0 calc(1 * var(--u)) 0 rgba(255, 255, 255, .06), inset 0 0 0 calc(1 * var(--u)) rgba(255, 255, 255, .03);
+  overflow: hidden;
+  overflow: clip;
+  color: #fff;
+}
+.w08-glow { position: absolute; left: 0; top: 0; width: calc(320 * var(--u)); height: calc(320 * var(--u)); margin: calc(-160 * var(--u)) 0 0 calc(-160 * var(--u)); border-radius: 50%; background: radial-gradient(closest-side, rgba(87, 250, 135, .07), transparent); opacity: 0; pointer-events: none; will-change: transform, opacity; }
+.w08-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.w08-abs { position: absolute; margin: 0; white-space: nowrap; }
+.w08-label { font: 400 calc(20 * var(--u)) / 1 "Inter", system-ui, sans-serif; color: #a0a0a0; letter-spacing: -.005em; }
+.w08-value { font: 600 calc(20 * var(--u)) / 1 "Inter", system-ui, sans-serif; letter-spacing: .012em; color: #fff; text-align: right; }
+.w08-small { font: 400 calc(13.5 * var(--u)) / 1 "Inter", system-ui, sans-serif; color: #a0a0a0; }
+.w08-big { display: flex; align-items: flex-start; font: 600 calc(62 * var(--u)) / 1.2 "Inter", system-ui, sans-serif; letter-spacing: -.012em; }
+.w08-int { color: #fff; }
+.w08-dec { color: #8c8c8c; margin-left: calc(-4.5 * var(--u)); letter-spacing: .01em; }
+
+/* the period chip: calendar + 24h */
+.w08-period {
+  position: absolute;
+  right: calc(29 * var(--u));
+  top: calc(41 * var(--u));
+  height: calc(30 * var(--u));
+  margin: 0;
+  padding: 0 calc(8 * var(--u)) 0 calc(6 * var(--u));
+  display: flex;
+  align-items: center;
+  gap: calc(9 * var(--u));
+  border: 0;
+  border-radius: calc(10 * var(--u));
+  background: transparent;
+  color: #f8e136;
+  font: 600 calc(20 * var(--u)) / 1 "Inter", system-ui, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color .25s ease;
+}
+.w08-period:hover { background: rgba(248, 225, 54, .08); }
+.w08-period svg { width: calc(17 * var(--u)); height: calc(19 * var(--u)); fill: currentColor; will-change: transform; }
+.w08-period span { display: inline-block; min-width: calc(36 * var(--u)); text-align: left; }
+
+/* APR slider */
+.w08-track { position: absolute; left: calc(25 * var(--u)); width: calc(385 * var(--u)); top: calc(268 * var(--u)); height: calc(32 * var(--u)); cursor: pointer; touch-action: none; outline: none; border-radius: calc(12 * var(--u)); }
+.w08-knob {
+  position: absolute;
+  left: 0;
+  top: calc(274.5 * var(--u));
+  width: calc(17 * var(--u));
+  height: calc(17 * var(--u));
+  margin-left: calc(-8.5 * var(--u));
+  border-radius: 50%;
+  background: #f8e136;
+  box-shadow: 0 0 0 0 rgba(248, 225, 54, .4);
+  pointer-events: none;
+  will-change: transform;
+}
+.w08-track:focus-visible + .w08-knob { box-shadow: 0 0 0 calc(4 * var(--u)) rgba(248, 225, 54, .35); }
+.w08-scrub { position: absolute; left: 0; right: 0; top: calc(150 * var(--u)); height: calc(100 * var(--u)); cursor: ew-resize; touch-action: pan-y; outline: none; }
+.w08-scrub:focus-visible, .w08-period:focus-visible { outline: none; box-shadow: 0 0 0 calc(1.6 * var(--u)) rgba(255, 255, 255, .55); }
+.w08-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

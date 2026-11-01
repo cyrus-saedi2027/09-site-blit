@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="widgets/05-progress/set.css">
 <link rel="stylesheet" href="widgets/06-insights/set.css">
 <link rel="stylesheet" href="widgets/07-folders/set.css">
+<link rel="stylesheet" href="widgets/08-earnings/set.css">
 <!-- /bundle:css -->
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <!-- bundle:js -->
@@ -30,6 +31,7 @@
 <script defer src="widgets/05-progress/set.js"></script>
 <script defer src="widgets/06-insights/set.js"></script>
 <script defer src="widgets/07-folders/set.js"></script>
+<script defer src="widgets/08-earnings/set.js"></script>
 <!-- /bundle:js -->
 </head>
 <body>
@@ -80,6 +82,7 @@
       <a href="#w05"><b>05</b>گزارش پیشرفت</a>
       <a href="#w06"><b>06</b>بینش و تبدیل · ۲ کارت</a>
       <a href="#w07"><b>07</b>کارت‌های پوشه‌ای · ۶ کارت</a>
+      <a href="#w08"><b>08</b>درآمد زنده</a>
     </nav>
   </section>
 
@@ -306,6 +309,34 @@
       <div class="stage-show">
         <span class="stage-tag" aria-hidden="true"><i></i>SET · 07</span>
         <div class="stage-mount is-full" data-mount="7"></div>
+      </div>
+    </article>
+    <article class="stage" id="w08" aria-labelledby="w08-title">
+      <div class="stage-info">
+        <div class="stage-id">
+          <p class="stage-num" aria-hidden="true"><span>0</span><span>8</span></p>
+          <p class="stage-kicker"><b>ویجت شماره‌ی ۸</b><span>Widget · 08</span></p>
+        </div>
+        <h2 class="stage-title" id="w08-title">درآمد زنده</h2>
+        <p class="stage-en">Live earnings · rewards and APR</p>
+        <p class="stage-desc">کارت تیره‌ی «<bdi dir="ltr">Your Rewards</bdi>» با نمودار سبز و اسلایدر APR، مثل طرح. این عکس هم فقط یه طرح داشت، پس شماره‌ی ۸ یه کارته. پاداش‌ها همیشه دارن زیاد می‌شن و رقم‌های آخر عدد می‌غلتن.</p>
+        <ul class="hints">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9" cy="12" r="4" fill="currentColor" stroke="none"/><path d="M15 12h6M3 12h2" stroke-dasharray="2 2"/></svg><span><b>دکمه‌ی زرد APR رو بکش.</b> درصد می‌غلته، «<bdi dir="ltr">Total Rewards</bdi>» و «<bdi dir="ltr">Total Amount</bdi>» عوض می‌شن و سرعت شمردن پاداش هم با نرخ بالا و پایین می‌ره. با کیبورد: ← و → (با Shift یه درصد).</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg><span><b>روی نمودار بکش.</b> یه نشانگر روی خط سبز سُر می‌خوره و عدد بزرگ می‌گه تا اون ساعت چقدر پاداش جمع شده بود.</span></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span><b>روی «<bdi dir="ltr">24h</bdi>» بزن.</b> بین ۲۴ ساعت، ۷ روز، ۳۰ روز و یک سال می‌چرخه و نمودار شکل عوض می‌کنه.</span></li>
+        </ul>
+        <div class="stage-actions">
+          <button class="btn primary" type="button" data-act="replay">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.2V9h4.8"/></svg>
+            از اول
+          </button>
+          <button class="btn" type="button" data-act="live" aria-pressed="false"><i class="dot" aria-hidden="true"></i>داده‌ی زنده</button>
+        </div>
+        <code class="stage-path">widgets/08-earnings/</code>
+      </div>
+      <div class="stage-show">
+        <span class="stage-tag" aria-hidden="true"><i></i>W · 08</span>
+        <div class="stage-mount" data-mount="8"></div>
       </div>
     </article>
   </main>

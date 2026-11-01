@@ -28,6 +28,7 @@ cd exchange-widgets && npx http-server -p 8000
 | 05 | گزارش پیشرفت | Progress Report · weekly steps, from the owner's shot (it had one design, so 05 is one card): the panel's colours are sampled from the shot and live (they drift, follow the pointer, ring when pressed); "+" turns into × and opens seven daily goal capsules to scrub; the red pill flips between steps and percent | [`widgets/05-progress`](widgets/05-progress/) | **new, waiting for feedback** |
 | 06 | بینش و نرخ تبدیل (مجموعه، ۲ کارت) | Insights pager · **06·1** Insights (revenue growth, orange) and **06·2** Conversion (blue). In the shot they are pages 4 and 5 of one deck; here each card is its own six-page deck: dashes, swipe or keys turn pages (charts morph, numbers roll), a working Daily / Weekly / Monthly menu, the marker and the glowing dot scrub their charts, "Explore more +" opens a glass panel, the fitted background lights lean toward the pointer | [`widgets/06-insights`](widgets/06-insights/) | **new, waiting for feedback** |
 | 07 | کارت‌های پوشه‌ای (مجموعه، ۶ کارت) | Folder cards · six black folder-shaped widgets: **07·1** clock & sleep, **07·2** flight, **07·3** walking, **07·4** stock, **07·5** recorder, **07·6** radio. All controls work: the clock runs, the recorder records / pauses / flags, the radio tunes by dragging the dial and seeks stations, the stock ticks and converts currencies, the flight swaps direction, every strip scrubs | [`widgets/07-folders`](widgets/07-folders/) | **new, waiting for feedback** |
+| 08 | درآمد زنده | Live earnings · rewards and APR, from the owner's shot (one design, so 08 is one card): the rewards count up live, the chart flows and scrubs, the yellow APR knob drags and recomputes the totals, the "24h" chip turns through 7d / 30d / 1y | [`widgets/08-earnings`](widgets/08-earnings/) | **new, waiting for feedback** |
 
 ## ساختار · Structure
 
@@ -44,6 +45,7 @@ exchange-widgets/
   widgets/05-progress/     the same three files (a set of one card)
   widgets/06-insights/     the same three files (a full-width set: `.stage.is-full`)
   widgets/07-folders/      the same three files (full width; uses Oswald for the numbers)
+  widgets/08-earnings/     the same three files (one card)
   tools/bundle.mjs      builds single-file copies into dist/ (one to send, one for a claude.ai Artifact)
 ```
 
