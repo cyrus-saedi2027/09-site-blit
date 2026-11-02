@@ -255,16 +255,20 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .buyrow .price { display: grid; line-height: 1.5; }
 .buyrow .price b { font-size: calc(max(15px, calc(var(--u) * 1.2)) * var(--tx) * var(--tx-copy)); font-weight: var(--fwb); }
 
-/* ── the header: a fixed capsule that, as the page scrolls, gets narrower and stays centred (--hs: 0 → 1). ONLY ITS WIDTH
+@property --hs { syntax: '<number>'; inherits: true; initial-value: 0; }
+/* ── the header: a fixed capsule that gets narrower and stays centred when the page starts to scroll (--hs: 0 → 1). It has two
+   resting states, wide and narrow, and a motion between them that the scroll STARTS (a few pixels are enough, or the wheel's
+   first turn) and that then runs by itself: it never waits for more scroll and is never left half way. ONLY ITS WIDTH
    changes (and the spaces between its pieces): its height, its corners, its top and the room round its buttons stay as they
    are, so nothing ever touches its edge. ── */
 /* it is outside the hero so it stays above the second section; at the top of the page it sits exactly on the empty
    row of the hero's grid */
 .nav {
   --hs: 0;
-  /* the words and the small buttons fade out FIRST (by 25 % of the way), and only then do their boxes narrow, so a piece is never seen cut in half */
-  --hq: clamp(0, calc(1 - var(--hs) * 4), 1);
-  --hw: clamp(0, calc((var(--hs) - .2) * 2.5), 1);
+  transition: --hs .6s cubic-bezier(.4, 0, .2, 1);
+  /* the words and the small buttons fade out FIRST (by 25 % of the way), and only then do their boxes narrow, so a piece is never seen cut in half. (The numbers: the words are gone by 40 % of the way, the boxes start to narrow at 10 %.) */
+  --hq: clamp(0, calc(1 - var(--hs) * 2.4), 1);
+  --hw: clamp(0, calc((var(--hs) - .1) * 1.8), 1);
   --wg: calc(100vw - var(--pad-l) - var(--pad-r));
   --wf: calc(var(--wg) * var(--hd-w) / 100);
   --wc: min(calc(100vw - 24px), max(calc(var(--px) * var(--hd-cw)), 760px));
@@ -279,6 +283,9 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   padding-inline: calc(var(--u) * 1.3) calc(var(--u) * .6);
   box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 calc(14px + 16px * var(--hs)) calc(40px + 24px * var(--hs)) -20px rgba(0, 0, 0, calc(var(--shadow) + .15 * var(--hs)));
 }
+.nav.is-compact { --hs: 1; transition-duration: .8s; transition-timing-function: cubic-bezier(.22, 1, .36, 1); }
+.nav.is-still { transition: none; }
+@media (prefers-reduced-motion: reduce) { .nav { transition: none; } }
 .brand { display: inline-flex; align-items: center; gap: calc(var(--u) * .55); flex: none; text-decoration: none; font-weight: var(--fwb); font-size: calc(max(17px, calc(var(--u) * 1.25)) * var(--tx) * var(--tx-nav)); line-height: 1; color: rgb(var(--fg)); white-space: nowrap; }
 .bars { display: flex; align-items: center; gap: max(2px, calc(var(--u) * .16)); height: max(17px, calc(var(--u) * 1.3)); direction: ltr; }
 .bars i { width: max(2.5px, calc(var(--u) * .19)); height: 100%; border-radius: 9px; background: var(--ring); transform: scaleY(var(--s)); transition: background-color .8s; }
@@ -1952,14 +1959,10 @@ const hd = {
    scrolling: the header becomes a small centred pill and follows the page; the hero stays where it is while
    the second section slides over it (the hero shrinks a little, rounds its corners and goes dark)
    ════════════════════════════════════════════════════════════════ */
-/* the header's curve: it answers from the first pixel of scroll and settles softly at the end (a quarter of a sine) */
-const easeOut = (t) => Math.sin(clamp(t, 0, 1) * Math.PI / 2);
 const scrollFx = {
-  cur: 0, hs: -1, p: -1,
+  cur: 0, p: -1, compact: false,
   init() {
     this.cur = window.scrollY;
-    // no smoothing of its own: it follows the page's scroll exactly (the smooth scroll below gives the page its ease), so
-    // the header and the hero never run behind the page
     addEventListener('scroll', () => this.apply(), { passive: true });
     addEventListener('resize', () => this.apply(true));
     this.apply(true);
@@ -1979,10 +1982,16 @@ const scrollFx = {
       const vis = p < 0.985;
       if (vis !== state.visible) { state.visible = vis; timer.sync(); }
     }
-    // the header
-    const dist = Math.max(120, Math.min(190, innerHeight * 0.18)), hs = LOOK.hdCompact ? easeOut(S / dist) : 0;
-    if (force || Math.abs(hs - this.hs) > 0.0004 || (hs === 0) !== (this.hs === 0) || (hs === 1) !== (this.hs === 1)) {
-      this.hs = hs; nav.style.setProperty('--hs', hs.toFixed(4)); nav.classList.toggle('is-compact', hs > 0.55);
+    // the header: two resting states (wide, narrow) and a motion between them (in the stylesheet, on --hs). The scroll only STARTS it:
+    // after 10 px (it stays narrow down to 3 px, so a small shake doesn't flick it), or at once when the smooth scroll has been
+    // asked for a scroll down (the wheel's first turn: the page itself is still starting slowly). Nothing is left half way.
+    const lead = smoothScroll.running && smoothScroll.tgt > 12;
+    const want = !!LOOK.hdCompact && (this.compact ? S > 3 || lead : S > 10 || lead);
+    if (force || want !== this.compact) {
+      this.compact = want;
+      if (force) nav.classList.add('is-still');   // a resize or a setting changes it without a motion
+      nav.classList.toggle('is-compact', want);
+      if (force) { void nav.offsetWidth; nav.classList.remove('is-still'); }
     }
     const max = document.documentElement.scrollHeight - innerHeight;
     nav.style.setProperty('--pg', (max > 0 ? clamp(S / max, 0, 1) : 0).toFixed(4));
@@ -2021,6 +2030,7 @@ const smoothScroll = {
     ev.preventDefault();
     if (!this.running) { this.tgt = this.set = window.scrollY; this.y.fill(this.tgt); this.running = true; this.last = performance.now(); gsap.ticker.add(this.tick); }
     this.tgt = clamp(this.tgt + dy, 0, this.max());
+    scrollFx.apply();   // the header may start now (the page itself starts slowly)
   },
   tick() {
     const s = smoothScroll, now = performance.now(), tau = Math.max(0.02, LOOK.scrollSoft / 1000);
