@@ -265,6 +265,7 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 | `hdWidth` | هدر · عرض هدر بالای صفحه | 60–100 ٪ | 100 |
 | `hdCompact` | هدر · هدر با اسکرول کوچیک بشه | روشن / خاموش | روشن |
 | `hdCompactW` | هدر · عرض هدر کوچیک‌شده | 760–1400 px | 1400 |
+| `hdSpeed` | هدر · سرعت جمع‌شدن هدر | 0.5 / 0.8 / 1.2 s (تند / معمولی / آروم) | 0.8 |
 | `hdHover` | هدر · نشونه‌ی لینک‌ها | pill / line / off | pill |
 | `hdProg` | هدر · خط پیشرفت اسکرول رو هدر | روشن / خاموش | روشن |
 | `brand` | نوشته‌های ثابت · اسم سایت | متن | بلیت |
@@ -388,6 +389,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 
 ## 18. Performance
 
+- **Layout shift (the brief asks for none):** the page has 0 on load and while its content scrolls. The header's width morph is a *layout* animation (`width`/`left` on a fixed element), and Chrome counts it: about 0.05–0.06 per morph at 1920×862 (a tight shadow only brings it to 0.03), so under the 0.1 limit but not zero. **In the production site animate it with `transform` / `clip-path` (FLIP)** so that it counts nothing; the look stays the same.
 - Continuous motion is `transform` and `opacity`. The per-frame style writes are the time sign (one element, and only the one that shows), the picture's zoom, the header's `--hs` and `--pg` while the page scrolls, and the hero's transform while it is covered. The scroll listener is passive and its work is skipped when nothing changed.
 - No `backdrop-filter`, no blend modes, no WebGL, **no audio** (no `AudioContext`, no analyser, no beat). The mirrored edge (off by default) is the only `filter` on a big element: blurred once inside the layer that zooms.
 - Scenes are built once and reused; after the intro the other shows' scenes are built one at a time. At most `shows + 1` free scenes are kept.
