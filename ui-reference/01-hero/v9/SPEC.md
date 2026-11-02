@@ -1,7 +1,7 @@
 # Hero · نسخه‌ی ۹ · جایگاه ویژه، دقیقاً اندازه‌ی دسکتاپ، همه‌چیز قابل‌تنظیم · handoff spec
 
 > **خلاصه برای خودت:** نسخه‌ی ۹ همون نسخه‌ی ۸ است (چند کادر جدای نرم‌گوشه با فاصله‌ی کم: **هدر**، **کادر کارت‌ها**، **کادر خودِ بنر**، **کادر اطلاعات**) که سه دور کار روش شده:
-> 1. **دقیقاً اندازه‌ی دسکتاپ:** کادرها کل پنجره رو لبه‌به‌لبه پر می‌کنن (حاشیه‌ی برابر از چهار طرف، فاصله‌ی برابر بینشون)، روی هر دسکتاپی از ۱۲۸۰×۶۰۰ تا ۲۵۶۰×۱۴۴۰ و عریض‌تر. بنر همیشه کامل و بی‌برش وسط کادرش می‌شینه؛ اگه شکل کادر تا ۲٫۵٪ با بنر فرق داشته باشه کادر رو کامل پر می‌کنه (کشیدگی‌اش دیده نمی‌شه)، وگرنه جای خالی کنارش **سیاهه**.
+> 1. **دقیقاً اندازه‌ی دسکتاپ:** کادرها کل پنجره رو لبه‌به‌لبه پر می‌کنن (حاشیه‌ی برابر از چهار طرف، فاصله‌ی برابر بینشون)، روی هر دسکتاپی از ۱۲۸۰×۶۰۰ تا ۲۵۶۰×۱۴۴۰ و عریض‌تر. **شکل کادر بنر قفله (نسبت ۱٫۷۴): یه سایز بنر برای همه‌ی پنجره‌ها، `۱۷۴۰×۱۰۰۰`** (یا هر اندازه‌ی بزرگ‌تر با همین نسبت، مثل ۳۴۸۰×۲۰۰۰)؛ بنر همیشه تمام کادر رو پر می‌کنه و کامله. کادر تا جایی که ارتفاع پنجره اجازه بده بزرگ می‌شه و ستون کارت‌ها جای اضافیِ عرض رو می‌گیره (تو پنجره‌ی عریض هر کارت یه ردیفه: عکس و کنارش اسم و روز و مکان). بنری که تا ۲٫۵٪ با این نسبت فرق داشته باشه هم کادر رو پر می‌کنه؛ دورتر از اون کامل و با سیاهی کنارش دیده می‌شه. «آزاد» هم هست (کادر هر چی جا می‌مونه رو می‌گیره).
 > 2. **همه‌چیز تو «تنظیمات نمونه» (دکمه‌ی گرد پایین‌چپ) قابل‌تنظیمه:** فاصله‌ی بین کادرها و تا لبه‌ها، ارتفاع‌ها، گردی گوشه‌ها، خط دور، سایه، رنگ کادرها (حتی سفید)، رنگ نوشته‌ها، فونت، اندازه‌ی هر دسته نوشته، نوشته‌های ثابت (اسم سایت، دسته‌ها، دکمه‌ها…)، آیتم‌های هدر، شدت و نوع حرکت. ۱۰ «حالت آماده» (فشرده، باز، گرد، تیز، چسبیده، سفید…) و «کپی تنظیمات» که متنش رو می‌شه برای ما فرستاد تا همون بشه پیش‌فرض. تب «اندازه‌ها»: اندازه‌ی هر کادر و خودِ بنر به پیکسل، اندازه‌ای که از برگزارکننده می‌خوایم، و یه لایه که اندازه‌ها و فاصله‌ها رو روی صفحه می‌کشه.
 > 3. **حرفه‌ای‌تر:** هدر ثابته و با اسکرول یه کپسول کوچیک وسط‌چین می‌شه (با حرکت)؛ هیرو سرجاش می‌مونه و **بخش دوم** مثل ورقه از روش رد می‌شه؛ جستجوی پنجره‌ای (`/` یا Ctrl+K)، منوی شهر، لینک‌هایی که پیل زیرشون می‌لغزه، نور دنبال‌کننده‌ی موس روی کادرها، دکمه‌ی خرید آهنربایی با موج، کشیدن بنر برای عوض کردن اجرا، چهار نوع جابه‌جایی بین اجراها (محو، کشویی، زوم، پرده)، ۱۶ رنگ + رنگ دلخواه.
 >
@@ -9,11 +9,12 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, the sixth owner round (the third round of version 9 itself). History of v9:
+**Status:** v9, the eighth owner round (the fifth round of version 9 itself). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
 - *Round C*: the owner's own settings became the defaults (gap and margins 9, header 71, facts panel 80, rail up to 480, thumbs' radius 7, 0.5 px line at 8 %, shadow 91 %, panels `#0d0d0d`, the small header 1400 wide); **six new banners** in a given order (the first one's name is the show «دختر بودن یا پسر نبودن، مسئله این است»; then «هانی نظریان»; «زندگی شاید…»; «برفاب»; «دو دقیقه به هشت»; «امان»), sized to fill the banner's panel; «when the zoom-out ends the banner must be completely visible».
+- *Round D*: «the size you told me isn't the frame's size at all; tell me exactly what size to make; let me add pictures myself in the settings» — the owner views the page in claude.ai, in a window of about 1920×862, where the (then flexible) frame was 1637×711, not the 1553×893 of a 1920×1080 window. And then: «what matters is that when the site is built the sizes are right: give me a size that fills the frame with no problem». So: **the banner panel's shape is locked** (`frame: lock`, ratio 1.74), the rail takes the width the window has over, the settings' «جایگاه» tab says the size to make and takes the owner's own pictures (in place of a banner, or as new shows).
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -77,7 +78,8 @@ Every number is a variable, and the settings panel writes them (§11). `--px` is
 
 - **The grid** (hero and every scene): columns `--rail-w` and `1fr` (swapped with the cards on the left), rows `--nav-h` and `1fr`, areas `"nav nav" "rail main"` or `"nav nav" "main rail"`, `gap`, and the page margins as padding. The rail and the banner column take **all** the width, so nothing is left over at the sides.
 - **The banner column** (`.tk`): rows `1fr` and `--dock-h`, so the banner's panel is `main-h − dock-h − gap` tall and as wide as the column.
-- **At 1920×1080 with the defaults:** margin 9 px, gap 9 px, rail 339.5 px, banner panel 1553.5×893 (inside the 0.5 px line: 1552.5×892, a ratio of 1.7404), the banner fills it. `geom(W, H)` in the script is this same arithmetic for any window (the sizes tab uses it; a test checks it against the page at 22 sizes).
+- **At 1920×1080 with the defaults:** margin 9 px, gap 9 px, rail 339.5 px, banner panel 1553.5×892.8 (ratio 1.74), the banner fills it.
+- **The locked panel** (`:root[data-frame="lock"]`, only on a window that isn't stacked): `--frame-h0 = main-h − dock-h − gap` (the height the window allows), `--lk-room = 100vw − 2·edge-min − gap` (the width for the rail and the panel), `--frame-w = min(frame-h0 × ratio, lk-room − rail-nat)` (as wide as the shape needs, never leaving the rail less than its natural width), `--rail-w = min(rail-cap, lk-room − frame-w)` (the rail takes what is left, up to `railMax`) and `--edge-x = (100vw − rail-w − gap − frame-w) / 2` (the margins take any rest, so they grow only when the rail has hit its cap). `.frame { aspect-ratio: ratio }` and `.tk { grid-template-rows: auto dock-h; align-content: center }`: on a window taller than the shape needs, the banner and the facts panel stay together in the middle of the column. `rail-nat` is the old (free) rail width, from the cards. On a 16:9 window the numbers are the free layout's to within 2 px. `geom(W, H)` in the script is this same arithmetic for any window (the sizes tab uses it; a test checks it against the page at 22 sizes).
 - **In production** the hero is a size container (`container-type: size`) and the page's `100vw` / `100svh` become `100cqw` / `100cqh` of the hero; declare the variables on the hero element, not on `:root`.
 
 ---
@@ -102,7 +104,9 @@ Every number is a variable, and the settings panel writes them (§11). `--px` is
 
 ## 5. The banner's panel and what is beside the banner
 
-The banner is **never cut and never covered** (unless the owner asks for «پر کردن کادر»). It is drawn with `object-fit: contain` in a panel that takes whatever room is left, so:
+**The panel's shape is locked** (`frame: lock`, `ratio: 1.74`, §2), so a banner of that shape fills it in every window: **one size to make, 1740×1000** (3480×2000 for sharp screens). With `frame: free` the panel takes whatever room is left and its shape follows the window (the rest of this section is for that case, and for a banner of another shape).
+
+The banner is **never cut and never covered** (unless the owner asks for «پر کردن کادر»). It is drawn with `object-fit: contain` in the panel, so:
 
 - if the panel's shape is the banner's own to within **2.5 %** (`FILL_TOL`, the script's `is-fill`), the banner **fills the panel**: `object-fit: fill`, so nothing is cut and no bar is left; the stretch is less than 2.5 % (the six sample banners are 1.7417, the panel at 1920×1080 is 1.7404: 0.07 %), which the eye can't see. A 16:9 banner (1.7778) is 2.1 % off and fills as well;
 - otherwise (a wider difference: a 16:10 window, an ultra-wide one, a banner of 3:1) the banner sits whole in the middle and the rest of the panel is **black** (`fill: black`, the default) or **the banner's own edge, mirrored and blurred** (`fill: edge`): two copies of the same picture, one on each side (class `is-h`) or one above and one below (`is-v`), flipped so the column of pixels next to the picture is the picture's own edge column, blurred with `blur(1.4u)` and darkened by 26 %. The script measures the panel (`ResizeObserver`) and writes the picture's size as `--pw` and `--ph`; the CSS places the copies from those;
@@ -145,6 +149,7 @@ A panel with one card per show, the up and down bars and the pause button. It is
 
 - **A card** is a 16:9 picture (the banner's 640 px version) with one line under it: «تئاتر برفاب» on the start side and the short day («۱۲–۱۷ آبان», «۲۵–۳۰ مهر») on the end side. The line can be under the picture, over it (on a gradient) or off; the day can be left out; it goes by itself when the picture is narrower than 190 px.
 - **The cards share the height equally** (`--cell-h`), centred in their cell; the rail's width follows from the picture's (at most `railMax`).
+- **A wide rail** (locked shape on a window wider than 16:9, §2): the rail gets the extra width. When its inner width is at least `cell-h × 16/9 + 9.4u` (a picture as tall as the card plus room for about eight em of words), the script sets `data-rail="wide"` and each card is a row: the picture (as tall as the cell), and beside it, over up to three lines, the show (two lines at most), the days and the place. Narrower, the cards stay as they were (a picture with one line under it, centred). The rows, the four-card window and the scroll are the same in both. At 1920×937 the rail is 548 px, at 1920×862 658 px, at 1536×730 474 px; at 3440×1440 it stops at its cap (840 × 1.33 = 1120 px) and the margins grow.
 - **More cards than fit:** the rail has room for four cards (`VIS`; `--n` = min(shows, 4); every row is exactly `--cell-h`, so the width the owner tuned doesn't change with the number of shows). With six shows the list scrolls inside the panel in **whole cards**: the window shows four cards, the active one second from the top (`scrollTo` on the list, `scroll-snap`, so no card is left cut at rest), and slides when the active card leaves it (smooth; the page doesn't move). The bars, the arrow keys and the timer move the show and the window follows. The wheel over the rail scrolls the list and, at its end, the page.
 - **States:** the active card has a 2px ring in the show's ring colour and a glow, its words are white; the others are dimmed by `dim` % (14 by default) and come back on hover (and lift a little); focus has a ring; keys, `role="tab"`, hover pause: as v7.
 - **The time left on this show** («نشونه‌ی زمان باقی‌مونده»): a 3px bar at the bottom of the active picture that grows from the right, or a line that draws itself round the picture, or nothing. It is the timer itself; only the visible sign is written each frame.
@@ -200,13 +205,15 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 
 | کلید | چی رو عوض می‌کنه | مقدارها | پیش‌فرض |
 |---|---|---|---|
+| `frame` | شکل کادر بنر · کادر بنر | lock / free | lock |
+| `ratio` | شکل کادر بنر · نسبت کادر بنر (عرض ÷ ارتفاع) | 1.30–2.60 | 1.74 |
 | `gap` | فاصله‌ها · فاصله‌ی بین کادرها | 0–60 px | 9 |
 | `edgeX` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی چپ و راست | 0–140 px | 9 |
 | `edgeT` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی بالا | 0–140 px | 9 |
 | `edgeB` | فاصله‌ها · فاصله‌ی کادرها تا لبه‌ی پایین | 0–140 px | 9 |
 | `navH` | اندازه‌ی کادرها · ارتفاع هدر | 44–110 px | 71 |
 | `dockH` | اندازه‌ی کادرها · ارتفاع کادر اطلاعات | 56–200 px | 80 |
-| `railMax` | اندازه‌ی کادرها · حداکثر عرض ستون کارت‌ها | 160–480 px | 480 |
+| `railMax` | اندازه‌ی کادرها · حداکثر عرض ستون کارت‌ها | 160–1400 px | 840 |
 | `rail` | اندازه‌ی کادرها · جای ستون کارت‌ها | left / right | left |
 | `fit` | بنر · نمایش بنر | contain / cover | contain |
 | `fill` | بنر · جای خالی کنار بنر | black / edge | black |
@@ -320,7 +327,7 @@ slot {
 
 The panel in `index.html` («تنظیمات نمونه», the round button at the bottom left) has seven tabs: **نسخه‌ها** (only inside the comparison page: the versions and the preview sizes), **جایگاه** (this show), **چیدمان**, **سبک**, **هدر و متن**, **حرکت** (§11) and **اندازه‌ها** (§15). It can move to the other side of the screen. The «جایگاه» tab is the one the real admin would have:
 
-1. **Image:** at the top a box says the size that fills the banner's panel **in this window** (the panel's own inner size, e.g. 1629×711 at 1920×862, 1552×891 at 1920×1080), its ratio, the double of it for a sharp screen, the window it was measured in and what it is on a 1920×1080 window (it follows the window and every setting). Then drop or pick one or several files (the box «بنر خودت رو اینجا بنداز یا انتخاب کن»); two buttons say where they go: «جای بنر این اجرا» (the default) or «اجرای جدید، آخر لیست» (each file becomes a new show at the end of the list with made-up words to change in the fields below it; the rail's window slides to it; it lasts until the page is reloaded). The note under says whether the file fills the panel and, if not, the size to make; the box «روی بنر نوشته (عنوان، تاریخ…) هست» picks the layout: ticked → *bar*, unticked → *text*. The panel says what it found: «بنر ۱۶:۹ · ۱۶۷۲×۹۴۱ · تو قابش کامل و بدون برش دیده می‌شه» (or that it fills the panel), or «نسبت ۳٫۰۰ به ۱ … کامل دیده می‌شه، ولی بالا و پایینش خالی می‌مونه (سیاهه)». **A tall or square picture (ratio under 1.15) is refused** («پوستر عمودی جای خودش رو تو قفسه‌ی پوستر داره، نه اینجا»), and the slot stays as it was. «عکس نمونه، بدون نوشته» puts a text-free photo in the slot.
+1. **Image:** at the top a box says the size to make: with the locked shape **one size for every window, `1740×1000`** (the ratio × 1000), and the double of it for a sharp screen; and, smaller, what the panel measures here (e.g. 1240×713 in a 1920×862 window) and in a 1920×1080 one. With the free shape the box gives the panel's own size in this window instead (it follows the window and every setting). Then drop or pick one or several files (the box «بنر خودت رو اینجا بنداز یا انتخاب کن»); two buttons say where they go: «جای بنر این اجرا» (the default) or «اجرای جدید، آخر لیست» (each file becomes a new show at the end of the list with made-up words to change in the fields below it; the rail's window slides to it; it lasts until the page is reloaded). The note under says whether the file fills the panel and, if not, the size to make; the box «روی بنر نوشته (عنوان، تاریخ…) هست» picks the layout: ticked → *bar*, unticked → *text*. The panel says what it found: «بنر ۱۶:۹ · ۱۶۷۲×۹۴۱ · تو قابش کامل و بدون برش دیده می‌شه» (or that it fills the panel), or «نسبت ۳٫۰۰ به ۱ … کامل دیده می‌شه، ولی بالا و پایینش خالی می‌مونه (سیاهه)». **A tall or square picture (ratio under 1.15) is refused** («پوستر عمودی جای خودش رو تو قفسه‌ی پوستر داره، نه اینجا»), and the slot stays as it was. «عکس نمونه، بدون نوشته» puts a text-free photo in the slot.
 2. **Info:** کادر پایین / متن روی عکس. 3. **Colour:** 16 swatches (the one suggested from the picture is marked) and a colour of one's own. 4. **Texts:** title, kind, short name, venue, price from, badge. 5. **Reset** puts the slot back as it was.
 
 Validation worth having in the real one: at least 1600×900 (warn below 1920×1080); JPEG, PNG or WebP up to 10 MB; refuse a ratio under 1.15; warn how the panel will look for a ratio that isn't the panel's own (about 1.74 with the default look; within 2.5 % it fills the panel); warn if the banner's words come closer than 4 % to an edge (the zoom clips them for a moment).
@@ -329,19 +336,24 @@ Validation worth having in the real one: at least 1600×900 (warn below 1920×10
 
 ## 15. The sizes
 
-The tab «اندازه‌ها» says, for the window it is in: the window and its pixel ratio; the size of the header, the rail, the banner's panel, **the banner itself inside it**, the facts panel; the gap and the margins; the file of the current banner (size, ratio) and what size it should be to look sharp here; **the size to ask the organiser for** (§16); and a table of the banner's panel and of the banner on common windows (2560×1440 … 1280×720) for the current look. With the defaults:
+The tab «اندازه‌ها» says, for the window it is in: the window and its pixel ratio; the size of the header, the rail, the banner's panel, **the banner itself inside it**, the facts panel; the gap and the margins; the file of the current banner (size, ratio); **the size to make** (with the locked shape, one size: `1740×1000`, and what it is on this window's panel) and the size to ask the organiser for (§16); and a table of the banner's panel on common windows for the current look. With the defaults (the shape locked at 1.74), the panel is always 1.74 : 1 and only its size and the rail change:
 
-| Window | Banner's panel | The banner | Rail | Gap | Margin |
-|---|---|---|---|---|---|
-| 2560×1440 | 2072×1191 | 2071×1190 | 452 | 12 | 12 |
-| **1920×1080** | **1553×893** | **1552×892** | 340 | 9 | 9 |
-| 1920×937 | 1603×775 | 1349×774 | 294 | 8 | 8 |
-| 1536×864 | 1246×714 | 1245×713 | 268 | 7 | 7 |
-| 1440×900 | 1132×760 | 1131×649 | 288 | 7 | 7 |
-| 1366×768 | 1115×635 | 1114×634 | 232 | 6 | 6 |
-| 1280×720 | 1050×590 | 1049×589 | 212 | 6 | 6 |
+| Window | Banner's panel | Rail | Gap | Margin |
+|---|---|---|---|---|
+| 2560×1440 | 2072×1191 | 452 | 12 | 12 |
+| **1920×1080** | **1553×893** | 340 | 9 | 9 |
+| 1920×937 (a maximised browser) | 1348×775 | 548 | 8 | 8 |
+| 1920×862 (the owner's claude.ai window) | 1240×713 | 658 | 7 | 7 |
+| 1536×864 | 1243×714 | 271 | 7 | 7 |
+| 1536×730 (a laptop's browser) | 1043×600 | 474 | 6 | 6 |
+| 1440×900 | 1132×651 | 288 | 7 | 7 |
+| 1366×768 | 1105×635 | 242 | 6 | 6 |
+| 1366×650 | 909×522 | 441 | 5 | 5 |
+| 1280×720 | 1027×590 | 235 | 6 | 6 |
 
-On every 16:9 window the panel is 1.74 : 1, so the banner (inside the 0.5 px line) fills it. A 16:10 window (1440×900) or a wide one (1920×937) leaves bars (here 55 px above and below, or 127 px at each side) — black, or the banner's mirrored edge.
+The banner (1740×1000, or any size of that shape) is the panel's inside, minus the 0.5 px line. The panel gets smaller on a smaller window but never changes shape: at 1920×862 it is 1240×713 and the rail 658 px (cards in rows); at 1920×1080 it is 1553×893 and the rail 340 px (cards as pictures with a line under them). On a window taller than 1.74 the banner and the facts panel stay together in the middle of the column (1440×900: 55 px of black above and below).
+
+**To be sharp** the banner should have at least as many pixels as the biggest panel it will be drawn in: 2072×1191 on a 2560×1440 screen, double that on a high-density one. 1740×1000 is sharp up to a 1920×1080 window on an ordinary screen; 3480×2000 is sharp everywhere.
 
 The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌ها رو روی صفحه بکش» draws a layer over the page: each panel's outline with its size, each gap in pink with its number, each margin in blue with its number, and the banner's own size. It follows the window, the scroll and every change of the look.
 
@@ -351,7 +363,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 
 | Step | Detail |
 |---|---|
-| Ask for | a banner of the shape of the banner's panel. **There is no one size for every window:** the panel takes what the window leaves, so its shape follows the window's height (1.74 at 1920×1080 → 1553×893; 2.3 at 1920×860 → 1630×709, the owner's claude.ai window). The page says the number for the window it is in (the settings' «جایگاه» tab); the sample files are 1672×960 (1.74; **3344×1920** for sharp high-density screens), JPEG, PNG or WebP up to 10 MB, with the important words at least 4 % from the edges (the picture starts 5 % zoomed in). A 16:9 banner (1920×1080) fills the panel too, stretched by 2 %. For the text layout a **2560×1440** photo with no words. A shape further off than 2.5 % is accepted whole (with black beside it); a poster (ratio under 1.15) is refused |
+| Ask for | **one size for every window: a banner of 1740×1000** (ratio 1.74, the shape the banner's panel is locked to; **3480×2000** for sharp high-density screens, or any size with that ratio), JPEG, PNG or WebP up to 10 MB, with the important words at least 4 % from the edges (the picture starts 5 % zoomed in). A banner within 2.5 % of that ratio (a 16:9 one, 1920×1080, is 2.1 % off) fills the panel too; further off it is shown whole with black beside it or above and below. For the text layout a **2560×1440** photo with no words. A poster (ratio under 1.15) is refused |
 | Make the sizes | WebP: 640 (the cards), 1024 and 1672 (or 1920 if the source has it); photos 640, 1920, 2560. Never upscale |
 | Make the ambient | 64 × 36, cover-fitted with a little bleed, `blur 2.5px saturate 1.45`, ~1 KB WebP (only used when the page's background is the glow) |
 | Suggest the colour | `suggestPalette()`: shrink to 64 px, skip transparent, grey (saturation < .28) and dark (value < .2) pixels, a 36-bin hue histogram weighted by `s²·v`, smoothed, the peak snapped to the nearest of the first eight colours; a black-and-white picture gets violet |
@@ -395,6 +407,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **Interactions:** search by kind, by name and by venue, a miss, Enter, `/`, Esc and Ctrl+K; the city menu; the highlight sliding to within 0.2 px; every header piece switched off; the second section's filter and numbers; the measuring layer's twelve labels; the arrow keys; dragging left and right; the lean (x 8.4 px) and its return; the four changes between shows each ending with opacity 1 and no transform or clip left; the ring and the bar; captions over, under, off; English digits; the title at 140 %; sharp buttons; the mode «چسبیده» (0 margin, 0 gap, 0 radius).
 - **Behaviour:** one scene after five quick clicks and after fourteen changes in a row; the timer pauses over the rail; the panel pauses the show; a 16:9 file is accepted, a poster refused, a 3:1 file accepted whole; no audio element, no player, no equaliser anywhere; reduced motion: paused, no zoom, shown.
 - **Six banners (round C):** fit 132 of 132 again, with six shows and the owner's defaults (the rail shows four whole cards in every window, 1920×1080: banner 1553.5×893, rail 339.5, `is-fill`, a stretch of 0.2 %); each of the six banners fills that panel (object-fit fill, picture 1552×891 in a 1553.5×893 panel); at 1920×937 the banner stays whole with black beside it (`contain`); the zoom is 1.027 at 1.5 s, 1.009 at 3 s and **exactly 1.0000 at 5.6 s and at 6.5 s**, when the banner's layer is the panel's size; the rail's window starts at card 0 0 1 2 2 2 for the six shows, each active card whole between the bars; the second section lays six cards in three columns; the measuring layer draws its twelve labels; the six files (18 sizes) load with no stand-in picture; no script errors.
+- **The locked shape (round D):** at 1920×1080, 1920×937, 1920×862, 1536×730, 1366×650, 2560×1440, 2560×1300, 1440×780, 1280×720 and 3440×1440 the banner's panel is 1.7400 : 1 (to 0.01 %), the banner fills it (`is-fill`), `geom()` agrees with the page to 0.1 px, and the header, rail, panel and facts reach the same margins (the rail at its natural width on 16:9 windows, wider on the others; the margins grow only at 3440×1440, where the rail stops at its cap); on 1440×900 and 1024×768 the banner and the facts sit together in the middle of the column. The wide rail's cards are rows: pictures 16:9, words inside their cell, four whole cards in view.
 - **The comparison page:** the sample fills the window exactly; `1920x1080` makes the page inside exactly 1920×1080; the size and the version survive each other; v1 gets the capsule.
 - **Cost** (1920×1080, software rendering, per second of wall time): paused 0–1 ms of script; running (zoom + the time sign) 9 ms of script, 13 ms of style, 1 ms of layout; during a change 11 ms of script, 46 ms of style, 6 ms of layout.
 
@@ -404,7 +417,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 
 - **Music** (the player, the playlist, the rhythm analysis, the beat on the picture and the logo): the owner asked for it to be removed completely.
 - **Posters:** the owner doesn't want them in the hero. **Cropping the banner, or covering it:** the baked words must stay whole (unless the owner picks «پر کردن کادر»).
-- **A locked ratio for the banner's panel** (one size for every window): the panels tile the window, so locking the shape would leave the rail (660 px wide at 1920×862) or the page margins to take the difference. Not built; it is the owner's choice (one size to make versus a hero that fills every window).
+- **A free banner panel by default:** it is an option now (`frame: free`); the default is the locked shape, because the owner wants one size that fills the frame once the site is built. The cost of the lock: on a window wider than 16:9 (every browser window) the cards get more room than they need, so they become rows; on an ultra-wide window the margins grow (the rail stops at `railMax`).
 - **A safe-area guide:** not needed when nothing covers the banner.
 - **A language switch, a theme switch, a cart, a mega menu in the header:** possible; each is a button in the same place. The header has the ones that matter most to a ticket buyer: search, city, my tickets, notifications, login.
 - **A second info column for very wide windows, a 2 × 2 card grid, a taller facts panel for tall windows:** each would use the spare room better in one shape of window and complicate every other.

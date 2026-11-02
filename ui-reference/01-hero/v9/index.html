@@ -42,7 +42,7 @@
   --on-accent: #1a1206;
   --ring: #d9a441;
   /* the look (the settings panel writes these) */
-  --gap-n: 9; --edge-x-n: 9; --edge-t-n: 9; --edge-b-n: 9; --nav-n: 71; --dock-n: 80; --rail-max-n: 480;
+  --gap-n: 9; --edge-x-n: 9; --edge-t-n: 9; --edge-b-n: 9; --nav-n: 71; --dock-n: 80; --rail-max-n: 840;
   --r-n: 19; --rt-n: 7; --rb: 999px; --bw: .5px; --shadow: .91;
   --tx: 1; --tx-nav: 1; --tx-main: 1; --tx-small: 1; --tx-cap: 1; --tx-copy: 1;
   --fwb: 800; --fwm: 700;
@@ -51,7 +51,8 @@
   --mot: 1;
   /* the geometry */
   --hero-h: max(440px, 100svh);
-  --edge-x: max(calc(var(--px) * var(--edge-x-n)), calc((100vw - var(--hero-h) * 2.25) / 2));
+  --edge-min: calc(var(--px) * var(--edge-x-n));
+  --edge-x: max(var(--edge-min), calc((100vw - var(--hero-h) * 2.25) / 2));
   --pad-t: max(calc(var(--px) * var(--edge-t-n)), env(safe-area-inset-top, 0px));
   --pad-r: max(var(--edge-x), env(safe-area-inset-right, 0px));
   --pad-b: max(calc(var(--px) * var(--edge-b-n)), env(safe-area-inset-bottom, 0px));
@@ -73,7 +74,10 @@
   --main-h: calc(var(--hero-h) - var(--pad-t) - var(--pad-b) - var(--nav-h) - var(--gap));
   --cell-h: calc((var(--main-h) - 2 * var(--rail-pad) - 2 * var(--bw) - 2 * var(--arrow-h) - (var(--n) + 1) * var(--card-gap)) / var(--n));
   --thumb-w: calc((var(--cell-h) - var(--cap-h) - var(--cap-gap)) * 1.7778);
-  --rail-w: clamp(calc(var(--u) * 11), calc(var(--thumb-w) + 2 * var(--rail-pad) + 2 * var(--bw)), calc(var(--px) * var(--rail-max-n)));
+  --rail-cap: calc(var(--px) * var(--rail-max-n));
+  --rail-nat: clamp(calc(var(--u) * 11), calc(var(--thumb-w) + 2 * var(--rail-pad) + 2 * var(--bw)), var(--rail-cap));
+  --rail-w: var(--rail-nat);
+  --lock-r: 1.74;
   /* how far the page is scrolled over the hero (the second section slides over it) */
   --pin: var(--hero-h);
   color-scheme: dark;
@@ -121,6 +125,24 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   padding: var(--pad-t) var(--pad-r) var(--pad-b) var(--pad-l);
 }
 .hero.rail-left, .hero.rail-left .scene { grid-template-columns: minmax(0, 1fr) var(--rail-w); grid-template-areas: "nav nav" "main rail"; }
+
+/* ── a locked banner panel ────────────────────────────────────────
+   The banner panel always has the same shape (--lock-r), so ONE banner size fits every window and always fills it.
+   The panel is as tall as the window allows and as wide as that shape needs; the rail takes what is left of the width
+   (up to its cap, --rail-max-n) and the page margins take any rest. On a window whose shape is the panel's own nothing
+   changes; on a wider one (every browser window is wider than its screen) the cards get more room; on a taller one the
+   banner and the facts panel stay together in the middle of the column. Not on phones and tall windows (they stack). */
+@media (width > 760px) and (aspect-ratio > 5/4) {
+  :root[data-frame="lock"] {
+    --frame-h0: calc(var(--main-h) - var(--dock-h) - var(--gap));
+    --lk-room: calc(100vw - 2 * var(--edge-min) - var(--gap));
+    --frame-w: min(calc(var(--frame-h0) * var(--lock-r)), calc(var(--lk-room) - var(--rail-nat)));
+    --rail-w: min(var(--rail-cap), calc(var(--lk-room) - var(--frame-w)));
+    --edge-x: calc((100vw - var(--rail-w) - var(--gap) - var(--frame-w)) / 2);
+  }
+  :root[data-frame="lock"] .scene[data-mode="bar"] .tk { grid-template-rows: auto var(--dock-h); align-content: center; }
+  :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: var(--lock-r); }
+}
 
 /* scenes: one per show, stacked; the new one fades in over the old one */
 .scenes { position: absolute; inset: 0; z-index: 0; background: var(--bg); }
@@ -356,6 +378,16 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .c-cap { height: var(--cap-h); min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: .7em; padding-inline: .25em; line-height: 1.4; }
 .c-cap b { min-width: 0; font-size: calc(max(12px, calc(var(--u) * .76)) * var(--tx) * var(--tx-cap)); font-weight: var(--fwm); color: rgba(var(--fg), .86); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .4s; }
 .c-cap em { flex: none; font-style: normal; font-size: calc(max(11px, calc(var(--u) * .64)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); white-space: nowrap; }
+.c-cap .c-venue { display: none; min-width: 0; max-width: 100%; font-style: normal; font-size: calc(max(11px, calc(var(--u) * .64)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* a wide rail (the window is wider than the banner's shape needs): each card is a row, the picture and, beside it, the show,
+   its days and its place; the script sets data-rail="wide" when the rail has room for that */
+.hero[data-rail="wide"] .c-box { width: 100%; grid-template-columns: auto minmax(0, 1fr); column-gap: calc(var(--u) * .9); align-items: center; row-gap: 0; }
+.hero[data-rail="wide"] .c-thumb { width: calc(var(--cell-h) * 1.7778); }
+.hero[data-rail="wide"] .c-cap { height: auto; min-width: 0; flex-direction: column; align-items: flex-start; justify-content: center; gap: .2em; padding-inline: 0; }
+.hero[data-rail="wide"] .c-cap b { max-width: 100%; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-cap)); line-height: 1.55; }
+.hero[data-rail="wide"] .c-cap em { display: block; font-size: calc(max(11.5px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); }
+.hero[data-rail="wide"] .c-cap .c-venue { display: block; }
+:root[data-capdate="off"] .hero[data-rail="wide"] .c-cap em { display: none; }
 @container cap (max-width: 190px) { .c-cap em { display: none; } }
 .card:hover .c-cap b, .card.is-active .c-cap b { color: rgb(var(--fg)); }
 :root[data-capdate="off"] .c-cap em { display: none; }
@@ -443,6 +475,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   .stage { align-items: center; }
   .tk { grid-template-rows: auto auto; align-content: center; }
   .scene[data-mode="bar"] .frame { aspect-ratio: var(--ratio, 1.7778); }
+  :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: var(--lock-r); }
   .scene[data-mode="text"] .tk, .scene[data-mode="text"] .frame { height: 100%; }
   .rail { flex-direction: row; align-items: center; gap: 8px; padding: 6px; }
   .c-arrow:not(.c-pause), .c-foot .c-arrow:first-child { display: none; }
@@ -774,9 +807,9 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
       <div class="tablewrap">
         <table class="spec">
           <tbody>
-            <tr><th>اندازه و نسبت</th><td>کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: با پنجره‌ی ۱۹۲۰×۱۰۸۰ حدود <b>۱۵۵۳×۸۹۳</b> (نسبت ۱٫۷۴)، با ۱۹۲۰×۸۶۰ حدود ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. عدد دقیق پنجره‌ی خودت بالای تب «جایگاه» (تنظیمات) نوشته شده</td></tr>
+            <tr><th>اندازه و نسبت</th><td><b>یه سایز برای همه‌ی پنجره‌ها: ۱۷۴۰×۱۰۰۰</b> (نسبت ۱٫۷۴؛ برای صفحه‌های تیز دو برابرش، ۳۴۸۰×۲۰۰۰). شکل کادر بنر قفله، پس بنر تو هر پنجره‌ای تمام کادر رو پر می‌کنه؛ فقط تو پنجره‌ی بزرگ‌تر بزرگ‌تر دیده می‌شه. بنری که تا ۲٫۵٪ با این نسبت فرق داشته باشه (مثل ۱۶:۹) هم کادر رو پر می‌کنه</td></tr>
             <tr><th>متن تو بنر</th><td>هر جای بنر می‌تونه باشه، چون چیزی روش نمی‌افته. فقط اول هر اجرا عکس حدود ۵٪ زوم‌شده‌ست و تو ۷۰٪ وقت اجرا آروم زوم‌اوت می‌شه؛ بعدش بنر کامل و ثابت می‌ایسته. پس متن رو از لبه‌ها دست‌کم ۴٪ دور نگه دارن</td></tr>
-            <tr><th>بنری با نسبت دورتر</th><td>می‌شه بذاری. نسبتش تا ۲٫۵٪ با کادر فرق داشته باشه کادر رو پر می‌کنه؛ بیشتر از اون بنر کامل و با نسبت خودش دیده می‌شه، و جای خالی دو طرفش یا بالا و پایینش سیاهه (یا لبه‌ی محوشده‌ی خود بنر؛ تو تنظیمات انتخاب می‌شه)</td></tr>
+            <tr><th>بنری با نسبت دورتر</th><td>می‌شه بذاری. بنر کامل و با نسبت خودش دیده می‌شه، و جای خالی دو طرفش یا بالا و پایینش سیاهه (یا لبه‌ی محوشده‌ی خود بنر؛ تو تنظیمات انتخاب می‌شه). برای همین یه سایز می‌خوایم</td></tr>
             <tr><th>پوستر عمودی</th><td>قبول نمی‌شه (پنل مدیریت رد می‌کنه). جای پوستر قفسه‌ی پوستره، نه این بخش</td></tr>
             <tr><th>عکس (چیدمان متن)</th><td>۱۶:۹، دست‌کم ۱۹۲۰×۱۰۸۰ (بهتر ۲۵۶۰)، بدون نوشته، سوژه سمت کارت‌ها؛ طرف دیگه زیر نوشته‌ست</td></tr>
             <tr><th>فایل</th><td>JPEG، PNG یا WebP تا ۱۰ مگابایت. سرور WebP و چند اندازه (۶۴۰، ۱۰۲۴، ۱۶۷۲ یا ۱۹۲۰) و تصویر محو و کوچیک پس‌زمینه و رنگ پیشنهادی رو می‌سازه</td></tr>
@@ -903,7 +936,7 @@ if (typeof window.gsap === 'undefined') { root.classList.remove('is-intro'); ret
    ════════════════════════════════════════════════════════════════ */
 const LOOK_DEF = {
   // layout
-  gap: 9, edgeX: 9, edgeT: 9, edgeB: 9, navH: 71, dockH: 80, railMax: 480, rail: 'left',
+  frame: 'lock', ratio: 1.74, gap: 9, edgeX: 9, edgeT: 9, edgeB: 9, navH: 71, dockH: 80, railMax: 840, rail: 'left',
   fit: 'contain', fill: 'black', bg: 'black', bgColor: '#000000',
   caps: 'under', capDate: true, dim: 14, progress: 'bar',
   // style
@@ -1303,7 +1336,7 @@ const cards = {
     im.onerror = () => { if (!pic.fake) pic.fake = fakeArt(e, pic); im.onerror = null; im.src = pic.fake; };
     im.src = pic.fake || pic.thumb;
     const th = document.createElement('span'); th.className = 'c-thumb'; th.appendChild(im); if (bar) th.appendChild(bar); if (ring) th.appendChild(ring);
-    const cap = document.createElement('span'); cap.className = 'c-cap'; cap.innerHTML = `<b>${esc(label(e))}</b><em>${esc(e.w.tiny)}</em>`;
+    const cap = document.createElement('span'); cap.className = 'c-cap'; cap.innerHTML = `<b>${esc(label(e))}</b><em>${esc(e.w.tiny)}</em><i class="c-venue">${esc(e.venue)}</i>`;
     const box = document.createElement('span'); box.className = 'c-box'; box.append(th, cap);
     b.appendChild(box);
     b.setAttribute('aria-label', `${label(e)}، ${e.venue}، ${e.w.short}`);
@@ -1328,6 +1361,21 @@ const cards = {
     else if (m === 'ring' && this.ring && this.ring.firstElementChild) this.ring.firstElementChild.style.strokeDashoffset = (100 - v * 100).toFixed(2);
   },
 };
+
+/* the rail's mode: when the window is wider than the banner's shape needs, the rail gets the extra width (§5 of the SPEC);
+   if it has room for a picture and a few words side by side, each card becomes a row */
+function railMode() {
+  const r = $('#rail'); if (!r || !cards.els.length) return;
+  let wide = false;
+  if (!STK.matches && LOOK.caps === 'under') {
+    const cs = getComputedStyle(r), cell = cards.els[0].getBoundingClientRect().height, pad = parseFloat(cs.paddingLeft), u = pad / 0.75;
+    const inner = r.clientWidth - 2 * pad;
+    wide = cell > 20 && inner >= cell * 1.7778 + 9.4 * u;   // a picture as tall as the card, then a gap and room for about 8 em of words
+  }
+  const v = wide ? 'wide' : 'narrow';
+  if (hero.dataset.rail !== v) hero.dataset.rail = v;
+}
+if ('ResizeObserver' in window) new ResizeObserver(() => railMode()).observe($('#rail'));
 
 /* the show's time: when it ends, the next show fades in. It pauses (and so does the zoom) with the
    pointer over the rail, the pause button, the admin panel open, the hero covered by the next section,
@@ -1435,10 +1483,10 @@ function digitsApply() {
 const num = (name, div = 1) => (v) => css(name, +(v / div).toFixed(4));
 // how each setting reaches the page (the ones that need the page to do something more are handled in look.set)
 const APPLY = {
-  gap: num('--gap-n'), edgeX: num('--edge-x-n'), edgeT: num('--edge-t-n'), edgeB: num('--edge-b-n'), navH: num('--nav-n'), dockH: num('--dock-n'), railMax: num('--rail-max-n'),
+  frame: (v) => attr('data-frame', v), ratio: num('--lock-r'), gap: num('--gap-n'), edgeX: num('--edge-x-n'), edgeT: num('--edge-t-n'), edgeB: num('--edge-b-n'), navH: num('--nav-n'), dockH: num('--dock-n'), railMax: num('--rail-max-n'),
   rail: (v) => hero.classList.toggle('rail-left', v === 'left'),
   fit: (v) => attr('data-fit', v), fill: (v) => attr('data-fill', v), bg: bgApply, bgColor: bgApply,
-  caps: (v) => attr('data-caps', v), capDate: (v) => attr('data-capdate', v ? 'on' : 'off'), dim: num('--dim', 100), progress: (v) => { attr('data-progress', v); cards.paint(timer.p.v); },
+  caps: (v) => { attr('data-caps', v); if (typeof railMode === 'function' && look.ready) railMode(); }, capDate: (v) => attr('data-capdate', v ? 'on' : 'off'), dim: num('--dim', 100), progress: (v) => { attr('data-progress', v); cards.paint(timer.p.v); },
   radius: num('--r-n'), radiusThumb: num('--rt-n'), btn: (v) => css('--rb', BTN[v] || BTN.pill),
   borderW: (v) => css('--bw', v + 'px'), borderO: num('--bo', 100), shadow: num('--shadow', 100),
   panelColor: theme, textColor: theme, textCustom: theme,
@@ -1477,6 +1525,9 @@ const Cs = (id, label, sw) => ({ k: 'c', id, label, sw });
 const X = (id, label, wide) => ({ k: 'x', id, label, wide });
 const UI = {
   layout: [
+    { h: 'شکل کادر بنر', n: 'قفل: کادر بنر تو هر پنجره‌ای همین نسبت رو داره، پس بنری با این نسبت همیشه کادرش رو کامل پر می‌کنه (یه سایز برای همه‌ی پنجره‌ها)؛ ستون کارت‌ها جای اضافیِ پنجره رو می‌گیره. آزاد: کادر هر چی جا می‌مونه رو می‌گیره و شکلش با پنجره عوض می‌شه.', c: [
+      S('frame', 'کادر بنر', [['lock', 'قفل (یه سایز برای همه)'], ['free', 'آزاد (هر چی جا می‌مونه)']]),
+      R('ratio', 'نسبت کادر بنر (عرض ÷ ارتفاع)', 1.3, 2.6, 0.01, '')] },
     { h: 'فاصله‌ها', n: 'عددها پیکسلِ طرحِ ۱۹۲۰ هستن و با اندازه‌ی پنجره متناسب کوچیک و بزرگ می‌شن.', c: [
       R('gap', 'فاصله‌ی بین کادرها', 0, 60, 1, 'px'),
       R('edgeX', 'فاصله‌ی کادرها تا لبه‌ی چپ و راست', 0, 140, 1, 'px'),
@@ -1485,7 +1536,7 @@ const UI = {
     { h: 'اندازه‌ی کادرها', c: [
       R('navH', 'ارتفاع هدر', 44, 110, 1, 'px'),
       R('dockH', 'ارتفاع کادر اطلاعات', 56, 200, 1, 'px'),
-      R('railMax', 'حداکثر عرض ستون کارت‌ها', 160, 480, 2, 'px'),
+      R('railMax', 'حداکثر عرض ستون کارت‌ها', 160, 1400, 2, 'px'),
       S('rail', 'جای ستون کارت‌ها', [['left', 'چپ'], ['right', 'راست']])] },
     { h: 'بنر', c: [
       S('fit', 'نمایش بنر', [['contain', 'کامل، بدون برش'], ['cover', 'پر کردن کادر (برش می‌خوره)']]),
@@ -1560,6 +1611,8 @@ const look = {
     try {
       const j = JSON.parse(localStorage.getItem('hero9.look') || 'null'); if (!j) return;
       this.take(j);
+      // a width saved before the rail could grow (480 was the slider's end, 326 the old default) isn't a choice
+      if (!j.rev && (LOOK.railMax === 480 || LOOK.railMax === 326)) LOOK.railMax = LOOK_DEF.railMax;
     } catch (err) { /* private window: nothing saved */ }
   },
   // take values from a {look, texts} object into lk and tx, checking each one's kind; says how many it took
@@ -1574,7 +1627,7 @@ const look = {
     const l = {}, t = {};
     for (const k of Object.keys(LOOK_DEF)) if (LOOK[k] !== LOOK_DEF[k]) l[k] = LOOK[k];
     for (const k of Object.keys(TXT_DEF)) if (TXT[k] !== TXT_DEF[k]) t[k] = TXT[k];
-    return { version: 9, look: l, texts: t };
+    return { version: 9, rev: 3, look: l, texts: t };
   },
   applyAll() { for (const k of Object.keys(LOOK_DEF)) { try { if (APPLY[k]) APPLY[k](LOOK[k]); } catch (err) { /* a setting never stops the page */ } } this.applyTexts(true); },
   /* one value changes */
@@ -1624,6 +1677,7 @@ const look = {
   import(text) {
     let j; try { j = JSON.parse(text); } catch (err) { toast('این متن خوانده نشد. باید همون متنی باشه که «کپی تنظیمات» می‌ده.'); return; }
     const lk = { ...LOOK_DEF }, tx = { ...TXT_DEF }, n = this.take(j, lk, tx);
+    if (!j.rev && (lk.railMax === 480 || lk.railMax === 326)) lk.railMax = LOOK_DEF.railMax;   // saved before the rail could grow
     this.replace(lk, tx); toast(n ? `${faP(n)} تنظیم اعمال شد.` : 'چیزی تو این متن پیدا نشد.');
   },
 
@@ -1732,6 +1786,7 @@ const look = {
     const row = (a, b2) => `<div><b>${a}</b><output>${b2}</output></div>`;
     const stacked = innerWidth <= 760 || innerWidth / innerHeight <= 1.25;
     const need = `${faP(Math.ceil(s.frame.clientWidth * dpr))}×${faP(Math.ceil(s.frame.clientHeight * dpr))}`;
+    const LOCK = LOOK.frame === 'lock', mw = Math.round(LOOK.ratio * 1000), rs = LOOK.ratio.toFixed(2).replace('.', '٫'), fa1 = (v) => faP(v);
     const e = s.e, bn = e.banner;
     const sizesList = [[1920, 1080], [1920, 937], [1920, 860], [1536, 864], [1440, 900], [1366, 768], [2560, 1440]];
     let tbl = '<div class="hd"><span>اندازه‌ی پنجره</span><span>کادر بنر · خودِ بنر</span></div>';
@@ -1749,9 +1804,9 @@ const look = {
       </div>${stacked ? '<p>این پنجره چیدمان زیرهمه (موبایل یا پنجره‌ی بلند)؛ عددهای جدول پایین برای چیدمان کنار همه.</p>' : ''}</div>
       <div class="pp-sec"><h4>بنر این اجرا</h4><div class="szt">
         ${row('فایل', `${faP(bn.w)}×${faP(bn.h)}  ( نسبت ${faP((bn.w / bn.h).toFixed(2)).replace('.', '٫')} )`)}
-        ${row('بنر برای پر کردن کادرِ همین پنجره', need)}
+        ${LOCK ? row('بنر برای همه‌ی پنجره‌ها', `${faP(mw)}×${faP(1000)}`) + row('همون برای کادرِ همین پنجره (تیز)', need) : row('بنر برای پر کردن کادرِ همین پنجره', need)}
       </div>
-      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>• بنر (چیدمان کادر پایین): کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: عدد بالا (<b>«بنر برای پر کردن کادرِ همین پنجره»</b>) برای پنجره‌ی الانه؛ با پنجره‌ی ۱۹۲۰×۱۰۸۰ و تنظیمات پیش‌فرض ≈ ۱۵۵۳×۸۹۳ (نسبت ۱٫۷۴) و با ۱۹۲۰×۸۶۰ ≈ ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
+      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>${LOCK ? `• بنر (چیدمان کادر پایین): <b>${fa1(mw)}×${fa1(1000)}</b> (نسبت ${fa1(rs)}؛ دو برابرش ${fa1(mw * 2)}×${fa1(2000)} برای صفحه‌های تیز). کادر بنر تو هر پنجره‌ای همین نسبت رو داره و بنر تمام کادر رو پر می‌کنه؛ فقط تو پنجره‌ی بزرگ‌تر بزرگ‌تر نشون داده می‌شه. بنری که تا ۲٫۵٪ با این نسبت فرق داشته باشه هم کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.` : `• بنر (چیدمان کادر پایین): کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: عدد بالا (<b>«بنر برای پر کردن کادرِ همین پنجره»</b>) برای پنجره‌ی الانه؛ با پنجره‌ی ۱۹۲۰×۱۰۸۰ و تنظیمات پیش‌فرض ≈ ۱۵۵۳×۸۹۳ (نسبت ۱٫۷۴) و با ۱۹۲۰×۸۶۰ ≈ ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.`}<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
       <div class="pp-sec"><h4>بنر تو پنجره‌های رایج</h4><p>برای چیدمان فعلی (فاصله‌ها و ارتفاع‌های تنظیم‌شده). عدد اول کادر بنره، عدد دوم خودِ بنر تو کادرش.</p><div class="szt">${tbl}</div></div>
       <div class="pp-sec"><h4>نشون دادن اندازه‌ها روی صفحه</h4>
         <label class="sw2"><span>اندازه‌ی کادرها، فاصله‌ها و حاشیه‌ها رو روی صفحه بکش</span><input type="checkbox" role="switch" id="ppDims"${LOOK.dims ? ' checked' : ''}><i></i></label>
@@ -2096,11 +2151,17 @@ function geom(W, H, L = LOOK) {
   const n = Math.min(EVENTS.length, VIS), railPad = u * 0.75, arrow = Math.max(28, u * 1.85), cardGap = u * 0.6;
   const capH = L.caps === 'under' ? Math.max(22, u * 1.3) : 0, capGap = L.caps === 'under' ? u * 0.35 : 0;
   const cell = (mainH - 2 * railPad - 2 * bw - 2 * arrow - (n + 1) * cardGap) / n, thumbW = (cell - capH - capGap) * 1.7778;
-  const railW = cssClamp(u * 11, thumbW + 2 * railPad + 2 * bw, px * L.railMax);
-  const colW = W - 2 * edgeX - railW - gap, frameH = EVENTS[state.i].layout === 'text' ? mainH : mainH - dockH - gap;
+  const railNat = cssClamp(u * 11, thumbW + 2 * railPad + 2 * bw, px * L.railMax), lock = L.frame === 'lock';
+  let railW = railNat, edgeX2 = edgeX, colW = W - 2 * edgeX - railW - gap;
+  if (lock) {
+    // the banner's shape is fixed: the panel is as wide as that shape needs, the rail takes the rest (up to its cap), the margins the rest of that
+    const room = W - 2 * px * L.edgeX - gap, frameW = Math.min((mainH - dockH - gap) * L.ratio, room - railNat);
+    railW = Math.min(px * L.railMax, room - frameW); edgeX2 = (W - railW - gap - frameW) / 2; colW = frameW;
+  }
+  const textLayout = EVENTS[state.i].layout === 'text', frameH = textLayout ? mainH : lock ? Math.min(colW / L.ratio, mainH - dockH - gap) : mainH - dockH - gap;
   const iw = colW - 2 * bw, ih = frameH - 2 * bw, cover = L.fit === 'cover' || EVENTS[state.i].layout === 'text' || Math.abs(Math.log(iw / ih / ar)) < FILL_TOL;
   const pic = cover ? { w: iw, h: ih } : { w: Math.min(iw, ih * ar), h: Math.min(ih, iw / ar) };
-  return { stacked, u, px, gap, edgeX, padT, padB, navH, dockH, mainH, railW, frame: { w: colW, h: frameH }, pic, rail: { w: railW, h: mainH }, dock: { w: colW, h: dockH }, nav: { w: W - 2 * edgeX, h: navH } };
+  return { stacked, u, px, gap, edgeX: edgeX2, padT, padB, navH, dockH, mainH, railW, frame: { w: colW, h: frameH }, pic, rail: { w: railW, h: mainH }, dock: { w: colW, h: dockH }, nav: { w: W - 2 * edgeX2, h: navH } };
 }
 
 const dims = {
@@ -2148,7 +2209,7 @@ const dims = {
 function fitNote(w, h) {
   // the shape the banner is compared with is the panel's own (so it follows the look's gaps and heights), 16:9 if there is none
   const f = stage.top && stage.top.mode === 'bar' ? stage.top.frame : null, T = f && f.clientHeight ? f.clientWidth / f.clientHeight : 16 / 9;
-  const r = w / h, size = `${fa(w)}×${fa(h)}`, rs = fa(r.toFixed(2)).replace('.', '٫'), ts = f && f.clientWidth ? `${fa(f.clientWidth)}×${fa(f.clientHeight)}` : '';
+  const r = w / h, size = `${fa(w)}×${fa(h)}`, rs = fa(r.toFixed(2)).replace('.', '٫'), ts = LOOK.frame === 'lock' && f ? `${fa(Math.round(LOOK.ratio * 1000))}×${fa(1000)}` : f && f.clientWidth ? `${fa(f.clientWidth)}×${fa(f.clientHeight)}` : '';
   if (Math.abs(Math.log(r / T)) < FILL_TOL) return `<b>نسبت ${rs} به ۱</b> · ${size} · کادر رو کامل پر می‌کنه و چیزی ازش بریده نمی‌شه`;
   return `<b>نسبت ${rs} به ۱</b> · ${size} · کامل دیده می‌شه، ولی ${r > T ? 'بالا و پایینش' : 'دو طرفش'} خالی می‌مونه (${LOOK.fill === 'edge' ? 'با لبه‌ی محوشده‌ی خودش پر می‌شه' : 'سیاهه'})${ts ? `. برای اینکه کادر رو پر کنه <bdi dir="ltr">${ts}</bdi> بساز` : ''}`;
 }
@@ -2224,6 +2285,12 @@ const panel = {
     const box = $('#ppNeed'), s = stage.top; if (!box || !s) return;
     const f = s.frame, w = f.clientWidth, h = f.clientHeight; if (!w || !h) return;
     const stacked = STK.matches, bw = Math.max(parseFloat(getComputedStyle(f).borderTopWidth) || 0, 0), r = (w / h).toFixed(2).replace('.', '٫');
+    if (LOOK.frame === 'lock' && s.mode === 'bar') {
+      // the shape is locked: one size for every window
+      const R = LOOK.ratio, mw = Math.round(R * 1000), rs = R.toFixed(2).replace('.', '٫'), g = stacked ? null : geom(1920, 1080);
+      box.innerHTML = `<span>اندازه‌ی بنر برای همه‌ی پنجره‌ها (کادر بنر همیشه همین شکل رو داره)</span><b class="big"><bdi dir="ltr">${fa(mw)}×${fa(1000)}</bdi></b><span>نسبت ${fa(rs)} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(mw * 2)}×${fa(2000)}</bdi>؛ هر اندازه‌ی بزرگ‌تر با همین نسبت هم خوبه</span><span class="sm">کادر الان تو این پنجره (${fa(innerWidth)}×${fa(innerHeight)}) <bdi dir="ltr">${fa(w)}×${fa(h)}</bdi>${g ? ` و تو پنجره‌ی ۱۹۲۰×۱۰۸۰ <bdi dir="ltr">${fa(Math.round(g.frame.w - 2 * bw))}×${fa(Math.round(g.frame.h - 2 * bw))}</bdi>` : ''}؛ بنر همیشه تمام کادر رو پر می‌کنه، فقط بزرگ و کوچیک می‌شه.</span>`;
+      return;
+    }
     let big = '';
     if (!stacked) { const g = geom(1920, 1080); big = ` · با پنجره‌ی ۱۹۲۰×۱۰۸۰ می‌شه <bdi dir="ltr">${fa(Math.round(g.frame.w - 2 * bw))}×${fa(Math.round(g.frame.h - 2 * bw))}</bdi>`; }
     box.innerHTML = `<span>اندازه‌ی بنری که کادر همین پنجره رو کامل پر می‌کنه</span><b class="big"><bdi dir="ltr">${fa(w)}×${fa(h)}</bdi></b><span>نسبت ${fa(r)} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(w * 2)}×${fa(h * 2)}</bdi></span><span class="sm">پنجره‌ی الان ${fa(innerWidth)}×${fa(innerHeight)}. کادر هر چی از پنجره می‌مونه رو می‌گیره، پس با ارتفاع پنجره عدد هم عوض می‌شه${big}.</span>`;
@@ -2293,6 +2360,7 @@ async function rebuild(i) {
 /* boot */
 look.boot();
 cards.build();
+railMode();
 setAccent(EVENTS[0]);
 cards.set(0);
 panel.init();

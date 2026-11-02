@@ -8,7 +8,7 @@ Only banners are used here. The hero's background is always a wide banner; tall 
 
 ## اجرا روی سیستم خودت · Running locally with the real art
 
-Put the files here with exactly these names, in this order (the order of the rail). Every banner is **1672×960** (a ratio of 1.7417, the shape of the banner's panel at 1920×1080 with the default look; a 16:9 banner works as well, it is stretched by 2 %), in three widths: 1672 (the source), 1024×588 and 640×368 (the rail cards). The owner's originals were 1649–1651 × 953–954 PNGs; they were resampled to these sizes (a stretch of under 1 %).
+Put the files here with exactly these names, in this order (the order of the rail). The size to make is **1740×1000** (ratio 1.74: the banner's panel is locked to that shape in every window; **3480×2000** for sharp screens). The samples here are **1672×960** (ratio 1.7417, the same shape to 0.1 %; a 16:9 banner works as well, it is stretched by 2 %), in three widths: 1672 (the source), 1024×588 and 640×368 (the rail cards). The owner's originals were 1649–1651 × 953–954 PNGs; they were resampled to these sizes (a stretch of under 1 %).
 
 | # | Show | Files |
 |---|---|---|
