@@ -4,6 +4,8 @@
 
 This folder is the UI reference for the ticketing site. The home page is designed **one section at a time**. Each section has a live HTML prototype plus a `SPEC.md` handoff that the desktop agent uses to build it in the real codebase. The prototypes are the source of truth for look and motion.
 
+**قبل از هر کاری [`BRIEF.md`](BRIEF.md) رو بخون** (معرفی پروژه‌ی «بلیت» و چک‌لیستی که هر دور باید چک بشه) · **Read [`BRIEF.md`](BRIEF.md) first**: the project brief and the checklist to run every round.
+
 ## چطور ببینی · How to view
 
 ```bash

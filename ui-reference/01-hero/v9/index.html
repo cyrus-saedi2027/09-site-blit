@@ -255,23 +255,28 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .buyrow .price { display: grid; line-height: 1.5; }
 .buyrow .price b { font-size: calc(max(15px, calc(var(--u) * 1.2)) * var(--tx) * var(--tx-copy)); font-weight: var(--fwb); }
 
-/* ── the header: a fixed capsule that, as the page scrolls, becomes a small pill and stays centred (--hs: 0 → 1) ── */
+/* ── the header: a fixed capsule that, as the page scrolls, gets narrower and stays centred (--hs: 0 → 1). ONLY ITS WIDTH
+   changes (and the spaces between its pieces): its height, its corners, its top and the room round its buttons stay as they
+   are, so nothing ever touches its edge. ── */
 /* it is outside the hero so it stays above the second section; at the top of the page it sits exactly on the empty
    row of the hero's grid */
 .nav {
   --hs: 0;
+  /* the words and the small buttons fade out FIRST (by 25 % of the way), and only then do their boxes narrow, so a piece is never seen cut in half */
+  --hq: clamp(0, calc(1 - var(--hs) * 4), 1);
+  --hw: clamp(0, calc((var(--hs) - .2) * 2.5), 1);
   --wg: calc(100vw - var(--pad-l) - var(--pad-r));
   --wf: calc(var(--wg) * var(--hd-w) / 100);
   --wc: min(calc(100vw - 24px), max(calc(var(--px) * var(--hd-cw)), 760px));
   --ib: max(36px, calc(var(--u) * 2.2));
   position: fixed; z-index: 30; display: flex; align-items: center; overflow: hidden;
-  top: calc(var(--pad-t) + (10px - var(--pad-t)) * var(--hs));
+  top: var(--pad-t);
   left: calc((var(--pad-l) + (var(--wg) - var(--wf)) / 2) * (1 - var(--hs)) + (100vw - var(--wc)) / 2 * var(--hs));
   width: calc(var(--wf) + (var(--wc) - var(--wf)) * var(--hs));
-  height: calc(var(--nav-h) * (1 - .2 * var(--hs)));
-  border-radius: calc(var(--r) + (min(var(--nav-h) * .4, var(--r) * 2.2) - var(--r)) * var(--hs));
+  height: var(--nav-h);
+  border-radius: var(--r);
   gap: calc(var(--u) * (2.2 - 1 * var(--hs)));
-  padding-inline: calc(var(--u) * (1.3 - .3 * var(--hs))) calc(var(--u) * .6);
+  padding-inline: calc(var(--u) * 1.3) calc(var(--u) * .6);
   box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 calc(14px + 16px * var(--hs)) calc(40px + 24px * var(--hs)) -20px rgba(0, 0, 0, calc(var(--shadow) + .15 * var(--hs)));
 }
 .brand { display: inline-flex; align-items: center; gap: calc(var(--u) * .55); flex: none; text-decoration: none; font-weight: var(--fwb); font-size: calc(max(17px, calc(var(--u) * 1.25)) * var(--tx) * var(--tx-nav)); line-height: 1; color: rgb(var(--fg)); white-space: nowrap; }
@@ -294,13 +299,13 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .nb svg.i { width: 1.3em; height: 1.3em; }
 .nb.icon { width: var(--ib); padding: 0; justify-content: center; }
 .nb .dotn { position: absolute; top: 24%; inset-inline-end: 25%; width: 7px; height: 7px; border-radius: 50%; background: var(--ring); box-shadow: 0 0 0 2px var(--capsule); }
-.search { width: calc(var(--ib) + var(--px) * 236 * (1 - var(--hs))); padding-inline: calc((var(--ib) - 1.3em) / 2); }
-.search .st { flex: 1; min-width: 0; text-align: start; overflow: hidden; text-overflow: ellipsis; opacity: calc(1 - var(--hs) * 2.4); color: rgba(var(--fg), .55); }
-.search kbd { font: inherit; font-size: max(10.5px, .78em); line-height: 1.5; padding: 0 .55em; border-radius: 5px; border: 1px solid rgba(var(--fg), .22); color: rgba(var(--fg), .6); opacity: calc(1 - var(--hs) * 2.4); }
-.city { max-width: calc(var(--ib) + var(--px) * 84 * (1 - var(--hs))); padding-inline: calc((var(--ib) - 1.3em) / 2) calc(var(--u) * .8 * (1 - var(--hs))); }
-.city .ct { opacity: calc(1 - var(--hs) * 2.4); overflow: hidden; text-overflow: ellipsis; }
-.city .cv { width: .9em; height: .9em; opacity: calc(1 - var(--hs) * 2.4); }
-.nb-grp { display: flex; align-items: center; gap: calc(var(--u) * .7); max-width: calc((var(--ib) * 2 + var(--u) * .7) * (1 - var(--hs))); margin-inline-end: calc(var(--u) * -.7 * var(--hs)); opacity: calc(1 - var(--hs) * 2.4); overflow: hidden; }
+.search { width: calc(var(--ib) + var(--px) * 236 * (1 - var(--hw))); padding-inline: calc((var(--ib) - 1.3em) / 2); }
+.search .st { flex: 1; min-width: 0; text-align: start; overflow: hidden; text-overflow: ellipsis; opacity: var(--hq); color: rgba(var(--fg), .55); }
+.search kbd { font: inherit; font-size: max(10.5px, .78em); line-height: 1.5; padding: 0 .55em; border-radius: 5px; border: 1px solid rgba(var(--fg), .22); color: rgba(var(--fg), .6); opacity: var(--hq); }
+.city { max-width: calc(var(--ib) + var(--px) * 84 * (1 - var(--hw))); padding-inline: calc((var(--ib) - 1.3em) / 2) calc(var(--u) * .8 * (1 - var(--hw))); }
+.city .ct { opacity: var(--hq); overflow: hidden; text-overflow: ellipsis; }
+.city .cv { width: .9em; height: .9em; opacity: var(--hq); }
+.nb-grp { display: flex; align-items: center; gap: calc(var(--u) * .7); max-width: calc((var(--ib) * 2 + var(--u) * .7) * (1 - var(--hw))); margin-inline-end: calc(var(--u) * -.7 * var(--hw)); opacity: var(--hq); overflow: hidden; }
 .login { all: unset; box-sizing: border-box; position: relative; cursor: pointer; display: inline-flex; align-items: center; flex: none; height: var(--ib); padding-inline: calc(var(--u) * 1.1); border-radius: var(--rb); background: rgb(var(--fg)); color: var(--capsule); font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-nav)); font-weight: var(--fwm); white-space: nowrap; transition: transform .4s var(--ease), filter .3s; }
 .login:hover { transform: translateY(-1px); filter: brightness(.94); }
 .login:active { transform: scale(.97); }
@@ -946,7 +951,7 @@ const LOOK_DEF = {
   // the header
   hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdWidth: 100, hdCompact: true, hdCompactW: 1400, hdHover: 'pill', hdProg: true,
   // motion
-  mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, swipe: true, story: true, intro: true,
+  mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
   // tools
   dims: false,
 };
@@ -1497,6 +1502,7 @@ const APPLY = {
   hdWidth: num('--hd-w'), hdCompact: () => scrollFx.apply(true), hdCompactW: num('--hd-cw'), hdHover: (v) => attr('data-hl', v), hdProg: (v) => attr('data-hd-prog', v ? 'on' : 'off'),
   mot: () => css('--mot', MOTK()), spot: (v) => attr('data-spot', v ? 'on' : 'off'),
   story: (v) => { attr('data-story', v ? 'on' : 'off'); scrollFx.apply(true); },
+  scroll: () => smoothScroll.sync(),
   dims: (v) => dims.on(v),
 };
 
@@ -1595,7 +1601,10 @@ const UI = {
       S('fade', 'سرعت محو شدن', [[0.8, 'تند'], [1.2, 'معمولی'], [1.8, 'آروم']]),
       W('intro', 'حرکت ورود صفحه')] },
     { h: 'تعامل', c: [W('spot', 'نور دنبال‌کننده‌ی موس روی کادرها'), W('magnet', 'دکمه‌ی خرید آهنربایی'), W('swipe', 'کشیدن بنر برای عوض کردن اجرا')] },
-    { h: 'اسکرول', c: [W('story', 'هیرو سرجاش می‌مونه و بخش دوم می‌ره روش')] },
+    { h: 'اسکرول', n: 'نرم: چرخ ماوس صفحه رو با شروع آروم، اوج سرعت و پایان آروم می‌بره (مثل تنظیم سرعت تو ادیت ویدیو). «نرمی» هر چی بیشتر باشه، شروع و پایان طولانی‌تر و نرم‌تره.', c: [
+      S('scroll', 'اسکرول چرخ ماوس', [['smooth', 'نرم'], ['native', 'معمولی مرورگر']]),
+      R('scrollSoft', 'نرمی اسکرول', 30, 140, 1, 'ms'),
+      W('story', 'هیرو سرجاش می‌مونه و بخش دوم می‌ره روش')] },
   ],
 };
 const TABS = ['cmp', 'slot', 'layout', 'style', 'text', 'motion', 'sizes'];
@@ -1943,28 +1952,20 @@ const hd = {
    scrolling: the header becomes a small centred pill and follows the page; the hero stays where it is while
    the second section slides over it (the hero shrinks a little, rounds its corners and goes dark)
    ════════════════════════════════════════════════════════════════ */
-const ease3 = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+/* the header's curve: it answers from the first pixel of scroll and settles softly at the end (a quarter of a sine) */
+const easeOut = (t) => Math.sin(clamp(t, 0, 1) * Math.PI / 2);
 const scrollFx = {
-  cur: 0, tgt: 0, running: false, hs: -1, p: -1,
+  cur: 0, hs: -1, p: -1,
   init() {
-    this.cur = this.tgt = window.scrollY;
-    addEventListener('scroll', () => { this.tgt = window.scrollY; this.kick(); }, { passive: true });
+    this.cur = window.scrollY;
+    // no smoothing of its own: it follows the page's scroll exactly (the smooth scroll below gives the page its ease), so
+    // the header and the hero never run behind the page
+    addEventListener('scroll', () => this.apply(), { passive: true });
     addEventListener('resize', () => this.apply(true));
     this.apply(true);
   },
-  // the values follow the scroll with a little weight, so the header's change feels like a motion, not a jump
-  kick() {
-    if (this.running) return;
-    this.running = true; gsap.ticker.add(this.tick);
-  },
-  tick() {
-    const s = scrollFx, d = s.tgt - s.cur;
-    s.cur += d * (MOTK() ? 0.2 : 1);
-    if (Math.abs(d) < 0.2) { s.cur = s.tgt; s.running = false; gsap.ticker.remove(s.tick); }
-    s.apply();
-  },
   apply(force) {
-    const S = this.running || !force ? this.cur : (this.cur = this.tgt = window.scrollY);
+    const S = (this.cur = window.scrollY);
     const H = hero.offsetHeight || innerHeight, k = MOTK();
     // the hero under the sheet
     const p = LOOK.story && !STK.matches ? clamp(S / H, 0, 1) : 0;
@@ -1979,7 +1980,7 @@ const scrollFx = {
       if (vis !== state.visible) { state.visible = vis; timer.sync(); }
     }
     // the header
-    const dist = Math.max(120, Math.min(190, innerHeight * 0.18)), hs = LOOK.hdCompact ? ease3(clamp(S / dist, 0, 1)) : 0;
+    const dist = Math.max(120, Math.min(190, innerHeight * 0.18)), hs = LOOK.hdCompact ? easeOut(S / dist) : 0;
     if (force || Math.abs(hs - this.hs) > 0.0004 || (hs === 0) !== (this.hs === 0) || (hs === 1) !== (this.hs === 1)) {
       this.hs = hs; nav.style.setProperty('--hs', hs.toFixed(4)); nav.classList.toggle('is-compact', hs > 0.55);
     }
@@ -1987,6 +1988,60 @@ const scrollFx = {
     nav.style.setProperty('--pg', (max > 0 ? clamp(S / max, 0, 1) : 0).toFixed(4));
     if (dims.active) dims.queue();
   },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   smooth scrolling. The wheel moves a TARGET; the page follows it through four soft stages (four lags in a row), so a
+   turn of the wheel starts slowly, builds its speed to a peak (after about 150 ms) and settles slowly (in about half a
+   second) — a bell-shaped speed, like a speed ramp in a video editor. A touch pad, the keyboard, the scroll bar and links keep the browser's own scrolling
+   (an element that can scroll itself under the pointer, like the rail, keeps the wheel too). Off with reduced motion.
+   ════════════════════════════════════════════════════════════════ */
+const smoothScroll = {
+  tgt: 0, y: [0, 0, 0, 0], set: 0, running: false, last: 0,
+  init() {
+    addEventListener('wheel', (ev) => this.wheel(ev), { passive: false });
+    addEventListener('scroll', () => this.external(), { passive: true });
+  },
+  on() { return LOOK.scroll === 'smooth' && !reduceMotion; },
+  max() { return Math.max(0, document.documentElement.scrollHeight - innerHeight); },
+  // an element under the pointer that can still scroll itself in this direction keeps the wheel
+  inner(el, dy) {
+    for (; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+      if (el.scrollHeight <= el.clientHeight + 1) continue;
+      const oy = getComputedStyle(el).overflowY;
+      if (oy !== 'auto' && oy !== 'scroll') continue;
+      if (dy > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0) return true;
+    }
+    return false;
+  },
+  wheel(ev) {
+    if (!this.on() || ev.defaultPrevented || ev.ctrlKey || ev.shiftKey || ev.altKey || ev.metaKey || !ev.deltaY || Math.abs(ev.deltaX) > Math.abs(ev.deltaY)) return;
+    const dy = ev.deltaY * (ev.deltaMode === 1 ? 16 : ev.deltaMode === 2 ? innerHeight : 1);
+    if (this.inner(ev.target instanceof Element ? ev.target : null, dy)) return;
+    ev.preventDefault();
+    if (!this.running) { this.tgt = this.set = window.scrollY; this.y.fill(this.tgt); this.running = true; this.last = performance.now(); gsap.ticker.add(this.tick); }
+    this.tgt = clamp(this.tgt + dy, 0, this.max());
+  },
+  tick() {
+    const s = smoothScroll, now = performance.now(), tau = Math.max(0.02, LOOK.scrollSoft / 1000);
+    let left = Math.min(0.1, (now - s.last) / 1000);
+    s.last = now;
+    // the frame is cut into small steps, so the move is the same whatever the frame rate (a slow frame doesn't change its shape)
+    while (left > 1e-6) {
+      const d = Math.min(1 / 240, left), a = 1 - Math.exp(-d / tau);   // each stage closes this much of its gap in this step
+      let from = s.tgt;
+      for (let k = 0; k < s.y.length; k++) { s.y[k] += (from - s.y[k]) * a; from = s.y[k]; }
+      left -= d;
+    }
+    let y = s.y[s.y.length - 1];
+    if (Math.abs(s.tgt - y) < 0.3) { y = s.tgt; s.y.fill(y); s.stop(); }
+    s.set = y; window.scrollTo({ top: y, behavior: 'instant' });
+    scrollFx.apply();   // the header and the hero move in the very frame the page does (a scroll event would come one frame later)
+  },
+  stop() { if (this.running) { this.running = false; gsap.ticker.remove(this.tick); } },
+  // the page was moved by something else (the scroll bar, a key, a link): let go of the target
+  external() { if (this.running && Math.abs(window.scrollY - this.set) > 2.5) this.stop(); },
+  sync() { if (!this.on()) this.stop(); },
 };
 
 /* ════════════════════════════════════════════════════════════════
@@ -2369,6 +2424,7 @@ hd.init();
 s2.init();
 fx.init();
 scrollFx.init();
+smoothScroll.init();
 if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttribute('aria-pressed', 'true'); a.setAttribute('aria-label', 'ادامه‌ی نمایش خودکار'); }
 
 (function intro() {
