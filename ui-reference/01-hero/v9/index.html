@@ -227,6 +227,27 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 /* on light panels the accent's light tone would vanish, so the small coloured words use a deep tone of the accent */
 :root[data-theme="light"] .badge, :root[data-theme="light"] .eyebrow, :root[data-theme="light"] .cmdk-row em { color: color-mix(in oklab, var(--ring) 58%, #000); }
 
+/* the status label: a colour for its meaning (red: لغو شد · amber: به‌تعویق افتاد · grey: برگزار شد، تمام شد · blue: به‌زودی · green: تمدید شد),
+   the same whatever the show's own accent is. -d: its text on a dark panel, -l: on a light one */
+.st { --st: 148, 163, 184; --st-d: 203, 213, 225; --st-l: 71, 85, 105; flex: none; font-style: normal; padding: .02em .7em; border-radius: 999px; font-size: .94em; font-weight: var(--fwb); line-height: 1.5; white-space: nowrap; color: rgb(var(--st-d)); background: rgba(var(--st), .2); box-shadow: inset 0 0 0 1px rgba(var(--st), .55); }
+.st[data-tone="bad"] { --st: 239, 68, 68; --st-d: 252, 165, 165; --st-l: 185, 28, 28; }
+.st[data-tone="warn"] { --st: 245, 158, 11; --st-d: 252, 211, 77; --st-l: 180, 83, 9; }
+.st[data-tone="info"] { --st: 56, 189, 248; --st-d: 125, 211, 252; --st-l: 3, 105, 161; }
+.st[data-tone="good"] { --st: 34, 197, 94; --st-d: 134, 239, 172; --st-l: 21, 128, 61; }
+:root[data-theme="light"] .st { color: rgb(var(--st-l)); }
+:root[data-theme="light"] .copy .st, :root[data-theme="light"] .st-ov { color: rgb(var(--st-d)); }
+/* in a small card's picture it sits in the corner, on a dark chip so it reads over any picture (the hero's banner has none: its facts panel has the label) */
+.st-ov { position: absolute; z-index: 3; top: calc(var(--u) * .35); inset-inline-start: calc(var(--u) * .35); font-size: calc(max(10.5px, calc(var(--u) * .6)) * var(--tx) * var(--tx-small)); background: rgba(8, 8, 12, .84); box-shadow: inset 0 0 0 1px rgba(var(--st), .75); pointer-events: none; }
+
+/* a buy button that can't be pressed: the sale hasn't started (a countdown), or the show is full, over, moved or cancelled */
+.buy.is-wait, .buy.is-off { background: rgba(var(--fg), .08); color: rgb(var(--fg)); box-shadow: inset 0 0 0 1px rgba(var(--fg), .28); cursor: default; will-change: auto; }
+.buy.is-off { color: rgba(var(--fg), .66); }
+.buy.is-wait:hover, .buy.is-off:hover { filter: none; }
+.buy.is-wait:active, .buy.is-off:active { transform: none; }
+.buy.is-wait { flex-direction: column; gap: .05em; line-height: 1.25; min-width: calc(var(--u) * 11); padding-block: .3em; }
+.bw-l { font-size: calc(max(10.5px, calc(var(--u) * .6)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); line-height: 1.3; opacity: .72; }
+.bw-t { font-size: calc(max(13.5px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.3; font-variant-numeric: tabular-nums; }
+
 /* when the panel is narrow it drops its least useful parts */
 @container dock (max-width: 800px) { .d-when span { display: none; } }
 @container dock (max-width: 660px) { .d-venue, .d-sep:nth-of-type(2) { display: none; } }
@@ -292,9 +313,14 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .brand:hover .bars i { animation: bar .8s ease-in-out infinite alternate; animation-delay: calc(var(--k, 0) * -.13s); }
 @keyframes bar { from { transform: scaleY(var(--s)); } to { transform: scaleY(calc(.25 + (1 - var(--s)) * .7)); } }
 .links { position: relative; display: flex; flex: none; gap: calc(var(--u) * (.35 - .15 * var(--hs))); }
-.links a { position: relative; z-index: 1; text-decoration: none; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-nav)); color: rgba(var(--fg), .72); padding: calc(var(--u) * .4) calc(var(--u) * (1.05 - .25 * var(--hs))); border-radius: 999px; transition: color .3s; }
-.links a:hover, .links a[aria-current="page"] { color: rgb(var(--fg)); }
-.links a[aria-current="page"] { font-weight: var(--fwm); }
+.links > a, .links > button { all: unset; box-sizing: border-box; cursor: pointer; position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .4em; text-decoration: none; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-nav)); color: rgba(var(--fg), .72); padding: calc(var(--u) * .4) calc(var(--u) * (1.05 - .25 * var(--hs))); border-radius: 999px; white-space: nowrap; transition: color .3s; }
+.links > a:hover, .links > button:hover, .links > [aria-current], .links > [aria-expanded="true"] { color: rgb(var(--fg)); }
+.links > [aria-current] { font-weight: var(--fwm); }
+.links > a:focus-visible, .links > button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.links .cv { width: .7em; height: .7em; opacity: .6; transition: transform .35s var(--ease), opacity .3s; }
+.links > [aria-expanded="true"] .cv { transform: rotate(180deg); opacity: 1; }
+.links .cnt { font-size: .82em; font-weight: var(--fwb); line-height: 1.5; padding: 0 .55em; border-radius: 999px; color: rgb(125, 211, 252); background: rgba(56, 189, 248, .2); box-shadow: inset 0 0 0 1px rgba(56, 189, 248, .5); }
+:root[data-theme="light"] .links .cnt { color: rgb(3, 105, 161); }
 .links .hl { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 0; border-radius: 999px; background: rgba(var(--fg), .1); opacity: 0; pointer-events: none; }
 :root[data-hl="line"] .links .hl { top: auto; bottom: 0; height: 2px; border-radius: 2px; background: var(--ring); }
 :root[data-hl="off"] .links .hl { display: none; }
@@ -309,8 +335,8 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .search { width: calc(var(--ib) + var(--px) * 236 * (1 - var(--hw))); padding-inline: calc((var(--ib) - 1.3em) / 2); }
 .search .st { flex: 1; min-width: 0; text-align: start; overflow: hidden; text-overflow: ellipsis; opacity: var(--hq); color: rgba(var(--fg), .55); }
 .search kbd { font: inherit; font-size: max(10.5px, .78em); line-height: 1.5; padding: 0 .55em; border-radius: 5px; border: 1px solid rgba(var(--fg), .22); color: rgba(var(--fg), .6); opacity: var(--hq); }
-.city { max-width: calc(var(--ib) + var(--px) * 84 * (1 - var(--hw))); padding-inline: calc((var(--ib) - 1.3em) / 2) calc(var(--u) * .8 * (1 - var(--hw))); }
-.city .ct { opacity: var(--hq); overflow: hidden; text-overflow: ellipsis; }
+.city { width: calc(var(--ib) + max(var(--px) * 112, var(--u) * .8 + 7.4em - var(--ib) / 2) * (1 - var(--hw))); padding-inline: calc((var(--ib) - 1.3em) / 2) calc(var(--u) * .8 * (1 - var(--hw))); }
+.city .ct { flex: 1; min-width: 0; text-align: start; opacity: var(--hq); overflow: hidden; text-overflow: ellipsis; }
 .city .cv { width: .9em; height: .9em; opacity: var(--hq); }
 .nb-grp { display: flex; align-items: center; gap: calc(var(--u) * .7); max-width: calc((var(--ib) * 2 + var(--u) * .7) * (1 - var(--hw))); margin-inline-end: calc(var(--u) * -.7 * var(--hw)); opacity: var(--hq); overflow: hidden; }
 .login { all: unset; box-sizing: border-box; position: relative; cursor: pointer; display: inline-flex; align-items: center; flex: none; height: var(--ib); padding-inline: calc(var(--u) * 1.1); border-radius: var(--rb); background: rgb(var(--fg)); color: var(--capsule); font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-nav)); font-weight: var(--fwm); white-space: nowrap; transition: transform .4s var(--ease), filter .3s; }
@@ -341,13 +367,26 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .cmdk-row b { font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cmdk-row small { font-size: 12px; color: rgba(var(--fg), .6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cmdk-row em { font-style: normal; font-size: 12px; font-weight: 700; padding: 1px 10px; border-radius: 999px; color: var(--accent-l); background: color-mix(in oklab, var(--accent) 22%, transparent); }
+.cmdk-row em.st { color: rgb(var(--st-d)); background: rgba(var(--st), .2); box-shadow: inset 0 0 0 1px rgba(var(--st), .55); }
+:root[data-theme="light"] .cmdk-row em.st { color: rgb(var(--st-l)); }
 .cmdk-empty { padding: 26px 12px; text-align: center; font-size: 13.5px; color: rgba(var(--fg), .6); }
 .cmdk-foot { display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 10px 18px; border-top: 1px solid rgba(var(--fg), .12); font-size: 12px; color: rgba(var(--fg), .6); }
 .menu-pop { position: fixed; z-index: 45; min-width: 190px; padding: 6px; display: grid; gap: 2px; background: var(--capsule); color: rgb(var(--fg)); border: 1px solid rgba(var(--fg), .2); border-radius: calc(var(--r) * .9); box-shadow: 0 30px 80px -24px #000; font-family: var(--font); font-size: 13.5px; }
 .menu-pop button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px; border-radius: calc(var(--r) * .55); color: rgba(var(--fg), .86); }
 .menu-pop button:hover, .menu-pop button:focus-visible { background: rgba(var(--fg), .1); color: rgb(var(--fg)); }
+.menu-pop button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -2px; }
 .menu-pop button[aria-current="true"] { font-weight: 700; color: rgb(var(--fg)); }
 .menu-pop svg.i { width: 15px; height: 15px; color: var(--ring); }
+.menu-pop .n { font-size: .86em; font-weight: 700; padding: 0 .6em; border-radius: 999px; background: rgba(var(--fg), .1); color: rgba(var(--fg), .8); font-variant-numeric: tabular-nums; }
+.menu-pop .n.is-0 { opacity: .5; }
+/* the city menu: a wide grid, filled down the columns in the alphabet, with room for every name whole */
+.menu-pop.is-cities { width: min(calc(var(--u) * 26), calc(100vw - 16px)); padding: calc(var(--u) * .45); gap: calc(var(--u) * .12) calc(var(--u) * .2); grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr)); grid-template-rows: repeat(var(--rows, 8), auto); grid-auto-flow: column; font-size: calc(max(14px, calc(var(--u) * .8)) * var(--tx) * var(--tx-nav)); border-radius: calc(var(--r) * 1.1); }
+.menu-pop.is-cities button { justify-content: flex-start; gap: .5em; padding: .62em .9em; border-radius: calc(var(--r) * .6); white-space: nowrap; }
+.menu-pop.is-cities button svg.i { margin-inline-start: auto; flex: none; }
+.menu-pop.is-cities button span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* a kind's menu: its two lists and the number of shows in each */
+.menu-pop.is-cats { min-width: calc(var(--u) * 13); font-size: calc(max(13.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-nav)); }
+.menu-pop.is-cats button { padding: .6em .9em; }
 
 @media (max-width: 1100px) { .search kbd { display: none; } }
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
@@ -383,6 +422,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .c-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease), filter .5s; }
 .card:not(.is-active) .c-thumb img { filter: brightness(calc(1 - var(--dim))) saturate(.92); }
 .card:not(.is-active):hover .c-thumb img { filter: none; }
+.card[data-st="cancelled"] .c-thumb img, .card[data-st="held"] .c-thumb img { filter: grayscale(.9) brightness(.8); }
 .card:hover .c-thumb img { transform: scale(1.05); }
 .card:hover .c-thumb { box-shadow: 0 0 0 1px rgba(var(--fg), .4); }
 .card:focus-visible .c-thumb { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
@@ -419,54 +459,113 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 :root[data-progress="ring"] .c-ring { display: block; }
 :root[data-progress="off"] .c-bar, :root[data-progress="off"] .c-ring { display: none; }
 
-/* ── the second section: a plain one, made of the same panels, gaps and margins as the hero ── */
-/* it slides over the hero like a sheet (the hero stays put under it), so its top corners are round */
+/* ── the list under the hero: the category bar, a section for each category (name, number, tickets), the footer. Made of the
+   hero's own panels, gaps, margins, radii and colours, so every setting changes it too. It slides over the hero like a
+   sheet (the hero stays put under it), so its top corners are round ── */
 .s2 { position: relative; z-index: 2; min-height: var(--hero-h); margin-top: calc(var(--pin) * -1); background: var(--bg); color: rgb(var(--fg)); border-radius: calc(var(--r) * 1.7) calc(var(--r) * 1.7) 0 0; box-shadow: 0 -1px 0 rgba(var(--fg), .14), 0 -40px 90px -30px rgba(0, 0, 0, .9); }
 .s2::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 2px; border-radius: inherit; background: linear-gradient(to left, var(--ring), transparent 55%); opacity: .8; pointer-events: none; }
-.s2-in { display: grid; gap: var(--gap); padding: calc(var(--nav-h) + var(--gap) * 3.2) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); }
-.s2-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: calc(var(--u) * 1.4) calc(var(--u) * 2); padding: calc(var(--u) * 1.8) calc(var(--u) * 2); }
-.s2-title { display: grid; gap: .35em; max-width: 62ch; }
-.eyebrow { display: inline-flex; align-items: center; gap: .6em; font-size: calc(max(12px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: var(--accent-l); }
-.eyebrow::before { content: ""; width: .5em; height: .5em; border-radius: 50%; background: var(--ring); box-shadow: 0 0 .9em var(--ring); }
-.s2 h2 { margin: 0; font-size: calc(max(24px, calc(var(--u) * 2.1)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; text-wrap: balance; }
-.s2-title p { margin: 0; font-size: calc(max(13.5px, calc(var(--u) * .85)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); line-height: 1.9; }
-.chips { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .5); }
-.chips button { all: unset; cursor: pointer; padding: .4em 1.2em; border-radius: var(--rb); border: 1px solid rgba(var(--fg), .2); font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .8); transition: background .3s, color .3s, border-color .3s, transform .4s var(--ease); }
-.chips button:hover { border-color: rgba(var(--fg), .5); color: rgb(var(--fg)); }
-.chips button[aria-pressed="true"] { background: rgb(var(--fg)); color: var(--capsule); border-color: transparent; }
-.chips button:active { transform: scale(.95); }
-.chips button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
-/* six shows: three across (two rows), two across on a narrower window, one on a phone */
-.s2-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(3, minmax(0, 1fr)); }
-@media (max-width: 1100px) { .s2-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.s2-card { display: grid; grid-template-rows: auto 1fr; gap: calc(var(--u) * .5); padding: calc(var(--u) * .6); transition: transform .6s var(--ease), border-color .4s; }
-.s2-card:hover { transform: translateY(calc(var(--u) * -.34 * var(--mot))); border-color: rgba(var(--fg), .4); }
-.s2-card.is-out { display: none; }
-.s2-thumb { all: unset; box-sizing: border-box; position: relative; display: block; aspect-ratio: 16 / 9; border-radius: var(--rt); overflow: hidden; background: #14121d; cursor: pointer; }
-.s2-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
-.s2-card:hover .s2-thumb img { transform: scale(1.05); }
-.s2-thumb:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
-.s2-body { display: grid; align-content: start; gap: calc(var(--u) * .3); padding: calc(var(--u) * .4) calc(var(--u) * .6) calc(var(--u) * .5); }
-.s2-body h3 { margin: 0; font-size: calc(max(15px, calc(var(--u) * 1.02)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.6; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
-.s2-meta { display: flex; flex-wrap: wrap; gap: .1em 1.1em; font-size: calc(max(12px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .64); }
-.s2-meta span { display: inline-flex; align-items: center; gap: .4em; min-width: 0; }
-.s2-meta svg.i { width: 1.1em; height: 1.1em; color: var(--ring); }
-.s2-foot { display: flex; align-items: center; justify-content: space-between; gap: .8em; margin-top: calc(var(--u) * .5); }
-.s2-foot .price { display: grid; line-height: 1.4; }
-.s2-foot .price b { font-size: calc(max(14px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
-.s2-foot .buy { height: max(34px, calc(var(--u) * 2.1)); min-width: 0; padding-inline: calc(var(--u) * 1.2); font-size: calc(max(12.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-main)); }
-.s2-strip { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: calc(var(--u) * 1.4); padding: calc(var(--u) * 1.4) calc(var(--u) * 2); }
-.stats { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 1.4) calc(var(--u) * 3.2); }
-.stat { display: grid; gap: .1em; }
-.stat b { font-size: calc(max(26px, calc(var(--u) * 2.4)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.25; font-variant-numeric: tabular-nums; }
-.stat span { font-size: calc(max(12px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.s2-in { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--gap) * 2.4); align-content: start; padding: calc(var(--nav-h) + var(--gap) * 3.2) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); }
+
+/* the bar of the categories: a pill slides to the one in view; under the header it stays with the page */
+.catnav { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); z-index: 6; padding: calc(var(--u) * .42); border-radius: calc(var(--r) * 1.1); transition: box-shadow .4s, border-color .4s; }
+.catnav.is-stuck { border-color: rgba(var(--fg), .24); box-shadow: inset 0 1px 0 rgba(var(--fg), .06), 0 calc(var(--u) * 1.3) calc(var(--u) * 3) calc(var(--u) * -.9) rgba(0, 0, 0, .95); }
+.cat-track { position: relative; display: flex; gap: calc(var(--u) * .25); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.cat-track::-webkit-scrollbar { display: none; }
+.cat { position: relative; z-index: 1; flex: none; display: inline-flex; align-items: center; gap: .55em; padding: .66em 1.2em; border-radius: 999px; text-decoration: none; white-space: nowrap; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-nav)); font-weight: var(--fwm); color: rgba(var(--fg), .7); transition: color .3s; }
+.cat svg.i { width: 1.3em; height: 1.3em; }
+.cat:hover, .cat[aria-current] { color: rgb(var(--fg)); }
+.cat[data-empty] { opacity: .55; }
+.cat:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -2px; }
+.cat-ind { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 0; border-radius: 999px; background: rgba(var(--fg), .1); box-shadow: inset 0 0 0 1px rgba(var(--fg), .16); transition: transform .6s var(--ease), width .6s var(--ease); pointer-events: none; }
+
+/* a section: its name with a dot in the show's colour, how many shows, and its cards */
+.s2-secs { display: grid; gap: calc(var(--gap) * 3.6); }
+.tkt-sec { display: grid; gap: calc(var(--gap) * 1.7); align-content: start; }
+.tkt-sec h2 { display: flex; align-items: center; gap: .6em; margin: 0; padding-inline: calc(var(--u) * .5); font-size: calc(max(20px, calc(var(--u) * 1.5)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
+.tkt-sec h2::before { content: ""; flex: none; width: .42em; height: .42em; border-radius: 50%; background: var(--ring); box-shadow: 0 0 .9em var(--ring); transition: background-color .8s, box-shadow .8s; }
+.tkt-sec .cnt { font-size: .56em; font-weight: var(--fwm); line-height: 1.6; padding: .06em .95em; border-radius: 999px; color: rgba(var(--fg), .72); background: rgba(var(--fg), .08); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); }
+.tkt-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (min-width: 2200px) { .tkt-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (max-width: 1499px) { .tkt-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1099px) { .tkt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .tkt-grid { grid-template-columns: minmax(0, 1fr); } }
+.s2-empty { margin: 0; padding: calc(var(--u) * 3) calc(var(--u) * 2); text-align: center; font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
+
+/* a ticket: the banner whole on top, a perforation with a notch at each side, and under it the words on a soft copy of the banner */
+.tkt { --nr: calc(var(--u) * .6); --notch: max(calc(var(--u) * 10.4 * var(--tx)), calc(134px * var(--tx))); --art: none; position: relative; transition: transform .6s var(--ease), filter .5s; -webkit-tap-highlight-color: transparent; }
+.tkt:hover, .tkt:focus-within { transform: translateY(calc(var(--u) * -.3 * var(--mot))); filter: drop-shadow(0 calc(var(--u) * 1) calc(var(--u) * 1.3) rgba(0, 0, 0, .6)); }
+.tkt-in { position: relative; display: grid; grid-template-rows: auto var(--notch); overflow: hidden; isolation: isolate; border-radius: var(--r); background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo));
+  -webkit-mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat;
+  mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat; }
+.tkt-pic { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: #14121d; cursor: pointer; }
+.tkt-pic img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
+.tkt:hover .tkt-pic img { transform: scale(1.06); }
+.tkt-pic:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
+.tkt-lbl { position: absolute; z-index: 3; top: 0; left: 0; display: inline-flex; align-items: center; gap: .45em; padding: .5em 1.1em .5em .95em; border-radius: 0 0 calc(var(--r) * .75) 0; font-size: calc(max(11.5px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); line-height: 1.5; background: rgba(8, 8, 12, .88); color: rgb(var(--st-d)); box-shadow: inset 0 0 0 1px rgba(var(--st), .6); }
+.tkt-lbl svg.i { width: 1.2em; height: 1.2em; }
+:root[data-theme="light"] .tkt-lbl { color: rgb(var(--st-d)); }
+.tkt-tag { position: absolute; z-index: 3; left: 0; bottom: 0; padding: .3em 1.1em .3em 1.3em; border-radius: 0 calc(var(--r) * .55) 0 0; font-size: calc(max(12px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); line-height: 1.5; font-weight: var(--fwm); background: rgba(8, 8, 12, .9); color: #fff; }
+.tkt-stamp { position: absolute; z-index: 3; top: 50%; left: 50%; translate: -50% -50%; rotate: -8deg; padding: .1em .85em; border: .13em solid rgba(255, 255, 255, .86); border-radius: .4em; outline: .05em solid rgba(255, 255, 255, .5); outline-offset: .14em; background: rgba(8, 8, 12, .3); color: rgba(255, 255, 255, .92); font-size: calc(max(22px, calc(var(--u) * 1.7)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.5; letter-spacing: .02em; white-space: nowrap; text-shadow: 0 2px 10px rgba(0, 0, 0, .45); pointer-events: none; }
+.tkt[data-st="soldout"] .tkt-pic img { filter: grayscale(.85) brightness(.62) contrast(1.05); }
+.tkt[data-st="held"] .tkt-pic img, .tkt[data-st="cancelled"] .tkt-pic img { filter: grayscale(.95) brightness(.8); }
+.tkt[data-st="held"]:hover .tkt-pic img, .tkt[data-st="cancelled"]:hover .tkt-pic img { filter: none; }
+.tkt-perf { position: absolute; z-index: 3; inset-inline: calc(var(--u) * .9); bottom: var(--notch); border-top: 2px dashed rgba(255, 255, 255, .26); transition: border-color .5s; pointer-events: none; }
+.tkt:hover .tkt-perf, .tkt:focus-within .tkt-perf { border-color: rgba(255, 255, 255, .6); }
+.tkt-info { position: relative; display: grid; grid-template-rows: auto auto auto 1fr; align-content: start; padding: calc(var(--u) * 1.05) calc(var(--u) * 1.15) calc(var(--u) * .95); color: #fff; --fg: 255, 255, 255; overflow: hidden; }
+.tkt-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #14121d; }
+.tkt-bg::before { content: ""; position: absolute; inset: -30px -24px; background: var(--art) center bottom / cover no-repeat; filter: blur(15px) saturate(1.3); transform: scale(1.12); }
+.tkt-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8, 8, 12, .5), rgba(8, 8, 12, .78)); }
+.tkt[data-st="soldout"] .tkt-bg::before { filter: grayscale(.85) brightness(.7) blur(15px); }
+.tkt[data-st="held"] .tkt-bg::before, .tkt[data-st="cancelled"] .tkt-bg::before { filter: grayscale(1) blur(15px); }
+.tkt-name { margin: 0; display: flex; align-items: baseline; gap: .5em; min-width: 0; font-size: calc(max(14.5px, calc(var(--u) * 1.02)) * var(--tx) * var(--tx-main)); line-height: 1.7; white-space: nowrap; cursor: pointer; }
+.tkt-name .pre { flex: none; font-size: .9em; font-weight: 400; opacity: .8; }
+.tkt-name b { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-weight: var(--fwb); }
+.tkt-row { display: flex; align-items: center; gap: .55em; min-width: 0; font-size: calc(max(12px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.95; color: rgba(255, 255, 255, .86); }
+.tkt-row svg.i { flex: none; width: 1.25em; height: 1.25em; opacity: .9; }
+.tkt-row span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tkt-foot { align-self: end; display: flex; align-items: flex-end; justify-content: space-between; gap: .8em; }
+.tkt-price { display: grid; line-height: 1.4; }
+.tkt-price span { font-size: calc(max(10.5px, calc(var(--u) * .62)) * var(--tx) * var(--tx-small)); color: rgba(255, 255, 255, .7); }
+.tkt-price b { font-size: calc(max(14px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); white-space: nowrap; }
+.tkt-price small { margin-inline-start: .3em; font-size: .62em; font-weight: 500; opacity: .75; }
+.tkt .buy { gap: .5em; height: max(36px, calc(var(--u) * 2.4)); min-width: calc(var(--u) * 7.4); padding-inline: calc(var(--u) * 1.3); font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-main)); }
+.tkt .buy svg.i { width: 1.35em; height: 1.35em; }
+.tkt-off { align-self: end; display: grid; place-items: center; height: max(36px, calc(var(--u) * 2.4)); padding-inline: 1em; border-radius: var(--rb); background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); color: rgba(255, 255, 255, .74); font-size: calc(max(12.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); white-space: nowrap; cursor: default; }
+.tkt-cd { align-self: end; display: flex; align-items: flex-end; justify-content: space-between; gap: .8em; }
+.cd-l { font-size: calc(max(11.5px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(255, 255, 255, .82); padding-bottom: .5em; }
+.cd-b { display: flex; align-items: flex-start; gap: .35em; direction: ltr; }
+.cd-b .u { display: grid; justify-items: center; gap: .25em; }
+.cd-b b { min-width: 2.35em; padding: .28em .3em; border-radius: .5em; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); font-size: calc(max(14.5px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.25; text-align: center; font-variant-numeric: tabular-nums; }
+.cd-b i { font-size: calc(max(10.5px, calc(var(--u) * .6)) * var(--tx) * var(--tx-small)); font-style: normal; color: rgba(255, 255, 255, .7); }
+.cd-b em { padding-top: .3em; font-style: normal; font-weight: 800; color: rgba(255, 255, 255, .6); }
+
+/* the footer */
+.ft { padding: calc(var(--u) * 2.4) calc(var(--u) * 2.6) calc(var(--u) * 1.4); }
+.ft-grid { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1.25fr; gap: calc(var(--u) * 2.4); }
+.ft-col { display: grid; align-content: start; gap: calc(var(--u) * .55); min-width: 0; }
+.ft-col h4 { display: flex; align-items: center; gap: .5em; margin: 0 0 calc(var(--u) * .3); font-size: calc(max(14px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.ft-col h4 svg.i { width: 1.25em; height: 1.25em; color: var(--ring); }
+.ft-col p { margin: 0; font-size: calc(max(12.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); line-height: 2; color: rgba(var(--fg), .66); }
+.ft-col ul { display: grid; gap: calc(var(--u) * .25); margin: 0; padding: 0; list-style: none; }
+.ft-col a { font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); text-decoration: none; color: rgba(var(--fg), .72); transition: color .3s; }
+.ft-col a:hover { color: rgb(var(--fg)); }
+.ft-col a:focus-visible, .ft-end a:focus-visible, .ft-logo:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; border-radius: 4px; }
+.ft-col a.ft-logo { display: inline-flex; align-items: center; gap: .55em; width: fit-content; text-decoration: none; color: rgb(var(--fg)); font-size: calc(max(19px, calc(var(--u) * 1.35)) * var(--tx) * var(--tx-nav)); line-height: 1; }
+.ft-logo b { font-weight: var(--fwb); }
+.ft-trust { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .5); margin-top: calc(var(--u) * .3); }
+.ft-trust span { display: grid; place-items: center; min-width: calc(var(--u) * 6.4); height: calc(var(--u) * 4.2); padding: .4em .9em; border-radius: calc(var(--rt) * 1.1); border: 1px dashed rgba(var(--fg), .3); font-size: calc(max(10.5px, calc(var(--u) * .62)) * var(--tx) * var(--tx-small)); line-height: 1.6; text-align: center; color: rgba(var(--fg), .55); }
+.ft-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6em 1.6em; margin-top: calc(var(--u) * 1.6); padding-top: calc(var(--u) * 1.1); border-top: 1px solid rgba(var(--fg), .12); font-size: calc(max(12px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.ft-end a { display: inline-flex; align-items: center; gap: .4em; text-decoration: none; color: rgba(var(--fg), .72); }
+.ft-end a:hover { color: rgb(var(--fg)); }
+@media (max-width: 1099px) { .ft-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
   .s2 { border-radius: 22px 22px 0 0; }
   .s2-in { padding: calc(var(--nav-h) + 26px) 10px 48px; }
-  .s2-head, .s2-strip { padding: 18px; }
-  .s2-grid { grid-template-columns: 1fr; }
+  .catnav { top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); }
+  .ft { padding: 20px 18px 14px; }
+  .ft-grid { grid-template-columns: 1fr; gap: 22px; }
 }
-@media (prefers-reduced-motion: reduce) { .s2-card, .s2-thumb img, .chips button { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .tkt, .tkt-pic img, .cat, .cat-ind, .catnav, .tkt-perf { transition: none; } }
 
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -605,6 +704,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 .fld input:focus-visible, .fld select:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
 .fld select option { color: #111; }
 .fld-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pp-hint { font-size: 11.5px; line-height: 1.7; color: var(--pp-ink3); }
 .seg { display: flex; flex-wrap: wrap; gap: 6px; }
 .seg button { all: unset; box-sizing: border-box; cursor: pointer; padding: 5px 12px; border-radius: 999px; border: 1px solid var(--pp-line2); font-size: 12.5px; color: var(--pp-ink2); transition: background .3s, color .3s, border-color .3s; }
 .seg button:hover { border-color: var(--pp-ink3); color: #fff; }
@@ -714,6 +814,14 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
   <symbol id="i-arrow-ul" viewBox="0 0 24 24"><path d="M17 7 7 17M7 8v9h9"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.6"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></symbol>
   <symbol id="i-return" viewBox="0 0 24 24"><path d="M20 6v6a3 3 0 0 1-3 3H5m4-4-4 4 4 4"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6.6" height="6.6" rx="1.8"/><rect x="13.4" y="4" width="6.6" height="6.6" rx="1.8"/><rect x="4" y="13.4" width="6.6" height="6.6" rx="1.8"/><rect x="13.4" y="13.4" width="6.6" height="6.6" rx="1.8"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><path d="M12 7.6V12l3 2"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 17.5V6.2l10-2v11"/><circle cx="6.8" cy="17.6" r="2.4"/><circle cx="16.8" cy="15.6" r="2.4"/></symbol>
+  <symbol id="i-mask" viewBox="0 0 24 24"><path d="M4.2 5.8c2.6.6 5.2.6 7.8 0v6.2a3.9 3.9 0 0 1-7.8 0V5.8Z"/><path d="M6.4 9.2h.01M9.8 9.2h.01M6.4 13c.9.8 2.3.8 3.2 0"/><path d="M12 8.6c2.4.5 4.8.5 7.2 0v6.2a3.6 3.6 0 0 1-6.2 2.5"/><path d="M14.4 12.2h.01M17.4 12.2h.01"/></symbol>
+  <symbol id="i-smile" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.2"/><path d="M8.6 14c.9 1.6 2.1 2.4 3.4 2.4s2.5-.8 3.4-2.4"/><path d="M9.3 9.6h.01M14.7 9.6h.01"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6.2 8.2h11.6l1 10.9a1 1 0 0 1-1 1.1H6.2a1 1 0 0 1-1-1.1l1-10.9Z"/><path d="M9 8.2V7a3 3 0 0 1 6 0v1.2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.6 5.2 6v5.4c0 4.3 2.8 7.4 6.8 8.9 4-1.5 6.8-4.6 6.8-8.9V6L12 3.6Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+  <symbol id="i-headset" viewBox="0 0 24 24"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3.8" y="13.4" width="3.6" height="5.2" rx="1.6"/><rect x="16.6" y="13.4" width="3.6" height="5.2" rx="1.6"/><path d="M18.4 18.6c0 1.2-1.4 2-3.4 2h-1.8"/></symbol>
 </svg>
 
 <div class="app" id="app">
@@ -751,17 +859,49 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
       </section>
     </div>
 
-    <section class="s2" id="s2" aria-labelledby="s2-h">
+    <section class="s2" id="s2" aria-label="برنامه‌ها">
     <div class="s2-in">
-      <div class="s2-head panel" data-rv>
-        <div class="s2-title"><span class="eyebrow" data-t="s2Eye">این هفته</span><h2 id="s2-h" data-t="s2Title">اجراهایی که نباید از دست بدی</h2><p data-t="s2Sub">همه‌ی اجراهای ویژه‌ی این هفته یک‌جا. دسته رو انتخاب کن و بلیتت رو بگیر.</p></div>
-        <div class="chips" id="chips" role="group" aria-label="دسته‌ی اجرا"></div>
-      </div>
-      <div class="s2-grid" id="s2Grid"></div>
-      <div class="s2-strip panel" data-rv>
-        <div class="stats"><div class="stat"><b data-count="120">۰</b><span>اجرای زنده در ماه</span></div><div class="stat"><b data-count="48">۰</b><span>سالن در سراسر کشور</span></div><div class="stat"><b data-count="98" data-suffix="٪">۰</b><span>رضایت خریدارها</span></div></div>
-        <button type="button" class="buy" id="s2All"><span data-t="s2Cta">دیدن همه‌ی اجراها</span></button>
-      </div>
+      <nav class="catnav panel" id="catnav" aria-label="دسته‌بندی برنامه‌ها"><div class="cat-track" id="catTrack"></div></nav>
+      <div class="s2-secs" id="s2Secs"></div>
+      <footer class="ft panel" id="ft" data-rv>
+        <div class="ft-grid">
+          <div class="ft-col ft-brand">
+            <a class="ft-logo" href="#hero" data-go="top" aria-label="بلیت، بالای صفحه"><span class="bars" aria-hidden="true"><i style="--s:.38;--k:0"></i><i style="--s:.72;--k:1"></i><i style="--s:1;--k:2"></i><i style="--s:.6;--k:3"></i><i style="--s:.34;--k:4"></i></span><b>بلیت</b></a>
+            <p>بلیت کنسرت، تئاتر و جُنگ، با انتخاب زنده‌ی صندلی و دریافت آنی بلیت.</p>
+            <ul>
+              <li><a href="#s2Secs" data-go="all">برنامه‌ها</a></li>
+              <li><a href="#" data-page="پشتیبانی">پشتیبانی</a></li>
+              <li><a href="#" data-page="درباره‌ی ما">درباره‌ی ما</a></li>
+              <li><a href="#" data-page="آرشیو برنامه‌ها">آرشیو برنامه‌ها</a></li>
+            </ul>
+          </div>
+          <div class="ft-col">
+            <h4><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>دسته‌بندی‌ها</h4>
+            <ul>
+              <li><a href="#s2Secs" data-go="soon">به‌زودی (پیش‌فروش)</a></li>
+              <li><a href="#s2Secs" data-go="concert:tehran">کنسرت‌های تهران</a></li>
+              <li><a href="#s2Secs" data-go="concert:other">کنسرت‌های شهرستان‌ها</a></li>
+              <li><a href="#s2Secs" data-go="theatre:tehran">تئاترهای تهران</a></li>
+              <li><a href="#s2Secs" data-go="theatre:other">تئاترهای شهرستان‌ها</a></li>
+              <li><a href="#s2Secs" data-go="comedy:tehran">جُنگ و تئاتر کمدی</a></li>
+            </ul>
+          </div>
+          <div class="ft-col">
+            <h4><svg class="i" aria-hidden="true"><use href="#i-headset"/></svg>راهنما</h4>
+            <ul>
+              <li><a href="#" data-page="پیگیری خرید">پیگیری خرید</a></li>
+              <li><a href="#" data-page="ثبت مشکل یا طرح پرسش">ثبت مشکل یا طرح پرسش</a></li>
+              <li><a href="#" data-page="قوانین خرید">قوانین خرید</a></li>
+            </ul>
+          </div>
+          <div class="ft-col">
+            <h4><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg>خرید امن</h4>
+            <p>پرداخت از درگاه‌های معتبر بانکی، رزرو هم‌زمان صندلی و صدور آنی بلیت الکترونیکی با کد QR.</p>
+            <div class="ft-trust"><span>جای نماد اعتماد الکترونیکی</span><span>جای نماد ساماندهی</span></div>
+          </div>
+        </div>
+        <div class="ft-end"><span>همه‌ی حقوق برای بلیت محفوظ است.</span><a href="#hero" data-go="top"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg>برگشت به بالای صفحه</a></div>
+      </footer>
     </div>
   </section>
   </div>
@@ -892,8 +1032,21 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
           <label class="fld">مکان<input id="fVenue" type="text" autocomplete="off"></label>
           <div class="fld-2">
             <label class="fld">قیمت از (تومان)<input id="fPrice" type="text" autocomplete="off"></label>
-            <label class="fld">برچسب<select id="fBadge"><option value="">بدون برچسب</option><option>پیش‌فروش</option><option>پرفروش</option><option>ظرفیت رو به اتمام</option><option>اجرای ویژه</option><option>جدید</option></select></label>
+            <label class="fld">برچسب دلخواه<input id="fBadge" type="text" list="badgeList" autocomplete="off" placeholder="مثلاً پرفروش"><datalist id="badgeList"><option value="پرفروش"><option value="ظرفیت رو به اتمام"><option value="اجرای ویژه"><option value="اجرای جدید"><option value="تک‌اجرا"><option value="پیش‌فروش"></datalist></label>
           </div>
+        </div>
+
+        <div class="pp-group">
+          <span>دسته، شهر و وضعیت این جایگاه</span>
+          <div class="fld-2">
+            <label class="fld">دسته<select id="fKind"></select></label>
+            <label class="fld">شهر<select id="fCity"></select></label>
+          </div>
+          <div class="fld-2">
+            <label class="fld">برچسب وضعیت<select id="fStatus"><option value="auto">خودکار (از روی تاریخ و ظرفیت)</option><option value="normal">عادی</option><option value="soon">به‌زودی</option><option value="extended">تمدید شد</option><option value="soldout">تمام شد</option><option value="postponed">به‌تعویق افتاد</option><option value="cancelled">لغو شد</option><option value="held">برگزار شد</option></select></label>
+            <label class="fld">شروع فروش<select id="fSale"><option value="none">فروش بازه</option><option value="keep" hidden>همین که هست</option><option value="10">۱۰ ثانیه دیگه</option><option value="3600">۱ ساعت دیگه</option><option value="93600">۱ روز و ۲ ساعت دیگه</option><option value="259200">۳ روز دیگه</option></select></label>
+          </div>
+          <small class="pp-hint" id="ppStNote"></small>
         </div>
         <div class="pp-group"><a class="pill" id="ppNotes" href="#notes-h">یادداشت‌های طراحی (زیر صفحه) ↓</a></div>
       </section>
@@ -959,14 +1112,15 @@ const LOOK_DEF = {
   hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdWidth: 100, hdCompact: true, hdCompactW: 1400, hdSpeed: 0.8, hdHover: 'pill', hdProg: true,
   // motion
   mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
+  // the list under the hero
+  listFill: true,
   // tools
   dims: false,
 };
 const TXT_DEF = {
-  brand: 'بلیت', cats: 'کنسرت، تئاتر، استندآپ، فستیوال، خانوادگی', login: 'ورود | ثبت‌نام',
+  brand: 'بلیت', cats: 'کنسرت، تئاتر، جُنگ و کمدی، به‌زودی (پیش‌فروش)', login: 'ورود | ثبت‌نام',
   search: 'جستجوی اجرا، هنرمند یا سالن…', city: 'تهران',
   buy: 'خرید بلیت', priceLab: 'قیمت از', venueLab: 'مکان', unit: 'تومان',
-  s2Eye: 'این هفته', s2Title: 'اجراهایی که نباید از دست بدی', s2Sub: 'همه‌ی اجراهای ویژه‌ی این هفته یک‌جا. دسته رو انتخاب کن و بلیتت رو بگیر.', s2Cta: 'دیدن همه‌ی اجراها',
 };
 const LOOK = { ...LOOK_DEF }, TXT = { ...TXT_DEF };
 const STK = matchMedia('(max-width: 760px), (max-aspect-ratio: 5/4)');   // the panels stack (phones, tall windows)
@@ -1033,30 +1187,37 @@ function setPal(e, key, custom) {
    content (sample data — in production this comes from the admin panel)
    banner: the organiser's 16:9 banner. layout: 'bar' (the facts in a panel at the bottom; the banner has its own
    words) or 'text' (the words over the picture, as in v7; for a photo with no words in it).
-   Prices and some dates are made up.
+   kind: concert / theatre / comedy, city: where it is; with the city they give the show its category (Tehran or the other
+   cities). status (the owner's choice; empty = worked out from the dates and the seats), saleAt (the sale hasn't started
+   until then), seatsLeft (0 = sold out): see status.js.
+   The dates are the ones the banners print (so the facts panel agrees with the banner above it), prices are made up. The
+   banners' dates are in the past by now, so every sample show carries the owner's choice of status: the sample doesn't
+   turn into «برگزار شد» as the calendar moves (choose «خودکار» in the panel to see it do that). Only the countdown is
+   counted from the day the page is opened.
    ════════════════════════════════════════════════════════════════ */
 const art = (slug, bw, bh) => ({
   banner: { src: `assets/events/${slug}-banner-1672.webp`, srcset: `assets/events/${slug}-banner-1024.webp 1024w, assets/events/${slug}-banner-1672.webp 1672w`, thumb: `assets/events/${slug}-banner-640.webp`, w: bw, h: bh },
 });
+const HOUR = 36e5;
 const EVENTS = [
-  { id: 'dokhtar-pesar', pal: 'crimson', layout: 'bar', type: 'تئاتر', name: 'دختر بودن یا پسر نبودن', title: 'دختر بودن یا پسر نبودن، مسئله این است',
+  { id: 'dokhtar-pesar', pal: 'crimson', layout: 'bar', kind: 'theatre', city: 'رامسر', type: 'تئاتر', name: 'دختر بودن یا پسر نبودن', title: 'دختر بودن یا پسر نبودن، مسئله این است',
     desc: 'اجرای گروه تئاتر فردا؛ نویسنده فرهاد تقدعلی، کارگردان شیوا علیخانیان.',
-    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', ...art('dokhtar-pesar', 1672, 960) },
-  { id: 'hani-nazarian', pal: 'gold', layout: 'bar', type: 'کنسرت', name: 'هانی نظریان', title: 'اجرای زنده‌ی هانی نظریان با ارکستر سینمایی Sequence',
+    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', status: 'normal', ...art('dokhtar-pesar', 1672, 960) },
+  { id: 'hani-nazarian', pal: 'gold', layout: 'bar', kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'هانی نظریان', title: 'اجرای زنده‌ی هانی نظریان با ارکستر سینمایی Sequence',
     desc: 'شبی با موسیقی فیلم، به رهبری هانی نظریان و با ارکستر سینمایی Sequence.',
-    venue: 'سالن اصلی اداره فرهنگ و ارشاد', startsAt: '2026-11-19T20:00:00+03:30', endsAt: '2026-11-20T20:00:00+03:30', price: '۸۵۰ هزار', badge: 'پیش‌فروش', ...art('hani-nazarian', 1672, 960) },
-  { id: 'zendegi-shayad', pal: 'crimson', layout: 'bar', type: 'تئاتر', name: 'زندگی شاید…', title: 'نمایش «زندگی شاید…»',
+    venue: 'سالن اصلی اداره فرهنگ و ارشاد', startsAt: '2026-11-19T20:00:00+03:30', endsAt: '2026-11-20T20:00:00+03:30', price: '۸۵۰ هزار', badge: '', status: 'soon', saleAt: new Date(Date.now() + 26 * HOUR + 37 * 60e3 + 12e3).toISOString(), ...art('hani-nazarian', 1672, 960) },
+  { id: 'zendegi-shayad', pal: 'crimson', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'زندگی شاید…', title: 'نمایش «زندگی شاید…»',
     desc: 'نمایشی به نویسندگی، طراحی و کارگردانی محمدجواد ملک‌محمودی.',
-    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', ...art('zendegi-shayad', 1672, 960) },
-  { id: 'barfab', pal: 'violet', layout: 'bar', type: 'تئاتر', name: 'برفاب', title: 'نمایش «برفاب» · Mebwater',
+    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', status: 'normal', ...art('zendegi-shayad', 1672, 960) },
+  { id: 'barfab', pal: 'violet', layout: 'bar', kind: 'theatre', city: 'ساری', type: 'تئاتر', name: 'برفاب', title: 'نمایش «برفاب» · Mebwater',
     desc: 'نمایش درام مدرن از گروه نمایشی صنم؛ نویسنده و کارگردان میثم رایکا.',
-    venue: 'مجتمع فرهنگی هنری آزادشاد، ساری', startsAt: '2026-11-03T20:00:00+03:30', endsAt: '2026-11-08T20:00:00+03:30', price: '۳۲۰ هزار', badge: 'اجرای جدید', ...art('barfab', 1672, 960) },
-  { id: 'do-daghighe', pal: 'orange', layout: 'bar', type: 'تئاتر', name: 'دو دقیقه به هشت', title: 'نمایش «دو دقیقه به هشت»',
+    venue: 'مجتمع فرهنگی هنری آزادشاد، ساری', startsAt: '2026-11-03T20:00:00+03:30', endsAt: '2026-11-08T20:00:00+03:30', price: '۳۲۰ هزار', badge: '', status: 'extended', ...art('barfab', 1672, 960) },
+  { id: 'do-daghighe', pal: 'orange', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'دو دقیقه به هشت', title: 'نمایش «دو دقیقه به هشت»',
     desc: 'نمایشی به نویسندگی و کارگردانی علی اصغری، با تهیه‌کنندگی فاطمه مجریان.',
-    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: 'ظرفیت رو به اتمام', ...art('do-daghighe', 1672, 960) },
-  { id: 'aman', pal: 'white', layout: 'bar', type: 'تئاتر', name: 'امان', title: 'نمایش «امان»',
+    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: '', status: 'soldout', seatsLeft: 0, ...art('do-daghighe', 1672, 960) },
+  { id: 'aman', pal: 'white', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'امان', title: 'نمایش «امان»',
     desc: 'نمایشی به کارگردانی مجتبی جدی و تهیه‌کنندگی فرید مقدم.',
-    venue: 'تهران · سالن نمایش', startsAt: '2026-11-09T20:00:00+03:30', price: '۲۸۰ هزار', badge: 'تک‌اجرا', ...art('aman', 1672, 960) },
+    venue: 'تهران · سالن نمایش', startsAt: '2026-11-09T20:00:00+03:30', price: '۲۸۰ هزار', badge: 'تک‌اجرا', status: 'normal', ...art('aman', 1672, 960) },
 ];
 // the sample photo for the "text" layout: the words sit on the side away from the cards, so the singers
 // stand on the cards' side (the flipped copy when the cards are on the left)
@@ -1086,9 +1247,162 @@ function when(e) {
   const wk = F.week.format(a);
   return { calDay: d1, calMonth: m1, top: wk, sub: `ساعت ${t}`, short: `${wk} ${d1} ${m1}`, tiny: `${d1} ${m1}`, time: t };
 }
-EVENTS.forEach((e) => { setPal(e, e.pal); e.ver = 0; e.w = when(e); e.orig = JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner })); });
+const origOf = (e) => JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner, kind: e.kind, city: e.city, status: e.status || 'auto', saleAt: e.saleAt || null, seatsLeft: e.seatsLeft === undefined ? null : e.seatsLeft }));
+EVENTS.forEach((e) => { setPal(e, e.pal); e.ver = 0; e.w = when(e); e.orig = origOf(e); });
 root.style.setProperty('--n', Math.min(EVENTS.length, VIS));   // the rail's room is worked out for this many cards
 const label = (e) => `${e.type} ${e.name}`;
+
+/* ════════════════════════════════════════════════════════════════
+   what a show is right now: its status label, whether its sale has opened (and the countdown to it), and its
+   category. In production the server works all of this out; here it comes from the show's own fields (dates,
+   seats left, the owner's choice) so every label and button can be looked at.
+   ════════════════════════════════════════════════════════════════ */
+
+// the kinds of programme, and the six categories they make with the city (Tehran, or the other cities)
+const KINDS = [
+  { id: 'concert', label: 'کنسرت', type: 'کنسرت' },
+  { id: 'theatre', label: 'تئاتر', type: 'تئاتر' },
+  { id: 'comedy', label: 'جُنگ و کمدی', type: 'کمدی' },
+];
+const CAT_LABEL = {
+  'concert:tehran': 'کنسرت‌های تهران', 'concert:other': 'کنسرت‌های شهرستان‌ها',
+  'theatre:tehran': 'تئاترهای تهران', 'theatre:other': 'تئاترهای شهرستان‌ها',
+  'comedy:tehran': 'جُنگ و تئاتر کمدی تهران', 'comedy:other': 'جُنگ و تئاتر کمدی شهرستان‌ها',
+};
+const SOON_LABEL = 'به‌زودی (پیش‌فروش)';
+const catOf = (e) => `${e.kind || 'theatre'}:${e.city === 'تهران' ? 'tehran' : 'other'}`;
+const catCount = (key) => LIST().filter((e) => inCat(e, key)).length;
+const catName = (key) => (key === 'all' ? 'همه' : key === 'soon' ? SOON_LABEL : CAT_LABEL[key] || key);
+const inCat = (e, key) => key === 'all' || (key === 'soon' ? statusOf(e).key === 'soon' : catOf(e) === key);
+
+// the labels. tone: the meaning's colour (red, amber, grey, blue, green), not the show's own accent. cta: the buy button's
+// words while the show can't be bought.
+const STATUS = {
+  normal: { label: '', tone: '' },
+  soon: { label: 'به‌زودی', tone: 'info', cta: 'به‌زودی' },
+  extended: { label: 'تمدید شد', tone: 'good' },
+  soldout: { label: 'تمام شد', tone: 'mute', cta: 'تمام شد' },
+  postponed: { label: 'به‌تعویق افتاد', tone: 'warn', cta: 'به‌تعویق افتاد' },
+  cancelled: { label: 'لغو شد', tone: 'bad', cta: 'لغو شد' },
+  held: { label: 'برگزار شد', tone: 'mute', cta: 'برگزار شد' },
+};
+const endOf =(e) => Date.parse(e.endsAt || e.startsAt) + 3 * HOUR;   // the last night's show is over about three hours after it starts
+const saleMs = (e) => (e.saleAt ? Date.parse(e.saleAt) : 0);
+// the owner's choice (e.status) wins; otherwise: the dates ("برگزار شد"), the sale's start ("به‌زودی") and the seats ("تمام شد") decide
+function statusOf(e, now = Date.now()) {
+  const m = e.status;
+  let k, why = '';
+  if (m && m !== 'auto' && STATUS[m]) { k = m; why = 'انتخاب خودت'; }
+  else if (endOf(e) < now) { k = 'held'; why = 'همه‌ی روزهای اجرا گذشته'; }
+  else if (saleMs(e) > now) { k = 'soon'; why = 'فروش هنوز شروع نشده'; }
+  else if (e.seatsLeft === 0) { k = 'soldout'; why = 'ظرفیت صفر شده'; }
+  else { k = 'normal'; why = 'اجرای عادی'; }
+  return { key: k, why, ...STATUS[k] };
+}
+const statusChip = (e, cls = '') => { const s = statusOf(e); return s.label ? `<em class="st ${cls}" data-tone="${s.tone}">${esc(s.label)}</em>` : ''; };
+
+// the sale's start: "چهارشنبه ۱۲ آبان، ساعت ۱۸:۰۰", and the time left: "۱ روز و ۰۲:۳۷:۴۵"
+function saleWhen(e) {
+  const a = new Date(saleMs(e));
+  return `${F.week.format(a)} ${F.day.format(a)} ${F.month.format(a)}، ساعت ${F.time.format(a)}`;
+}
+function leftText(ms) {
+  const s = Math.max(0, Math.ceil(ms / 1000)), d = Math.floor(s / 86400), p = (n) => String(n).padStart(2, '0');
+  return fa((d ? `${d} روز و ` : '') + `${p(Math.floor((s % 86400) / 3600))}:${p(Math.floor((s % 3600) / 60))}:${p(s % 60)}`);
+}
+// the buy button: the real one, the countdown (the sale hasn't started), or the reason it can't be bought. extra: more attributes
+// (data-part, in the facts' panel)
+function buyHTML(e, extra = '') {
+  const s = statusOf(e), ex = extra ? ` ${extra}` : '';
+  if (s.key === 'soon') {
+    const timed = saleMs(e) > Date.now();
+    return `<button type="button" class="buy is-wait"${ex} aria-disabled="true" aria-label="${esc(timed ? `فروش بلیت ${e.title} از ${saleWhen(e)} شروع می‌شه` : `فروش بلیت ${e.title} به‌زودی شروع می‌شه`)}"><span class="bw-l">${timed ? 'شروع فروش' : 'به‌زودی'}</span>${timed ? `<b class="bw-t" data-sale="${esc(e.id)}" aria-hidden="true">${leftText(saleMs(e) - Date.now())}</b>` : ''}</button>`;
+  }
+  if (s.cta) return `<button type="button" class="buy is-off"${ex} aria-disabled="true" aria-label="${esc(`${e.title}: ${s.label}`)}">${esc(s.cta)}</button>`;
+  return `<button type="button" class="buy"${ex} aria-label="${esc(`${TXT.buy} ${e.title}، از ${dg(e.price)} ${TXT.unit}`)}">${esc(TXT.buy)}</button>`;
+}
+// what a press on a buy button says
+function buyMessage(e) {
+  const s = statusOf(e);
+  if (s.key === 'soon') return saleMs(e) > Date.now() ? `فروش «${e.title}» ${saleWhen(e)} شروع می‌شه.` : `فروش «${e.title}» به‌زودی شروع می‌شه.`;
+  if (s.cta) return `«${e.title}»: ${s.label}.`;
+  return `اینجا صفحه‌ی انتخاب صندلی «${label(e)}» باز می‌شه.`;
+}
+
+// the countdown: one clock for every button and every card that shows one. It reads the time every second (from the second's
+// own edge, so it never drifts), and when a show's time is up the sale opens: the button becomes the real one, with a message.
+const showById = (id) => LIST().find((x) => x.id === id) || EVENTS.find((x) => x.id === id);
+const sale = {
+  timer: 0,
+  tick() {
+    const now = Date.now();
+    $$('[data-sale]').forEach((el) => {
+      const e = showById(el.dataset.sale); if (!e || !saleMs(e)) return;
+      const t = leftText(saleMs(e) - now); if (el.textContent !== t) el.textContent = t;
+    });
+    // the boxes on a card: hours (they can pass 24), minutes, seconds
+    $$('[data-sale-box]').forEach((box) => {
+      const e = showById(box.dataset.saleBox); if (!e || !saleMs(e)) return;
+      const s = Math.max(0, Math.ceil((saleMs(e) - now) / 1000)), v = { h: Math.floor(s / 3600), m: Math.floor((s % 3600) / 60), s: s % 60 };
+      $$('b[data-u]', box).forEach((b) => { const t = fa(String(v[b.dataset.u]).padStart(2, '0')); if (b.textContent !== t) b.textContent = t; });
+    });
+    LIST().forEach((e) => { if (saleMs(e) && saleMs(e) <= now) sale.open(e); });
+  },
+  open(e) {
+    e.saleAt = null; e.ver++;
+    if (e.status === 'soon') e.status = 'normal';   // a «به‌زودی» that was the owner's choice ends with the sale
+    const i = EVENTS.indexOf(e);
+    if (i >= 0) cards.refresh(i);
+    s2.refresh(); hd.refreshCats(); if (stage.top && stage.top.e === e) look.wordsInPlace();
+    panel.sync();
+    toast(`فروش بلیت «${e.title}» شروع شد!`);
+  },
+  start() {
+    const go = () => { this.tick(); this.timer = setTimeout(go, 1000 - (Date.now() % 1000) + 8); };
+    go();
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the shows that only fill the list under the hero (the option «اجراهای ساختگی برای پر کردن لیست»). The six real banners make
+   a short list; how a list of twenty reads (the sections, the rows of cards, the labels side by side) is what the owner asked to
+   see. Their names are made up, their pictures are drawn by the page (a stand-in banner from the title and the colour, the same
+   one the hero uses when a file is missing), and they are not in the featured slot: the hero and its rail have the six.
+   ════════════════════════════════════════════════════════════════ */
+const TEHRAN_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' });
+const inDays = (d, hm = '20:00') => `${TEHRAN_DAY.format(new Date(Date.now() + d * DAY))}T${hm}:00+03:30`;
+const DAY = 24 * HOUR;
+// kind, city, type word, name, venue, colour, first day (days from today), last day (0 = one night), price, the rest
+const FILL = [
+  ['concert', 'تهران', 'کنسرت', 'شب‌های جاز', 'تهران · تالار موسیقی', 'gold', 4, 0, '۶۵۰ هزار', { badge: 'پرفروش' }],
+  ['concert', 'تهران', 'کنسرت', 'ارکستر زهی بهار', 'تهران · سالن همایش‌ها', 'blue', 8, 0, '۴۵۰ هزار', {}],
+  ['concert', 'تهران', 'کنسرت', 'پیانو در غروب', 'تهران · تالار موسیقی', 'violet', 19, 0, '۵۸۰ هزار', { soonIn: 5 * HOUR + 12 * 6e4 }],
+  ['concert', 'تهران', 'کنسرت', 'آوازهای قدیمی', 'تهران · فرهنگسرا', 'orange', 12, 0, '۷۲۰ هزار', { sold: true }],
+  ['concert', 'شیراز', 'کنسرت', 'شب‌های بهاری', 'شیراز · تالار مرکزی', 'green', 6, 0, '۳۸۰ هزار', {}],
+  ['concert', 'اصفهان', 'کنسرت', 'ساز و آواز اصفهان', 'اصفهان · تالار فرهنگ', 'teal', 10, 0, '۳۵۰ هزار', { ext: true }],
+  ['concert', 'مشهد', 'کنسرت', 'شب‌های خراسان', 'مشهد · سالن همایش‌ها', 'pink', 15, 0, '۴۲۰ هزار', { sold: true }],
+  ['theatre', 'تهران', 'تئاتر', 'مرد دو چهره', 'تهران · سالن نمایش', 'crimson', 3, 8, '۳۲۰ هزار', {}],
+  ['theatre', 'تهران', 'تئاتر', 'خانه‌ی کاغذی', 'تهران · سالن نمایش', 'indigo', 5, 11, '۲۹۰ هزار', { ext: true }],
+  ['theatre', 'تبریز', 'تئاتر', 'آخرین مسافر', 'تبریز · تالار مرکزی', 'cyan', 7, 10, '۲۶۰ هزار', {}],
+  ['theatre', 'رشت', 'تئاتر', 'پنجره‌ای رو به شب', 'رشت · تالار مرکزی', 'brown', 9, 12, '۲۴۰ هزار', { badge: 'تک‌اجرا' }],
+  ['comedy', 'تهران', 'کمدی', 'شب خنده (استندآپ کمدی)', 'تهران · سالن همایش‌ها', 'yellow', 2, 0, '۲۲۰ هزار', { badge: 'پرفروش' }],
+  ['comedy', 'تهران', 'جُنگ', 'جُنگ شادی', 'تهران · فرهنگسرا', 'lime', 11, 0, '۲۰۰ هزار', { sold: true }],
+  ['comedy', 'کرج', 'جُنگ', 'جُنگ خنده در کرج', 'کرج · سالن نمایش', 'silver', 13, 0, '۱۸۰ هزار', {}],
+  ['comedy', 'اصفهان', 'کمدی', 'کمدی در سه پرده', 'اصفهان · سالن نمایش', 'white', 16, 0, '۲۱۰ هزار', {}],
+];
+const MORE = FILL.map(([kind, city, type, name, venue, pal, d1, d2, price, o], k) => {
+  const e = {
+    id: `more-${k + 1}`, filler: true, pal, layout: 'bar', kind, city, type, name, title: `${type === 'کنسرت' ? 'کنسرت' : type === 'تئاتر' ? 'نمایش' : type} «${name}»`,
+    desc: 'نمونه‌ی ساختگی برای پر کردن لیست.', venue, startsAt: inDays(d1), endsAt: d2 ? inDays(d2) : undefined, price, badge: o.badge || '',
+    status: o.sold ? 'soldout' : o.ext ? 'extended' : o.soonIn ? 'soon' : 'normal', seatsLeft: o.sold ? 0 : undefined,
+    saleAt: o.soonIn ? new Date(Date.now() + o.soonIn).toISOString() : undefined,
+    banner: { w: 1672, h: 960 }, ver: 0,
+  };
+  setPal(e, pal); e.w = when(e);
+  return e;
+});
+// the shows of the list under the hero: the featured ones, and (an option) the fillers
+const LIST = () => (LOOK.listFill ? EVENTS.concat(MORE) : EVENTS);
 
 /* ════════════════════════════════════════════════════════════════
    the colour a picture suggests: the strongest vivid hue, snapped to the nearest of the first eight palette
@@ -1181,25 +1495,25 @@ function ambientOf(img) {
    the change from one show to the next works between any two layouts
    ════════════════════════════════════════════════════════════════ */
 function dockHTML(e) {
-  const w = e.w, buyLabel = `${TXT.buy} ${e.title}، از ${dg(e.price)} ${TXT.unit}`;
+  const w = e.w;
   return `
-    <div class="d-cell d-main" data-part><span class="kick"><i class="dot"></i>${esc(e.type)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}<span class="kv">· ${esc(e.venue)}</span></span><b class="d-name" title="${esc(e.title)}">${esc(e.title)}</b></div>
+    <div class="d-cell d-main" data-part><span class="kick"><i class="dot"></i>${esc(e.type)}${statusChip(e)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}<span class="kv">· ${esc(e.venue)}</span></span><b class="d-name" title="${esc(e.title)}">${esc(e.title)}</b></div>
     <i class="d-sep" aria-hidden="true"></i>
     <div class="d-cell d-date" data-part><span class="cal" aria-hidden="true"><em>${esc(w.calMonth)}</em><b>${esc(w.calDay)}</b></span><span class="d-when"><b>${esc(w.top)}</b><span>${esc(w.sub.replace(w.time, ''))}<bdi dir="ltr">${esc(w.time)}</bdi></span></span></div>
     <i class="d-sep" aria-hidden="true"></i>
     <div class="d-cell d-venue" data-part><span class="d-lab">${esc(TXT.venueLab)}</span><b title="${esc(e.venue)}">${esc(e.venue)}</b></div>
     <i class="d-sep" aria-hidden="true"></i>
     <div class="d-cell d-price price" data-part><span class="d-lab">${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></div>
-    <button type="button" class="buy" data-part aria-label="${esc(buyLabel)}">${esc(TXT.buy)}</button>`;
+    ${buyHTML(e, 'data-part')}`;
 }
 function copyHTML(e) {
-  const w = e.w, buyLabel = `${TXT.buy} ${e.title}، از ${dg(e.price)} ${TXT.unit}`;
+  const w = e.w;
   return `
-    <span class="kick" data-part><i class="dot"></i>${esc(e.type)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}</span>
+    <span class="kick" data-part><i class="dot"></i>${esc(e.type)}${statusChip(e)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}</span>
     <h1 class="title" data-part>${esc(e.title)}</h1>
     <p class="sub" data-part>${esc(e.venue)} · ${esc(w.short)}</p>
     <p class="desc" data-part>${esc(e.desc)}</p>
-    <div class="buyrow" data-part><span class="price"><span class="d-lab">${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="buy" aria-label="${esc(buyLabel)}">${esc(TXT.buy)}</button></div>`;
+    <div class="buyrow" data-part><span class="price"><span class="d-lab">${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span>${buyHTML(e)}</div>`;
 }
 const altOf = (e) => `${e.title} · ${e.venue} · ${e.w.short}`;
 const MODES = {
@@ -1348,10 +1662,13 @@ const cards = {
     im.onerror = () => { if (!pic.fake) pic.fake = fakeArt(e, pic); im.onerror = null; im.src = pic.fake; };
     im.src = pic.fake || pic.thumb;
     const th = document.createElement('span'); th.className = 'c-thumb'; th.appendChild(im); if (bar) th.appendChild(bar); if (ring) th.appendChild(ring);
+    // the status label sits in the picture's corner (a small card, not the hero banner)
+    const st = statusOf(e); b.dataset.st = st.key;
+    if (st.label) th.insertAdjacentHTML('beforeend', statusChip(e, 'st-ov'));
     const cap = document.createElement('span'); cap.className = 'c-cap'; cap.innerHTML = `<b>${esc(label(e))}</b><em>${esc(e.w.tiny)}</em><i class="c-venue">${esc(e.venue)}</i>`;
     const box = document.createElement('span'); box.className = 'c-box'; box.append(th, cap);
     b.appendChild(box);
-    b.setAttribute('aria-label', `${label(e)}، ${e.venue}، ${e.w.short}`);
+    b.setAttribute('aria-label', `${label(e)}، ${e.venue}، ${e.w.short}${st.label ? `، ${st.label}` : ''}`);
   },
   refresh(i) { this.fill(this.els[i], EVENTS[i]); },
   refreshAll() { this.els.forEach((_, i) => this.refresh(i)); },
@@ -1418,7 +1735,7 @@ function go(i, source = 'user') {
   if (i === state.i) return;
   const e = EVENTS[i], n = EVENTS.length, from = state.i, dir = ((i - from + n) % n) <= n / 2 ? 1 : -1;
   state.i = i; cards.set(i);
-  if (source !== 'auto') live.textContent = `${label(e)}، ${e.venue}، ${e.w.short}`;
+  if (source !== 'auto') live.textContent = `${label(e)}، ${e.venue}، ${e.w.short}${statusOf(e).label ? `، ${statusOf(e).label}` : ''}`;
   partsOut(stage.top);
   stage.show(i, { dir }).then((s) => { if (s && stage.top === s) partsIn(s, 0.42); });
   timer.start();
@@ -1441,7 +1758,7 @@ function toast(msg) {
 $('#scenes').addEventListener('click', (ev) => {
   const e = EVENTS[state.i];
   if (fx.dragged) { ev.preventDefault(); fx.dragged = false; return; }
-  if (ev.target.closest('.buy')) toast(`اینجا صفحه‌ی انتخاب صندلی «${label(e)}» باز می‌شه.`);
+  if (ev.target.closest('.buy')) toast(buyMessage(e));
   else if (ev.target.closest('.frame')) { ev.preventDefault(); toast(`اینجا صفحه‌ی «${e.title}» باز می‌شه.`); }
 });
 $('#upBtn').addEventListener('click', prev);
@@ -1489,8 +1806,8 @@ function theme() {
 function bgApply() { attr('data-bg', LOOK.bg); css('--bg', LOOK.bg === 'color' && HEX.test(LOOK.bgColor) ? LOOK.bgColor : '#000000'); }
 function digitsApply() {
   FA = LOOK.digits === 'en' ? '0123456789' : '۰۱۲۳۴۵۶۷۸۹'; mkF();
-  EVENTS.forEach((e) => { e.w = when(e); e.ver++; });
-  if (look.ready) { cards.refreshAll(); look.wordsInPlace(); s2.refresh(); s2.counters(true); look.sizesTick(); }
+  EVENTS.concat(MORE).forEach((e) => { e.w = when(e); e.ver++; });
+  if (look.ready) { cards.refreshAll(); look.wordsInPlace(); s2.refresh(); hd.refreshCats(); look.sizesTick(); }
 }
 const num = (name, div = 1) => (v) => css(name, +(v / div).toFixed(4));
 // how each setting reaches the page (the ones that need the page to do something more are handled in look.set)
@@ -1510,6 +1827,7 @@ const APPLY = {
   mot: () => css('--mot', MOTK()), spot: (v) => attr('data-spot', v ? 'on' : 'off'),
   story: (v) => { attr('data-story', v ? 'on' : 'off'); scrollFx.apply(true); },
   scroll: () => smoothScroll.sync(),
+  listFill: () => { if (look.ready) { s2.refresh(); hd.refreshCats(); } },
   dims: (v) => dims.on(v),
 };
 
@@ -1563,6 +1881,7 @@ const UI = {
       W('capDate', 'روز اجرا کنار اسم'),
       R('dim', 'کم‌رنگ بودن کارت‌های غیرفعال', 0, 60, 1, '٪'),
       S('progress', 'نشونه‌ی زمان باقی‌مونده', [['bar', 'خط پایین'], ['ring', 'دور کارت'], ['off', 'هیچ']])] },
+    { h: 'لیست زیر هیرو', n: 'شش اجرای واقعی لیست کوتاهی می‌سازن. با این گزینه ۱۵ اجرای ساختگی (با تصویر نمونه) هم تو لیست می‌آن تا چیدمان یه لیست پر دیده بشه؛ تو هیرو فقط همون شش اجرا هستن.', c: [W('listFill', 'اجراهای ساختگی برای پر کردن لیست')] },
   ],
   style: [
     { h: 'گوشه‌ها و لبه‌ها', c: [
@@ -1597,9 +1916,8 @@ const UI = {
       S('hdHover', 'نشونه‌ی لینک‌ها', [['pill', 'پیل متحرک'], ['line', 'خط زیرش'], ['off', 'هیچ']]),
       W('hdProg', 'خط پیشرفت اسکرول رو هدر')] },
     { h: 'نوشته‌های ثابت', n: 'هر چی اینجا بنویسی همون لحظه عوض می‌شه.', c: [
-      X('brand', 'اسم سایت'), X('cats', 'دسته‌های هدر (با ویرگول جدا کن)', true), X('login', 'دکمه‌ی ورود'), X('search', 'نوشته‌ی جستجو', true), X('city', 'شهر'),
+      X('brand', 'اسم سایت'), X('cats', 'اسم دسته‌های هدر، با ویرگول جدا (به ترتیب: کنسرت، تئاتر، جُنگ و کمدی، پیش‌فروش)', true), X('login', 'دکمه‌ی ورود'), X('search', 'نوشته‌ی جستجو', true), X('city', 'شهر'),
       X('buy', 'دکمه‌ی خرید'), X('priceLab', 'برچسب «قیمت از»'), X('venueLab', 'برچسب «مکان»'), X('unit', 'واحد پول')] },
-    { h: 'بخش دوم', c: [X('s2Eye', 'برچسب بالای عنوان'), X('s2Title', 'عنوان', true), X('s2Sub', 'توضیح', true), X('s2Cta', 'دکمه')] },
   ],
   motion: [
     { h: 'حرکت', c: [
@@ -1833,32 +2151,59 @@ const look = {
 };
 
 /* ════════════════════════════════════════════════════════════════
-   the header: the categories with a highlight that slides under the pointer, a search window (a command
-   palette, opened from the search button, "/" or Ctrl/⌘+K), a city menu, and two small buttons
+   the header: the categories (each kind opens a small menu with its two lists, Tehran and the other cities) with a
+   highlight that slides under the pointer, a search window (a command palette, opened from the search button, "/" or
+   Ctrl/⌘+K), a city menu (a wide grid of the cities), and two small buttons
    ════════════════════════════════════════════════════════════════ */
 const norm = (s) => String(s).toLowerCase().replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[‌‎‏]/g, '').replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();
-const CITIES = ['تهران', 'اصفهان', 'شیراز', 'مشهد', 'تبریز', 'کیش', 'رشت', 'اهواز'];
-let pop = null;
-function closePop() { if (!pop) return; pop.remove(); pop = null; document.removeEventListener('pointerdown', popOutside, true); document.removeEventListener('keydown', popKey, true); }
-function popOutside(ev) { if (pop && !pop.contains(ev.target) && !ev.target.closest('#cityBtn')) closePop(); }
-function popKey(ev) { if (ev.key === 'Escape') { ev.stopPropagation(); closePop(); $('#cityBtn').focus(); } }
-// a small menu under a button
-function menuPop(anchor, items, current, onPick) {
+// the cities of the customer's filter: the 31 provincial capitals and Kish, in the alphabet. (The other towns, the "شهرستان‌ها", come later.)
+const CITIES = ['اراک', 'اردبیل', 'ارومیه', 'اصفهان', 'اهواز', 'ایلام', 'بجنورد', 'بندرعباس', 'بوشهر', 'بیرجند', 'تبریز', 'تهران', 'خرم‌آباد', 'رشت', 'زاهدان', 'زنجان', 'ساری', 'سمنان', 'سنندج', 'شهرکرد', 'شیراز', 'قزوین', 'قم', 'کرج', 'کرمان', 'کرمانشاه', 'کیش', 'گرگان', 'مشهد', 'همدان', 'یاسوج', 'یزد'];
+let pop = null, popT = 0;
+function closePop() {
+  clearTimeout(popT);
+  if (!pop) return;
+  const a = pop.anchor; pop.remove(); pop = null;
+  if (a) a.setAttribute('aria-expanded', 'false');
+  document.removeEventListener('pointerdown', popOutside, true); document.removeEventListener('keydown', popKey, true);
+}
+function popOutside(ev) { if (pop && !pop.contains(ev.target) && !(pop.anchor && pop.anchor.contains(ev.target))) closePop(); }
+// the keys inside a menu: Esc closes it; the arrows move between its items (in the grid, left and right move between the columns)
+function popKey(ev) {
+  if (!pop) return;
+  if (ev.key === 'Escape') { ev.stopPropagation(); const a = pop.anchor; closePop(); if (a) a.focus(); return; }
+  const items = $$('button', pop), n = items.length, cols = +pop.dataset.cols || 1, rows = +pop.dataset.rows || n, i = items.indexOf(document.activeElement);
+  const step = { ArrowDown: 1, ArrowUp: -1, ArrowLeft: cols > 1 ? rows : 0, ArrowRight: cols > 1 ? -rows : 0 }[ev.key];
+  let j;
+  if (ev.key === 'Home') j = 0; else if (ev.key === 'End') j = n - 1;
+  else if (step) j = i < 0 ? 0 : Math.abs(step) === 1 ? (i + step + n) % n : clamp(i + step, 0, n - 1);
+  else if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') { ev.preventDefault(); ev.stopPropagation(); return; }   // a single column: the page's own arrow keys (the next show) stay quiet while a menu is open
+  else return;
+  ev.preventDefault(); ev.stopPropagation(); if (items[j]) items[j].focus();
+}
+// a menu under a button. items: texts, or { t: text, v: value, n: a count }; onPick gets the value. opt: cls, cols (a grid of columns,
+// filled down the columns), align ('end': the menu's edge on the button's edge, 'center'), focus (false: don't move the focus
+// into it), label
+function menuPop(anchor, items, current, onPick, opt = {}) {
   closePop();
-  const el = document.createElement('div'); el.className = 'menu-pop'; el.setAttribute('role', 'menu');
-  items.forEach((t) => {
-    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem'); if (t === current) b.setAttribute('aria-current', 'true');
-    b.innerHTML = `<span>${esc(t)}</span>${t === current ? '<svg class="i"><use href="#i-check"/></svg>' : ''}`;
-    b.addEventListener('click', () => { onPick(t); closePop(); anchor.focus(); });
+  const list = items.map((it) => (typeof it === 'string' ? { t: it, v: it } : it)), cols = opt.cols || 1, rows = Math.ceil(list.length / cols);
+  const el = document.createElement('div'); el.className = `menu-pop${opt.cls ? ' ' + opt.cls : ''}`; el.setAttribute('role', 'menu'); if (opt.label) el.setAttribute('aria-label', opt.label);
+  el.dataset.cols = cols; el.dataset.rows = rows; if (cols > 1) { el.style.setProperty('--cols', cols); el.style.setProperty('--rows', rows); }
+  list.forEach((it) => {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'menuitem'); b.dataset.v = it.v;
+    const cur = it.v === current; if (cur) b.setAttribute('aria-current', 'true');
+    b.innerHTML = `<span>${esc(it.t)}</span>${it.n !== undefined ? `<small class="n${it.n ? '' : ' is-0'}">${fa(it.n)}</small>` : ''}${cur ? '<svg class="i"><use href="#i-check"/></svg>' : ''}`;
+    b.addEventListener('click', () => { onPick(it.v, it); closePop(); if (opt.back !== false) anchor.focus(); });
     el.appendChild(b);
   });
   $('#app').appendChild(el);
   const r = anchor.getBoundingClientRect(), w = el.offsetWidth;
-  el.style.top = `${Math.round(r.bottom + 10)}px`; el.style.left = `${Math.round(clamp(r.right - w, 8, innerWidth - w - 8))}px`;
-  pop = el;
+  const x = opt.align === 'center' ? r.left + r.width / 2 - w / 2 : r.right - w;
+  el.style.top = `${Math.round(r.bottom + 10)}px`; el.style.left = `${Math.round(clamp(x, 8, innerWidth - w - 8))}px`;
+  pop = el; el.anchor = anchor; anchor.setAttribute('aria-expanded', 'true');
   const k = MOTK(); gsap.fromTo(el, { opacity: 0, y: -8 * k, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'expo.out', clearProps: 'transform,opacity' });
   document.addEventListener('pointerdown', popOutside, true); document.addEventListener('keydown', popKey, true);
-  $('button', el).focus();
+  if (opt.focus !== false) ($('[aria-current="true"]', el) || $('button', el)).focus();
+  return el;
 }
 
 // the search window
@@ -1881,6 +2226,7 @@ const cmdk = {
   open() {
     if (!this.el) this.build();
     if (!this.el.hidden) return;
+    closePop();
     this.opener = document.activeElement; state.palette = true; timer.sync();
     this.el.hidden = false; this.inp.value = ''; this.render('');
     const k = MOTK(); gsap.fromTo(this.el, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'sine.out', clearProps: 'opacity' });
@@ -1894,7 +2240,7 @@ const cmdk = {
   },
   render(q) {
     const n = norm(q);
-    const hay = (e) => norm([e.title, e.type, e.name, e.venue, e.badge || '', e.w.short, e.desc].join(' '));
+    const hay = (e) => norm([e.title, e.type, e.name, e.venue, e.badge || '', e.city || '', statusOf(e).label, e.w.short, e.desc].join(' '));
     const rows = EVENTS.map((e, i) => ({ e, i })).filter((r) => !n || hay(r.e).includes(n));
     this.rows = rows;
     this.list.textContent = '';
@@ -1902,7 +2248,8 @@ const cmdk = {
     rows.forEach((r, k) => {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'cmdk-row'; b.setAttribute('role', 'option'); b.setAttribute('aria-selected', 'false'); b.id = `cmdk-${k}`;
       b.style.setProperty('--accent', r.e.accent); b.style.setProperty('--accent-l', r.e.accentL);
-      b.innerHTML = `<img alt="" src="${esc(r.e.banner.fake || r.e.banner.thumb)}"><span><b>${esc(r.e.title)}</b><small>${esc(r.e.venue)} · ${esc(r.e.w.short)}</small></span><em>${esc(r.e.badge || r.e.type)}</em>`;
+      // the end of the row: the status label if the show has one, else its own label or its kind
+      b.innerHTML = `<img alt="" src="${esc(r.e.banner.fake || r.e.banner.thumb)}"><span><b>${esc(r.e.title)}</b><small>${esc(r.e.venue)} · ${esc(r.e.w.short)}</small></span>${statusOf(r.e).label ? statusChip(r.e) : `<em>${esc(r.e.badge || r.e.type)}</em>`}`;
       b.addEventListener('click', () => this.pick(k));
       b.addEventListener('pointermove', () => { if (this.sel !== k) { this.sel = k; this.mark(); } });
       this.list.appendChild(b);
@@ -1926,16 +2273,60 @@ const cmdk = {
 const hd = {
   hl: null, links: $('#links'),
   search: { setPlaceholder() { const b = $('#searchBtn'); if (b) b.setAttribute('aria-label', TXT.search); if (cmdk.inp) cmdk.inp.placeholder = TXT.search; } },
+  // the links: the first three names are the kinds (each opens its two lists), the next is the list of shows whose sale hasn't
+  // started, any more are plain links (the text setting «دسته‌های هدر» gives the names)
   buildLinks() {
-    const cats = TXT.cats.split(/[،,\n]/).map((s) => s.trim()).filter(Boolean).slice(0, 8), L = this.links;
+    const names = TXT.cats.split(/[،,\n]/).map((s) => s.trim()).filter(Boolean).slice(0, 8), L = this.links;
+    closePop();
     L.textContent = '';
     this.hl = document.createElement('i'); this.hl.className = 'hl'; this.hl.setAttribute('aria-hidden', 'true'); L.appendChild(this.hl);
-    cats.forEach((c, i) => {
-      const a = document.createElement('a'); a.href = '#hero'; a.textContent = c; if (i === 0) a.setAttribute('aria-current', 'page');
-      a.addEventListener('click', (ev) => { ev.preventDefault(); $$('a', L).forEach((x) => x.removeAttribute('aria-current')); a.setAttribute('aria-current', 'page'); toast(`اینجا فهرست «${c}» باز می‌شه.`); });
+    names.forEach((name, i) => {
+      const kind = KINDS[i];
+      let a;
+      if (kind) {
+        a = document.createElement('button'); a.type = 'button'; a.dataset.kind = kind.id; a.setAttribute('aria-haspopup', 'menu'); a.setAttribute('aria-expanded', 'false');
+        a.innerHTML = `<span>${esc(name)}</span><svg class="i cv" aria-hidden="true"><use href="#i-down"/></svg>`;
+        a.addEventListener('click', () => this.openKind(a, kind, 'click'));
+        a.addEventListener('keydown', (ev) => { if (ev.key === 'ArrowDown') { ev.preventDefault(); this.openKind(a, kind, 'click'); } });
+        a.addEventListener('pointerenter', (ev) => { if (ev.pointerType === 'mouse') this.hoverOpen(a, kind); });
+      } else {
+        a = document.createElement('a'); a.href = '#s2';
+        const soon = i === KINDS.length, n = soon ? catCount('soon') : 0;
+        a.innerHTML = `<span>${esc(name)}</span>${n ? `<small class="cnt">${fa(n)}</small>` : ''}`;
+        if (soon) a.dataset.cat = 'soon';
+        a.addEventListener('click', (ev) => { ev.preventDefault(); closePop(); if (soon) s2.go('soon'); else toast(`اینجا فهرست «${name}» باز می‌شه.`); });
+        a.addEventListener('pointerenter', () => { clearTimeout(popT); popT = setTimeout(() => { if (pop && pop.dataset.hover) closePop(); }, 120); });
+      }
       a.addEventListener('pointerenter', () => this.hlTo(a)); a.addEventListener('focus', () => this.hlTo(a));
       L.appendChild(a);
     });
+    this.markCat();
+  },
+  // the data changed (a show's kind, city or status; a sale opened; a show was added): the links are written again
+  refreshCats() { if (this.links) this.buildLinks(); },
+  // the link of the list shown below is marked
+  markCat() {
+    const cur = s2.cur || 'all';
+    $$('#links > *:not(.hl)').forEach((x) => { const on = x.dataset.cat ? x.dataset.cat === cur : x.dataset.kind ? cur.startsWith(`${x.dataset.kind}:`) : false; if (on) x.setAttribute('aria-current', 'true'); else x.removeAttribute('aria-current'); });
+  },
+  // a kind's menu: its two lists with the number of shows in each. how: 'click' (the focus goes into it) or 'hover' (it closes when the pointer leaves)
+  openKind(btn, kind, how) {
+    if (pop && pop.anchor === btn) { if (pop.dataset.hover) { delete pop.dataset.hover; if (how === 'click') ($('[aria-current="true"]', pop) || $('button', pop)).focus(); return; } closePop(); return; }
+    const items = [`${kind.id}:tehran`, `${kind.id}:other`].map((k) => ({ t: CAT_LABEL[k], n: catCount(k), v: k }));
+    const el = menuPop(btn, items, s2.cur, (k) => s2.go(k), { cls: 'is-cats', align: 'center', focus: how === 'click', label: kind.label, back: how === 'click' });
+    if (how === 'hover') {
+      el.dataset.hover = '1';
+      el.addEventListener('pointerenter', () => clearTimeout(popT));
+      el.addEventListener('pointerleave', () => this.hoverLeave());
+    }
+  },
+  hoverOpen(btn, kind) {
+    clearTimeout(popT);
+    popT = setTimeout(() => { if (btn.matches(':hover') && !(pop && pop.anchor === btn)) this.openKind(btn, kind, 'hover'); }, 110);
+  },
+  hoverLeave() {
+    clearTimeout(popT);
+    popT = setTimeout(() => { if (pop && pop.dataset.hover && !pop.matches(':hover') && !pop.anchor.matches(':hover')) closePop(); }, 220);
   },
   hlTo(a) {
     const h = this.hl; if (!h || LOOK.hdHover === 'off') return;
@@ -1943,11 +2334,15 @@ const hd = {
     gsap.to(h, { x: a.offsetLeft, width: a.offsetWidth, opacity: 1, duration: fresh || !k ? 0 : 0.5, ease: 'expo.out', overwrite: true });
   },
   init() {
-    this.links.addEventListener('pointerleave', () => { if (this.hl) gsap.to(this.hl, { opacity: 0, duration: 0.3, overwrite: true }); });
+    this.links.addEventListener('pointerleave', () => { if (this.hl) gsap.to(this.hl, { opacity: 0, duration: 0.3, overwrite: true }); this.hoverLeave(); });
     this.links.addEventListener('focusout', (ev) => { if (!this.links.contains(ev.relatedTarget) && this.hl) gsap.to(this.hl, { opacity: 0, duration: 0.3, overwrite: true }); });
     $('#searchBtn').addEventListener('click', () => cmdk.open());
     const city = $('#cityBtn');
-    city.addEventListener('click', () => { if (pop) { closePop(); return; } menuPop(city, CITIES, TXT.city, (c) => { look.setText('city', c); const f = $('[data-ctl="city"] input'); if (f) f.value = c; toast(`اجراهای ${c} رو نشون می‌دم.`); }); });
+    city.setAttribute('aria-expanded', 'false');
+    city.addEventListener('click', () => {
+      if (pop && pop.anchor === city) { closePop(); return; }
+      menuPop(city, CITIES, TXT.city, (c) => { look.setText('city', c); const f = $('[data-ctl="city"] input'); if (f) f.value = c; toast(`اجراهای ${c} رو نشون می‌دم.`); }, { cls: 'is-cities', cols: STK.matches ? 3 : 4, label: 'شهر' });
+    });
     $('#ticketsBtn').addEventListener('click', () => toast('اینجا بلیت‌های من باز می‌شه.'));
     $('#bellBtn').addEventListener('click', (ev) => { const d = $('.dotn', ev.currentTarget); if (d) d.remove(); toast('اینجا اعلان‌ها باز می‌شه.'); });
     $$('#loginBtn, #menuBtn').forEach((b) => b.addEventListener('click', () => toast('این بخش هنوز ساخته نشده.')));
@@ -1955,6 +2350,7 @@ const hd = {
     this.search.setPlaceholder();
   },
 };
+
 
 /* ════════════════════════════════════════════════════════════════
    scrolling: the header becomes a small centred pill and follows the page; the hero stays where it is while
@@ -1990,6 +2386,7 @@ const scrollFx = {
     const want = !!LOOK.hdCompact && (this.compact ? S > 3 || lead : S > 10 || lead);
     if (force || want !== this.compact) {
       this.compact = want;
+      closePop();   // a menu under the header would be left where the header was
       if (force) nav.classList.add('is-still');   // a resize or a setting changes it without a motion
       nav.classList.toggle('is-compact', want);
       if (force) { void nav.offsetWidth; nav.classList.remove('is-still'); }
@@ -2056,76 +2453,160 @@ const smoothScroll = {
 };
 
 /* ════════════════════════════════════════════════════════════════
-   the second section: the same shows as cards, a filter by kind, and three numbers. Everything in it is the
-   hero's own material (panels, gaps, margins, colours), so the look's settings change it too.
+   the list under the hero, laid out the way the owner's own sample lays out its home page: a bar of the categories that
+   follows the page and shows where you are (a pill slides to the section in view), then one section for each category (its
+   name, how many shows, and its tickets as cards), and the footer. A show whose sale hasn't started is in its category and
+   also in «به‌زودی (پیش‌فروش)». The panels, gaps, margins, radii and colours are the hero's own, so the look's settings
+   change this too.
    ════════════════════════════════════════════════════════════════ */
+const SEC_ORDER = ['soon', 'concert:tehran', 'concert:other', 'theatre:tehran', 'theatre:other', 'comedy:tehran', 'comedy:other'];
+const secId = (key) => `sec-${key.replace(':', '-')}`;
+const iconOfCat = (key) => ({ all: 'grid', soon: 'clock', concert: 'music', theatre: 'mask', comedy: 'smile' }[key.split(':')[0]] || 'grid');
+const STATUS_ICON = { soon: 'clock', extended: 'check', held: 'check', cancelled: 'x', postponed: 'clock' };
+// what a card says in place of the buy button when the show can't be bought
+const OFF_TEXT = { soldout: 'بلیت‌ها به اتمام رسید', held: 'این برنامه برگزار شده است', cancelled: 'این برنامه لغو شد', postponed: 'این برنامه به‌تعویق افتاد', soon: 'فروش به‌زودی شروع می‌شه' };
+const ico = (n) => `<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+
+// one ticket: the banner whole on top (a label in its corner, the city's tag, the stamp of a full show), the perforation, and under it
+// the kind and name, the place, the day, and the buy button (or the countdown, or the reason it can't be bought)
+function ticketHTML(e) {
+  const st = statusOf(e), timed = st.key === 'soon' && saleMs(e) > Date.now();
+  const lbl = st.label && st.key !== 'soldout' ? `<em class="st tkt-lbl" data-tone="${st.tone}">${STATUS_ICON[st.key] ? ico(STATUS_ICON[st.key]) : ''}${esc(st.label)}</em>` : '';
+  const stamp = st.key === 'soldout' ? '<span class="tkt-stamp" aria-hidden="true">تمام شد</span>' : '';
+  const tag = e.city !== 'تهران' ? `<span class="tkt-tag">${esc(e.city)}</span>` : '';
+  const unit = (u, w, v) => `<span class="u"><b data-u="${u}">${fa(String(v).padStart(2, '0'))}</b><i>${w}</i></span>`;
+  let foot;
+  if (timed) {
+    const s = Math.max(0, Math.ceil((saleMs(e) - Date.now()) / 1000));
+    foot = `<div class="tkt-cd" data-sale-box="${esc(e.id)}" role="timer" aria-label="${esc(`فروش بلیت ${e.title} از ${saleWhen(e)} شروع می‌شه`)}"><span class="cd-l">شروع فروش</span><span class="cd-b" aria-hidden="true">${unit('h', 'ساعت', Math.floor(s / 3600))}<em>:</em>${unit('m', 'دقیقه', Math.floor((s % 3600) / 60))}<em>:</em>${unit('s', 'ثانیه', s % 60)}</span></div>`;
+  } else if (st.cta) foot = `<span class="tkt-off" aria-disabled="true">${esc(OFF_TEXT[st.key])}</span>`;
+  else foot = `<div class="tkt-foot"><span class="tkt-price"><span>${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="buy" aria-label="${esc(`${TXT.buy} ${e.title}، از ${dg(e.price)} ${TXT.unit}`)}">${ico('bag')}${esc(TXT.buy)}</button></div>`;
+  const ban = e.banner, src = ban.fake || ban.thumb || '';
+  return `<div class="tkt-in">
+      <a class="tkt-pic" href="#" draggable="false" aria-label="${esc(e.title)}${st.label ? `، ${esc(st.label)}` : ''}">
+        <img alt="" decoding="async" ${ban.fake || ban.thumb ? `src="${esc(src)}"${!ban.fake && ban.srcset ? ` srcset="${esc(ban.srcset)}" sizes="(max-width: 520px) 100vw, (max-width: 1100px) 50vw, (max-width: 1500px) 33vw, 25vw"` : ''}` : `data-fake="${esc(e.id)}"`}>
+        ${lbl}${stamp}${tag}
+      </a>
+      <span class="tkt-perf" aria-hidden="true"></span>
+      <div class="tkt-info"><i class="tkt-bg" aria-hidden="true"></i>
+        <h3 class="tkt-name" title="${esc(e.title)}"><span class="pre">${esc(e.type)}</span><b>${esc(e.name)}</b></h3>
+        <div class="tkt-row">${ico('pin')}<span title="${esc(e.venue)}">${esc(e.venue)}</span></div>
+        <div class="tkt-row">${ico('calendar')}<span>${esc(e.w.short)}</span></div>
+        ${foot}
+      </div>
+    </div>`;
+}
+
 const s2 = {
-  grid: $('#s2Grid'), chips: $('#chips'), cur: 'all', seen: false, counted: false,
+  secs: $('#s2Secs'), track: $('#catTrack'), bar: $('#catnav'), cur: 'all', seen: new Set(), io: null, stuckIo: null, lazy: null, sp: 0, lockUntil: 0,
   init() {
-    this.build(); this.buildChips(); this.apply(false);
-    $('#s2All').addEventListener('click', () => toast('اینجا صفحه‌ی همه‌ی اجراها باز می‌شه.'));
-    // the pieces rise as they come into view
-    if ('IntersectionObserver' in window && !reduceMotion) {
-      const io = new IntersectionObserver((ens) => {
-        const now = ens.filter((en) => en.isIntersecting); now.forEach((en, k) => { io.unobserve(en.target); en.target.classList.add('is-in'); gsap.to(en.target, { y: 0, opacity: 1, duration: 1.05, delay: k * 0.08, ease: 'expo.out', clearProps: 'transform,opacity' }); });
-      }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
-      this.io = io; this.watch();
-      const cio = new IntersectionObserver((ens) => { if (ens.some((en) => en.isIntersecting)) { this.counters(); cio.disconnect(); } }, { threshold: 0.4 });
-      cio.observe($('.s2-strip'));
-    } else this.counters(true);
+    this.build(); this.buildNav(); this.watch(); this.wireFooter();
+    // the bar is "stuck" (floating) when it sits under the header; its shadow tells it
+    if ('IntersectionObserver' in window) {
+      const arm = () => { if (this.stuckIo) this.stuckIo.disconnect(); this.stuckIo = new IntersectionObserver(([en]) => this.bar.classList.toggle('is-stuck', en.intersectionRatio < 1), { threshold: [1], rootMargin: `${-((parseFloat(getComputedStyle(this.bar).top) || 0) + 1)}px 0px 0px 0px` }); this.stuckIo.observe(this.bar); };
+      arm(); this.arm = arm;
+    }
+    addEventListener('resize', () => { clearTimeout(this.rz); this.rz = setTimeout(() => { if (this.arm) this.arm(); this.moveInd(this.cur, true); }, 150); });
+    // the wheel, a touch or a key are the visitor's own: the pill follows the page again
+    ['wheel', 'touchstart', 'keydown'].forEach((t) => addEventListener(t, () => { this.lockUntil = 0; }, { passive: true }));
+    // the section in view sets the pill: asked once a frame while the page moves
+    addEventListener('scroll', () => { if (this.sp) return; this.sp = requestAnimationFrame(() => { this.sp = 0; this.probe(); }); }, { passive: true });
+    requestAnimationFrame(() => { this.moveInd('all', true); this.probe(); });
   },
-  // everything that should rise on arrival: starts a little low and clear
-  watch() { $$('[data-rv], .s2-card').forEach((el) => { if (el.classList.contains('is-in')) return; gsap.set(el, { y: 38 * MOTK(), opacity: 0 }); this.io.observe(el); }); },
-  buildChips() {
-    const types = ['all', ...new Set(EVENTS.map((e) => e.type))];
-    this.chips.textContent = '';
-    types.forEach((t) => {
-      const b = document.createElement('button'); b.type = 'button'; b.dataset.k = t; b.textContent = t === 'all' ? 'همه' : t; b.setAttribute('aria-pressed', t === this.cur ? 'true' : 'false');
-      b.addEventListener('click', () => this.filter(t)); this.chips.appendChild(b);
-    });
+  // the sections, in the order of the list; an empty one is not drawn (its pill stays in the bar and says so when pressed)
+  sections() {
+    const all = LIST(), by = (key) => all.filter((e) => inCat(e, key));
+    return SEC_ORDER.map((key) => ({ key, list: by(key).sort((a, b) => (key === 'soon' ? saleMs(a) - saleMs(b) : Date.parse(a.startsAt) - Date.parse(b.startsAt))) })).filter((s) => s.list.length);
   },
   build() {
-    this.grid.textContent = '';
-    EVENTS.forEach((e, i) => {
-      const c = document.createElement('article'); c.className = 'panel s2-card'; c.dataset.type = e.type; c.dataset.i = i;
-      c.style.setProperty('--accent', e.accent); c.style.setProperty('--accent-l', e.accentL); c.style.setProperty('--on-accent', e.onAccent); c.style.setProperty('--ring', e.ring || e.accent);
-      c.innerHTML = `<button type="button" class="s2-thumb" aria-label="${esc(e.title)}، نمایش در بالای صفحه"><img alt="" ${e.banner.fake ? `src="${esc(e.banner.fake)}"` : `src="${esc(e.banner.thumb)}"${e.banner.srcset ? ` srcset="${esc(e.banner.srcset)}" sizes="(max-width: 760px) 100vw, (max-width: 1100px) 50vw, 33vw"` : ''}`}></button>
-        <div class="s2-body"><span class="kick"><i class="dot"></i>${esc(e.type)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}</span><h3>${esc(e.title)}</h3>
-          <div class="s2-meta"><span><svg class="i"><use href="#i-calendar"/></svg>${esc(e.w.short)}</span><span><svg class="i"><use href="#i-pin"/></svg>${esc(e.venue)}</span></div>
-          <div class="s2-foot"><span class="price"><span class="d-lab">${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="buy">${esc(TXT.buy)}</button></div></div>`;
-      const im = $('img', c); im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); im.src = e.banner.fake || fakeArt(e, e.banner); };
-      $('.s2-thumb', c).addEventListener('click', () => { scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); go(i, 'user'); });
-      $('.buy', c).addEventListener('click', () => toast(`اینجا صفحه‌ی انتخاب صندلی «${label(e)}» باز می‌شه.`));
-      this.grid.appendChild(c);
+    this.secs.textContent = '';
+    this.lazyOff();
+    this.sections().forEach(({ key, list }) => {
+      const sec = document.createElement('section'); sec.className = 'tkt-sec'; sec.id = secId(key); sec.dataset.sec = key; sec.setAttribute('aria-labelledby', `${secId(key)}-h`);
+      sec.innerHTML = `<h2 id="${secId(key)}-h" data-rv>${esc(catName(key))}<span class="cnt">${fa(list.length)} برنامه</span></h2><div class="tkt-grid"></div>`;
+      const grid = $('.tkt-grid', sec);
+      list.forEach((e) => {
+        const c = document.createElement('article'); c.className = 'tkt'; c.dataset.id = e.id; c.dataset.cat = catOf(e); c.dataset.st = statusOf(e).key;
+        c.style.setProperty('--accent', e.accent); c.style.setProperty('--accent-l', e.accentL); c.style.setProperty('--on-accent', e.onAccent); c.style.setProperty('--ring', e.ring || e.accent);
+        c.innerHTML = ticketHTML(e);
+        const im = $('img', c), ban = e.banner;
+        // the blurred copy of the banner behind the words
+        const bg = (u) => c.style.setProperty('--art', `url("${u}")`);
+        if (ban.fake) bg(ban.fake); else if (ban.thumb) bg(ban.thumb);
+        if (ban.thumb && !ban.fake) im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); const u = ban.fake = fakeArt(e, ban); im.src = u; bg(u); };
+        // open it in the hero (a featured show) or say where its page will be
+        const open = (ev) => { ev.preventDefault(); const i = EVENTS.indexOf(e); if (i >= 0) { scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); go(i, 'user'); } else toast(`اینجا صفحه‌ی «${e.title}» باز می‌شه.`); };
+        $('.tkt-pic', c).addEventListener('click', open);
+        $('.tkt-name', c).addEventListener('click', open);
+        const b = $('.buy', c); if (b) b.addEventListener('click', () => toast(buyMessage(e)));
+        const off = $('.tkt-off', c); if (off) off.addEventListener('click', () => toast(buyMessage(e)));
+        grid.appendChild(c);
+      });
+      this.secs.appendChild(sec);
     });
+    if (!this.secs.children.length) this.secs.innerHTML = '<p class="s2-empty panel">فعلاً برنامه‌ای ثبت نشده.</p>';
   },
-  // the cards are drawn again (a text or a colour changed); the filter stays
-  refresh() { this.build(); this.buildChips(); this.apply(false); if (this.io) this.watch(); },
-  apply() { $$('.s2-card', this.grid).forEach((c) => c.classList.toggle('is-out', this.cur !== 'all' && c.dataset.type !== this.cur)); },
-  // the cards that stay slide to their new places, the ones that come back rise in
-  filter(t) {
-    if (t === this.cur) return;
-    this.cur = t; $$('button', this.chips).forEach((b) => b.setAttribute('aria-pressed', b.dataset.k === t ? 'true' : 'false'));
-    const cs = $$('.s2-card', this.grid), first = new Map(cs.map((c) => [c, c.classList.contains('is-out') ? null : c.getBoundingClientRect()]));
-    this.apply();
-    const k = MOTK();
-    cs.forEach((c, n) => {
-      if (c.classList.contains('is-out')) return;
-      gsap.killTweensOf(c); const f = first.get(c);
-      if (!k) { gsap.set(c, { clearProps: 'all' }); return; }
-      if (!f) { gsap.fromTo(c, { y: 28 * k, scale: 0.94, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.8, delay: n * 0.05, ease: 'expo.out', clearProps: 'transform,opacity' }); return; }
-      const l = c.getBoundingClientRect(), dx = f.left - l.left, dy = f.top - l.top;
-      if (dx || dy) gsap.fromTo(c, { x: dx, y: dy }, { x: 0, y: 0, duration: 0.85, ease: 'expo.out', clearProps: 'transform' });
-    });
+  // the bar: «همه‌ی برنامه‌ها» and each category, a pill slides to the one in view
+  buildNav() {
+    const keys = ['all', ...SEC_ORDER];
+    this.track.innerHTML = '<i class="cat-ind" aria-hidden="true"></i>' + keys.map((k) => `<a class="cat" href="#${k === 'all' ? 's2Secs' : secId(k)}" data-cat="${k}"${k !== 'all' && !catCount(k) ? ' data-empty' : ''}${k === this.cur ? ' aria-current="true"' : ''}>${ico(iconOfCat(k))}<span>${esc(k === 'all' ? 'همه‌ی برنامه‌ها' : catName(k))}</span></a>`).join('');
+    $$('.cat', this.track).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); this.go(a.dataset.cat); }));
+    this.moveInd(this.cur, true);
   },
-  // the three numbers count up when they come into view
-  counters(instant) {
-    const els = $$('.stat b'); this.counted = true;
-    els.forEach((el) => {
-      const to = +el.dataset.count, suf = el.dataset.suffix || '', o = { v: 0 };
-      if (instant || reduceMotion) { el.textContent = fa(to) + suf; return; }
-      gsap.to(o, { v: to, duration: 1.8, ease: 'expo.out', onUpdate: () => { el.textContent = fa(Math.round(o.v)) + suf; } });
-    });
+  moveInd(key, instant) {
+    const ind = $('.cat-ind', this.track), a = $(`.cat[data-cat="${key}"]`, this.track); if (!ind || !a || !a.offsetWidth) return;
+    if (instant || !MOTK()) ind.style.transition = 'none';
+    ind.style.width = `${a.offsetWidth}px`; ind.style.transform = `translateX(${a.offsetLeft}px)`;
+    if (instant || !MOTK()) { void ind.offsetWidth; ind.style.transition = ''; }
+    $$('.cat', this.track).forEach((x) => { if (x === a) x.setAttribute('aria-current', 'true'); else x.removeAttribute('aria-current'); });
+    // the bar scrolls (on a narrow window) so the pill in view is in view
+    const t = this.track; if (t.scrollWidth > t.clientWidth + 2) { const want = a.offsetLeft - (t.clientWidth - a.offsetWidth) / 2; t.scrollTo({ left: want, behavior: instant || !MOTK() ? 'auto' : 'smooth' }); }
+  },
+  // the last section whose top is above the line just under the bar is the one in view
+  probe() {
+    if (performance.now() < this.lockUntil) return;   // the page is travelling to the pill that was pressed: it stays on that one
+    const line = this.bar.getBoundingClientRect().bottom + 24; let cur = 'all';
+    $$('.tkt-sec', this.secs).forEach((x) => { if (x.getBoundingClientRect().top <= line) cur = x.dataset.sec; });
+    if (cur !== this.cur) { this.cur = cur; this.moveInd(cur); hd.markCat(); }
+  },
+  // everything that should rise on arrival: starts a little low and clear (the cards that were already seen don't)
+  watch() {
+    if (!this.io && 'IntersectionObserver' in window && !reduceMotion) {
+      this.io = new IntersectionObserver((ens) => {
+        const now = ens.filter((en) => en.isIntersecting); now.forEach((en, k) => { this.io.unobserve(en.target); en.target.classList.add('is-in'); if (en.target.dataset.id) this.seen.add(en.target.dataset.id); gsap.to(en.target, { y: 0, opacity: 1, duration: 1.05, delay: k * 0.07, ease: 'expo.out', clearProps: 'transform,opacity,transition' }); });
+      }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+    }
+    if (this.io) $$('[data-rv], .tkt', this.secs.parentNode).forEach((el) => { if (el.classList.contains('is-in')) return; if (el.dataset.id && this.seen.has(el.dataset.id)) { el.classList.add('is-in'); return; } gsap.set(el, { y: 34 * MOTK(), opacity: 0, transition: 'none' }); this.io.observe(el); });
+    // a stand-in picture is drawn only when its card comes near the screen, one at a time, and not while the page is making its entrance
+    const fakes = $$('img[data-fake]', this.secs);
+    if (fakes.length) {
+      const draw = (im) => { const e = showById(im.dataset.fake); if (!e || !im.isConnected) return; const u = e.banner.fake || (e.banner.fake = fakeArt(e, e.banner)); im.src = u; im.closest('.tkt').style.setProperty('--art', `url("${u}")`); };
+      const queue = [], pump = () => { if (this.pumping) return; this.pumping = true; const step = () => { if (state.intro) { setTimeout(step, 400); return; } const im = queue.shift(); if (!im) { this.pumping = false; return; } draw(im); setTimeout(step, 30); }; setTimeout(step, 60); };
+      if ('IntersectionObserver' in window) {
+        this.lazy = new IntersectionObserver((ens) => ens.forEach((en) => { if (en.isIntersecting) { this.lazy.unobserve(en.target); queue.push(en.target); pump(); } }), { rootMargin: '900px 0px' });
+        fakes.forEach((im) => this.lazy.observe(im));
+      } else fakes.forEach(draw);
+    }
+  },
+  lazyOff() { if (this.lazy) { this.lazy.disconnect(); this.lazy = null; } },
+  later() { clearTimeout(this.lt); this.lt = setTimeout(() => this.refresh(), 160); },
+  // the cards are drawn again (a text, a colour or a status changed)
+  refresh() {
+    clearTimeout(this.lt);
+    const y = scrollY; this.build(); this.buildNav(); this.watch(); this.moveInd(this.cur, true);
+    if (Math.abs(scrollY - y) > 1) scrollTo(0, y);
+  },
+  // a link in the header, a pill in the bar: take the page to this category's section (its title lands just under the bar)
+  go(key) {
+    const el = key === 'all' ? this.secs : $(`#${secId(key)}`);
+    this.cur = key; this.moveInd(key); hd.markCat(); this.lockUntil = performance.now() + 1800;
+    if (!el) { toast(`فعلاً اجرایی تو «${catName(key)}» نیست.`); return; }
+    const gap = parseFloat(getComputedStyle(hero).rowGap) || 9, off = (parseFloat(getComputedStyle(this.bar).top) || 0) + this.bar.offsetHeight + gap * 1.6;
+    scrollTo({ top: Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - off)), behavior: reduceMotion ? 'auto' : 'smooth' });
+  },
+  wireFooter() {
+    $$('#ft [data-go]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const k = a.dataset.go; if (k === 'top') scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); else this.go(k); }));
+    $$('#ft [data-page]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }));
   },
 };
 
@@ -2133,7 +2614,7 @@ const s2 = {
    the touch of the page: a soft light that follows the pointer over a panel, a buy button that leans toward the
    pointer and ripples, banners that can be dragged to the next show, and the keys
    ════════════════════════════════════════════════════════════════ */
-const SPOT = '.nav, .rail, .dock, .s2-card, .s2-head, .s2-strip';
+const SPOT = '.nav, .rail, .dock, .catnav, .ft';
 const fx = {
   dragged: false, cur: null, drag: null, mag: null,
   init() {
@@ -2146,7 +2627,7 @@ const fx = {
     root.addEventListener('pointerleave', () => { this.light(null); this.lean(null); });
     // the ripple
     document.addEventListener('pointerdown', (ev) => {
-      const b = ev.target.closest && ev.target.closest('.buy'); if (!b || !MOTK()) return;
+      const b = ev.target.closest && ev.target.closest('.buy'); if (!b || !MOTK() || b.getAttribute('aria-disabled') === 'true') return;
       const r = b.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2.4, dot = document.createElement('i'); dot.className = 'rp';
       dot.style.cssText = `width:${d}px;height:${d}px;left:${ev.clientX - r.left - d / 2}px;top:${ev.clientY - r.top - d / 2}px`;
       b.appendChild(dot); gsap.to(dot, { scale: 1, opacity: 0, duration: 0.75, ease: 'power2.out', onComplete: () => dot.remove() });
@@ -2181,7 +2662,7 @@ const fx = {
       if (ev.ctrlKey || ev.metaKey || typing) return;
       if (ev.key === '/' && !state.palette) { ev.preventDefault(); cmdk.open(); return; }
       if (state.palette || state.admin) return;
-      if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') { if (t && t.closest && t.closest('.rail')) return; ev.preventDefault(); ev.key === 'ArrowLeft' ? next('user') : prev(); }
+      if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') { if (t && t.closest && (t.closest('.rail') || t.closest('.catnav'))) return; ev.preventDefault(); ev.key === 'ArrowLeft' ? next('user') : prev(); }
     });
   },
   // the light over the panel under the pointer
@@ -2195,7 +2676,7 @@ const fx = {
   },
   // the buy button under (or near) the pointer leans toward it
   lean(ev) {
-    const b = stage.top && stage.top.buy; if (!b && !this.mag) return;
+    const b = stage.top && stage.top.buy && stage.top.buy.getAttribute('aria-disabled') !== 'true' ? stage.top.buy : null; if (!b && !this.mag) return;
     if (!ev || !b || !MOTK()) { if (this.mag) { gsap.to(this.mag, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.5)' }); this.mag = null; } return; }
     const r = b.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, dx = ev.clientX - cx, dy = ev.clientY - cy, dist = Math.hypot(dx, dy), reach = Math.max(r.width, 90) * 0.9;
     if (dist < reach) { this.mag = b; gsap.to(b, { x: dx * 0.22 * MOTK(), y: dy * 0.32 * MOTK(), duration: 0.5, ease: 'power3.out', overwrite: 'auto' }); }
@@ -2301,9 +2782,18 @@ const panel = {
     $('#ppPhoto').addEventListener('click', () => this.usePhoto());
     $('#ppReset').addEventListener('click', () => this.reset());
     $('#ppNotes').addEventListener('click', (ev) => { ev.preventDefault(); this.open(false); $('#notes-h').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); });
-    const fields = { fTitle: 'title', fVenue: 'venue', fPrice: 'price', fType: 'type', fName: 'name' };
+    const fields = { fTitle: 'title', fVenue: 'venue', fPrice: 'price', fType: 'type', fName: 'name', fBadge: 'badge' };
     Object.entries(fields).forEach(([id, key]) => $('#' + id).addEventListener('input', (ev) => { const e = EVENTS[state.i]; e[key] = ev.target.value; e.w = when(e); this.texts(); }));
-    $('#fBadge').addEventListener('change', (ev) => { EVENTS[state.i].badge = ev.target.value; this.texts(); });
+    // the show's kind, city, status and sale start (what the categories, the labels and the countdown work from)
+    $('#fKind').innerHTML = KINDS.map((k) => `<option value="${k.id}">${esc(k.label)}</option>`).join('');
+    $('#fCity').innerHTML = CITIES.map((c) => `<option>${esc(c)}</option>`).join('');
+    $('#fKind').addEventListener('change', (ev) => { const e = EVENTS[state.i], old = KINDS.find((k) => k.id === e.kind); e.kind = ev.target.value; if (old && e.type === old.type) { e.type = KINDS.find((k) => k.id === e.kind).type; $('#fType').value = e.type; } this.texts(true); });
+    $('#fCity').addEventListener('change', (ev) => { EVENTS[state.i].city = ev.target.value; this.texts(true); });
+    $('#fStatus').addEventListener('change', (ev) => { EVENTS[state.i].status = ev.target.value === 'auto' ? undefined : ev.target.value; this.texts(true); });
+    $('#fSale').addEventListener('change', (ev) => {
+      const e = EVENTS[state.i], v = ev.target.value; if (v === 'keep') return;
+      e.saleAt = v === 'none' ? null : new Date(Date.now() + (+v) * 1000).toISOString(); this.texts(true);
+    });
     this.sync();
   },
   open(on) {
@@ -2321,11 +2811,17 @@ const panel = {
     if (e.cust) $('#ppCustom').value = e.cust;
     const set = (id, v) => { const el = $('#' + id); if (document.activeElement !== el) el.value = v; };
     set('fTitle', e.title); set('fVenue', e.venue); set('fPrice', e.price); set('fBadge', e.badge || ''); set('fType', e.type); set('fName', e.name);
+    set('fKind', e.kind || 'theatre'); set('fStatus', e.status || 'auto');
+    const cs = $('#fCity'); if (![...cs.options].some((o) => o.value === e.city)) cs.add(new Option(e.city, e.city)); set('fCity', e.city || 'تهران');
+    const fs = $('#fSale'); set('fSale', saleMs(e) > Date.now() ? 'keep' : 'none'); fs.querySelector('[value="keep"]').hidden = !(saleMs(e) > Date.now());
+    this.stNote(e);
     $('#ppNote').innerHTML = fitNote(e.banner.w, e.banner.h) + (e.banner.custom ? '' : ' · از فایل‌های نمونه');
     this.need();
     look.sizesTick();
   },
   tab(name) { look.tab(name); },
+  // what the show's label is now, and why (under the status field)
+  stNote(e) { const st = statusOf(e), n = $('#ppStNote'); if (n) n.textContent = `الان: ${st.label || 'عادی'} (${st.why})`; },
   // the cards change side; a sample photo changes with them (the words go to the other side)
   async setRail(left) {
     hero.classList.toggle('rail-left', left);
@@ -2337,10 +2833,10 @@ const panel = {
   async setLayout(t) { const e = EVENTS[state.i]; if (e.layout === t) return; e.layout = t; if (t === 'text' && !e.fp) e.fp = { o: '50% 45%', op: '50% 40%', mop: '50% 50%' }; await rebuild(state.i); setAccent(e); this.sync(); },
   async setColor(k, hex) { const e = EVENTS[state.i]; setPal(e, k, hex); e.ver++; cards.refresh(state.i); await rebuild(state.i); setAccent(e); s2.refresh(); this.sync(); },
   // the words change in place, without a fade
-  texts() {
+  texts(cats) {
     const e = EVENTS[state.i], s = stage.top; e.ver++;
     cards.refresh(state.i);
-    s2.refresh();
+    s2.later(); this.stNote(e); if (cats) hd.refreshCats();   // only a kind, a city, a status or a sale start changes the header's lists
     if (!s || s.e !== e) return;
     const host = s.mode === 'bar' ? $('.dock', s.el) : $('.copy', s.el);
     host.innerHTML = s.mode === 'bar' ? dockHTML(e) : copyHTML(e);
@@ -2392,15 +2888,15 @@ const panel = {
     const rd = await this.readImage(file); if (!rd) return;
     const { url, im, w, h } = rd, hasText = $('#ppText').checked, n = EVENTS.filter((x) => x.mine).length + 1;
     const d = new Date(Date.now() + 7 * 864e5), e = {
-      id: `mine-${n}-${Date.now()}`, mine: true, layout: hasText ? 'bar' : 'text', type: 'تئاتر', name: `اجرای من ${fa(n)}`, title: `اجرای من ${fa(n)}`,
+      id: `mine-${n}-${Date.now()}`, mine: true, layout: hasText ? 'bar' : 'text', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: `اجرای من ${fa(n)}`, title: `اجرای من ${fa(n)}`,
       desc: 'یه توضیح کوتاه از اجرا، تا دو خط.', venue: 'تهران · سالن نمایش', startsAt: `${d.toISOString().slice(0, 10)}T20:00:00+03:30`, price: '۲۰۰ هزار', badge: 'جدید',
       banner: { src: url, thumb: url, w, h, custom: true }, fp: hasText ? null : { o: '50% 45%', op: '50% 40%', mop: '50% 50%' }, ver: 0,
     };
     e.suggested = suggestPalette(im); setPal(e, e.suggested); e.w = when(e);
-    e.orig = JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner }));
+    e.orig = origOf(e);
     EVENTS.push(e);
     root.style.setProperty('--n', Math.min(EVENTS.length, VIS));
-    cards.add(e, EVENTS.length - 1); s2.refresh(); look.sizesTick();
+    cards.add(e, EVENTS.length - 1); s2.refresh(); hd.refreshCats(); look.sizesTick();
     go(EVENTS.length - 1, 'user');
   },
   async usePhoto() {
@@ -2408,9 +2904,11 @@ const panel = {
     await rebuild(state.i); setAccent(e); s2.refresh(); this.sync();
   },
   async reset() {
-    const e = EVENTS[state.i], o = e.orig; Object.assign(e, JSON.parse(JSON.stringify({ layout: o.layout, type: o.type, name: o.name, title: o.title, venue: o.venue, price: o.price, badge: o.badge, banner: o.banner })));
+    const e = EVENTS[state.i], o = e.orig; Object.assign(e, JSON.parse(JSON.stringify({ layout: o.layout, type: o.type, name: o.name, title: o.title, venue: o.venue, price: o.price, badge: o.badge, banner: o.banner, kind: o.kind, city: o.city })));
+    e.status = o.status === 'auto' ? undefined : o.status; e.seatsLeft = o.seatsLeft === null ? undefined : o.seatsLeft;
+    e.saleAt = o.saleAt && Date.parse(o.saleAt) > Date.now() ? o.saleAt : null;   // a sale that has opened since stays open
     e.fp = null; e.suggested = null; setPal(e, o.pal); e.w = when(e); e.ver++;
-    await rebuild(state.i); setAccent(e); s2.refresh(); this.sync();
+    await rebuild(state.i); setAccent(e); s2.refresh(); hd.refreshCats(); this.sync();
   },
 };
 // after a change to the active show's layout, picture or colour: build its scene again and fade
@@ -2436,6 +2934,7 @@ s2.init();
 fx.init();
 scrollFx.init();
 smoothScroll.init();
+sale.start();
 if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttribute('aria-pressed', 'true'); a.setAttribute('aria-label', 'ادامه‌ی نمایش خودکار'); }
 
 (function intro() {
@@ -2460,7 +2959,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
