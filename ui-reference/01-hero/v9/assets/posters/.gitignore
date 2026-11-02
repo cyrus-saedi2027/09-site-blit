@@ -1,0 +1,6 @@
+# the organisers' real posters and the photos of the owner's sample are other people's art (this repository is public): not committed
+real-*
+photo-*
+!orig-*
+!README.md
+!.gitignore

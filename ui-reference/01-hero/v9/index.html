@@ -484,11 +484,12 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .tkt-sec h2 { display: flex; align-items: center; gap: .6em; margin: 0; padding-inline: calc(var(--u) * .5); font-size: calc(max(20px, calc(var(--u) * 1.5)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
 .tkt-sec h2::before { content: ""; flex: none; width: .42em; height: .42em; border-radius: 50%; background: var(--ring); box-shadow: 0 0 .9em var(--ring); transition: background-color .8s, box-shadow .8s; }
 .tkt-sec .cnt { font-size: .56em; font-weight: var(--fwm); line-height: 1.6; padding: .06em .95em; border-radius: 999px; color: rgba(var(--fg), .72); background: rgba(var(--fg), .08); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); }
-.tkt-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (min-width: 2200px) { .tkt-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-@media (max-width: 1499px) { .tkt-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 1099px) { .tkt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 520px) { .tkt-grid { grid-template-columns: minmax(0, 1fr); } }
+.tkt-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(6, minmax(0, 1fr)); }
+@media (min-width: 2200px) { .tkt-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+@media (max-width: 1499px) { .tkt-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (max-width: 1249px) { .tkt-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 999px) { .tkt-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 699px) { .tkt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .s2-empty { margin: 0; padding: calc(var(--u) * 3) calc(var(--u) * 2); text-align: center; font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
 
 /* a ticket: the banner whole on top, a perforation with a notch at each side, and under it the words on a soft copy of the banner */
@@ -497,9 +498,13 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .tkt-in { position: relative; display: grid; grid-template-rows: auto var(--notch); overflow: hidden; isolation: isolate; border-radius: var(--r); background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo));
   -webkit-mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat;
   mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat; }
-.tkt-pic { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: #14121d; cursor: pointer; }
-.tkt-pic img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
-.tkt:hover .tkt-pic img { transform: scale(1.06); }
+/* the poster's frame (--pr: width ÷ height). The poster is shown whole: it fills the frame when its shape is the frame's, else the frame is filled by a soft copy of it */
+.tkt-pic { position: relative; display: block; aspect-ratio: var(--pr, .667); overflow: hidden; background: #14121d; cursor: pointer; }
+.tkt-pic::before { content: ""; position: absolute; inset: -14%; background: var(--art) center / cover no-repeat; filter: blur(16px) brightness(.72) saturate(1.2); }
+.tkt-pic.is-fill::before { display: none; }
+.tkt-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
+.tkt-pic.is-fill img { object-fit: fill; }
+.tkt:hover .tkt-pic img { transform: scale(1.04); }
 .tkt-pic:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
 .tkt-lbl { position: absolute; z-index: 3; top: 0; left: 0; display: inline-flex; align-items: center; gap: .45em; padding: .5em 1.1em .5em .95em; border-radius: 0 0 calc(var(--r) * .75) 0; font-size: calc(max(11.5px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); line-height: 1.5; background: rgba(8, 8, 12, .88); color: rgb(var(--st-d)); box-shadow: inset 0 0 0 1px rgba(var(--st), .6); }
 .tkt-lbl svg.i { width: 1.2em; height: 1.2em; }
@@ -511,7 +516,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .tkt[data-st="held"]:hover .tkt-pic img, .tkt[data-st="cancelled"]:hover .tkt-pic img { filter: none; }
 .tkt-perf { position: absolute; z-index: 3; inset-inline: calc(var(--u) * .9); bottom: var(--notch); border-top: 2px dashed rgba(255, 255, 255, .26); transition: border-color .5s; pointer-events: none; }
 .tkt:hover .tkt-perf, .tkt:focus-within .tkt-perf { border-color: rgba(255, 255, 255, .6); }
-.tkt-info { position: relative; display: grid; grid-template-rows: auto auto auto 1fr; align-content: start; padding: calc(var(--u) * 1.05) calc(var(--u) * 1.15) calc(var(--u) * .95); color: #fff; --fg: 255, 255, 255; overflow: hidden; }
+.tkt-info { position: relative; isolation: isolate; display: grid; grid-template-rows: auto auto auto 1fr; align-content: start; padding: calc(var(--u) * 1.05) calc(var(--u) * 1.15) calc(var(--u) * .95); color: #fff; --fg: 255, 255, 255; overflow: hidden; }
 .tkt-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #14121d; }
 .tkt-bg::before { content: ""; position: absolute; inset: -30px -24px; background: var(--art) center bottom / cover no-repeat; filter: blur(15px) saturate(1.3); transform: scale(1.12); }
 .tkt-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8, 8, 12, .5), rgba(8, 8, 12, .78)); }
@@ -527,7 +532,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .tkt-price { display: grid; line-height: 1.4; }
 .tkt-price span { font-size: calc(max(10.5px, calc(var(--u) * .62)) * var(--tx) * var(--tx-small)); color: rgba(255, 255, 255, .7); }
 .tkt-price b { font-size: calc(max(14px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); white-space: nowrap; }
-.tkt-price small { margin-inline-start: .3em; font-size: .62em; font-weight: 500; opacity: .75; }
+.tkt-price small { margin-inline-start: .3em; font-size: max(10.5px, .62em); font-weight: 500; opacity: .75; }
 .tkt .buy { gap: .5em; height: max(36px, calc(var(--u) * 2.4)); min-width: calc(var(--u) * 7.4); padding-inline: calc(var(--u) * 1.3); font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-main)); }
 .tkt .buy svg.i { width: 1.35em; height: 1.35em; }
 .tkt-off { align-self: end; display: grid; place-items: center; height: max(36px, calc(var(--u) * 2.4)); padding-inline: 1em; border-radius: var(--rb); background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); color: rgba(255, 255, 255, .74); font-size: calc(max(12.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); white-space: nowrap; cursor: default; }
@@ -538,6 +543,12 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .cd-b b { min-width: 2.35em; padding: .28em .3em; border-radius: .5em; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); font-size: calc(max(14.5px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.25; text-align: center; font-variant-numeric: tabular-nums; }
 .cd-b i { font-size: calc(max(10.5px, calc(var(--u) * .6)) * var(--tx) * var(--tx-small)); font-style: normal; color: rgba(255, 255, 255, .7); }
 .cd-b em { padding-top: .3em; font-style: normal; font-weight: 800; color: rgba(255, 255, 255, .6); }
+
+/* the words over the poster, as in the owner's sample (a look option): the card is the poster's shape and the words sit on its lower part */
+:root[data-pinfo="over"] .tkt-in { display: block; aspect-ratio: var(--pr, .667); }
+:root[data-pinfo="over"] .tkt-pic { position: absolute; inset: 0; aspect-ratio: auto; }
+:root[data-pinfo="over"] .tkt-info { position: absolute; inset-inline: 0; bottom: 0; height: var(--notch); }
+:root[data-pinfo="over"] .tkt-tag { bottom: calc(var(--notch) + 1px); }
 
 /* the footer */
 .ft { padding: calc(var(--u) * 2.4) calc(var(--u) * 2.6) calc(var(--u) * 1.4); }
@@ -564,6 +575,15 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   .catnav { top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); }
   .ft { padding: 20px 18px 14px; }
   .ft-grid { grid-template-columns: 1fr; gap: 22px; }
+}
+@media (max-width: 699px) {
+  .tkt-stamp { font-size: 20px; }
+  .tkt-price { display: none; }
+  .tkt .buy { width: 100%; min-width: 0; padding-inline: 8px; }
+  .tkt-foot { justify-content: stretch; }
+  .tkt-info { padding-inline: 12px; }
+  .cd-l { display: none; }
+  .tkt-cd { justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) { .tkt, .tkt-pic img, .cat, .cat-ind, .catnav, .tkt-perf { transition: none; } }
 
@@ -1008,6 +1028,14 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
           <div class="pp-row"><button type="button" class="pill" id="ppPhoto">عکس نمونه، بدون نوشته</button><button type="button" class="pill" id="ppReset">بازگردانی این جایگاه</button></div>
         </div>
 
+        <div class="pp-group">
+          <span>پوستر این اجرا (برای لیست‌ها و بخش‌های بعد از هیرو)</span>
+          <div class="need" id="ppPNeed" role="status" aria-live="polite"></div>
+          <label class="drop"><input type="file" id="ppPosterFile" accept="image/*"><svg class="i"><use href="#i-upload"/></svg>پوستر عمودی خودت رو انتخاب کن</label>
+          <div class="pp-note" id="ppPNote" role="status" aria-live="polite"></div>
+          <div class="pp-row"><button type="button" class="pill" id="ppPReset">برگردوندن پوستر</button></div>
+        </div>
+
         <fieldset class="pp-group">
           <legend>اطلاعات</legend>
           <div class="tpl tpl-2" id="ppLay">
@@ -1112,8 +1140,8 @@ const LOOK_DEF = {
   hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdWidth: 100, hdCompact: true, hdCompactW: 1400, hdSpeed: 0.8, hdHover: 'pill', hdProg: true,
   // motion
   mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
-  // the list under the hero
-  listFill: true,
+  // the list under the hero: the sample shows that fill it, the shape of a poster's frame (width ÷ height), the words under the poster or over it
+  listFill: true, posterRatio: 0.667, posterInfo: 'below',
   // tools
   dims: false,
 };
@@ -1202,19 +1230,19 @@ const HOUR = 36e5;
 const EVENTS = [
   { id: 'dokhtar-pesar', pal: 'crimson', layout: 'bar', kind: 'theatre', city: 'رامسر', type: 'تئاتر', name: 'دختر بودن یا پسر نبودن', title: 'دختر بودن یا پسر نبودن، مسئله این است',
     desc: 'اجرای گروه تئاتر فردا؛ نویسنده فرهاد تقدعلی، کارگردان شیوا علیخانیان.',
-    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', status: 'normal', ...art('dokhtar-pesar', 1672, 960) },
+    venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', status: 'normal', poster: { src: 'assets/posters/real-dokhtar-pesar.webp', w: 800, h: 1200 }, ...art('dokhtar-pesar', 1672, 960) },
   { id: 'hani-nazarian', pal: 'gold', layout: 'bar', kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'هانی نظریان', title: 'اجرای زنده‌ی هانی نظریان با ارکستر سینمایی Sequence',
     desc: 'شبی با موسیقی فیلم، به رهبری هانی نظریان و با ارکستر سینمایی Sequence.',
     venue: 'سالن اصلی اداره فرهنگ و ارشاد', startsAt: '2026-11-19T20:00:00+03:30', endsAt: '2026-11-20T20:00:00+03:30', price: '۸۵۰ هزار', badge: '', status: 'soon', saleAt: new Date(Date.now() + 26 * HOUR + 37 * 60e3 + 12e3).toISOString(), ...art('hani-nazarian', 1672, 960) },
   { id: 'zendegi-shayad', pal: 'crimson', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'زندگی شاید…', title: 'نمایش «زندگی شاید…»',
     desc: 'نمایشی به نویسندگی، طراحی و کارگردانی محمدجواد ملک‌محمودی.',
-    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', status: 'normal', ...art('zendegi-shayad', 1672, 960) },
+    venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', status: 'normal', poster: { src: 'assets/posters/real-zendegi-shayad.webp', w: 800, h: 1198 }, ...art('zendegi-shayad', 1672, 960) },
   { id: 'barfab', pal: 'violet', layout: 'bar', kind: 'theatre', city: 'ساری', type: 'تئاتر', name: 'برفاب', title: 'نمایش «برفاب» · Mebwater',
     desc: 'نمایش درام مدرن از گروه نمایشی صنم؛ نویسنده و کارگردان میثم رایکا.',
     venue: 'مجتمع فرهنگی هنری آزادشاد، ساری', startsAt: '2026-11-03T20:00:00+03:30', endsAt: '2026-11-08T20:00:00+03:30', price: '۳۲۰ هزار', badge: '', status: 'extended', ...art('barfab', 1672, 960) },
   { id: 'do-daghighe', pal: 'orange', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'دو دقیقه به هشت', title: 'نمایش «دو دقیقه به هشت»',
     desc: 'نمایشی به نویسندگی و کارگردانی علی اصغری، با تهیه‌کنندگی فاطمه مجریان.',
-    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: '', status: 'soldout', seatsLeft: 0, ...art('do-daghighe', 1672, 960) },
+    venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: '', status: 'soldout', seatsLeft: 0, poster: { src: 'assets/posters/real-do-daghighe.webp', w: 800, h: 1224 }, ...art('do-daghighe', 1672, 960) },
   { id: 'aman', pal: 'white', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'امان', title: 'نمایش «امان»',
     desc: 'نمایشی به کارگردانی مجتبی جدی و تهیه‌کنندگی فرید مقدم.',
     venue: 'تهران · سالن نمایش', startsAt: '2026-11-09T20:00:00+03:30', price: '۲۸۰ هزار', badge: 'تک‌اجرا', status: 'normal', ...art('aman', 1672, 960) },
@@ -1247,7 +1275,7 @@ function when(e) {
   const wk = F.week.format(a);
   return { calDay: d1, calMonth: m1, top: wk, sub: `ساعت ${t}`, short: `${wk} ${d1} ${m1}`, tiny: `${d1} ${m1}`, time: t };
 }
-const origOf = (e) => JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner, kind: e.kind, city: e.city, status: e.status || 'auto', saleAt: e.saleAt || null, seatsLeft: e.seatsLeft === undefined ? null : e.seatsLeft }));
+const origOf = (e) => JSON.parse(JSON.stringify({ pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner, poster: e.poster || null, kind: e.kind, city: e.city, status: e.status || 'auto', saleAt: e.saleAt || null, seatsLeft: e.seatsLeft === undefined ? null : e.seatsLeft }));
 EVENTS.forEach((e) => { setPal(e, e.pal); e.ver = 0; e.w = when(e); e.orig = origOf(e); });
 root.style.setProperty('--n', Math.min(EVENTS.length, VIS));   // the rail's room is worked out for this many cards
 const label = (e) => `${e.type} ${e.name}`;
@@ -1364,44 +1392,71 @@ const sale = {
 };
 
 /* ════════════════════════════════════════════════════════════════
-   the shows that only fill the list under the hero (the option «اجراهای ساختگی برای پر کردن لیست»). The six real banners make
-   a short list; how a list of twenty reads (the sections, the rows of cards, the labels side by side) is what the owner asked to
-   see. Their names are made up, their pictures are drawn by the page (a stand-in banner from the title and the colour, the same
-   one the hero uses when a file is missing), and they are not in the featured slot: the hero and its rail have the six.
+   the shows that only fill the list under the hero (the option «اجراهای نمونه برای پر کردن لیست»). Six real shows make a short
+   list; how a list of thirty reads (the sections, the rows of posters, the labels side by side) is what the owner asked to see.
+   Most of them are the owner's own sample (blit-prototype.html): its events (fictional names, real public halls), its
+   dates (days from today, so nothing is ever out of date) and its photos as posters. Six more are finished posters of ours
+   (with the day, the hall and the time printed on them, so their days are fixed), and one is the real poster of a show that
+   is over. They are in the list only: the hero and its rail have the six real shows.
+   Posters: assets/posters/ (see its README). A file that isn't there is drawn by the page (a stand-in poster from the title
+   and the colour).
    ════════════════════════════════════════════════════════════════ */
 const TEHRAN_DAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' });
-const inDays = (d, hm = '20:00') => `${TEHRAN_DAY.format(new Date(Date.now() + d * DAY))}T${hm}:00+03:30`;
 const DAY = 24 * HOUR;
-// kind, city, type word, name, venue, colour, first day (days from today), last day (0 = one night), price, the rest
-const FILL = [
-  ['concert', 'تهران', 'کنسرت', 'شب‌های جاز', 'تهران · تالار موسیقی', 'gold', 4, 0, '۶۵۰ هزار', { badge: 'پرفروش' }],
-  ['concert', 'تهران', 'کنسرت', 'ارکستر زهی بهار', 'تهران · سالن همایش‌ها', 'blue', 8, 0, '۴۵۰ هزار', {}],
-  ['concert', 'تهران', 'کنسرت', 'پیانو در غروب', 'تهران · تالار موسیقی', 'violet', 19, 0, '۵۸۰ هزار', { soonIn: 5 * HOUR + 12 * 6e4 }],
-  ['concert', 'تهران', 'کنسرت', 'آوازهای قدیمی', 'تهران · فرهنگسرا', 'orange', 12, 0, '۷۲۰ هزار', { sold: true }],
-  ['concert', 'شیراز', 'کنسرت', 'شب‌های بهاری', 'شیراز · تالار مرکزی', 'green', 6, 0, '۳۸۰ هزار', {}],
-  ['concert', 'اصفهان', 'کنسرت', 'ساز و آواز اصفهان', 'اصفهان · تالار فرهنگ', 'teal', 10, 0, '۳۵۰ هزار', { ext: true }],
-  ['concert', 'مشهد', 'کنسرت', 'شب‌های خراسان', 'مشهد · سالن همایش‌ها', 'pink', 15, 0, '۴۲۰ هزار', { sold: true }],
-  ['theatre', 'تهران', 'تئاتر', 'مرد دو چهره', 'تهران · سالن نمایش', 'crimson', 3, 8, '۳۲۰ هزار', {}],
-  ['theatre', 'تهران', 'تئاتر', 'خانه‌ی کاغذی', 'تهران · سالن نمایش', 'indigo', 5, 11, '۲۹۰ هزار', { ext: true }],
-  ['theatre', 'تبریز', 'تئاتر', 'آخرین مسافر', 'تبریز · تالار مرکزی', 'cyan', 7, 10, '۲۶۰ هزار', {}],
-  ['theatre', 'رشت', 'تئاتر', 'پنجره‌ای رو به شب', 'رشت · تالار مرکزی', 'brown', 9, 12, '۲۴۰ هزار', { badge: 'تک‌اجرا' }],
-  ['comedy', 'تهران', 'کمدی', 'شب خنده (استندآپ کمدی)', 'تهران · سالن همایش‌ها', 'yellow', 2, 0, '۲۲۰ هزار', { badge: 'پرفروش' }],
-  ['comedy', 'تهران', 'جُنگ', 'جُنگ شادی', 'تهران · فرهنگسرا', 'lime', 11, 0, '۲۰۰ هزار', { sold: true }],
-  ['comedy', 'کرج', 'جُنگ', 'جُنگ خنده در کرج', 'کرج · سالن نمایش', 'silver', 13, 0, '۱۸۰ هزار', {}],
-  ['comedy', 'اصفهان', 'کمدی', 'کمدی در سه پرده', 'اصفهان · سالن نمایش', 'white', 16, 0, '۲۱۰ هزار', {}],
+const inDays = (d, hm = '20:00') => `${TEHRAN_DAY.format(new Date(Date.now() + d * DAY))}T${hm}:00+03:30`;
+const fpd = (v) => String(v).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const priceText = (n) => `${fpd(Math.round(n / 1000))} هزار`;
+const posterFile = (name) => ({ src: `assets/posters/${name}.webp`, w: 2, h: 3 });   // the size is read when it loads; 2×3 only shapes the stand-in
+// the owner's sample: kind, city, the word before the name, name, hall, colour, first day, last day (0 = one day), time, lowest price (toman), status, minutes until the sale, poster
+const SAMPLE = [
+  ['concert', 'تهران', 'کنسرت', 'سپهر آریا', 'برج میلاد - سالن همایش‌ها', 'green', 9, 10, '20:30', 980000, 'soon', 321, 'photo-pop-green'],
+  ['theatre', 'تهران', 'نمایش', 'آخرین پرده', 'خانه نمایش مهرگان - سالن ۱', 'silver', 2, 30, '19:00', 650000, 'soon', 128, 'photo-theater-beam'],
+  ['concert', 'تهران', 'کنسرت', 'شب‌های بتهوون (ارکستر سمفونیک آوا)', 'تالار وحدت', 'gold', 5, 6, '21:30', 700000, 'normal', 0, 'photo-orchestra-ornate'],
+  ['concert', 'تهران', 'کنسرت', 'گروه نوای مهر (ویژه بانوان)', 'فرهنگسرای نیاوران - سالن خلیج فارس', 'blue', 3, 0, '18:30', 1100000, 'normal', 0, 'photo-folk-singer-orchestra'],
+  ['concert', 'تهران', 'کنسرت', 'کوارتت زهی پارسه', 'فرهنگسرای ارسباران', 'teal', 8, 9, '20:00', 700000, 'normal', 0, 'photo-persian-violin-arch'],
+  ['concert', 'تهران', 'کنسرت', 'رسیتال پیانو؛ شبی با شوپن', 'تالار هنر', 'gold', 12, 0, '19:30', 550000, 'normal', 0, 'photo-piano-dark'],
+  ['concert', 'تهران', 'کنسرت', 'شب جاز تهران', 'پردیس تئاتر شهرزاد - سالن ۱', 'blue', 15, 16, '21:00', 750000, 'normal', 0, 'photo-jazz-sax-blue'],
+  ['concert', 'تهران', 'کنسرت', 'گروه سایه', 'برج میلاد - سالن همایش‌ها', 'crimson', 19, 0, '20:30', 900000, 'soldout', 0, 'photo-rock-guitar-crowd'],
+  ['concert', 'اصفهان', 'کنسرت', 'آرمان کیان', 'سالن سیتی سنتر', 'orange', 2, 3, '19:00', 950000, 'soldout', 0, 'photo-pop-smoke'],
+  ['concert', 'مشهد', 'کنسرت', 'مهتاب (ویژه بانوان)', 'سالن همایش‌های بین‌المللی', 'orange', 4, 0, '17:00', 800000, 'normal', 0, 'photo-singer-warm'],
+  ['concert', 'کرمان', 'کنسرت', 'شب سه‌تار', 'تالار مرکزی فرهنگ و هنر', 'teal', 2, 0, '19:30', 480000, 'normal', 0, 'photo-persian-setar-man'],
+  ['concert', 'یزد', 'کنسرت', 'آوای کویر (ویژه بانوان)', 'سالن آمفی‌تئاتر فرهنگسرای یزد', 'gold', 6, 0, '18:00', 550000, 'normal', 0, 'photo-persian-tar-woman'],
+  ['concert', 'رشت', 'کنسرت', 'بهراد', 'تالار مرکزی رشت', 'pink', 3, 0, '20:00', 950000, 'soldout', 0, 'photo-pop-guitar-pink'],
+  ['concert', 'تبریز', 'کنسرت', 'سنتور و آواز', 'تالار فجر', 'orange', 7, 0, '19:00', 480000, 'normal', 0, 'photo-persian-santur'],
+  ['concert', 'شیراز', 'کنسرت', 'گروه شب‌تاب', 'تالار حافظ', 'crimson', 5, 7, '20:00', 850000, 'extended', 0, 'photo-rock-red'],
+  ['concert', 'کرج', 'کنسرت', 'کیان نوری', 'سالن اکومال', 'violet', 4, 0, '21:00', 900000, 'normal', 0, 'photo-pop-silhouette'],
+  ['concert', 'همدان', 'کنسرت', 'صدای باران (ویژه بانوان)', 'مجتمع فرهنگی بوعلی - تالار اصلی', 'blue', 9, 0, '18:30', 600000, 'normal', 0, 'photo-singer-spot-blue'],
+  ['concert', 'اهواز', 'کنسرت', 'ترانه‌های بهار (ویژه بانوان)', 'تالار هنر اهواز', 'violet', 11, 0, '19:00', 700000, 'normal', 0, 'photo-pop-woman-purple'],
+  ['theatre', 'تهران', 'نمایش', 'صندلی خالی', 'تئاترشهر - سالن اصلی', 'gold', -21, 24, '18:30', 450000, 'normal', 0, 'photo-theater-chair'],
+  ['theatre', 'تهران', 'نمایش', 'مردی در تاریکی', 'پردیس تئاتر شهرزاد - سالن ۱', 'silver', -38, 12, '20:00', 500000, 'normal', 0, 'photo-theater-monologue'],
+  ['theatre', 'تهران', 'نمایش موزیکال', 'پردهٔ سرخ', 'تالار هنر', 'crimson', 1, 26, '19:30', 700000, 'normal', 0, 'photo-theater-curtain'],
+  ['theatre', 'تهران', 'نمایش', 'رقص سایه‌ها', 'فرهنگسرای ارسباران', 'cyan', 3, 9, '19:00', 380000, 'normal', 0, 'photo-theater-modern'],
+  ['comedy', 'کرج', 'جُنگ', 'کودک «سیرک شادی»', 'سالن اکومال', 'lime', 3, 4, '17:00', 300000, 'normal', 0, 'photo-kids-clown'],
+  ['comedy', 'تهران', 'نمایش کودک', 'پینوکیو', 'تئاترشهر - سالن اصلی', 'crimson', 0, 18, '16:00', 280000, 'normal', 0, 'photo-kids-pinocchio'],
+  ['comedy', 'اصفهان', 'جُنگ', 'شب خنده (استندآپ کمدی)', 'سالن سیتی سنتر', 'yellow', 8, 0, '20:00', 500000, 'normal', 0, 'photo-comedy-mic'],
+  ['comedy', 'اردبیل', 'جُنگ', 'کودک «عروسک‌های جادویی»', 'سالن آمفی‌تئاتر ورزش و جوانان', 'orange', 2, 0, '16:30', 300000, 'normal', 0, 'photo-kids-marionette'],
 ];
-const MORE = FILL.map(([kind, city, type, name, venue, pal, d1, d2, price, o], k) => {
-  const e = {
-    id: `more-${k + 1}`, filler: true, pal, layout: 'bar', kind, city, type, name, title: `${type === 'کنسرت' ? 'کنسرت' : type === 'تئاتر' ? 'نمایش' : type} «${name}»`,
-    desc: 'نمونه‌ی ساختگی برای پر کردن لیست.', venue, startsAt: inDays(d1), endsAt: d2 ? inDays(d2) : undefined, price, badge: o.badge || '',
-    status: o.sold ? 'soldout' : o.ext ? 'extended' : o.soonIn ? 'soon' : 'normal', seatsLeft: o.sold ? 0 : undefined,
-    saleAt: o.soonIn ? new Date(Date.now() + o.soonIn).toISOString() : undefined,
-    banner: { w: 1672, h: 960 }, ver: 0,
-  };
-  setPal(e, pal); e.w = when(e);
-  return e;
-});
-// the shows of the list under the hero: the featured ones, and (an option) the fillers
+// finished posters: what is printed on them is fixed (the day, the hall, the time)
+const FIXED = [
+  { id: 'o-bitaarof', kind: 'comedy', city: 'تهران', type: 'استندآپ', name: 'بی‌تعارف', venue: 'تهران، پردیس تئاتر شهرزاد', pal: 'yellow', startsAt: '2026-11-03T21:00:00+03:30', price: '۲۲۰ هزار', status: 'normal', poster: 'orig-bitaarof' },
+  { id: 'o-chaharmezrab', kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'چهار مضراب (ارکستر زهی باران)', venue: 'تهران، تالار وحدت', pal: 'teal', startsAt: '2026-11-28T19:00:00+03:30', price: '۶۰۰ هزار', status: 'normal', poster: 'orig-chaharmezrab' },
+  { id: 'o-frequency', kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'فرکانس (گروه نیمه‌شب)', venue: 'تهران، مجموعه ورزشی آزادی', pal: 'violet', startsAt: '2026-12-15T20:30:00+03:30', price: '۱۲۰۰ هزار', status: 'soon', saleMin: 14 * 60 + 41, poster: 'orig-frequency' },
+  { id: 'o-parvaz', kind: 'comedy', city: 'تهران', type: 'سیرک', name: 'پرواز (گروه آکروبات آسمان)', venue: 'تهران، فرهنگسرای نیاوران', pal: 'teal', startsAt: '2026-11-14T17:00:00+03:30', price: '۲۸۰ هزار', status: 'normal', poster: 'orig-parvaz' },
+  { id: 'o-spectrum', kind: 'concert', city: 'تهران', type: 'فستیوال', name: 'طیف (موسیقی الکترونیک)', venue: 'تهران، برج میلاد - سالن همایش‌ها', pal: 'indigo', startsAt: '2026-11-19T21:00:00+03:30', endsAt: '2026-11-20T21:00:00+03:30', price: '۹۰۰ هزار', status: 'normal', poster: 'orig-spectrum' },
+  { id: 'o-shadows', kind: 'theatre', city: 'تهران', type: 'تئاتر فیزیکال', name: 'سایه‌ها (گروه تئاتر آینه)', venue: 'تهران، تئاترشهر - تالار اصلی', pal: 'crimson', startsAt: '2026-11-07T19:30:00+03:30', price: '۳۵۰ هزار', status: 'normal', poster: 'orig-shadows' },
+  // the real poster of a concert that is over: shows the label «برگزار شد» on a real poster
+  { id: 'real-skykings', kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'SkyKings', venue: 'تهران، سالن پاسارگاد اریکه ایرانیان', pal: 'gold', startsAt: '2026-10-29T19:00:00+03:30', price: '۴۵۰ هزار', status: 'held', poster: 'real-skykings' },
+];
+const MORE = SAMPLE.map(([kind, city, type, name, hall, pal, d1, d2, hm, price, st, saleMin, poster], k) => ({
+  id: `s-${k + 1}`, filler: true, pal, layout: 'bar', kind, city, type, name, title: `${type} ${name}`, desc: '', venue: `${city}، ${hall}`,
+  startsAt: inDays(d1, hm), endsAt: d2 ? inDays(d2, hm) : undefined, price: priceText(price), badge: '', status: st,
+  seatsLeft: st === 'soldout' ? 0 : undefined, saleAt: saleMin ? new Date(Date.now() + saleMin * 6e4).toISOString() : undefined, poster: posterFile(poster), ver: 0,
+})).concat(FIXED.map((f) => ({
+  filler: true, layout: 'bar', desc: '', badge: '', ver: 0, ...f, title: `${f.type} ${f.name}`, poster: posterFile(f.poster),
+  saleAt: f.saleMin ? new Date(Date.now() + f.saleMin * 6e4).toISOString() : undefined,
+})));
+MORE.forEach((e) => { setPal(e, e.pal); e.w = when(e); });
+// the shows of the list under the hero: the featured ones, and (an option) the others
 const LIST = () => (LOOK.listFill ? EVENTS.concat(MORE) : EVENTS);
 
 /* ════════════════════════════════════════════════════════════════
@@ -1443,9 +1498,9 @@ function suggestPalette(img) {
 // error at upload, so this only keeps the prototype readable.
 const fakes = new Map();
 function fakeArt(e, a) {
-  const key = `${e.id}|${e.pal}|${e.title}`;
+  const tall = a.w / a.h < 0.95, key = `${e.id}|${e.pal}|${e.title}|${tall ? 'p' : 'b'}`;   // a poster is tall, a banner is wide
   if (fakes.has(key)) return fakes.get(key);
-  const p = PALETTE[e.pal] || colourSet(e.cust || '#d9a441'), tall = false, W = 1344, H = Math.round(W / clamp(a.w / a.h, 1, 3.4));
+  const p = PALETTE[e.pal] || colourSet(e.cust || '#d9a441'), W = tall ? 840 : 1344, H = tall ? Math.round(W / clamp(a.w / a.h, 0.4, 0.95)) : Math.round(W / clamp(a.w / a.h, 1, 3.4));
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d'), rgba = (hex, al) => { const v = rgb(hex); return `rgba(${v[0]},${v[1]},${v[2]},${al})`; };
   let g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, p.deep); g.addColorStop(1, '#07060c'); x.fillStyle = g; x.fillRect(0, 0, W, H);
@@ -1453,13 +1508,20 @@ function fakeArt(e, a) {
   x.save(); x.globalAlpha = 0.1; x.fillStyle = p.light;
   for (let k = 0; k < 3; k++) { const bx = W * (0.2 + k * 0.28); x.beginPath(); x.moveTo(bx, -10); x.lineTo(bx + W * 0.05, -10); x.lineTo(bx + W * (0.25 - k * 0.08), H); x.lineTo(bx - W * 0.12, H); x.closePath(); x.fill(); }
   x.restore();
-  const big = tall ? W * 0.15 : H * 0.14, maxW = (tall ? W : W * 0.72) * 0.86, cx = tall ? W / 2 : W * 0.5;
+  let big = tall ? W * 0.15 : H * 0.14;
+  const maxW = (tall ? W : W * 0.72) * 0.86, cx = tall ? W / 2 : W * 0.5;
   x.direction = 'rtl'; x.textAlign = 'center'; x.fillStyle = '#fff';
-  x.font = `700 ${Math.round(big * 0.46)}px Vazirmatn, Tahoma, sans-serif`; x.globalAlpha = 0.78; x.fillText(e.type, cx, H * (tall ? 0.22 : 0.3)); x.globalAlpha = 1;
+  // the title in as few lines as will do: a long one gets a smaller type, so it never runs into the lines under it
+  let lines = [];
+  for (let tries = 0; tries < 5; tries++) {
+    x.font = `900 ${Math.round(big)}px Vazirmatn, Tahoma, sans-serif`; lines = []; let line = '';
+    for (const w of e.title.split(' ')) { const t = line ? `${line} ${w}` : w; if (x.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
+    lines.push(line);
+    if (lines.length <= (tall ? 4 : 3)) break;
+    big *= 0.85;
+  }
+  x.font = `700 ${Math.round(big * 0.46)}px Vazirmatn, Tahoma, sans-serif`; x.globalAlpha = 0.78; x.fillText(e.type, cx, H * (tall ? 0.2 : 0.3)); x.globalAlpha = 1;
   x.font = `900 ${Math.round(big)}px Vazirmatn, Tahoma, sans-serif`;
-  const lines = []; let line = '';
-  for (const w of e.title.split(' ')) { const t = line ? `${line} ${w}` : w; if (x.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t; }
-  lines.push(line);
   const lh = big * 1.3, y0 = H * 0.5 - (lines.length - 1) * lh / 2 + big * 0.3;
   lines.forEach((t, k) => x.fillText(t, cx, y0 + k * lh, maxW));
   x.font = `600 ${Math.round(big * 0.4)}px Vazirmatn, Tahoma, sans-serif`; x.globalAlpha = 0.8; x.fillText(`${e.venue} · ${e.w.short}`, cx, H * 0.78, W * 0.8);
@@ -1828,6 +1890,7 @@ const APPLY = {
   story: (v) => { attr('data-story', v ? 'on' : 'off'); scrollFx.apply(true); },
   scroll: () => smoothScroll.sync(),
   listFill: () => { if (look.ready) { s2.refresh(); hd.refreshCats(); } },
+  posterRatio: (v) => { css('--pr', v); if (look.ready) { s2.refit(); panel.posterNote(); } }, posterInfo: (v) => attr('data-pinfo', v),
   dims: (v) => dims.on(v),
 };
 
@@ -1881,7 +1944,10 @@ const UI = {
       W('capDate', 'روز اجرا کنار اسم'),
       R('dim', 'کم‌رنگ بودن کارت‌های غیرفعال', 0, 60, 1, '٪'),
       S('progress', 'نشونه‌ی زمان باقی‌مونده', [['bar', 'خط پایین'], ['ring', 'دور کارت'], ['off', 'هیچ']])] },
-    { h: 'لیست زیر هیرو', n: 'شش اجرای واقعی لیست کوتاهی می‌سازن. با این گزینه ۱۵ اجرای ساختگی (با تصویر نمونه) هم تو لیست می‌آن تا چیدمان یه لیست پر دیده بشه؛ تو هیرو فقط همون شش اجرا هستن.', c: [W('listFill', 'اجراهای ساختگی برای پر کردن لیست')] },
+    { h: 'لیست زیر هیرو (پوستری)', n: 'تو همه‌ی بخش‌های بعد از هیرو هر اجرا یه پوستر عمودیه که کامل (بدون برش) تو کادر پوستر می‌شینه؛ پوستری که با این نسبت فرق داشته باشه با نسخه‌ی محوِ خودش پر می‌شه. اجراهای نمونه (از نمونه‌ی خودت، با عکس‌هاش به‌جای پوستر، به‌اضافه‌ی چند پوستر نهایی) لیست رو پر می‌کنن؛ تو هیرو فقط همون شش اجرای واقعی هستن.', c: [
+      R('posterRatio', 'نسبت کادر پوستر (عرض ÷ ارتفاع)', 0.5, 1, 0.01, ''),
+      S('posterInfo', 'نوشته‌های کارت', [['below', 'زیر پوستر (پوستر کامل دیده می‌شه)'], ['over', 'روی پوستر (مثل نمونه)']]),
+      W('listFill', 'اجراهای نمونه برای پر کردن لیست')] },
   ],
   style: [
     { h: 'گوشه‌ها و لبه‌ها', c: [
@@ -2141,7 +2207,7 @@ const look = {
         ${row('فایل', `${faP(bn.w)}×${faP(bn.h)}  ( نسبت ${faP((bn.w / bn.h).toFixed(2)).replace('.', '٫')} )`)}
         ${LOCK ? row('بنر برای همه‌ی پنجره‌ها', `${faP(mw)}×${faP(1000)}`) + row('همون برای کادرِ همین پنجره (تیز)', need) : row('بنر برای پر کردن کادرِ همین پنجره', need)}
       </div>
-      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>${LOCK ? `• بنر (چیدمان کادر پایین): <b>${fa1(mw)}×${fa1(1000)}</b> (نسبت ${fa1(rs)}؛ دو برابرش ${fa1(mw * 2)}×${fa1(2000)} برای صفحه‌های تیز). کادر بنر تو هر پنجره‌ای همین نسبت رو داره و بنر تمام کادر رو پر می‌کنه؛ فقط تو پنجره‌ی بزرگ‌تر بزرگ‌تر نشون داده می‌شه. بنری که تا ۲٫۵٪ با این نسبت فرق داشته باشه هم کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.` : `• بنر (چیدمان کادر پایین): کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: عدد بالا (<b>«بنر برای پر کردن کادرِ همین پنجره»</b>) برای پنجره‌ی الانه؛ با پنجره‌ی ۱۹۲۰×۱۰۸۰ و تنظیمات پیش‌فرض ≈ ۱۵۵۳×۸۹۳ (نسبت ۱٫۷۴) و با ۱۹۲۰×۸۶۰ ≈ ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.`}<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
+      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>${LOCK ? `• بنر (چیدمان کادر پایین): <b>${fa1(mw)}×${fa1(1000)}</b> (نسبت ${fa1(rs)}؛ دو برابرش ${fa1(mw * 2)}×${fa1(2000)} برای صفحه‌های تیز). کادر بنر تو هر پنجره‌ای همین نسبت رو داره و بنر تمام کادر رو پر می‌کنه؛ فقط تو پنجره‌ی بزرگ‌تر بزرگ‌تر نشون داده می‌شه. بنری که تا ۲٫۵٪ با این نسبت فرق داشته باشه هم کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.` : `• بنر (چیدمان کادر پایین): کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: عدد بالا (<b>«بنر برای پر کردن کادرِ همین پنجره»</b>) برای پنجره‌ی الانه؛ با پنجره‌ی ۱۹۲۰×۱۰۸۰ و تنظیمات پیش‌فرض ≈ ۱۵۵۳×۸۹۳ (نسبت ۱٫۷۴) و با ۱۹۲۰×۸۶۰ ≈ ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.`}<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• پوستر (لیست‌ها و بخش‌های بعد از هیرو): عمودی، <b>${fa1(1000)}×${fa1(Math.round(1000 / LOOK.posterRatio / 10) * 10)}</b> (نسبت ${fa1(LOOK.posterRatio.toFixed(2)).replace('.', '٫')}؛ دو برابرش ${fa1(2000)}×${fa1(Math.round(2000 / LOOK.posterRatio / 10) * 10)} برای صفحه‌های تیز). پوستری با نسبت دیگه هم کامل دیده می‌شه و جای خالی کنارش با نسخه‌ی محوِ خودش پر می‌شه؛ بنر افقی به‌عنوان پوستر قبول نمی‌شه.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
       <div class="pp-sec"><h4>بنر تو پنجره‌های رایج</h4><p>برای چیدمان فعلی (فاصله‌ها و ارتفاع‌های تنظیم‌شده). عدد اول کادر بنره، عدد دوم خودِ بنر تو کادرش.</p><div class="szt">${tbl}</div></div>
       <div class="pp-sec"><h4>نشون دادن اندازه‌ها روی صفحه</h4>
         <label class="sw2"><span>اندازه‌ی کادرها، فاصله‌ها و حاشیه‌ها رو روی صفحه بکش</span><input type="checkbox" role="switch" id="ppDims"${LOOK.dims ? ' checked' : ''}><i></i></label>
@@ -2481,10 +2547,10 @@ function ticketHTML(e) {
     foot = `<div class="tkt-cd" data-sale-box="${esc(e.id)}" role="timer" aria-label="${esc(`فروش بلیت ${e.title} از ${saleWhen(e)} شروع می‌شه`)}"><span class="cd-l">شروع فروش</span><span class="cd-b" aria-hidden="true">${unit('h', 'ساعت', Math.floor(s / 3600))}<em>:</em>${unit('m', 'دقیقه', Math.floor((s % 3600) / 60))}<em>:</em>${unit('s', 'ثانیه', s % 60)}</span></div>`;
   } else if (st.cta) foot = `<span class="tkt-off" aria-disabled="true">${esc(OFF_TEXT[st.key])}</span>`;
   else foot = `<div class="tkt-foot"><span class="tkt-price"><span>${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="buy" aria-label="${esc(`${TXT.buy} ${e.title}، از ${dg(e.price)} ${TXT.unit}`)}">${ico('bag')}${esc(TXT.buy)}</button></div>`;
-  const ban = e.banner, src = ban.fake || ban.thumb || '';
+  const art = e.poster || e.banner, src = art.fake || (e.poster ? art.src : art.thumb) || '';
   return `<div class="tkt-in">
       <a class="tkt-pic" href="#" draggable="false" aria-label="${esc(e.title)}${st.label ? `، ${esc(st.label)}` : ''}">
-        <img alt="" decoding="async" ${ban.fake || ban.thumb ? `src="${esc(src)}"${!ban.fake && ban.srcset ? ` srcset="${esc(ban.srcset)}" sizes="(max-width: 520px) 100vw, (max-width: 1100px) 50vw, (max-width: 1500px) 33vw, 25vw"` : ''}` : `data-fake="${esc(e.id)}"`}>
+        <img alt="" decoding="async" ${src ? `src="${esc(src)}"${!art.fake && !e.poster && art.srcset ? ` srcset="${esc(art.srcset)}" sizes="(max-width: 520px) 50vw, (max-width: 1100px) 34vw, 17vw"` : ''}` : `data-fake="${esc(e.id)}"`}>
         ${lbl}${stamp}${tag}
       </a>
       <span class="tkt-perf" aria-hidden="true"></span>
@@ -2516,7 +2582,8 @@ const s2 = {
   // the sections, in the order of the list; an empty one is not drawn (its pill stays in the bar and says so when pressed)
   sections() {
     const all = LIST(), by = (key) => all.filter((e) => inCat(e, key));
-    return SEC_ORDER.map((key) => ({ key, list: by(key).sort((a, b) => (key === 'soon' ? saleMs(a) - saleMs(b) : Date.parse(a.startsAt) - Date.parse(b.startsAt))) })).filter((s) => s.list.length);
+    const over = (e) => (['held', 'cancelled'].includes(statusOf(e).key) ? 1 : 0);   // a show that is over (or cancelled) goes last
+    return SEC_ORDER.map((key) => ({ key, list: by(key).sort((a, b) => over(a) - over(b) || (key === 'soon' ? saleMs(a) - saleMs(b) : Date.parse(a.startsAt) - Date.parse(b.startsAt))) })).filter((s) => s.list.length);
   },
   build() {
     this.secs.textContent = '';
@@ -2529,11 +2596,15 @@ const s2 = {
         const c = document.createElement('article'); c.className = 'tkt'; c.dataset.id = e.id; c.dataset.cat = catOf(e); c.dataset.st = statusOf(e).key;
         c.style.setProperty('--accent', e.accent); c.style.setProperty('--accent-l', e.accentL); c.style.setProperty('--on-accent', e.onAccent); c.style.setProperty('--ring', e.ring || e.accent);
         c.innerHTML = ticketHTML(e);
-        const im = $('img', c), ban = e.banner;
-        // the blurred copy of the banner behind the words
+        const im = $('img', c), art = e.poster || e.banner, pic = $('.tkt-pic', c);
+        // the soft copy of the picture behind it (it fills what the picture leaves) and behind the words
         const bg = (u) => c.style.setProperty('--art', `url("${u}")`);
-        if (ban.fake) bg(ban.fake); else if (ban.thumb) bg(ban.thumb);
-        if (ban.thumb && !ban.fake) im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); const u = ban.fake = fakeArt(e, ban); im.src = u; bg(u); };
+        if (art.fake) bg(art.fake); else if (e.poster ? art.src : art.thumb) bg(e.poster ? art.src : art.thumb);
+        const tall = !!e.poster, size = tall ? { w: 2, h: 3 } : art;
+        // a file that isn't there is drawn by the page; and the picture is shown whole: it fills the frame if its shape is the frame's (to FILL_TOL), else the soft copy fills the rest
+        im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); const u = art.fake = fakeArt(e, size); im.src = u; bg(u); };
+        im.addEventListener('load', () => this.fit(pic, im));
+        if (im.complete && im.naturalWidth) this.fit(pic, im);
         // open it in the hero (a featured show) or say where its page will be
         const open = (ev) => { ev.preventDefault(); const i = EVENTS.indexOf(e); if (i >= 0) { scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); go(i, 'user'); } else toast(`اینجا صفحه‌ی «${e.title}» باز می‌شه.`); };
         $('.tkt-pic', c).addEventListener('click', open);
@@ -2565,7 +2636,7 @@ const s2 = {
   // the last section whose top is above the line just under the bar is the one in view
   probe() {
     if (performance.now() < this.lockUntil) return;   // the page is travelling to the pill that was pressed: it stays on that one
-    const line = this.bar.getBoundingClientRect().bottom + 24; let cur = 'all';
+    const line = this.bar.getBoundingClientRect().bottom + Math.max(60, innerHeight * 0.28); let cur = 'all';   // a section is the one in view once its title is in the upper part of the window
     $$('.tkt-sec', this.secs).forEach((x) => { if (x.getBoundingClientRect().top <= line) cur = x.dataset.sec; });
     if (cur !== this.cur) { this.cur = cur; this.moveInd(cur); hd.markCat(); }
   },
@@ -2589,6 +2660,9 @@ const s2 = {
     }
   },
   lazyOff() { if (this.lazy) { this.lazy.disconnect(); this.lazy = null; } },
+  // the picture whole in the poster's frame: its own shape (to FILL_TOL of the frame's) fills it, any other leaves the soft copy round it
+  fit(pic, im) { if (!im.naturalWidth) return; pic.classList.toggle('is-fill', Math.abs(Math.log(im.naturalWidth / im.naturalHeight / LOOK.posterRatio)) < FILL_TOL); },
+  refit() { $$('.tkt-pic', this.secs).forEach((pic) => this.fit(pic, $('img', pic))); },
   later() { clearTimeout(this.lt); this.lt = setTimeout(() => this.refresh(), 160); },
   // the cards are drawn again (a text, a colour or a status changed)
   refresh() {
@@ -2779,6 +2853,8 @@ const panel = {
     $('#ppWhere').addEventListener('click', (ev) => { const b = ev.target.closest('button'); if (!b) return; this.where = b.dataset.v; $$('#ppWhere button').forEach((x) => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); });
     // the size to make follows the window
     addEventListener('resize', () => { if (this.needRaf) return; this.needRaf = requestAnimationFrame(() => { this.needRaf = 0; if (!this.el.hidden) this.need(); }); });
+    $('#ppPosterFile').addEventListener('change', (ev) => { const f = ev.target.files[0]; ev.target.value = ''; if (f) this.usePosterFile(f); });
+    $('#ppPReset').addEventListener('click', () => this.resetPoster());
     $('#ppPhoto').addEventListener('click', () => this.usePhoto());
     $('#ppReset').addEventListener('click', () => this.reset());
     $('#ppNotes').addEventListener('click', (ev) => { ev.preventDefault(); this.open(false); $('#notes-h').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); });
@@ -2814,7 +2890,7 @@ const panel = {
     set('fKind', e.kind || 'theatre'); set('fStatus', e.status || 'auto');
     const cs = $('#fCity'); if (![...cs.options].some((o) => o.value === e.city)) cs.add(new Option(e.city, e.city)); set('fCity', e.city || 'تهران');
     const fs = $('#fSale'); set('fSale', saleMs(e) > Date.now() ? 'keep' : 'none'); fs.querySelector('[value="keep"]').hidden = !(saleMs(e) > Date.now());
-    this.stNote(e);
+    this.stNote(e); this.posterNote();
     $('#ppNote').innerHTML = fitNote(e.banner.w, e.banner.h) + (e.banner.custom ? '' : ' · از فایل‌های نمونه');
     this.need();
     look.sizesTick();
@@ -2842,6 +2918,22 @@ const panel = {
     host.innerHTML = s.mode === 'bar' ? dockHTML(e) : copyHTML(e);
     s.parts = $$('[data-part]', s.el); s.buy = $('.buy', s.el);
   },
+  // the poster of the active show (for the lists), from a file of the owner's
+  async usePosterFile(file) {
+    const rd = await this.readImage(file, 'poster'); if (!rd) return;
+    const e = EVENTS[state.i]; e.poster = { src: rd.url, w: rd.w, h: rd.h, custom: true };
+    s2.refresh(); this.posterNote();
+  },
+  resetPoster() { const e = EVENTS[state.i], o = e.orig; e.poster = o.poster || undefined; s2.refresh(); this.posterNote(); },
+  // the size to ask for, and what the show's poster is now
+  posterNote() {
+    const e = EVENTS[state.i], r = LOOK.posterRatio, w = 1000, h = Math.round(w / r / 10) * 10, box = $('#ppPNeed'), note = $('#ppPNote'); if (!box) return;
+    box.innerHTML = `<span>اندازه‌ی پوستر برای لیست‌ها (همه‌ی بخش‌ها جز هیرو)</span><b class="big"><bdi dir="ltr">${fa(w)}×${fa(h)}</bdi></b><span>نسبت ${fa(r.toFixed(2)).replace('.', '٫')} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(w * 2)}×${fa(h * 2)}</bdi>. پوستر با نسبت دیگه هم کامل دیده می‌شه و جای خالی کنارش با نسخه‌ی محوِ خودش پر می‌شه.</span>`;
+    const p = e.poster;
+    if (!p) { note.innerHTML = 'این اجرا پوستر نداره؛ تو لیست‌ها بنرش کامل (بدون برش) تو کادر پوستر نشون داده می‌شه.'; return; }
+    const ar = p.w / p.h, fit = Math.abs(Math.log(ar / r)) < FILL_TOL;
+    note.innerHTML = `<b>نسبت ${fa(ar.toFixed(2)).replace('.', '٫')} به ۱</b> · ${fa(p.w)}×${fa(p.h)} · ${fit ? 'کادر رو کامل پر می‌کنه' : 'کامل دیده می‌شه، ولی ' + (ar > r ? 'بالا و پایینش' : 'دو طرفش') + ' با نسخه‌ی محوِ خودش پر می‌شه'}${p.custom ? '' : ' · از فایل‌های نمونه'}`;
+  },
   // the size that fills the banner's panel in this window (what to make), and in a 1920×1080 one
   need() {
     const box = $('#ppNeed'), s = stage.top; if (!box || !s) return;
@@ -2858,10 +2950,19 @@ const panel = {
     box.innerHTML = `<span>اندازه‌ی بنری که کادر همین پنجره رو کامل پر می‌کنه</span><b class="big"><bdi dir="ltr">${fa(w)}×${fa(h)}</bdi></b><span>نسبت ${fa(r)} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(w * 2)}×${fa(h * 2)}</bdi></span><span class="sm">پنجره‌ی الان ${fa(innerWidth)}×${fa(innerHeight)}. کادر هر چی از پنجره می‌مونه رو می‌گیره، پس با ارتفاع پنجره عدد هم عوض می‌شه${big}.</span>`;
   },
   // a picture read from a file; a tall one (a poster) is refused
-  async readImage(file) {
+  async readImage(file, kind) {
     const url = URL.createObjectURL(file), im = new Image(); im.src = url;
     try { await im.decode(); } catch (err) { URL.revokeObjectURL(url); toast('این فایل تصویر نیست یا خوانده نشد.'); return null; }
     const w = im.naturalWidth, h = im.naturalHeight;
+    if (kind === 'poster') {
+      // a poster is tall: a wide banner belongs to the hero
+      if (w / h > 0.95) {
+        toast('این تصویر افقی یا مربعه (بنر). برای پوستر، عمودی لازمه.');
+        $('#ppPNote').innerHTML = `<b>پذیرفته نشد</b> · ${fa(w)}×${fa(h)} · بنر افقی جاش تو هیروئه؛ پوستر باید عمودی باشه`;
+        URL.revokeObjectURL(url); return null;
+      }
+      return { url, im, w, h };
+    }
     if (w / h < 1.15) {
       // a tall poster is not a background: the hero is wide
       toast('این تصویر عمودی یا مربعه (پوستر). برای جایگاه ویژه بنر افقی لازمه.');
@@ -2905,6 +3006,7 @@ const panel = {
   },
   async reset() {
     const e = EVENTS[state.i], o = e.orig; Object.assign(e, JSON.parse(JSON.stringify({ layout: o.layout, type: o.type, name: o.name, title: o.title, venue: o.venue, price: o.price, badge: o.badge, banner: o.banner, kind: o.kind, city: o.city })));
+    e.poster = o.poster || undefined;
     e.status = o.status === 'auto' ? undefined : o.status; e.seatsLeft = o.seatsLeft === null ? undefined : o.seatsLeft;
     e.saleAt = o.saleAt && Date.parse(o.saleAt) > Date.now() ? o.saleAt : null;   // a sale that has opened since stays open
     e.fp = null; e.suggested = null; setPal(e, o.pal); e.w = when(e); e.ver++;
