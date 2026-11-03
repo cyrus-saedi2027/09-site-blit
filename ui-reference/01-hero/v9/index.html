@@ -967,6 +967,284 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 }
 @media (prefers-reduced-motion: reduce) { .evp-bg, .evp-motes i, .mp-pin svg, .mp-pin i, .ses, .evp-book.is-flash, .evp-rules.is-shake { animation: none !important; } .steps .bar, .mp, .evp-poster { transition: none; } }
 
+/* ── steps 2–4 of a purchase: the seats, the booking and payment, the tickets (buy.js); the same panels and themes ── */
+.steps li a { display: inline-flex; align-items: center; gap: .65em; color: inherit; text-decoration: none; }
+.steps li a:hover { color: rgb(var(--fg)); }
+.steps li.is-done { color: rgba(var(--fg), .78); }
+.steps li.is-done .n { background: #22c55e; color: #fff; }
+.steps li.is-done .n svg.i { width: 62%; height: 62%; stroke-width: 3; }
+.steps .bar { right: calc(var(--u) * .6 + (100% - var(--u) * 1.2) / 4 * var(--cur, 0)); }
+.bk .evp-crumb a:first-child { font-weight: var(--fwm); }
+
+/* the show and the session, the price filter */
+.bk-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); }
+.bk-showline { display: flex; align-items: center; gap: calc(var(--u) * .8); padding: calc(var(--u) * .7) calc(var(--u) * .9); border-radius: calc(var(--r) * 1.1); min-width: 0; }
+.bk-showline.in { padding: 0 0 calc(var(--u) * .9); margin-bottom: calc(var(--u) * .9); border-bottom: 1px solid rgba(var(--fg), .1); background: none; border-radius: 0; box-shadow: none; border-inline: 0; border-top: 0; }
+.bk-poster { flex: none; margin: 0; width: max(46px, calc(var(--u) * 3)); aspect-ratio: 2 / 3; border-radius: calc(var(--rt) * 1.1); overflow: hidden; background: #14121d; box-shadow: 0 6px 16px -8px rgba(0, 0, 0, .7); }
+.bk-poster img { width: 100%; height: 100%; object-fit: cover; }
+.bk-what { flex: 1; display: grid; min-width: 0; line-height: 1.7; }
+.bk-what b { font-size: calc(max(14px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bk-what span { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .62); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bk-ses { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: inline-flex; align-items: center; gap: .6em; padding: .45em .9em; border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .14); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); transition: background-color .3s; }
+.bk-ses:hover { background: rgba(var(--fg), .09); }
+.bk-ses > svg.i { width: 1.35em; height: 1.35em; color: var(--sc); }
+.bk-ses span { display: grid; line-height: 1.5; }
+.bk-ses small { color: rgba(var(--fg), .62); }
+.bk-ses em { display: inline-flex; align-items: center; gap: .3em; font-style: normal; color: var(--sc); font-weight: var(--fwm); }
+.bk-ses em svg.i { width: 1em; height: 1em; }
+.bk-ses:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.bk-filter { display: flex; align-items: center; gap: calc(var(--u) * .7); padding: calc(var(--u) * .7) calc(var(--u) * .9); border-radius: calc(var(--r) * 1.1); min-width: 0; }
+.bk-fl { flex: none; display: inline-flex; align-items: center; gap: .45em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); }
+.bk-fl svg.i { width: 1.3em; height: 1.3em; color: var(--sc); }
+.bk-chips { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .3); min-width: 0; }
+.chip.tier i { width: .7em; height: .7em; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 25%, transparent); }
+.chip.tier[aria-pressed="true"] { background: color-mix(in oklab, var(--c) 18%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 60%, transparent); }
+
+/* the map: the zones as tabs, a live dot, the seats on their arcs; zoom and drag */
+.bk-cols { grid-template-columns: minmax(0, 1fr) clamp(340px, calc(var(--u) * 24), 480px); }
+.bk-map { position: relative; display: grid; grid-template-rows: auto 1fr auto auto; padding: calc(var(--u) * .7); border-radius: calc(var(--r) * 1.15); overflow: hidden; }
+.bk-mhead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6em 1em; padding: 0 calc(var(--u) * .3) calc(var(--u) * .6); }
+.seg { display: inline-flex; gap: 3px; padding: 3px; border-radius: 999px; background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+.seg button { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: baseline; gap: .5em; padding: .5em 1.1em; border-radius: 999px; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .72); transition: background-color .3s, color .3s; white-space: nowrap; }
+.seg button small { font-size: .82em; opacity: .7; font-variant-numeric: tabular-nums; }
+.seg button[aria-selected="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.seg button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.bk-live { display: inline-flex; align-items: center; gap: .5em; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); }
+.bk-live > i { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34, 197, 94, .6); animation: live 1.8s ease-out infinite; }
+.bk-live b { color: #22c55e; font-weight: var(--fwb); }
+@keyframes live { 70% { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+.st-view { position: relative; height: clamp(420px, 64svh, 780px); overflow: hidden; direction: ltr; touch-action: none; cursor: grab; border-radius: calc(var(--r) * .8); background: radial-gradient(120% 80% at 50% 0%, color-mix(in oklab, var(--sc) 10%, transparent), transparent 60%), rgba(var(--fg), .025); user-select: none; -webkit-user-select: none; }
+.st-view.is-drag { cursor: grabbing; }
+.st-canvas { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+.st-stage { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.st-stage .st-glow { fill: none; stroke: url(#stgG); stroke-width: 26; stroke-linecap: round; opacity: .22; filter: blur(6px); }
+.st-stage .st-line { fill: none; stroke: url(#stgG); stroke-width: 5; stroke-linecap: round; }
+.st-stage text { fill: rgba(var(--fg), .8); font: 700 15px var(--font); letter-spacing: .02em; }
+/* the plan's drawing: the stage, the boxes and tables, the standing area, the sections' labels */
+.st-stage .st-board { fill: color-mix(in oklab, var(--sc) 16%, rgba(var(--fg), .06)); stroke: color-mix(in oklab, var(--sc) 45%, transparent); stroke-width: 1.5; }
+.st-stage .st-word { fill: rgba(var(--fg), .85); font: 800 17px var(--font); letter-spacing: .04em; }
+.st-stage .st-box { fill: rgba(var(--fg), .04); stroke: rgba(var(--fg), .22); stroke-width: 1.2; }
+.st-stage .st-table { fill: rgba(var(--fg), .07); stroke: rgba(var(--fg), .25); stroke-width: 1.2; }
+.st-stage .st-tn { fill: rgba(var(--fg), .6); font: 700 11px var(--font); }
+.st-stage .st-ga-bg { fill: rgba(var(--fg), .05); }
+.st-stage .st-ga-st { fill: rgba(var(--fg), .04); }
+.st-stand { --sz: 1; all: unset; box-sizing: border-box; position: absolute; left: 0; top: 0; width: var(--w); height: var(--h); transform: translate(var(--x), var(--y)) scale(var(--sz)); display: grid; place-content: center; justify-items: center; gap: 6px; border-radius: 22px; cursor: pointer; text-align: center; background: repeating-linear-gradient(45deg, color-mix(in oklab, var(--c) 14%, transparent) 0 12px, color-mix(in oklab, var(--c) 7%, transparent) 12px 24px); box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--c) 55%, transparent); color: rgb(var(--fg)); transition: box-shadow .3s, --sz .3s var(--ease); }
+.st-stand:hover { box-shadow: inset 0 0 0 3px var(--c); }
+.st-stand b { font: 900 30px var(--font); }
+.st-stand span { font: 600 17px var(--font); color: rgba(var(--fg), .8); }
+.st-stand small { font: 500 14px var(--font); color: rgba(var(--fg), .55); }
+.st-stand.is-pop { animation: seat-pop .45s var(--ease); }
+.st-stand:focus-visible { outline: 3px solid rgb(var(--fg)); outline-offset: 4px; }
+.st-sec { all: unset; box-sizing: border-box; position: absolute; left: 0; top: 0; transform: translate(-50%, -100%) translate(var(--x), var(--y)); padding: 5px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap; font: 700 14px var(--font); color: rgba(var(--fg), .8); background: var(--capsule); box-shadow: 0 0 0 1px rgba(var(--fg), .16), 0 6px 16px -8px rgba(0, 0, 0, .5); transition: background-color .3s, color .3s; }
+.st-sec:hover, .st-sec.is-on { background: rgb(var(--fg)); color: var(--capsule); }
+.st-sec:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.bk-list li.ga { grid-template-columns: auto 1fr auto auto; }
+.bk-list li .qty { display: inline-flex; gap: 2px; }
+.row-l { position: absolute; left: 0; top: 0; transform: translate(calc(var(--x) - 9px), calc(var(--y) - 8px)); width: 18px; height: 16px; font-style: normal; font-size: 9.5px; font-weight: 700; line-height: 16px; text-align: center; color: rgba(var(--fg), .42); pointer-events: none; }
+@property --sz { syntax: '<number>'; inherits: false; initial-value: 1; }
+.seat { --sz: 1; all: unset; box-sizing: border-box; position: absolute; left: 0; top: 0; width: 20px; height: 18px; transform: translate(calc(var(--x) - 10px), calc(var(--y) - 9px)) rotate(var(--a)) scale(var(--sz)); display: grid; place-items: center; border-radius: 6px 6px 4px 4px; font: 700 8.5px/1 var(--font); color: rgba(var(--fg), .92); cursor: pointer; transition: --sz .25s var(--ease), background-color .3s, opacity .3s, box-shadow .3s; }
+.seat[data-st="free"] { background: color-mix(in oklab, var(--c) 30%, transparent); box-shadow: inset 0 0 0 1.2px var(--c); }
+.seat[data-st="free"]:hover { --sz: 1.35; background: var(--c); color: #fff; z-index: 2; }
+.seat[data-st="mine"] { background: rgb(var(--fg)); color: var(--capsule); box-shadow: 0 0 0 2px var(--c), 0 4px 12px -4px var(--c); z-index: 1; }
+.seat[data-st="held"] { background: repeating-linear-gradient(45deg, rgba(245, 158, 11, .9) 0 3px, rgba(180, 83, 9, .9) 3px 6px); color: transparent; cursor: not-allowed; }
+.seat[data-st="sold"] { background: rgba(var(--fg), .13); color: transparent; cursor: not-allowed; }
+.seat[data-st="off"] { background: none; box-shadow: inset 0 0 0 1px rgba(var(--fg), .28); color: transparent; cursor: not-allowed; }
+.seat.is-dim { opacity: .22; }
+.seat:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; --sz: 1.3; z-index: 3; }
+.seat.is-pop { animation: seat-pop .45s var(--ease); }
+@keyframes seat-pop { 0% { --sz: .6; } 60% { --sz: 1.4; } 100% { --sz: 1; } }
+.seat.is-live { animation: seat-live 1.2s ease-out; }
+@keyframes seat-live { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, .8); } 100% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0); } }
+.st-canvas.is-far .seat { font-size: 0; }
+.st-zoom { position: absolute; top: calc(var(--u) * 4.2); left: calc(var(--u) * 1.3); display: grid; overflow: hidden; border-radius: calc(var(--r) * .55); background: var(--capsule); box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(var(--fg), .14); z-index: 2; }
+.st-zoom button { all: unset; cursor: pointer; display: grid; place-items: center; width: 38px; height: 36px; color: rgb(var(--fg)); }
+.st-zoom button + button { border-top: 1px solid rgba(var(--fg), .12); }
+.st-zoom button:hover { background: rgba(var(--fg), .08); }
+.st-zoom svg.i { width: 16px; height: 16px; }
+.st-zoom button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -2px; }
+.st-hint { display: flex; align-items: center; gap: .45em; margin: calc(var(--u) * .5) calc(var(--u) * .3) 0; font-size: calc(max(11px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .55); }
+.st-hint svg.i { width: 1.2em; height: 1.2em; }
+.st-legend { display: flex; flex-wrap: wrap; gap: .5em 1.3em; margin: calc(var(--u) * .55) calc(var(--u) * .3) calc(var(--u) * .2); padding: 0; list-style: none; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .72); }
+.st-legend li { display: inline-flex; align-items: center; gap: .45em; }
+.lg { width: 15px; height: 13px; border-radius: 4px 4px 3px 3px; }
+.lg.free { background: color-mix(in oklab, var(--c) 30%, transparent); box-shadow: inset 0 0 0 1.2px var(--c); }
+.lg.mine { background: rgb(var(--fg)); }
+.lg.held { background: repeating-linear-gradient(45deg, #f59e0b 0 3px, #b45309 3px 6px); }
+.lg.sold { background: rgba(var(--fg), .16); }
+.lg.off { box-shadow: inset 0 0 0 1px rgba(var(--fg), .35); }
+
+/* what you picked */
+.bk-cart, .bk-sum { padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); }
+.bk-held { display: flex; align-items: center; gap: .5em; margin: 0 0 .8em; padding: .55em .9em; border-radius: calc(var(--r) * .55); background: color-mix(in oklab, #f59e0b 14%, transparent); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgb(var(--fg)); }
+.bk-held svg.i { width: 1.25em; height: 1.25em; color: #f59e0b; }
+.bk-held b { font-variant-numeric: tabular-nums; }
+.bk-list { display: grid; gap: 4px; margin: 0 0 calc(var(--u) * .8); padding: 0; list-style: none; max-height: min(42vh, calc(var(--u) * 22)); overflow: auto; overscroll-behavior: contain; }
+.bk-list li { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: .7em; padding: .55em .8em; border-radius: calc(var(--r) * .5); background: rgba(var(--fg), .04); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); animation: ses-in .5s var(--ease) both; }
+.bk-list li > i { width: .65em; aspect-ratio: 1; border-radius: 50%; background: var(--c); }
+.bk-list li b { font-weight: var(--fwb); white-space: nowrap; }
+.bk-list li button { all: unset; cursor: pointer; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: rgba(var(--fg), .6); }
+.bk-list li button:hover { background: rgba(var(--fg), .1); color: rgb(var(--fg)); }
+.bk-list li button svg.i { width: 14px; height: 14px; }
+.bk-list li.bk-empty { grid-template-columns: auto 1fr; color: rgba(var(--fg), .62); background: none; box-shadow: inset 0 0 0 1px dashed; border: 1px dashed rgba(var(--fg), .2); }
+.bk-list li.bk-empty svg.i { width: 1.2em; height: 1.2em; }
+.bk-total { display: flex; align-items: baseline; justify-content: space-between; gap: 1em; margin-bottom: calc(var(--u) * .8); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
+.bk-total b { font-size: calc(max(17px, calc(var(--u) * 1.15)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); color: rgb(var(--fg)); }
+.bk-go, .bk-pay { width: 100%; gap: .5em; }
+.bk-go:disabled, .bk-go2:disabled { opacity: .45; cursor: not-allowed; filter: grayscale(.4); }
+.bk-go:disabled:active, .bk-go2:disabled:active { transform: none; }
+.bk-note { display: flex; align-items: flex-start; gap: .5em; margin: calc(var(--u) * .7) 0 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), .62); }
+.bk-note svg.i { flex: none; width: 1.3em; height: 1.3em; margin-top: .3em; color: var(--sc); }
+.bk-note a { color: var(--sc); }
+.bk-bar { display: none; }
+
+/* step 3: the hold, the buyer, the way to pay, the invoice */
+.bk-hold { display: flex; align-items: center; gap: calc(var(--u) * .9); padding: calc(var(--u) * .8) calc(var(--u) * 1.2); border-radius: calc(var(--r) * 1.1); background: color-mix(in oklab, var(--capsule) 92%, #f59e0b); }
+.bk-hold > div { display: grid; line-height: 1.8; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
+.bk-hold b { font-size: calc(max(14.5px, calc(var(--u) * .98)) * var(--tx) * var(--tx-main)); color: rgb(var(--fg)); }
+.bk-hold [data-hold] { font-variant-numeric: tabular-nums; color: #f59e0b; }
+.bk-ring { position: relative; flex: none; display: grid; place-items: center; width: max(46px, calc(var(--u) * 3)); aspect-ratio: 1; color: #f59e0b; }
+.bk-ring svg:not(.i) { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 3; }
+.bk-ring circle { stroke: rgba(var(--fg), .12); }
+.bk-ring .pr { stroke: #f59e0b; stroke-linecap: round; stroke-dasharray: 100px; stroke-dashoffset: calc((1 - var(--p, 1)) * 100px); transition: stroke-dashoffset 1s linear; }
+.bk-ring svg.i { width: 42%; height: 42%; }
+.bk-who, .bk-way { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5); }
+.bk-lead { margin: 0 0 calc(var(--u) * .9); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 2; color: rgba(var(--fg), .72); }
+.fld { display: grid; gap: .4em; margin-bottom: calc(var(--u) * .8); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.fld > span { font-weight: var(--fwm); color: rgba(var(--fg), .8); }
+.fld small { font-weight: 400; color: rgba(var(--fg), .55); }
+.fld input { box-sizing: border-box; width: 100%; height: max(46px, calc(var(--u) * 2.9)); padding: 0 1em; border-radius: calc(var(--r) * .55); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 calc(max(14px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)) var(--font); outline: none; transition: border-color .3s, box-shadow .3s; }
+.fld input[dir="ltr"] { text-align: left; letter-spacing: .04em; }
+.fld input::placeholder { color: rgba(var(--fg), .35); }
+.fld input:focus { border-color: var(--sc); box-shadow: 0 0 0 3px color-mix(in oklab, var(--sc) 25%, transparent); }
+.fld.is-bad input { border-color: #f43f5e; box-shadow: 0 0 0 3px rgba(244, 63, 94, .2); }
+.bk-otp { margin-top: calc(var(--u) * .4); padding: .9em 1em; border-radius: calc(var(--r) * .6); background: color-mix(in oklab, var(--sc) 8%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 30%, transparent); }
+.bk-otp.is-shake { animation: shake .55s cubic-bezier(.36, .07, .19, .97); }
+.bk-otp p { display: flex; gap: .5em; margin: 0 0 .7em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); line-height: 1.9; }
+.bk-otp p svg.i { flex: none; width: 1.35em; height: 1.35em; margin-top: .25em; color: var(--sc); }
+.bk-otp-row { display: flex; flex-wrap: wrap; align-items: center; gap: .7em 1em; }
+.otp { display: flex; gap: .45em; direction: ltr; }
+.otp input { box-sizing: border-box; width: max(42px, calc(var(--u) * 2.6)); height: max(48px, calc(var(--u) * 3)); border-radius: calc(var(--r) * .5); border: 1px solid rgba(var(--fg), .22); background: var(--capsule); color: rgb(var(--fg)); font: 800 calc(max(18px, calc(var(--u) * 1.2)) * var(--tx) * var(--tx-main)) var(--font); text-align: center; outline: none; transition: border-color .3s, box-shadow .3s; }
+.otp input:focus { border-color: var(--sc); box-shadow: 0 0 0 3px color-mix(in oklab, var(--sc) 25%, transparent); }
+.otp input:disabled { border-color: #22c55e; color: #22c55e; }
+.bk-otp-st { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
+.bk-otp-st.ok, .bk-code-st.ok { color: #16a34a; }
+.bk-otp-st.bad, .bk-code-st.bad { color: #e11d48; }
+:root[data-mode="dark"] .bk-otp-st.ok, :root[data-mode="dark"] .bk-code-st.ok { color: #4ade80; }
+:root[data-mode="dark"] .bk-otp-st.bad, :root[data-mode="dark"] .bk-code-st.bad { color: #fb7185; }
+.bk-ways { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * .5); }
+.way { position: relative; display: flex; align-items: center; gap: .8em; padding: .9em 1em; border-radius: calc(var(--r) * .6); cursor: pointer; box-shadow: inset 0 0 0 1px rgba(var(--fg), .14); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); transition: box-shadow .3s, background-color .3s; }
+.way input { position: absolute; opacity: 0; }
+.way > span:last-child { display: grid; line-height: 1.7; }
+.way small { color: rgba(var(--fg), .6); }
+.way-ic { display: grid; place-items: center; width: 38px; aspect-ratio: 1; border-radius: 50%; background: rgba(var(--fg), .07); color: var(--sc); }
+.way-ic svg.i { width: 50%; height: 50%; }
+.way.is-on { box-shadow: inset 0 0 0 2px var(--sc); background: color-mix(in oklab, var(--sc) 7%, transparent); }
+.way.is-off { opacity: .5; cursor: not-allowed; }
+.bk-code { display: flex; gap: .5em; margin-bottom: .4em; }
+.bk-code input { flex: 1; min-width: 0; height: 40px; padding: 0 .9em; border-radius: calc(var(--r) * .5); border: 1px dashed rgba(var(--fg), .3); background: none; color: rgb(var(--fg)); font: 600 13px var(--font); text-align: left; letter-spacing: .06em; outline: none; }
+.bk-code input:focus { border-style: solid; border-color: var(--sc); }
+.bk-code-st { min-height: 1.4em; margin: 0 0 .6em; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); }
+.bk-inv { display: grid; grid-template-columns: 1fr auto; gap: .55em 1em; margin: 0 0 calc(var(--u) * .9); padding-top: calc(var(--u) * .7); border-top: 1px solid rgba(var(--fg), .1); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
+.bk-inv dt { color: rgba(var(--fg), .66); }
+.bk-inv dd { margin: 0; font-weight: var(--fwm); text-align: left; font-variant-numeric: tabular-nums; }
+.bk-inv dd.neg { color: #16a34a; }
+:root[data-mode="dark"] .bk-inv dd.neg { color: #4ade80; }
+.bk-inv .tot { padding-top: .5em; border-top: 1px solid rgba(var(--fg), .1); font-size: 1.15em; font-weight: var(--fwb); color: rgb(var(--fg)); }
+.bk-inv dd.tot small { font-weight: 400; font-size: .75em; opacity: .7; }
+
+/* the demo gateway */
+.gw-box { width: min(520px, 100%); position: relative; }
+.gw-head { display: flex; align-items: center; gap: .8em; margin-bottom: 1.1em; padding-bottom: 1em; border-bottom: 1px solid rgba(var(--fg), .1); }
+.gw-head > svg.i { width: 2.2em; height: 2.2em; color: #22c55e; }
+.gw-head div { display: grid; line-height: 1.8; font-size: 13px; }
+.gw-head span { color: rgba(var(--fg), .66); }
+.gw-head span b { color: rgb(var(--fg)); }
+.gw-row { display: grid; grid-template-columns: 1fr 1fr; gap: .8em; align-items: end; }
+.gw-row .chip { height: max(46px, calc(var(--u) * 2.9)); margin-bottom: calc(var(--u) * .8); justify-content: center; }
+.gw-wait { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; align-content: center; gap: .6em; border-radius: inherit; background: color-mix(in oklab, var(--capsule) 92%, transparent); text-align: center; }
+.gw-wait span { font-size: 12.5px; color: rgba(var(--fg), .6); }
+.spin { width: 38px; height: 38px; border-radius: 50%; border: 3px solid rgba(var(--fg), .15); border-top-color: var(--sc, #a78bfa); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.bk-exp, .bk-miss { text-align: center; justify-items: center; }
+.bk-miss { display: grid; gap: .6em; max-width: 640px; margin: calc(var(--u) * 3) auto; padding: calc(var(--u) * 2.4) calc(var(--u) * 2); border-radius: calc(var(--r) * 1.15); }
+.bk-miss h1, .bk-exp h2 { margin: 0; font-size: calc(max(19px, calc(var(--u) * 1.3)) * var(--tx) * var(--tx-main)); }
+.bk-miss p, .bk-exp p { margin: 0 0 .6em; color: rgba(var(--fg), .7); line-height: 2; }
+.bk-exp .evp-dlg-end, .bk-miss .evp-dlg-end { justify-content: center; }
+.bk-exp-ic { display: grid; place-items: center; width: 62px; aspect-ratio: 1; margin: 0 auto .6em; border-radius: 50%; background: color-mix(in oklab, #f59e0b 16%, transparent); color: #f59e0b; }
+.bk-exp-ic svg.i { width: 46%; height: 46%; }
+a.buy, a.chip { text-decoration: none; }
+
+/* step 4: the tickets */
+.tk-ok { position: relative; overflow: hidden; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "c s k" "c a a"; align-items: center; gap: calc(var(--u) * .5) calc(var(--u) * 1.4); padding: calc(var(--u) * 1.5) calc(var(--u) * 1.8); border-radius: calc(var(--r) * 1.15); }
+.tk-check { grid-area: c; width: max(64px, calc(var(--u) * 4.2)); }
+.tk-check svg { width: 100%; height: 100%; display: block; }
+.tk-check circle { fill: color-mix(in oklab, #22c55e 16%, transparent); stroke: #22c55e; stroke-width: 2.5; stroke-dasharray: 160; stroke-dashoffset: 0; }
+.tk-check path { fill: none; stroke: #22c55e; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; stroke-dashoffset: 0; }
+.tk-check.is-in circle { animation: draw 0.8s var(--ease) both; }
+.tk-check.is-in path { animation: draw .5s var(--ease) .45s both; }
+@keyframes draw { from { stroke-dashoffset: 160; } }
+.tk-say { grid-area: s; }
+.tk-say h1 { margin: 0; font-size: calc(max(19px, calc(var(--u) * 1.35)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.5; }
+.tk-say p { margin: .2em 0 0; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), .7); }
+.tk-code { grid-area: k; display: grid; justify-items: end; gap: .3em; }
+.tk-code small { font-size: calc(max(11px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.tk-code b { font: 800 calc(max(16px, calc(var(--u) * 1.1)) * var(--tx) * var(--tx-main)) ui-monospace, "SFMono-Regular", Menlo, monospace; letter-spacing: .06em; }
+.tk-acts { grid-area: a; display: flex; flex-wrap: wrap; gap: calc(var(--u) * .4); }
+.cf { position: absolute; z-index: 3; left: calc(var(--u) * 3.5); top: 50%; width: 8px; height: 12px; border-radius: 2px; pointer-events: none; }
+.tk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 560px), 1fr)); gap: var(--gap); }
+.tk-card { --nr: 9px; position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr) 0 auto; align-items: stretch; border-radius: calc(var(--r) * 1.05); background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo)); box-shadow: 0 14px 40px -22px rgba(0, 0, 0, calc(var(--shadow) * var(--shk))); overflow: hidden;
+  -webkit-mask: radial-gradient(circle var(--nr) at max(150px, calc(var(--u) * 9.4)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at max(150px, calc(var(--u) * 9.4)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle var(--nr) at max(150px, calc(var(--u) * 9.4)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at max(150px, calc(var(--u) * 9.4)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat; }
+.tk-card::before { content: ""; position: absolute; inset-block: 0; right: 0; width: 5px; background: var(--c); }
+.tk-pst { width: max(84px, calc(var(--u) * 5.4)); aspect-ratio: auto; height: 100%; min-height: 100%; border-radius: 0; box-shadow: none; }
+.tk-body { display: grid; align-content: start; gap: .35em; padding: calc(var(--u) * 1) calc(var(--u) * 1.2); min-width: 0; }
+.tk-kind { display: inline-flex; align-items: center; gap: .45em; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .62); }
+.tk-kind svg.i { width: 1.2em; height: 1.2em; color: var(--c); }
+.tk-body h2 { margin: 0; font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.6; }
+.tk-body dl { display: grid; grid-template-columns: auto 1fr; gap: .2em .8em; margin: .2em 0; font-size: calc(max(12px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); }
+.tk-body dt { color: rgba(var(--fg), .55); }
+.tk-body dd { margin: 0; font-weight: var(--fwm); }
+.tk-addr { display: flex; align-items: flex-start; gap: .4em; margin: 0; font-size: calc(max(11px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), .6); }
+.tk-addr svg.i { flex: none; width: 1.2em; height: 1.2em; margin-top: .25em; }
+.tk-perf { position: relative; }
+.tk-perf::after { content: ""; position: absolute; top: calc(var(--nr) + 6px); bottom: calc(var(--nr) + 6px); left: 0; border-left: 2px dashed rgba(var(--fg), .2); }
+.tk-qr { display: grid; justify-items: center; align-content: center; gap: .4em; width: max(150px, calc(var(--u) * 9.4)); padding: calc(var(--u) * .9); }
+.qr { width: 100%; max-width: 132px; border-radius: 8px; display: block; }
+.tk-qr small { font: 700 10.5px ui-monospace, "SFMono-Regular", Menlo, monospace; color: rgba(var(--fg), .66); }
+.tk-qr span { font-size: calc(max(12px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); }
+.tk-help { padding: calc(var(--u) * 1.2) calc(var(--u) * 1.5); }
+.tk-help ul { margin: 0; padding-inline-start: 1.3em; display: grid; gap: .4em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), .76); }
+
+@media (max-width: 1099px), (max-aspect-ratio: 5/4) {
+  .bk-top { grid-template-columns: 1fr; }
+  .bk-cols .evp-side { order: 2; }
+}
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .bk-showline { flex-wrap: wrap; }
+  .bk-ses { width: 100%; }
+  .bk-filter { flex-direction: column; align-items: flex-start; }
+  .st-view { height: 62svh; }
+  .st-zoom { top: auto; bottom: 64px; left: 12px; }
+  .bk-ways { grid-template-columns: 1fr; }
+  .gw-row { grid-template-columns: 1fr; }
+  .tk-ok { grid-template-columns: auto 1fr; grid-template-areas: "c s" "k k" "a a"; padding: 18px; }
+  .tk-code { justify-items: start; }
+  .tk-card { grid-template-columns: minmax(0, 1fr) 0 auto; -webkit-mask: none; mask: none; }
+  .tk-pst { display: none; }
+  .tk-qr { width: 128px; }
+  .bk-bar { position: fixed; z-index: 35; inset-inline: 10px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px; padding-inline-start: 16px; border-radius: 999px; background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 18px 40px -14px rgba(0, 0, 0, calc(.9 * var(--shk) + .1)), inset 0 0 0 1px rgba(var(--fg), .14); }
+  .bk-bar-l { all: unset; display: grid; line-height: 1.5; font-size: 12.5px; cursor: pointer; }
+  .bk-bar-l b { font-size: 13.5px; }
+  .bk-bar-l span { color: rgba(var(--fg), .66); }
+  .bk-bar .buy { height: 44px; min-width: 0; padding-inline: 22px; }
+}
+@media print {
+  .nav, .totop, .bk-bar, .evp-cta, .steps, .tk-acts, .tk-help, .toast, #protoFab, .pp-fab, .evp-crumb { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .tk-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+}
+@media (prefers-reduced-motion: reduce) { .seat, .bk-list li, .bk-live > i, .seat.is-pop, .seat.is-live, .tk-check.is-in circle, .tk-check.is-in path, .spin { animation: none !important; transition: none !important; } }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -1514,6 +1792,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
 (() => {
 'use strict';
@@ -3337,6 +3616,121 @@ const s2 = {
 };
 
 /* ════════════════════════════════════════════════════════════════
+   the halls' plans (the brief's hall designer, §2.3): a plan is a stage and its sections, each of a kind —
+     fan     rows on arcs round the stage, in blocks with aisles between them (a semicircle, an amphitheatre)
+     rect    straight rows in blocks (a shoebox hall); turned (rot) it makes the stands along a sports hall's sides
+     boxes   the boxes (لژ) along a side wall, a few seats in each
+     tables  round tables with chairs round them (a cabaret, a comedy night)
+     stand   a standing area, sold by number, no seats
+   Seats are numbered as halls number them here: seat 1 on the right of the row (as you face the stage), row 1 nearest the
+   stage. A section's runs give each run of rows (or boxes, or tables) its price tier. The plans below are the TYPES of the
+   halls in the sample (an opera horseshoe like تالار وحدت, a wide fan like the conference hall of برج میلاد, a sports hall
+   like آزادی …); each real hall's own plan (from its seating chart) replaces its type in PLAN_OF.
+   ════════════════════════════════════════════════════════════════ */
+const HP = { pitch: 24, gap: 28, aisle: 1.7 };
+const PLANS = {
+  // a horseshoe opera hall: the parterre in three blocks, boxes on both walls, two balconies behind
+  opera: { stage: 'arc', secs: [
+    { id: 'p', t: 'پارتر', k: 'fan', rows: 16, R0: 230, seats: (r) => [6 + (r >> 2), 12 + (r >> 1), 6 + (r >> 2)], runs: [[1, 5, 'A'], [6, 11, 'B'], [12, 16, 'C']] },
+    { id: 'lr', t: 'لژهای راست', k: 'boxes', side: 1, n: 6, per: 4, x: 560, y0: 170, dy: 82, runs: [[1, 6, 'A']] },
+    { id: 'll', t: 'لژهای چپ', k: 'boxes', side: -1, n: 6, per: 4, x: 560, y0: 170, dy: 82, runs: [[1, 6, 'A']] },
+    { id: 'b1', t: 'بالکن یک', k: 'fan', rows: 5, R0: 760, seats: (r) => [10 + r, 16 + r, 10 + r], runs: [[1, 2, 'B'], [3, 5, 'C']] },
+    { id: 'b2', t: 'بالکن دو', k: 'fan', rows: 4, R0: 940, seats: (r) => [12 + r, 18 + r, 12 + r], runs: [[1, 4, 'D']] },
+  ] },
+  // a wide fan (a conference hall): three blocks on the floor, a balcony behind
+  'fan-l': { stage: 'arc', secs: [
+    { id: 'f', t: 'همکف', k: 'fan', rows: 16, R0: 240, seats: (r) => [8 + (r >> 1), 14 + (r >> 1), 8 + (r >> 1)], runs: [[1, 5, 'A'], [6, 11, 'B'], [12, 16, 'C']] },
+    { id: 'b', t: 'بالکن', k: 'fan', rows: 5, R0: 780, seats: (r) => [14 + r, 20 + r, 14 + r], runs: [[1, 5, 'D']] },
+  ] },
+  'fan-m': { stage: 'arc', secs: [
+    { id: 'f', t: 'همکف', k: 'fan', rows: 13, R0: 220, seats: (r) => [6 + (r >> 1), 10 + (r >> 1), 6 + (r >> 1)], runs: [[1, 4, 'A'], [5, 9, 'B'], [10, 13, 'C']] },
+    { id: 'b', t: 'بالکن', k: 'fan', rows: 4, R0: 640, seats: (r) => [10 + r, 14 + r, 10 + r], runs: [[1, 4, 'D']] },
+  ] },
+  'fan-s': { stage: 'arc', secs: [
+    { id: 'f', t: 'سالن', k: 'fan', rows: 10, R0: 200, seats: (r) => [5 + (r >> 1), 8 + (r >> 1), 5 + (r >> 1)], runs: [[1, 3, 'A'], [4, 7, 'B'], [8, 10, 'C']] },
+  ] },
+  // a straight hall: two blocks of straight rows and an aisle down the middle
+  'rect-m': { stage: 'rect', secs: [
+    { id: 'f', t: 'همکف', k: 'rect', rows: 14, y0: 150, seats: () => [9, 9], runs: [[1, 4, 'A'], [5, 9, 'B'], [10, 14, 'C']] },
+    { id: 'b', t: 'بالکن', k: 'rect', rows: 4, y0: 150 + 14 * 28 + 80, seats: () => [11, 11], runs: [[1, 4, 'D']] },
+  ] },
+  'rect-s': { stage: 'rect', secs: [
+    { id: 'f', t: 'سالن', k: 'rect', rows: 10, y0: 140, seats: (r) => [6 + (r > 5 ? 1 : 0), 6 + (r > 5 ? 1 : 0)], runs: [[1, 3, 'A'], [4, 7, 'B'], [8, 10, 'C']] },
+  ] },
+  // a sports hall for a big concert: a standing floor before the stage, seated stands on three sides
+  arena: { stage: 'wide', secs: [
+    { id: 'ga', t: 'ایستاده (جلوی صحنه)', k: 'stand', cap: 1200, box: [-310, 120, 620, 360], runs: [[0, 0, 'B']] },
+    { id: 'sr', t: 'سکوی راست', k: 'rect', rows: 7, y0: 0, x0: 380, yc: 300, rot: -Math.PI / 2, seats: () => [16], runs: [[1, 3, 'A'], [4, 7, 'C']] },
+    { id: 'sl', t: 'سکوی چپ', k: 'rect', rows: 7, y0: 0, x0: -380, yc: 300, rot: Math.PI / 2, seats: () => [16], runs: [[1, 3, 'A'], [4, 7, 'C']] },
+    { id: 'sb', t: 'سکوی روبه‌رو', k: 'fan', rows: 6, R0: 600, seats: (r) => [10 + r, 16 + r, 10 + r], runs: [[1, 3, 'C'], [4, 6, 'D']] },
+  ] },
+  // a cabaret: round tables before the stage, straight rows behind them
+  cabaret: { stage: 'rect', secs: [
+    { id: 'tb', t: 'میزها', k: 'tables', cols: 5, rows: 3, per: 6, y0: 200, dx: 128, dy: 116, runs: [[1, 5, 'A'], [6, 15, 'B']] },
+    { id: 'f', t: 'ردیف‌های پشت میزها', k: 'rect', rows: 8, y0: 200 + 3 * 116 + 30, seats: () => [10, 10], runs: [[1, 8, 'C']] },
+  ] },
+};
+const RUN_WORD = { fan: 'ردیف', rect: 'ردیف', boxes: 'لژ', tables: 'میز', stand: '' };
+const planOf = (e) => PLANS[hallOf(e).plan] || PLANS['fan-m'];
+
+// where every seat of a plan sits (one drawing for the whole hall, the stage at the top), the outline and label of every
+// section, and the rows' numbers
+function hallLayout(plan) {
+  const secs = [];
+  for (const sec of plan.secs) {
+    const seats = [], labels = [], shapes = [];
+    if (sec.k === 'fan') {
+      for (let r = 0; r < sec.rows; r++) {
+        const R = sec.R0 + r * HP.gap, blocks = sec.seats(r), step = HP.pitch / R;
+        const slots = blocks.reduce((a, b) => a + b, 0) + (blocks.length - 1) * HP.aisle, span = (slots - 1) * step;
+        const at = (sl) => { const th = span / 2 - sl * step; return { x: R * Math.sin(th), y: R * Math.cos(th), a: -th }; };
+        let sl = 0, n = 0;
+        blocks.forEach((b) => { for (let k = 0; k < b; k++) { seats.push({ row: r + 1, n: ++n, ...at(sl) }); sl++; } sl += HP.aisle; });
+        labels.push({ row: r + 1, ...at(-1.3) }, { row: r + 1, ...at(slots + 0.3) });
+      }
+    } else if (sec.k === 'rect') {
+      const rot = sec.rot || 0, c = Math.cos(rot), s = Math.sin(rot), x0 = sec.x0 || 0, y0 = sec.yc != null ? sec.yc : 0;
+      const T = (x, y) => (rot ? { x: x0 + x * c - y * s, y: y0 + x * s + y * c } : { x: x + x0, y });
+      for (let r = 0; r < sec.rows; r++) {
+        const blocks = sec.seats(r), slots = blocks.reduce((a, b) => a + b, 0) + (blocks.length - 1) * HP.aisle, y = (sec.y0 || 0) + r * HP.gap;
+        const at = (sl) => ({ ...T((slots - 1) * HP.pitch / 2 - sl * HP.pitch, rot ? r * HP.gap + 40 : y), a: rot });
+        let sl = 0, n = 0;
+        blocks.forEach((b) => { for (let k = 0; k < b; k++) { seats.push({ row: r + 1, n: ++n, ...at(sl) }); sl++; } sl += HP.aisle; });
+        labels.push({ row: r + 1, ...at(-1.3) }, { row: r + 1, ...at(slots + 0.3) });
+      }
+    } else if (sec.k === 'boxes') {
+      for (let b = 0; b < sec.n; b++) {
+        const cx = sec.side * sec.x, cy = sec.y0 + b * sec.dy, a = sec.side * -0.42, c = Math.cos(a), s = Math.sin(a);
+        shapes.push({ k: 'box', x: cx, y: cy, a, n: b + 1 });
+        [[11, -9], [-11, -9], [11, 11], [-11, 11]].slice(0, sec.per).forEach(([dx, dy], k) => seats.push({ row: b + 1, n: k + 1, x: cx + dx * c - dy * s, y: cy + dx * s + dy * c, a }));
+      }
+    } else if (sec.k === 'tables') {
+      let t = 0;
+      for (let r = 0; r < sec.rows; r++) for (let col = 0; col < sec.cols; col++) {
+        t++; const cx = ((sec.cols - 1) / 2 - col) * sec.dx, cy = sec.y0 + r * sec.dy;
+        shapes.push({ k: 'table', x: cx, y: cy, n: t });
+        for (let k = 0; k < sec.per; k++) { const an = -Math.PI / 2 + (k * 2 * Math.PI) / sec.per; seats.push({ row: t, n: k + 1, x: cx + Math.cos(an) * 34, y: cy + Math.sin(an) * 34, a: an + Math.PI / 2 }); }
+      }
+    } else if (sec.k === 'stand') {
+      const [x, y, w, h] = sec.box; shapes.push({ k: 'stand', x, y, w, h });
+    }
+    const lp = sec.k === 'fan' ? { x: 0, y: sec.R0 - 30 } : sec.k === 'rect' && !sec.rot ? { x: sec.x0 || 0, y: (sec.y0 || 0) - 30 } : sec.k === 'boxes' ? { x: sec.side * sec.x, y: sec.y0 - 52 } : sec.k === 'tables' ? { x: 0, y: sec.y0 - 66 } : null;
+    secs.push({ sec, seats, labels, shapes, lp });
+  }
+  // the bounds of every section and of the whole hall (the stage's room included)
+  const pad = 46; let X0 = -260, X1 = 260, Y0 = -110, Y1 = 120;
+  for (const z of secs) {
+    const pts = z.seats.concat(z.labels), sh = z.shapes.flatMap((p) => (p.k === 'stand' ? [{ x: p.x, y: p.y }, { x: p.x + p.w, y: p.y + p.h }] : [{ x: p.x - 36, y: p.y - 36 }, { x: p.x + 36, y: p.y + 36 }]));
+    const all = pts.concat(sh); if (!all.length) continue;
+    z.b = [Math.min(...all.map((p) => p.x)) - 16, Math.min(...all.map((p) => p.y)) - 16, Math.max(...all.map((p) => p.x)) + 16, Math.max(...all.map((p) => p.y)) + 16];
+    X0 = Math.min(X0, z.b[0]); Y0 = Math.min(Y0, z.b[1]); X1 = Math.max(X1, z.b[2]); Y1 = Math.max(Y1, z.b[3]);
+  }
+  const ox = -X0 + pad, oy = -Y0 + pad + 26, mv = (p) => ({ ...p, x: p.x + ox, y: p.y + oy });
+  secs.forEach((z) => { z.seats = z.seats.map(mv); z.labels = z.labels.map(mv); z.shapes = z.shapes.map(mv); if (z.lp) z.lp = mv(z.lp); if (z.b) z.b = [z.b[0] + ox, z.b[1] + oy, z.b[2] + ox, z.b[3] + oy]; });
+  return { W: Math.round(X1 - X0 + pad * 2), H: Math.round(Y1 - Y0 + pad * 2 + 26), secs, cx: ox, cy: oy, stage: plan.stage };
+}
+
+/* ════════════════════════════════════════════════════════════════
    the show's page: the first of the four steps of a purchase (choose the session → the seats → book and pay → the ticket),
    after the owner's sample: the steps, a cover with the poster, the facts (the days, the time and how long, the hall and its
    address, a map), what the show is, the price plan (+ 10 % VAT), the rules to accept, and the sessions as small tickets. On a
@@ -3345,50 +3739,45 @@ const s2 = {
    Transition) and back. Everything comes from the show's data; what the data doesn't have yet (the address, the sessions'
    seats, the zones' prices) is made from it here, the way the admin panel will fill it later.
    ════════════════════════════════════════════════════════════════ */
-// the halls we know: their address, their size (it sets the zones of the price plan) and where they are on the map
+// the halls we know: their address, their plan (hall.js: the price plan's zones and the seat map) and where they are (for the routing)
 const HALLS = [
-  [/وحدت/, 'تهران، خیابان حافظ، خیابان استاد شهریار، تالار وحدت', 'grand'],
-  [/میلاد/, 'تهران، بزرگراه شهید همت، برج میلاد', 'grand'],
-  [/آزادی/, 'تهران، بزرگراه شهید همت، مجموعه‌ی ورزشی آزادی', 'grand'],
-  [/ارسباران/, 'تهران، خیابان شریعتی، بالاتر از پل صدر، خیابان یخچال', 'medium'],
-  [/نیاوران/, 'تهران، خیابان پاسداران، روبه‌روی پارک نیاوران', 'medium'],
-  [/شهرزاد/, 'تهران، خیابان کریم‌خان زند، خیابان ایرانشهر', 'medium'],
-  [/تئاترشهر/, 'تهران، تقاطع خیابان انقلاب و ولیعصر، پارک دانشجو', 'medium'],
-  [/مهرگان/, 'تهران، خیابان انقلاب، خیابان دانشگاه، خیابان وحید نظری', 'small'],
-  [/تالار هنر$|، تالار هنر/, 'تهران، خیابان استاد نجات‌اللهی، خیابان سپند', 'medium'],
-  [/سیتی سنتر/, 'اصفهان، بزرگراه شهید خرازی، مجتمع سیتی سنتر', 'grand'],
-  [/حافظ/, 'شیراز، بلوار چمران، تالار حافظ', 'medium'],
-  [/همایش‌های بین‌المللی/, 'مشهد، بلوار سجاد، سالن همایش‌های بین‌المللی', 'grand'],
-  [/فجر/, 'تبریز، خیابان امام خمینی، تالار فجر', 'medium'],
-  [/اکومال/, 'کرج، بلوار جمهوری، مجتمع اکومال', 'medium'],
-  [/مرکزی رشت/, 'رشت، خیابان سعدی، تالار مرکزی', 'medium'],
-  [/کرمان|مرکزی فرهنگ و هنر/, 'کرمان، بلوار جمهوری اسلامی، مجتمع فرهنگی و هنری', 'small'],
-  [/یزد/, 'یزد، بلوار جمهوری، فرهنگسرای یزد', 'small'],
-  [/بوعلی/, 'همدان، میدان بوعلی، مجتمع فرهنگی بوعلی', 'medium'],
-  [/ورزش و جوانان/, 'اردبیل، خیابان امام، اداره‌ی کل ورزش و جوانان', 'small'],
-  [/هنر اهواز/, 'اهواز، کیانپارس، خیابان شهید چمران', 'medium'],
-  [/سلیمان‌?نژاد/, 'رامسر، خیابان مطهری، آمفی‌تئاتر شهید سلیمان‌نژاد', 'small'],
-  [/آزادشاد/, 'ساری، بلوار طالقانی، مجتمع فرهنگی هنری آزادشاد', 'medium'],
-  [/بصیرت/, 'تهران، بزرگراه شهید حکیم، مجتمع فرهنگی هنری بصیرت', 'medium'],
-  [/اداره فرهنگ و ارشاد/, 'تهران، سالن اصلی اداره‌ی فرهنگ و ارشاد اسلامی', 'medium'],
+  [/وحدت/, 'تهران، خیابان حافظ، خیابان استاد شهریار، تالار وحدت', 'opera', 35.6997, 51.4117],
+  [/میلاد/, 'تهران، بزرگراه شهید همت، برج میلاد', 'fan-l', 35.7448, 51.3753],
+  [/آزادی/, 'تهران، بزرگراه لشگری، مجموعه‌ی ورزشی آزادی', 'arena', 35.7247, 51.2752],
+  [/ارسباران/, 'تهران، خیابان شریعتی، بالاتر از پل صدر، خیابان یخچال', 'rect-m', 35.7713, 51.4466],
+  [/نیاوران/, 'تهران، خیابان پاسداران، روبه‌روی پارک نیاوران', 'fan-m', 35.8087, 51.4693],
+  [/شهرزاد/, 'تهران، خیابان کریم‌خان زند، خیابان ایرانشهر', 'fan-s', 35.7154, 51.4202],
+  [/تئاترشهر/, 'تهران، تقاطع خیابان انقلاب و ولیعصر، پارک دانشجو', 'fan-m', 35.7008, 51.4064],
+  [/مهرگان/, 'تهران، خیابان انقلاب، خیابان دانشگاه، خیابان وحید نظری', 'rect-s', 35.7006, 51.3965],
+  [/تالار هنر$|، تالار هنر/, 'تهران، خیابان استاد نجات‌اللهی، خیابان سپند', 'rect-m', 35.7109, 51.4161],
+  [/سیتی سنتر/, 'اصفهان، بزرگراه شهید خرازی، مجتمع سیتی سنتر', 'cabaret', 32.6116, 51.6950],
+  [/حافظ/, 'شیراز، بلوار چمران، تالار حافظ', 'fan-m', 29.6316, 52.5048],
+  [/همایش‌های بین‌المللی/, 'مشهد، بلوار سجاد، سالن همایش‌های بین‌المللی', 'fan-l', 36.3152, 59.5600],
+  [/فجر/, 'تبریز، خیابان امام خمینی، تالار فجر', 'opera', 38.0700, 46.3000],
+  [/اکومال/, 'کرج، بلوار جمهوری، مجتمع اکومال', 'rect-m', 35.8326, 50.9610],
+  [/مرکزی رشت/, 'رشت، خیابان سعدی، تالار مرکزی', 'opera', 37.2808, 49.5832],
+  [/کرمان|مرکزی فرهنگ و هنر/, 'کرمان، بلوار جمهوری اسلامی، مجتمع فرهنگی و هنری', 'rect-s', 30.2839, 57.0834],
+  [/یزد/, 'یزد، بلوار جمهوری، فرهنگسرای یزد', 'rect-s', 31.8974, 54.3569],
+  [/بوعلی/, 'همدان، میدان بوعلی، مجتمع فرهنگی بوعلی', 'fan-m', 34.7983, 48.5146],
+  [/ورزش و جوانان/, 'اردبیل، خیابان امام، اداره‌ی کل ورزش و جوانان', 'rect-s', 38.2498, 48.2933],
+  [/هنر اهواز/, 'اهواز، کیانپارس، خیابان شهید چمران', 'fan-m', 31.3183, 48.6706],
+  [/سلیمان‌?نژاد/, 'رامسر، خیابان مطهری، آمفی‌تئاتر شهید سلیمان‌نژاد', 'fan-s', 36.9031, 50.6583],
+  [/آزادشاد/, 'ساری، بلوار طالقانی، مجتمع فرهنگی هنری آزادشاد', 'fan-m', 36.5633, 53.0601],
+  [/بصیرت/, 'تهران، بزرگراه شهید حکیم، مجتمع فرهنگی هنری بصیرت', 'fan-m', null, null],
+  [/اداره فرهنگ و ارشاد/, 'تهران، سالن اصلی اداره‌ی فرهنگ و ارشاد اسلامی', 'fan-m', null, null],
 ];
-const hallOf = (e) => { const v = e.venue; const h = HALLS.find(([re]) => re.test(v)); const name = v.replace(new RegExp(`^${e.city}[،,]\\s*`), ''); return { name, addr: h ? h[1] : `${e.city}، ${name}`, size: h ? h[2] : 'medium' }; };
-// the zones of a hall and the tier of each run of rows (A is the dearest); a tier's price is a step above the lowest price of the show
-const ZONES = {
-  grand: [['همکف', [[1, 6, 'A'], [7, 13, 'B'], [14, 20, 'C']]], ['بالکن یک', [[1, 3, 'B'], [4, 7, 'C']]], ['بالکن دو', [[1, 6, 'D']]]],
-  medium: [['همکف', [[1, 5, 'A'], [6, 10, 'B'], [11, 14, 'C']]], ['بالکن', [[1, 5, 'D']]]],
-  small: [['سالن اصلی', [[1, 3, 'A'], [4, 7, 'B'], [8, 10, 'C']]]],
-};
+const hallOf = (e) => { const v = e.venue; const h = HALLS.find(([re]) => re.test(v)); const name = v.replace(new RegExp(`^${e.city}[،,]\\s*`), ''); return { name, addr: h ? h[1] : `${e.city}، ${name}`, plan: h ? h[2] : 'fan-m', lat: h ? h[3] : null, lng: h ? h[4] : null }; };
 const TIER = { A: { k: 2.2, c: '#8b5cf6' }, B: { k: 1.6, c: '#ec4899' }, C: { k: 1.25, c: '#f97316' }, D: { k: 1, c: '#0ea5e9' } };
 const DUR = { concert: 120, theatre: 90, comedy: 100 };
 const priceNum = (e) => { const d = String(e.price).replace(/[۰-۹]/g, (x) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(x)).replace(/[^\d]/g, ''); return (+d || 0) * (/هزار/.test(e.price) ? 1000 : 1); };
 const money = (n) => fa(Math.round(n).toLocaleString('en-US')).replace(/,/g, '٬');
 function tiersOf(e) {
-  const low = priceNum(e), z = ZONES[hallOf(e).size], used = [...new Set(z.flatMap(([, r]) => r.map((x) => x[2])))].sort().reverse();
+  const low = priceNum(e), P = planOf(e), used = [...new Set(P.secs.flatMap((zn) => zn.runs.map((x) => x[2])))].sort().reverse();
   // the cheapest tier in this hall is the show's lowest price; the others are steps above it (rounded to 10,000 toman)
   const base = TIER[used[0]].k, p = (t) => Math.round((low * TIER[t].k / base) / 1e4) * 1e4;
-  return z.flatMap(([zone, runs]) => runs.map(([a, b, t]) => ({ zone, a, b, t, c: TIER[t].c, price: p(t) })));
+  return P.secs.flatMap((zn) => zn.runs.map(([a, b, t]) => ({ zone: zn.t, zid: zn.id, kind: zn.k, word: RUN_WORD[zn.k], a, b, t, c: TIER[t].c, price: p(t) })));
 }
+const runName = (t) => (t.kind === 'stand' ? t.zone : `${t.zone}، ${t.word} ${fa(t.a)}${t.b > t.a ? ` تا ${fa(t.b)}` : ''}`);
 // a small number that is always the same for the same show (so its seats and its map don't change on a reload)
 const seedOf = (s) => { let h = 2166136261; for (const ch of String(s)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
 const rngOf = (seed) => () => { seed = (seed + 0x6D2B79F5) | 0; let t = seed; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
@@ -3451,16 +3840,23 @@ const page = {
   },
   // the address decides: #/e/<show> is a show's page, anything else is the home page
   route(first) {
-    const m = /^#\/e\/([^/?#]+)/.exec(location.hash), e = m && showById(decodeURIComponent(m[1]));
-    if (e) {
-      const t = this.trail;
-      if (t.length > 1 && t[t.length - 2] === e.id) t.pop(); else if (t[t.length - 1] !== e.id) t.push(e.id);
-      this.show(e, first === true);
+    const v = this.parse(location.hash);
+    if (v) {
+      const t = this.trail, h = location.hash;
+      if (t.length > 1 && t[t.length - 2] === h) t.pop(); else if (t[t.length - 1] !== h) t.push(h);
+      this.show(v, first === true);
     } else { this.trail = []; if (this.on) this.hide(); }
   },
-  open(e, { from = null, to = null } = {}) {
-    this.from = from; this.to = to; if (!this.on) this.trail = []; this.fromList = true;
-    const h = `#/e/${encodeURIComponent(e.id)}`;
+  // #/e/<show> · #/e/<show>/s/<session> · #/e/<show>/s/<session>/pay · #/ticket/<code> · and the pages of buy.js
+  parse(h) {
+    let m = /^#\/e\/([^/?#]+)(?:\/s\/([^/?#]+)(\/pay)?)?$/.exec(h);
+    if (m) { const e = showById(decodeURIComponent(m[1])); if (!e) return null; if (!m[2]) return { kind: 'show', e }; return { kind: m[3] ? 'pay' : 'seats', e, sid: decodeURIComponent(m[2]) }; }
+    return typeof buy !== 'undefined' ? buy.parse(h) : null;
+  },
+  open(e, { from = null, to = null } = {}) { this.go(`#/e/${encodeURIComponent(e.id)}`, { from, to }); },
+  // any view by its address (from the list, a header link, a step)
+  go(h, { from = null, to = null } = {}) {
+    this.from = from; this.to = to; if (!this.on) { this.trail = []; this.fromList = true; }
     if (location.hash === h) this.route(); else location.hash = h;
   },
   // back to the list: through the browser's own history when the page was opened from it (so «back» stays honest)
@@ -3486,21 +3882,23 @@ const page = {
     t.finished.finally(() => { root.classList.remove('vt-page'); if (this.vtEl) { this.vtEl.style.viewTransitionName = ''; this.vtEl = null; } });
     return t;
   },
-  show(e, first) {
-    const from = this.from && this.from.isConnected && this.from.getBoundingClientRect().bottom > 0 && this.from.getBoundingClientRect().top < innerHeight ? this.from : null;
+  show(v, first) {
+    const e = v.e || null, vis = (x) => x && x.isConnected && x.getBoundingClientRect().bottom > 0 && x.getBoundingClientRect().top < innerHeight;
+    // the poster flies: from the card that was pressed into the show's page, and from step to step (the page's poster into the next one's)
+    const from = vis(this.from) ? this.from : vis($('.evp-poster img, .bk-poster img', this.el)) ? $('.evp-poster img, .bk-poster img', this.el) : null;
     const was = this.on;
     const change = () => {
       if (!was) this.y = scrollY;
-      this.e = e; this.on = true; state.page = true; timer.sync(); closePop();
-      this.render(e);
+      if (this.leave) { const f = this.leave; this.leave = null; f(); }   // the last view stops what it runs (the live seat map, a timer)
+      this.v = v; this.e = e; this.on = true; state.page = true; timer.sync(); closePop();
       root.classList.add('is-page');
+      if (v.kind === 'show') { this.render(e); document.title = `${e.title} · بلیت`; } else buy.render(v);
       scrollTo({ top: 0, behavior: 'instant' }); smoothScroll.stop();
       scrollFx.apply(true); s2.toTop.sync();
-      document.title = `${e.title} · بلیت`;
       this.enter(!vt);
     };
     const vt = !first && !!document.startViewTransition && !!MOTK() && !modeFx.busy;
-    const t = first ? (change(), null) : this.vt(change, from, () => $('.evp-poster img', this.el));
+    const t = first ? (change(), null) : this.vt(change, e ? from : null, () => (e ? $('.evp-poster img, .bk-poster img', this.el) : null));
     this.from = null;
     const after = () => { if (this.to === 'sessions') this.toBook(); this.to = null; };
     if (t) t.finished.then(after, after); else after();
@@ -3509,15 +3907,16 @@ const page = {
     if (!this.on) return;
     const e = this.e, y = location.hash === '#hero' ? 0 : this.y;
     const change = () => {
+      if (this.leave) { const f = this.leave; this.leave = null; f(); }
       root.classList.remove('is-page');
-      this.on = false; state.page = false; this.el.textContent = ''; this.e = null;
+      this.on = false; state.page = false; this.el.textContent = ''; this.e = null; this.v = null;
       scrollTo({ top: y, behavior: 'instant' }); smoothScroll.stop();
       s2.clampAll(); timer.sync(); scrollFx.apply(true); s2.probe(); s2.toTop.sync();
       document.title = this.title0;
     };
-    const card = () => { const im = $(`.tkt[data-id="${e.id}"]:not([hidden]) img, .ptk[data-id="${e.id}"] img`); if (!im) return null; const r = im.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight ? im : null; };
-    const pst = $('.evp-poster img', this.el);
-    const t = this.vt(change, pst && pst.getBoundingClientRect().bottom > 0 ? pst : null, card);
+    const card = () => { if (!e) return null; const im = $(`.tkt[data-id="${e.id}"]:not([hidden]) img, .ptk[data-id="${e.id}"] img`); if (!im) return null; const r = im.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight ? im : null; };
+    const pst = e && $('.evp-poster img, .bk-poster img', this.el);
+    const t = this.vt(change, pst && pst.getBoundingClientRect().bottom > 0 ? pst : null, e ? card : () => null);
     const done = () => { this.fromList = false; if (this.then) { const f = this.then; this.then = null; f(); } };
     if (t) t.finished.then(done, done); else done();
   },
@@ -3551,7 +3950,7 @@ const page = {
       return `<div class="ses" data-st="${state}" style="--d:${i * 70}ms"><div class="ses-stub"><b>${esc(F.week.format(d))}</b><span>${esc(`${F.day.format(d)} ${F.month.format(d)}`)}</span><i>${esc(F.time.format(d))}</i></div><div class="ses-body"><span class="ses-st">${ico(state === 'ok' ? 'check' : state === 'full' ? 'x' : 'clock')}${label}</span><span class="ses-cap" aria-label="ظرفیت باقی‌مانده">${ico('users')}<i style="--v:${full ? 0 : Math.max(0.06, x.seats).toFixed(2)}"></i></span></div>${btn}</div>`;
     }).join('') : `<p class="ses-none">${st.key === 'held' ? 'این برنامه برگزار شده و فروش بلیتش تمام شده.' : 'سانسی برای فروش باز نیست.'}</p>`;
     const steps = `<ol class="steps panel evp-rise" aria-label="مراحل خرید">${STEPS.map((n, i) => `<li${i === 0 ? ' aria-current="step"' : ''}><span class="n">${fa(i + 1)}</span>${n}</li>`).join('')}<i class="bar" aria-hidden="true"></i></ol>`;
-    const plan = tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(t.zone)}، ردیف ${fa(t.a)} تا ${fa(t.b)}</span><b>${money(t.price)} <small>تومان</small></b><em aria-hidden="true" style="--w:${(t.price / tiers.reduce((m, x) => Math.max(m, x.price), 1)).toFixed(3)}"></em></li>`).join('');
+    const plan = tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(runName(t))}</span><b>${money(t.price)} <small>تومان</small></b><em aria-hidden="true" style="--w:${(t.price / tiers.reduce((m, x) => Math.max(m, x.price), 1)).toFixed(3)}"></em></li>`).join('');
     const similar = LIST().filter((x) => x !== e && x.kind === e.kind && !['held', 'cancelled'].includes(statusOf(x).key)).sort((a, b) => (a.city === e.city ? 0 : 1) - (b.city === e.city ? 0 : 1) || Date.parse(a.startsAt) - Date.parse(b.startsAt)).slice(0, 6);
     this.el.innerHTML = `<div class="evp-in" style="--sc-d:${cd};--sc-l:${cl}">
       <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
@@ -3614,7 +4013,17 @@ const page = {
     on('.evp-crumb [data-cat]', (a) => { const k = a.dataset.cat; this.close({ then: () => s2.go(k) }); });
     on('[data-act="rules"]', () => this.rules());
     on('[data-act="book"]', () => this.toBook());
-    on('[data-act="route"]', () => toast(`اینجا مسیریاب (نشان، بلد یا گوگل‌مپ) با نشانی «${hallOf(e).addr}» باز می‌شه.`));
+    on('[data-act="route"]', (b) => {
+      const h = hallOf(e), ll = h.lat ? `${h.lat},${h.lng}` : '', q = encodeURIComponent(`${h.name}، ${h.addr}`);
+      const links = [
+        ['نشان', ll ? `https://neshan.org/maps/@${ll},16z` : `https://neshan.org/maps/search/${q}`],
+        ['بلد', ll ? `https://balad.ir/location?latitude=${h.lat}&longitude=${h.lng}&zoom=16` : `https://balad.ir/search?query=${q}`],
+        ['گوگل‌مپ', ll ? `https://www.google.com/maps/dir/?api=1&destination=${ll}` : `https://www.google.com/maps/search/?api=1&query=${q}`],
+        ['ویز', ll ? `https://waze.com/ul?ll=${ll}&navigate=yes` : `https://waze.com/ul?q=${q}`],
+      ];
+      if (pop && pop.anchor === b) { closePop(); return; }
+      menuPop(b, links.map(([t, u]) => ({ t: `مسیریابی با ${t}`, v: u })), '', (u) => window.open(u, '_blank', 'noopener'), { label: 'مسیریابی' });
+    });
     on('[data-act="save"]', (b) => { const p = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(p)); toast(p ? 'به برنامه‌های نشان‌شده‌ات اضافه شد.' : 'از نشان‌شده‌ها برداشته شد.'); });
     on('[data-act="share"]', async () => {
       const url = location.href, data = { title: e.title, text: `${e.title} · ${e.w.short}`, url };
@@ -3629,9 +4038,9 @@ const page = {
         const r = $('.evp-rules', el); r.classList.remove('is-shake'); void r.offsetWidth; r.classList.add('is-shake');
         toast('اول قوانین خرید رو بخون و تیکش رو بزن.'); return;
       }
-      const s = ses[+b.dataset.s], d = new Date(s.t);
+      const s = ses[+b.dataset.s];
       $$('.ses', el).forEach((x) => x.classList.remove('is-picked')); b.closest('.ses').classList.add('is-picked');
-      toast(`سانس ${F.week.format(d)} ${F.day.format(d)} ${F.month.format(d)}، ساعت ${F.time.format(d)}. مرحله‌ی بعد (انتخاب صندلی) بخش بعدیه که با تأیید تو ساخته می‌شه.`);
+      this.go(`#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}`);
     });
     // the map zooms round the hall
     let z = 1; const mp = $('.mp', el);
@@ -3661,6 +4070,540 @@ const page = {
   },
   title0: document.title,
 };
+
+/* ════════════════════════════════════════════════════════════════
+   steps 2–4 of a purchase, after the owner's sample (and the brief: a live seat map, a hold with a timer, guest checkout by
+   mobile, a code by SMS for the busy shows, 10 % VAT, a discount code, the ticket with its QR):
+   #/e/<show>/s/<session>       the seats: the hall's zones as tabs, each zone's rows on arcs round the stage, a seat in
+                                its tier's colour; a price filter; zoom (buttons, Ctrl + wheel, pinch) and drag; the map is
+                                live (other buyers hold and buy seats while you look); up to ten seats; their list and sum
+   #/e/<show>/s/<session>/pay   the booking: the seats held for 15 minutes (a timer; when it ends they are let go), the
+                                buyer's mobile (no sign-up), an SMS code for a busy show, a discount code, the invoice with
+                                VAT, a demo bank gateway
+   #/ticket/<code>              the tickets: one per seat with its QR, the tracking code, the SMS sent, the calendar
+   Everything is simulated until the real gateway and SMS panel come (brief §2.5). Orders are kept in this browser
+   (localStorage «blit.orders») so a ticket's link and «پیگیری خرید» work after a reload.
+   ════════════════════════════════════════════════════════════════ */
+const MAX_SEATS = 10, HOLD_MIN = 15;
+const sessionOf = (e, sid) => sessionsOf(e).find((s) => s.id === sid);
+const store = {
+  get(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (err) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (err) { /* private window */ } },
+  sget(k, d) { try { const v = JSON.parse(sessionStorage.getItem(k)); return v == null ? d : v; } catch (err) { return d; } },
+  sset(k, v) { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, JSON.stringify(v)); } catch (err) { /* nothing */ } },
+};
+const faNum = (s) => fa(String(s));
+const enDigits = (s) => String(s).replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+const mmss = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return fa(`${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`); };
+const whenOf = (s) => { const d = new Date(s.t); return { wd: F.week.format(d), dm: `${F.day.format(d)} ${F.month.format(d)}`, tm: F.time.format(d) }; };
+const seatName = (x) => (x.ga ? `${x.zone} · بلیت ${fa(x.n)}` : `${x.zone}، ${x.word || 'ردیف'} ${fa(x.row)}، صندلی ${fa(x.n)}`);
+const item = (x) => ({ key: x.key, zid: x.zid, zone: x.zone, word: x.word, row: x.row, n: x.n, t: x.t, c: x.c, price: x.price, ga: !!x.ga });
+const STEP_LINKS = (e, s) => [`#/e/${encodeURIComponent(e.id)}`, s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : null, null, null];
+function stepsHTML(cur, e, s) {
+  const links = STEP_LINKS(e, s);
+  return `<ol class="steps panel evp-rise" aria-label="مراحل خرید" style="--cur:${cur - 1}">${STEPS.map((n, i) => {
+    const k = i + 1, done = k < cur, here = k === cur, href = done && cur < 4 ? links[i] : null;
+    const inner = `<span class="n">${done ? ico('check') : fa(k)}</span>${n}`;
+    return `<li${here ? ' aria-current="step"' : ''}${done ? ' class="is-done"' : ''}>${href ? `<a href="${href}">${inner}</a>` : inner}</li>`;
+  }).join('')}<i class="bar" aria-hidden="true"></i></ol>`;
+}
+
+// a session's hall: the plan's drawing (hall.js) with every seat's state. A seat is free, sold, held by someone who is paying,
+// or not for sale; the draw is the same on every visit (from the session's id); the rows nearest the stage go first; the seats
+// bought in this browser are sold. A standing area keeps a number of places left
+function seatPlan(e, s) {
+  const tiers = tiersOf(e), R = rngOf(seedOf(s.id + ':seats')), mine = new Set(store.get('blit.taken', {})[s.id] || []);
+  const sold = clamp(1 - s.seats, 0.04, 0.96), L = hallLayout(planOf(e)), ys = L.secs.flatMap((z) => z.seats.map((p) => p.y)), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  L.by = new Map();
+  for (const z of L.secs) {
+    const tierAt = (row) => tiers.find((x) => x.zid === z.sec.id && (z.sec.k === 'stand' || (row >= x.a && row <= x.b)));
+    z.seats.forEach((p) => {
+      const t = tierAt(p.row), r = R(), front = 1 - (p.y - y0) / Math.max(1, y1 - y0), prob = sold * (0.7 + 0.6 * front);
+      Object.assign(p, { key: `${z.sec.id}-${p.row}-${p.n}`, zid: z.sec.id, zone: z.sec.t, word: RUN_WORD[z.sec.k], t: t.t, c: t.c, price: t.price });
+      p.st = mine.has(p.key) || s.seats === 0 || r < prob ? 'sold' : r < prob + 0.025 ? 'held' : r < prob + 0.033 ? 'off' : 'free';
+      L.by.set(p.key, p);
+    });
+    if (z.sec.k === 'stand') {
+      const t = tierAt(0), gone = [...mine].filter((k) => k.startsWith(`ga:${z.sec.id}:`)).length;
+      z.ga = { zid: z.sec.id, zone: z.sec.t, t: t.t, c: t.c, price: t.price, left: s.seats === 0 ? 0 : Math.max(0, Math.round(z.sec.cap * clamp(s.seats, 0, 1) * 0.8) - gone) };
+    }
+  }
+  return L;
+}
+// a QR code as an SVG path (qrcode-generator, MIT)
+function qrSVG(text, cls = 'qr') {
+  if (typeof qrcode !== 'function') return `<svg class="${cls}" viewBox="0 0 21 21" aria-hidden="true"><rect width="21" height="21" fill="#fff"/></svg>`;
+  const q = qrcode(0, 'M'); q.addData(text); q.make();
+  const n = q.getModuleCount(); let d = '';
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) d += `M${c} ${r}h1v1h-1z`;
+  return `<svg class="${cls}" viewBox="-2 -2 ${n + 4} ${n + 4}" shape-rendering="crispEdges" role="img" aria-label="کد QR بلیت"><rect x="-2" y="-2" width="${n + 4}" height="${n + 4}" fill="#fff"/><path d="${d}" fill="#0b0a10"/></svg>`;
+}
+const codeOf = () => { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 8; i++) s += A[Math.floor(Math.random() * A.length)]; return `BL-${s.slice(0, 4)}-${s.slice(4)}`; };
+const maskPhone = (p) => { const d = enDigits(p); return fa(`${d.slice(0, 4)}•••${d.slice(-4)}`); };
+const CODES = { BLIT10: { label: '۱۰٪ تخفیف', of: (sum) => Math.round(sum * 0.1 / 1000) * 1000 }, HEDIYE: { label: '۵۰ هزار تومان تخفیف', of: (sum) => Math.min(sum, 50000) } };
+
+const buy = {
+  zone: 0, tiers: new Set(), cart: new Map(), plan: null, lay: null, hold: null, tick: 0, live: 0,
+  parse(h) {
+    let m = /^#\/ticket\/([^/?#]+)$/.exec(h);
+    if (m) return { kind: 'ticket', code: decodeURIComponent(m[1]) };
+    return null;
+  },
+  render(v) {
+    clearInterval(this.tick); clearTimeout(this.live);
+    if (v.kind === 'seats') this.seats(v); else if (v.kind === 'pay') this.pay(v); else if (v.kind === 'ticket') this.ticket(v);
+    // one clock for the hold's timers
+    this.tick = setInterval(() => this.clock(), 1000); this.clock();
+    page.leave = () => { clearInterval(this.tick); clearTimeout(this.live); this.tick = 0; this.live = 0; };
+  },
+  holdFor(e, s) { const h = store.sget('blit.hold', null); return h && h.eid === e.id && h.sid === s.id && h.until > Date.now() ? h : null; },
+  clock() {
+    const h = store.sget('blit.hold', null), left = h ? h.until - Date.now() : 0;
+    $$('[data-hold]').forEach((el) => { el.textContent = mmss(left); });
+    $$('[data-hold-bar]').forEach((el) => el.style.setProperty('--p', h ? clamp(left / (HOLD_MIN * 6e4), 0, 1).toFixed(4) : 0));
+    if (h && left <= 0 && page.on && page.v && page.v.kind === 'pay' && !this.expired) this.expire();
+  },
+
+  /* ───── step 2: the seats ───── */
+  seats(v) {
+    const e = v.e, s = sessionOf(e, v.sid), el = page.el;
+    if (!s) { el.innerHTML = this.missing('این سانس پیدا نشد', 'شاید تموم شده یا نشانیش عوض شده.', e); return; }
+    const st = statusOf(e);
+    if (st.key === 'soon' || st.cta) { el.innerHTML = this.missing(st.key === 'soon' ? 'فروش هنوز شروع نشده' : `«${e.title}»: ${st.label}`, st.key === 'soon' ? `فروش ${saleWhen(e)} شروع می‌شه.` : 'برای این اجرا بلیتی فروخته نمی‌شه.', e); return; }
+    if (!page.accepted.has(e.id)) page.accepted.add(e.id);   // a seats' link opened directly: the rules are shown again before paying
+    document.title = `انتخاب صندلی · ${e.title} · بلیت`;
+    const key = `${e.id}|${s.id}`;
+    if (this.cartKey !== key) { this.cart = new Map(); this.cartKey = key; this.zone = -1; this.tiers = new Set(); }
+    this.plan = seatPlan(e, s);
+    const hold = this.holdFor(e, s);
+    // a hold that is still running (back from the payment): its seats are yours again
+    if (hold) { this.cart = new Map(); hold.items.forEach((x) => { const y = this.find(x.key); if (y) { y.st = 'free'; this.cart.set(y.key, y); } else if (x.ga) this.cart.set(x.key, x); }); }
+    else this.cart.forEach((x, k) => { const y = this.find(k); if (x.ga) return; if (!y || y.st !== 'free') this.cart.delete(k); else this.cart.set(k, y); });
+    const w = whenOf(s), { src } = artOf(e), tiers = [...new Map(tiersOf(e).map((t) => [t.t, t])).values()].sort((a, b) => b.price - a.price);
+    const ses = sessionsOf(e);
+    el.innerHTML = `<div class="evp-in bk" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
+      <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-r')}برگشت به «${esc(e.name)}»</a></nav>
+      ${stepsHTML(2, e, s)}
+      <div class="bk-top evp-rise">
+        <section class="panel bk-showline">
+          <figure class="bk-poster"><img src="${esc(src)}" alt=""></figure>
+          <div class="bk-what"><b>${esc(e.title)}</b><span>${esc(hallOf(e).name)}، ${esc(e.city)}</span></div>
+          <button type="button" class="bk-ses" aria-haspopup="menu" aria-expanded="false">${ico('calendar')}<span><b>${esc(w.wd)} ${esc(w.dm)}</b><small>ساعت ${esc(w.tm)}</small></span>${ses.length > 1 ? `<em>تغییر سانس ${ico('down')}</em>` : ''}</button>
+        </section>
+        <section class="panel bk-filter" aria-label="فیلتر قیمت">
+          <span class="bk-fl">${ico('tag')}قیمت‌ها</span>
+          <div class="bk-chips" role="group"><button type="button" class="chip" data-t="" aria-pressed="${!this.tiers.size}">همه</button>${tiers.map((t) => `<button type="button" class="chip tier" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i>${money(t.price)}</button>`).join('')}</div>
+        </section>
+      </div>
+      <div class="evp-cols bk-cols">
+        <section class="panel bk-map evp-rise" aria-label="نقشه‌ی سالن">
+          <div class="bk-mhead">
+            <div class="seg" role="tablist" aria-label="بخش‌های سالن"><button type="button" role="tab" data-z="-1" aria-selected="${this.zone < 0}">کل سالن</button>${this.plan.secs.map((z, i) => `<button type="button" role="tab" data-z="${i}" aria-selected="${i === this.zone}">${esc(z.sec.t)}<small>${this.freeOf(z)}</small></button>`).join('')}</div>
+            <span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span>
+          </div>
+          <div class="st-view" tabindex="-1"><div class="st-canvas"></div></div>
+          <div class="st-zoom"><button type="button" data-zm="in" aria-label="بزرگ‌نمایی">${ico('plus')}</button><button type="button" data-zm="out" aria-label="کوچک‌نمایی">${ico('minus')}</button><button type="button" data-zm="fit" aria-label="کل سالن">${ico('grid')}</button></div>
+          <p class="st-hint">${ico('info')}بکش تا جابه‌جا بشه؛ Ctrl + چرخ ماوس یا دو انگشت برای بزرگ‌نمایی.</p>
+          <ul class="st-legend" aria-label="راهنما">${tiers.map((t) => `<li style="--c:${t.c}"><i class="lg free"></i>${money(t.price)}</li>`).join('')}<li><i class="lg mine"></i>انتخاب تو</li><li><i class="lg held"></i>در حال پرداخت دیگران</li><li><i class="lg sold"></i>فروخته شده</li><li><i class="lg off"></i>غیرقابل فروش</li></ul>
+        </section>
+        <aside class="evp-side">
+          <section class="panel bk-cart evp-rise" aria-labelledby="bkCartH">
+            <h2 id="bkCartH">${ico('ticket')}صندلی‌های تو<small class="bk-count"></small></h2>
+            ${hold ? `<p class="bk-held">${ico('clock')}رزرو تا <b data-hold>--:--</b></p>` : ''}
+            <ul class="bk-list"></ul>
+            <div class="bk-total"><span>جمع، بدون مالیات</span><b class="bk-sum"></b></div>
+            <button type="button" class="buy bk-go" disabled>${ico('arrow-l')}ادامه و رزرو صندلی‌ها</button>
+            <p class="bk-note">${ico('shield')}با «ادامه» صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن تا پرداخت کنی. هر خرید تا ${fa(MAX_SEATS)} صندلی.</p>
+          </section>
+        </aside>
+      </div>
+      <div class="bk-bar" aria-hidden="false"><button type="button" class="bk-bar-l"><b class="bk-count2"></b><span class="bk-sum2"></span></button><button type="button" class="buy bk-go2" disabled>ادامه</button></div>
+    </div>`;
+    this.wireSeats(e, s, ses);
+    this.drawHall(e, s);
+    this.cartPaint(e, s);
+    this.liveStart(e, s);
+  },
+  find(k) { return (this.plan && this.plan.by.get(k)) || null; },
+  freeOf(z) { if (z.ga) return `${fa(z.ga.left - [...this.cart.values()].filter((x) => x.ga && x.zid === z.sec.id).length)} جا`; return `${fa(z.seats.filter((x) => x.st === 'free').length)} آزاد`; },
+  wireSeats(e, s, ses) {
+    const el = page.el;
+    $$('.seg [data-z]', el).forEach((b) => b.addEventListener('click', () => this.focusZone(+b.dataset.z)));
+    $$('.bk-chips .chip', el).forEach((b) => b.addEventListener('click', () => {
+      const t = b.dataset.t;
+      if (!t) this.tiers.clear(); else if (this.tiers.has(t)) this.tiers.delete(t); else this.tiers.add(t);
+      $$('.bk-chips .chip', el).forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.t ? this.tiers.has(x.dataset.t) : !this.tiers.size)));
+      this.paintSeats();
+    }));
+    const sb = $('.bk-ses', el);
+    if (ses.length > 1) sb.addEventListener('click', () => {
+      if (pop && pop.anchor === sb) { closePop(); return; }
+      menuPop(sb, ses.map((x) => { const w = whenOf(x); return { t: `${w.wd} ${w.dm} · ${w.tm}`, v: x.id }; }), s.id, (id) => { if (id !== s.id) page.go(`#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(id)}`); }, { label: 'سانس‌ها' });
+    });
+    const go = () => {
+      if (!this.cart.size) return;
+      store.sset('blit.hold', { eid: e.id, sid: s.id, items: [...this.cart.values()].map(item), until: (this.holdFor(e, s) || {}).until || Date.now() + HOLD_MIN * 6e4 });
+      this.expired = false;
+      page.go(`#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}/pay`);
+    };
+    $('.bk-go', el).addEventListener('click', go); $('.bk-go2', el).addEventListener('click', go);
+    $('.bk-bar-l', el).addEventListener('click', () => { const c = $('.bk-cart', el); scrollTo({ top: c.getBoundingClientRect().top + scrollY - 120, behavior: reduceMotion ? 'auto' : 'smooth' }); });
+    this.wireMap(e, s);
+  },
+  // the whole hall at once: the stage, every section (its seats, its boxes or tables, its standing area), the rows' numbers and
+  // a label on every section that takes you into it
+  drawHall(e, s) {
+    const el = page.el, L = this.plan, cv = $('.st-canvas', el), cx = L.cx, cy = L.cy;
+    this.lay = L; this.flat = L.secs.flatMap((z) => z.seats);
+    cv.style.width = `${L.W}px`; cv.style.height = `${L.H}px`;
+    const st = L.stage === 'arc' ? `<path class="st-board" d="M ${cx - 230} ${cy - 96} H ${cx + 230} V ${cy - 20} Q ${cx} ${cy + 70} ${cx - 230} ${cy - 20} Z"/><path class="st-line" d="M ${cx - 230} ${cy - 20} Q ${cx} ${cy + 70} ${cx + 230} ${cy - 20}"/>`
+      : `<rect class="st-board" x="${cx - (L.stage === 'wide' ? 330 : 250)}" y="${cy - 96}" width="${L.stage === 'wide' ? 660 : 500}" height="${L.stage === 'wide' ? 110 : 96}" rx="14"/><path class="st-line" d="M ${cx - (L.stage === 'wide' ? 330 : 250)} ${cy + (L.stage === 'wide' ? 14 : 0)} H ${cx + (L.stage === 'wide' ? 330 : 250)}"/>`;
+    const shapes = L.secs.flatMap((z) => z.shapes.map((p) => (p.k === 'box' ? `<rect class="st-box" x="${p.x - 27}" y="${p.y - 24}" width="54" height="48" rx="10" transform="rotate(${(p.a * 180 / Math.PI).toFixed(1)} ${p.x} ${p.y})"/>` : p.k === 'table' ? `<circle class="st-table" cx="${p.x}" cy="${p.y}" r="19"/><text class="st-tn" x="${p.x}" y="${p.y + 4}" text-anchor="middle">${fa(p.n)}</text>` : '')).join('')).join('');
+    cv.innerHTML = `<svg class="st-stage" width="${L.W}" height="${L.H}" aria-hidden="true"><defs><linearGradient id="stgG" x1="0" x2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset=".5" stop-color="#ec4899"/><stop offset="1" stop-color="#f97316"/></linearGradient><pattern id="stgS" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="10" height="10" class="st-ga-bg"/><rect width="4" height="10" class="st-ga-st"/></pattern></defs>${st}<text class="st-word" x="${cx}" y="${cy - 46}" text-anchor="middle">صحنه</text>${shapes}</svg>`
+      + L.secs.filter((z) => z.ga).map((z) => { const p = z.shapes[0]; return `<button type="button" class="st-stand" data-ga="${z.sec.id}" style="--x:${p.x}px;--y:${p.y}px;--w:${p.w}px;--h:${p.h}px;--c:${z.ga.c}" aria-label="${esc(z.sec.t)}، ${esc(money(z.ga.price))} تومان، بزن تا یه بلیت اضافه بشه"><b>${esc(z.sec.t)}</b><span>${esc(money(z.ga.price))} تومان · <em class="ga-left">${this.freeOf(z)}</em></span><small>بزن تا بلیت ایستاده اضافه بشه</small></button>`; }).join('')
+      + L.secs.map((z, i) => { if (!z.b || z.ga) return ''; const p = z.lp || { x: (z.b[0] + z.b[2]) / 2, y: z.b[1] - 4 }; return `<button type="button" class="st-sec" data-z="${i}" style="--x:${p.x.toFixed(1)}px;--y:${p.y.toFixed(1)}px">${esc(z.sec.t)}</button>`; }).join('')
+      + L.secs.flatMap((z) => z.labels).map((p) => `<i class="row-l" style="--x:${p.x.toFixed(1)}px;--y:${p.y.toFixed(1)}px">${fa(p.row)}</i>`).join('')
+      + this.flat.map((x) => `<button type="button" class="seat" data-k="${x.key}" data-st="${x.st}" style="--x:${x.x.toFixed(1)}px;--y:${x.y.toFixed(1)}px;--a:${x.a.toFixed(4)}rad;--c:${x.c}" tabindex="-1" aria-label="${esc(seatName(x))}، ${esc(money(x.price))} تومان">${fa(x.n)}</button>`).join('');
+    this.paintSeats();
+    const first = $('.seat[data-st="free"]', cv) || $('.seat', cv); if (first) first.tabIndex = 0;
+    $$('.st-sec', cv).forEach((b) => b.addEventListener('click', (ev) => { ev.stopPropagation(); this.focusZone(+b.dataset.z); }));
+    $$('.st-stand', cv).forEach((b) => b.addEventListener('click', (ev) => { ev.stopPropagation(); this.addGA(e, s, b.dataset.ga, 1); }));
+    this.focusZone(this.zone, true);
+    if (MOTK()) gsap.from($$('.seat', cv), { opacity: 0, '--sz': 0.3, duration: 0.5, ease: 'expo.out', stagger: { amount: 0.6, from: 'start' }, clearProps: 'opacity,--sz' });
+  },
+  // a tab or a section's label: the map goes into that section (or back to the whole hall)
+  focusZone(i, instant) {
+    this.zone = i;
+    $$('.seg [data-z]', page.el).forEach((x) => x.setAttribute('aria-selected', String(+x.dataset.z === i)));
+    $$('.st-sec', page.el).forEach((x) => x.classList.toggle('is-on', +x.dataset.z === i));
+    const z = this.plan.secs[i];
+    if (i < 0 || !z || !z.b) { this.fit(instant); return; }
+    this.fitBox(z.b, instant);
+  },
+  // standing places: as many as you add, of the area's price
+  addGA(e, s, zid, d) {
+    const z = this.plan.secs.find((x) => x.sec.id === zid); if (!z || !z.ga) return;
+    const have = [...this.cart.values()].filter((x) => x.ga && x.zid === zid);
+    if (d > 0) {
+      if (this.cart.size >= MAX_SEATS) { toast(`هر خرید تا ${fa(MAX_SEATS)} بلیت.`); return; }
+      if (have.length >= z.ga.left) { toast('جای ایستاده‌ی خالی نمونده.'); return; }
+      if (this.tiers.size && !this.tiers.has(z.ga.t)) { toast('این بخش تو قیمتی که انتخاب کردی نیست.'); return; }
+      const n = have.length ? Math.max(...have.map((x) => x.n)) + 1 : 1;
+      this.cart.set(`ga:${zid}:${n}`, { key: `ga:${zid}:${n}`, zid, zone: z.ga.zone, word: '', row: 0, n, t: z.ga.t, c: z.ga.c, price: z.ga.price, ga: true });
+    } else if (have.length) this.cart.delete(have[have.length - 1].key);
+    const b = $(`.st-stand[data-ga="${zid}"]`, page.el); if (b) { $('.ga-left', b).textContent = this.freeOf(z); if (d > 0 && MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
+    const tab = $(`.seg [data-z="${this.plan.secs.indexOf(z)}"] small`, page.el); if (tab) tab.textContent = this.freeOf(z);
+    this.cartPaint(e, s);
+  },
+  paintSeats() {
+    const cv = $('.st-canvas', page.el); if (!cv) return;
+    $$('.seat', cv).forEach((b) => {
+      const x = this.find(b.dataset.k), mine = this.cart.has(b.dataset.k), dim = this.tiers.size && !this.tiers.has(x.t);
+      b.dataset.st = mine ? 'mine' : x.st; b.classList.toggle('is-dim', !!dim && !mine);
+      b.setAttribute('aria-pressed', String(mine));
+      if (x.st !== 'free' && !mine) b.setAttribute('aria-disabled', 'true'); else b.removeAttribute('aria-disabled');
+    });
+  },
+  cartPaint(e, s) {
+    const el = page.el, list = $('.bk-list', el), sum = [...this.cart.values()].reduce((a, x) => a + x.price, 0), n = this.cart.size;
+    // the seats one by one; the standing places of an area together, with − and +
+    const items = [...this.cart.values()], ga = new Map(); items.filter((x) => x.ga).forEach((x) => { if (!ga.has(x.zid)) ga.set(x.zid, []); ga.get(x.zid).push(x); });
+    list.innerHTML = n ? items.filter((x) => !x.ga).map((x) => `<li style="--c:${x.c}"><i aria-hidden="true"></i><span>${esc(seatName(x))}</span><b>${money(x.price)}</b><button type="button" data-rm="${x.key}" aria-label="برداشتن ${esc(seatName(x))}">${ico('x')}</button></li>`).join('')
+      + [...ga.entries()].map(([zid, xs]) => `<li class="ga" style="--c:${xs[0].c}"><i aria-hidden="true"></i><span>${esc(xs[0].zone)} × ${fa(xs.length)}</span><b>${money(xs[0].price * xs.length)}</b><span class="qty"><button type="button" data-ga-add="${zid}" aria-label="یه بلیت ایستاده‌ی دیگه">${ico('plus')}</button><button type="button" data-ga-rm="${zid}" aria-label="یه بلیت کمتر">${ico('minus')}</button></span></li>`).join('')
+      : `<li class="bk-empty">${ico('info')}روی صندلی‌های آزاد نقشه بزن تا انتخاب بشن${this.plan.secs.some((z) => z.ga) ? '، یا روی بخش ایستاده' : ''}.</li>`;
+    $$('[data-rm]', list).forEach((b) => b.addEventListener('click', () => { this.cart.delete(b.dataset.rm); this.paintSeats(); this.cartPaint(e, s); }));
+    $$('[data-ga-add]', list).forEach((b) => b.addEventListener('click', () => this.addGA(e, s, b.dataset.gaAdd, 1)));
+    $$('[data-ga-rm]', list).forEach((b) => b.addEventListener('click', () => this.addGA(e, s, b.dataset.gaRm, -1)));
+    $('.bk-count', el).textContent = `${fa(n)} از ${fa(MAX_SEATS)}`;
+    $('.bk-sum', el).textContent = `${money(sum)} تومان`;
+    $('.bk-count2', el).textContent = n ? `${fa(n)} صندلی` : 'صندلی انتخاب نشده';
+    $('.bk-sum2', el).textContent = n ? `${money(sum)} تومان` : '';
+    $('.bk-go', el).disabled = !n; $('.bk-go2', el).disabled = !n;
+  },
+  pick(e, s, b) {
+    const x = this.find(b.dataset.k); if (!x) return;
+    if (this.cart.has(x.key)) { this.cart.delete(x.key); }
+    else if (x.st === 'held') { toast('این صندلی در انتظار پرداخت خریدار دیگه‌ایه.'); return; }
+    else if (x.st === 'sold') { toast('این صندلی فروخته شده.'); return; }
+    else if (x.st === 'off') { toast('این صندلی برای فروش نیست.'); return; }
+    else if (this.tiers.size && !this.tiers.has(x.t)) { toast('این صندلی تو قیمتی که انتخاب کردی نیست.'); return; }
+    else if (this.cart.size >= MAX_SEATS) { toast(`هر خرید تا ${fa(MAX_SEATS)} صندلی.`); return; }
+    else { this.cart.set(x.key, x); if (MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
+    this.paintSeats(); this.cartPaint(e, s);
+  },
+  // zoom and drag: the canvas is moved and scaled (one transform); Ctrl + wheel and two fingers zoom where they are
+  wireMap(e, s) {
+    const vw = $('.st-view', page.el), cv = $('.st-canvas', page.el), m = this.m = { s: 1, x: 0, y: 0, min: 0.2, max: 3 };
+    const apply = (anim) => { cv.style.transition = anim && MOTK() ? 'transform .45s cubic-bezier(.22,1,.36,1)' : 'none'; cv.style.transform = `translate(${m.x}px, ${m.y}px) scale(${m.s})`; cv.classList.toggle('is-far', m.s < 0.62); };
+    this.applyMap = apply;
+    const zoomAt = (px, py, f, anim) => { const ns = clamp(m.s * f, m.min, m.max); m.x = px - (px - m.x) * (ns / m.s); m.y = py - (py - m.y) * (ns / m.s); m.s = ns; apply(anim); };
+    $$('.st-zoom [data-zm]', page.el).forEach((b) => b.addEventListener('click', () => { const r = vw.getBoundingClientRect(); if (b.dataset.zm === 'fit') this.fit(); else zoomAt(r.width / 2, r.height / 2, b.dataset.zm === 'in' ? 1.35 : 1 / 1.35, true); }));
+    vw.addEventListener('wheel', (ev) => { if (!ev.ctrlKey && !ev.metaKey) return; ev.preventDefault(); const r = vw.getBoundingClientRect(); zoomAt(ev.clientX - r.left, ev.clientY - r.top, Math.exp(-ev.deltaY * 0.0022)); }, { passive: false });
+    const pts = new Map(); let drag = null, moved = false, pinch = null;
+    vw.addEventListener('pointerdown', (ev) => {
+      pts.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      if (pts.size === 1) { drag = { x: ev.clientX, y: ev.clientY, mx: m.x, my: m.y }; moved = false; }
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: m.s }; }
+    });
+    vw.addEventListener('pointermove', (ev) => {
+      if (!pts.has(ev.pointerId)) return; pts.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      if (pinch && pts.size === 2) { const [a, b] = [...pts.values()], d = Math.hypot(a.x - b.x, a.y - b.y), r = vw.getBoundingClientRect(); zoomAt((a.x + b.x) / 2 - r.left, (a.y + b.y) / 2 - r.top, (pinch.s * d / pinch.d) / m.s); moved = true; return; }
+      if (!drag) return;
+      const dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
+      if (!moved && Math.hypot(dx, dy) > 6) { moved = true; vw.setPointerCapture(ev.pointerId); vw.classList.add('is-drag'); }
+      if (moved) { m.x = drag.mx + dx; m.y = drag.my + dy; apply(); }
+    });
+    const up = (ev) => { pts.delete(ev.pointerId); if (pts.size < 2) pinch = null; if (!pts.size) { drag = null; vw.classList.remove('is-drag'); } };
+    vw.addEventListener('pointerup', up); vw.addEventListener('pointercancel', up);
+    // a press that was a drag does not pick a seat
+    vw.addEventListener('click', (ev) => { if (moved) { ev.stopPropagation(); ev.preventDefault(); moved = false; return; } const b = ev.target.closest('.seat'); if (b) this.pick(e, s, b); }, true);
+    // the keys: the arrows go from seat to seat (the nearest one that way), Enter picks, + and − zoom
+    vw.addEventListener('keydown', (ev) => {
+      if (ev.key === '+' || ev.key === '=') { const r = vw.getBoundingClientRect(); zoomAt(r.width / 2, r.height / 2, 1.3, true); ev.preventDefault(); return; }
+      if (ev.key === '-') { const r = vw.getBoundingClientRect(); zoomAt(r.width / 2, r.height / 2, 1 / 1.3, true); ev.preventDefault(); return; }
+      const b = ev.target.closest('.seat'); if (!b || !/^Arrow/.test(ev.key)) return;
+      ev.preventDefault();
+      const all = $$('.seat', cv), here = all.indexOf(b), P = this.flat, p = P[here];
+      const dir = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[ev.key];
+      let best = -1, bd = Infinity;
+      P.forEach((q, i) => { if (i === here) return; const dx = q.x - p.x, dy = q.y - p.y, along = dx * dir[0] + dy * dir[1]; if (along <= 4) return; const off = Math.abs(dx * dir[1]) + Math.abs(dy * dir[0]), d = along + off * 2.4; if (d < bd) { bd = d; best = i; } });
+      if (best >= 0) { b.tabIndex = -1; all[best].tabIndex = 0; all[best].focus({ preventScroll: true }); this.into(all[best]); }
+    });
+    addEventListener('resize', this.onRz = () => { if (page.v && page.v.kind === 'seats') this.focusZone(this.zone, true); });
+    const prev = page.leave; page.leave = () => { removeEventListener('resize', this.onRz); if (prev) prev(); };
+  },
+  // a seat reached by the keys is brought into the view
+  into(b) {
+    const vw = $('.st-view', page.el), r = vw.getBoundingClientRect(), q = b.getBoundingClientRect(), m = this.m;
+    let dx = 0, dy = 0; if (q.left < r.left + 20) dx = r.left + 20 - q.left; else if (q.right > r.right - 20) dx = r.right - 20 - q.right;
+    if (q.top < r.top + 20) dy = r.top + 20 - q.top; else if (q.bottom > r.bottom - 20) dy = r.bottom - 20 - q.bottom;
+    if (dx || dy) { m.x += dx; m.y += dy; this.applyMap(true); }
+  },
+  fit(instant) { if (this.lay) this.fitBox([0, 0, this.lay.W, this.lay.H], instant, true); },
+  // a box of the drawing fills the view (the whole hall, or one section a little closer)
+  fitBox(b, instant, whole) {
+    const vw = $('.st-view', page.el); if (!vw || !this.lay) return;
+    const r = vw.getBoundingClientRect(), m = this.m, L = this.lay, w = b[2] - b[0], h = b[3] - b[1];
+    if (!r.width || !r.height) { if ((this.fitTry = (this.fitTry || 0) + 1) < 20) requestAnimationFrame(() => this.fitBox(b, instant, whole)); return; }
+    this.fitTry = 0;
+    const all = Math.min(r.width / L.W, r.height / L.H) * 0.96, s = whole ? all : Math.min(r.width / w, r.height / h) * 0.9;
+    m.min = all * 0.85; m.max = Math.max(3, all * 5); m.s = clamp(s, m.min, m.max); m.x = (r.width - w * m.s) / 2 - b[0] * m.s; m.y = (r.height - h * m.s) / 2 - b[1] * m.s;
+    this.applyMap(!instant);
+  },
+  // the map is live: someone holds a seat, a held one is bought or let go; the seats you picked are never touched
+  liveStart(e, s) {
+    const watchers = $('.bk-watch', page.el), R = Math.random;
+    let n = 4 + Math.floor(R() * 26);
+    const step = () => {
+      if (!page.on || !page.v || page.v.kind !== 'seats') return;
+      const all = this.flat, free = all.filter((x) => x.st === 'free' && !this.cart.has(x.key)), held = all.filter((x) => x.st === 'held');
+      const flip = (x, to) => { x.st = to; const b = $(`.seat[data-k="${x.key}"]`, page.el); if (b) { b.dataset.st = to; b.setAttribute('aria-disabled', 'true'); if (to === 'free') b.removeAttribute('aria-disabled'); b.classList.remove('is-live'); void b.offsetWidth; b.classList.add('is-live'); } };
+      if (free.length && R() < 0.75) flip(free[Math.floor(R() * free.length)], 'held');
+      if (held.length && R() < 0.4) flip(held[Math.floor(R() * held.length)], R() < 0.7 ? 'sold' : 'free');
+      this.plan.secs.forEach((z, i) => { const tab = $(`.seg [data-z="${i}"] small`, page.el); if (tab && !z.ga) tab.textContent = this.freeOf(z); });
+      n = clamp(n + Math.round((R() - 0.5) * 4), 2, 40); if (watchers) watchers.textContent = `${fa(n)} نفر همین الان دارن صندلی انتخاب می‌کنن`;
+      this.live = setTimeout(step, 2600 + R() * 2600);
+    };
+    if (watchers) watchers.textContent = `${fa(n)} نفر همین الان دارن صندلی انتخاب می‌کنن`;
+    if (!reduceMotion) this.live = setTimeout(step, 2200);
+  },
+
+  /* ───── step 3: book and pay ───── */
+  pay(v) {
+    const e = v.e, s = sessionOf(e, v.sid), el = page.el, h = s && this.holdFor(e, s);
+    if (!s || !h) { el.innerHTML = this.missing('رزروی برای پرداخت نیست', 'مهلت رزرو تموم شده یا هنوز صندلی‌ای انتخاب نکردی.', e, s); return; }
+    document.title = `رزرو و پرداخت · ${e.title} · بلیت`;
+    const seats = h.items;
+    const busy = !!(e.badge || saleMs(e) || /پرفروش/.test(e.badge || '')) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);   // a busy show asks for an SMS code (anti-bot, the brief §1.10)
+    const w = whenOf(s), { src } = artOf(e);
+    this.payState = { e, s, seats, code: '', otp: !busy, phone: store.get('blit.phone', '') };
+    el.innerHTML = `<div class="evp-in bk" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
+      <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}برگشت به صندلی‌ها</a></nav>
+      ${stepsHTML(3, e, s)}
+      <section class="panel bk-hold evp-rise" aria-live="polite"><span class="bk-ring" data-hold-bar aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21"/><circle class="pr" cx="24" cy="24" r="21" pathLength="100"/></svg>${ico('clock')}</span><div><b>صندلی‌هات تا <span data-hold>--:--</span> دیگه برات نگه داشته می‌شن</b><span>اگه تا اون موقع پرداخت نشه، آزاد می‌شن و بقیه می‌تونن بخرنشون.</span></div></section>
+      <div class="evp-cols">
+        <div class="evp-main">
+          <section class="panel bk-who evp-rise" aria-labelledby="bkWhoH">
+            <h2 id="bkWhoH">${ico('users')}خریدار<small>بدون ثبت‌نام</small></h2>
+            <p class="bk-lead">فقط شماره‌ی موبایلت لازمه: بلیت همین‌جا نشونت داده می‌شه و پیامک هم می‌شه؛ بعداً با همین شماره و کد پیامکی همه‌ی بلیت‌هات پیدا می‌شن.</p>
+            <label class="fld"><span>شماره‌ی موبایل</span><input id="bkPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" maxlength="13" value="${esc(this.payState.phone ? fa(this.payState.phone) : '')}" dir="ltr"></label>
+            <label class="fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی"></label>
+            ${busy ? `<div class="bk-otp" id="bkOtp"><p>${ico('shield-ok')}این اجرا پرطرفداره؛ برای اینکه ربات‌ها بلیت نخرن، شماره با یه کد پیامکی تأیید می‌شه.</p><div class="bk-otp-row"><button type="button" class="chip" id="bkSend">فرستادن کد</button><div class="otp" id="bkCode" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><span class="bk-otp-st" id="bkOtpSt"></span></div></div>` : ''}
+          </section>
+          <section class="panel bk-way evp-rise" aria-labelledby="bkWayH">
+            <h2 id="bkWayH">${ico('shield')}روش پرداخت</h2>
+            <div class="bk-ways" role="radiogroup">
+              <label class="way is-on"><input type="radio" name="way" value="gate" checked><span class="way-ic">${ico('shield-ok')}</span><span><b>درگاه بانکی (شاپرک)</b><small>همه‌ی کارت‌های عضو شتاب</small></span></label>
+              <label class="way is-off"><input type="radio" name="way" value="wallet" disabled><span class="way-ic">${ico('tag')}</span><span><b>کیف پول بلیت</b><small>موجودی: ۰ تومان</small></span></label>
+            </div>
+          </section>
+        </div>
+        <aside class="evp-side">
+          <section class="panel bk-sum evp-rise" aria-labelledby="bkSumH">
+            <div class="bk-showline in"><figure class="bk-poster"><img src="${esc(src)}" alt=""></figure><div class="bk-what"><b>${esc(e.title)}</b><span>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)}</span><span>${esc(hallOf(e).name)}</span></div></div>
+            <h2 id="bkSumH">${ico('ticket')}صورت‌حساب<small>${fa(seats.length)} صندلی</small></h2>
+            <ul class="bk-list">${seats.map((x) => `<li style="--c:${x.c}"><i aria-hidden="true"></i><span>${esc(seatName(x))}</span><b>${money(x.price)}</b></li>`).join('')}</ul>
+            <div class="bk-code"><input id="bkDisc" type="text" placeholder="کد تخفیف" dir="ltr" autocomplete="off" aria-label="کد تخفیف"><button type="button" class="chip" id="bkDiscGo">اعمال</button></div>
+            <p class="bk-code-st" id="bkDiscSt"></p>
+            <dl class="bk-inv"></dl>
+            <button type="button" class="buy bk-pay" id="bkPay">${ico('shield-ok')}<span>پرداخت</span></button>
+            <p class="bk-note">${ico('info')}با پرداخت، <a href="#" data-act="rules">قوانین خرید</a> رو می‌پذیری. برای آزمایش کد <b dir="ltr">BLIT10</b> رو امتحان کن.</p>
+          </section>
+        </aside>
+      </div>
+    </div>`;
+    this.invoice(); this.wirePay();
+  },
+  invoice() {
+    const st = this.payState, sum = st.seats.reduce((a, x) => a + x.price, 0), off = st.code ? CODES[st.code].of(sum) : 0, tax = Math.round((sum - off) * 0.1), total = sum - off + tax;
+    st.total = total;
+    $('.bk-inv', page.el).innerHTML = `<dt>جمع بلیت‌ها</dt><dd>${money(sum)}</dd>${off ? `<dt>تخفیف (${esc(CODES[st.code].label)})</dt><dd class="neg">− ${money(off)}</dd>` : ''}<dt>مالیات بر ارزش افزوده (۱۰٪)</dt><dd>${money(tax)}</dd><dt class="tot">مبلغ قابل پرداخت</dt><dd class="tot">${money(total)} <small>تومان</small></dd>`;
+    $('#bkPay span', page.el).textContent = `پرداخت ${money(total)} تومان`;
+  },
+  wirePay() {
+    const el = page.el, st = this.payState;
+    $$('[data-act="rules"]', el).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); page.rules(); }));
+    const ph = $('#bkPhone', el);
+    ph.addEventListener('input', () => { const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); st.phone = d; ph.closest('.fld').classList.remove('is-bad'); });
+    $('#bkDiscGo', el).addEventListener('click', () => {
+      const c = enDigits($('#bkDisc', el).value).trim().toUpperCase(), out = $('#bkDiscSt', el);
+      if (!c) { st.code = ''; out.textContent = ''; this.invoice(); return; }
+      if (CODES[c]) { st.code = c; out.className = 'bk-code-st ok'; out.textContent = `کد «${c}» اعمال شد: ${CODES[c].label}.`; }
+      else { st.code = ''; out.className = 'bk-code-st bad'; out.textContent = 'این کد معتبر نیست یا مهلتش تموم شده.'; }
+      this.invoice();
+    });
+    // the SMS code: five boxes, the cursor goes on by itself, a paste fills them all; «12345» is accepted (a demo)
+    const send = $('#bkSend', el);
+    if (send) {
+      const boxes = $$('#bkCode input', el), stl = $('#bkOtpSt', el);
+      let wait = 0, t = 0;
+      const tick = () => { if (wait <= 0) { send.disabled = false; send.textContent = 'فرستادن دوباره‌ی کد'; return; } send.textContent = `فرستادن دوباره تا ${mmss(wait * 1000)}`; wait--; t = setTimeout(tick, 1000); };
+      send.addEventListener('click', () => {
+        if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.fld').classList.add('is-bad'); toast('اول شماره‌ی موبایل درست رو بنویس (۱۱ رقم، با ۰۹).'); ph.focus(); return; }
+        $('#bkCode', el).hidden = false; boxes[0].focus(); send.disabled = true; wait = 90; clearTimeout(t); tick();
+        stl.textContent = `کد به ${maskPhone(st.phone)} پیامک شد (برای آزمایش: ۱۲۳۴۵).`;
+      });
+      const check = () => { const v = enDigits(boxes.map((b) => b.value).join('')); if (v.length < 5) return; if (v === '12345') { st.otp = true; stl.className = 'bk-otp-st ok'; stl.textContent = 'شماره تأیید شد.'; boxes.forEach((b) => { b.disabled = true; }); } else { stl.className = 'bk-otp-st bad'; stl.textContent = 'کد درست نیست.'; boxes.forEach((b) => { b.value = ''; }); boxes[0].focus(); } };
+      boxes.forEach((b, i) => {
+        b.addEventListener('input', () => { b.value = fa(enDigits(b.value).replace(/\D/g, '').slice(-1)); if (b.value && boxes[i + 1]) boxes[i + 1].focus(); check(); });
+        b.addEventListener('keydown', (ev) => { if (ev.key === 'Backspace' && !b.value && boxes[i - 1]) boxes[i - 1].focus(); });
+        b.addEventListener('paste', (ev) => { const d = enDigits((ev.clipboardData || window.clipboardData).getData('text')).replace(/\D/g, '').slice(0, 5); if (!d) return; ev.preventDefault(); d.split('').forEach((c, k) => { if (boxes[k]) boxes[k].value = fa(c); }); check(); });
+      });
+      const prev = page.leave; page.leave = () => { clearTimeout(t); if (prev) prev(); };
+    }
+    $('#bkPay', el).addEventListener('click', () => {
+      if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.fld').classList.add('is-bad'); toast('شماره‌ی موبایل رو درست بنویس؛ بلیت به همین شماره پیامک می‌شه.'); ph.focus(); return; }
+      if (!st.otp) { const o = $('#bkOtp', el); o.classList.remove('is-shake'); void o.offsetWidth; o.classList.add('is-shake'); toast('اول شماره رو با کد پیامکی تأیید کن.'); return; }
+      store.set('blit.phone', st.phone); st.name = $('#bkName', el).value.trim();
+      this.gateway();
+    });
+  },
+  // a demo of the bank's page (Shaparak): card, CVV2, the expiry, the dynamic password; any numbers are accepted
+  gateway() {
+    const st = this.payState, box = document.createElement('div');
+    box.className = 'evp-modal gw'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'درگاه پرداخت');
+    box.innerHTML = `<div class="evp-dlg panel gw-box">
+      <div class="gw-head">${ico('shield-ok')}<div><b>درگاه پرداخت اینترنتی (نمونه‌ی آزمایشی)</b><span>پذیرنده: بلیت · مبلغ: <b>${money(st.total)} تومان</b></span></div></div>
+      <label class="fld"><span>شماره‌ی کارت</span><input id="gwCard" inputmode="numeric" maxlength="19" dir="ltr" placeholder="6037 •••• •••• ••••" autocomplete="cc-number"></label>
+      <div class="gw-row"><label class="fld"><span>CVV2</span><input id="gwCvv" inputmode="numeric" maxlength="4" dir="ltr" autocomplete="cc-csc"></label><label class="fld"><span>ماه / سال انقضا</span><input id="gwExp" inputmode="numeric" maxlength="5" dir="ltr" placeholder="12/08" autocomplete="cc-exp"></label></div>
+      <div class="gw-row"><label class="fld"><span>رمز دوم (پویا)</span><input id="gwPin" inputmode="numeric" maxlength="8" dir="ltr" autocomplete="one-time-code"></label><button type="button" class="chip" id="gwOtp">درخواست رمز پویا</button></div>
+      <p class="bk-note">${ico('info')}این یه درگاه آزمایشیه؛ برای امتحان هر عددی بنویس. درگاه و پنل پیامک واقعی بعد از گرفتن اینماد وصل می‌شن.</p>
+      <div class="evp-dlg-end"><button type="button" class="buy" data-ok>${ico('shield-ok')}پرداخت</button><button type="button" class="chip" data-x>انصراف</button></div>
+      <div class="gw-wait" hidden><i class="spin" aria-hidden="true"></i><b>در حال پرداخت…</b><span>این صفحه رو نبند.</span></div>
+    </div>`;
+    $('#app').appendChild(box);
+    const k = MOTK(), card = $('#gwCard', box);
+    card.addEventListener('input', () => { const d = enDigits(card.value).replace(/\D/g, '').slice(0, 16); card.value = d.replace(/(.{4})/g, '$1 ').trim(); });
+    $('#gwExp', box).addEventListener('input', (ev) => { const d = enDigits(ev.target.value).replace(/\D/g, '').slice(0, 4); ev.target.value = d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d; });
+    $('#gwOtp', box).addEventListener('click', (ev) => { const b = ev.currentTarget; b.disabled = true; b.textContent = 'فرستاده شد'; setTimeout(() => { $('#gwPin', box).value = String(Math.floor(100000 + Math.random() * 899999)); toast('رمز پویا پیامک شد (اینجا خودش نوشته شد).'); }, 900); });
+    const shut = () => { gsap.to(box, { opacity: 0, duration: 0.25, onComplete: () => box.remove() }); };
+    box.addEventListener('click', (ev) => {
+      if (ev.target.closest('[data-x]')) { shut(); toast('پرداخت انجام نشد؛ صندلی‌ها هنوز برات نگه داشته می‌شن.'); return; }
+      if (!ev.target.closest('[data-ok]')) return;
+      const okCard = enDigits(card.value).replace(/\D/g, '').length === 16, okCvv = $('#gwCvv', box).value.length >= 3, okPin = $('#gwPin', box).value.length >= 5;
+      if (!okCard || !okCvv || !okPin) { toast(!okCard ? 'شماره‌ی کارت ۱۶ رقمه.' : !okCvv ? 'CVV2 سه یا چهار رقمه.' : 'رمز پویا رو بنویس یا درخواستش بده.'); return; }
+      $('.gw-wait', box).hidden = false;
+      setTimeout(() => { box.remove(); this.paid(); }, 1500);
+    });
+    gsap.fromTo(box, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    gsap.fromTo($('.gw-box', box), { y: 26 * k, scale: 0.97 }, { y: 0, scale: 1, duration: 0.6, ease: 'expo.out', clearProps: 'transform' });
+    card.focus();
+  },
+  // paid: the order is kept (and its seats become sold), the hold ends, the tickets come
+  paid() {
+    const st = this.payState, code = codeOf();
+    const order = { code, eid: st.e.id, sid: st.s.id, t: st.s.t, phone: st.phone, name: st.name || '', seats: st.seats.map(item), total: st.total, at: Date.now() };
+    const orders = store.get('blit.orders', []); orders.unshift(order); store.set('blit.orders', orders.slice(0, 40));
+    const taken = store.get('blit.taken', {}); taken[st.s.id] = (taken[st.s.id] || []).concat(order.seats.map((x) => x.key)); store.set('blit.taken', taken);
+    store.sset('blit.hold', null); this.cart = new Map(); this.cartKey = null;
+    page.go(`#/ticket/${encodeURIComponent(code)}`);
+  },
+  // the hold ran out on the payment page: the seats are let go
+  expire() {
+    this.expired = true;
+    const st = this.payState || {}, box = document.createElement('div');
+    box.className = 'evp-modal'; box.setAttribute('role', 'alertdialog'); box.setAttribute('aria-modal', 'true');
+    box.innerHTML = `<div class="evp-dlg panel bk-exp"><span class="bk-exp-ic">${ico('clock')}</span><h2>مهلت پرداخت تموم شد</h2><p>صندلی‌هایی که رزرو کرده بودی آزاد شدن. می‌تونی دوباره انتخابشون کنی، اگه هنوز کسی برنداشته باشه.</p><div class="evp-dlg-end"><button type="button" class="buy" data-ok>${ico('arrow-r')}انتخاب دوباره‌ی صندلی</button></div></div>`;
+    $('#app').appendChild(box);
+    store.sset('blit.hold', null);
+    $('[data-ok]', box).addEventListener('click', () => { box.remove(); if (st.e && st.s) page.go(`#/e/${encodeURIComponent(st.e.id)}/s/${encodeURIComponent(st.s.id)}`); });
+    $('[data-ok]', box).focus();
+  },
+
+  /* ───── step 4: the tickets ───── */
+  ticket(v) {
+    const el = page.el, o = store.get('blit.orders', []).find((x) => x.code === v.code), e = o && showById(o.eid);
+    if (!o || !e) { el.innerHTML = this.missing('بلیتی با این کد پیدا نشد', 'کد پیگیری رو دوباره ببین، یا از «پیگیری خرید» با شماره‌ی موبایلت پیداش کن.'); return; }
+    page.e = e; page.v.e = e;
+    document.title = `بلیت · ${e.title} · بلیت`;
+    const s = { id: o.sid, t: o.t }, w = whenOf(s), h = hallOf(e), { src } = artOf(e);
+    el.innerHTML = `<div class="evp-in bk tkp" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
+      ${stepsHTML(4, e, s)}
+      <section class="panel tk-ok evp-rise">
+        <span class="tk-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27.5l7.2 7.2L38 18.8"/></svg></span>
+        <div class="tk-say"><h1>پرداخت موفق بود؛ بلیت‌هات آماده‌ست</h1><p>بلیت‌ها به ${esc(maskPhone(o.phone))} پیامک شد. هر وقت خواستی با «پیگیری خرید» و همین شماره دوباره پیداشون کن.</p></div>
+        <div class="tk-code"><small>کد پیگیری</small><b dir="ltr">${esc(o.code)}</b><button type="button" class="chip" data-act="copy">${ico('copy')}کپی</button></div>
+        <div class="tk-acts"><button type="button" class="chip" data-act="ics">${ico('calendar')}افزودن به تقویم</button><button type="button" class="chip" data-act="print">${ico('ticket')}چاپ یا ذخیره‌ی PDF</button><a class="chip" href="#/receipts">${ico('search')}پیگیری خرید</a></div>
+      </section>
+      <div class="tk-grid">${o.seats.map((x, i) => `<article class="tk-card evp-rise" style="--c:${x.c}">
+        <figure class="bk-poster tk-pst"><img src="${esc(src)}" alt=""></figure>
+        <div class="tk-body">
+          <span class="tk-kind">${ico(iconOfCat(e.kind))}${esc(e.type)} · بلیت ${fa(i + 1)} از ${fa(o.seats.length)}</span>
+          <h2>${esc(e.title)}</h2>
+          <dl><dt>روز</dt><dd>${esc(w.wd)} ${esc(w.dm)}</dd><dt>ساعت</dt><dd>${esc(w.tm)}</dd><dt>جا</dt><dd>${esc(seatName(x))}</dd><dt>سالن</dt><dd>${esc(h.name)}</dd></dl>
+          <p class="tk-addr">${ico('pin')}${esc(h.addr)}</p>
+        </div>
+        <span class="tk-perf" aria-hidden="true"></span>
+        <div class="tk-qr">${qrSVG(`BLIT|${o.code}|${x.key}`)}<small dir="ltr">${esc(o.code)}-${fa(i + 1)}</small><span>${money(x.price)} تومان</span></div>
+      </article>`).join('')}</div>
+      <section class="panel tk-help evp-rise"><h2>${ico('info')}روز اجرا</h2><ul><li>یک ساعت پیش از شروع در سالن باش؛ پس از شروع، ورود ممکن نیست.</li><li>کد QR هر بلیت رو دم در نشون بده (روی گوشی یا چاپی)؛ هر کد فقط یک بار باز می‌شه.</li><li>بلیت شخصیه؛ برای همراهانت هر کدوم یه بلیت جدا داره.</li></ul></section>
+    </div>`;
+    const on = (sel, f) => $$(sel, el).forEach((x) => x.addEventListener('click', (ev) => { ev.preventDefault(); f(x); }));
+    on('[data-act="copy"]', async () => { try { await navigator.clipboard.writeText(o.code); toast('کد پیگیری کپی شد.'); } catch (err) { toast(`کد پیگیری: ${o.code}`); } });
+    on('[data-act="print"]', () => window.print());
+    on('[data-act="ics"]', () => {
+      const d = new Date(o.t), z = (n) => String(n).padStart(2, '0'), f = (x) => `${x.getUTCFullYear()}${z(x.getUTCMonth() + 1)}${z(x.getUTCDate())}T${z(x.getUTCHours())}${z(x.getUTCMinutes())}00Z`;
+      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Blit//FA', 'BEGIN:VEVENT', `UID:${o.code}@blit`, `DTSTAMP:${f(new Date())}`, `DTSTART:${f(d)}`, `DTEND:${f(new Date(+d + (DUR[e.kind] || 100) * 6e4))}`, `SUMMARY:${e.title}`, `LOCATION:${h.name}، ${h.addr}`, `DESCRIPTION:${o.seats.map(seatName).join(' / ')} · کد پیگیری ${o.code}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = `blit-${o.code}.ics`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    });
+    if (MOTK()) { const c = $('.tk-check', el); c.classList.add('is-in'); this.confetti($('.tk-ok', el)); }
+  },
+  // a little burst of the three kinds' colours over the success panel (transform and opacity only)
+  confetti(host) {
+    if (!host || !MOTK()) return;
+    const n = 26, cs = ['#a78bfa', '#fb7185', '#fbbf24', '#38bdf8'];
+    for (let i = 0; i < n; i++) {
+      const p = document.createElement('i'); p.className = 'cf'; p.style.background = cs[i % cs.length]; host.appendChild(p);
+      const a = Math.random() * Math.PI * 2, d = 80 + Math.random() * 160;
+      gsap.fromTo(p, { x: 0, y: 0, rotate: 0, opacity: 1 }, { x: Math.cos(a) * d, y: Math.sin(a) * d - 40, rotate: Math.random() * 540, opacity: 0, duration: 1.4 + Math.random() * 0.6, ease: 'expo.out', delay: 0.25, onComplete: () => p.remove() });
+    }
+  },
+  missing(title, text, e, s) {
+    return `<div class="evp-in bk"><section class="panel bk-miss evp-rise"><span class="bk-exp-ic">${ico('info')}</span><h1>${esc(title)}</h1><p>${esc(text)}</p><div class="evp-dlg-end">${e && s ? `<a class="buy" href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}انتخاب صندلی</a>` : ''}${e ? `<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">صفحه‌ی اجرا</a>` : ''}<a class="chip" href="#" data-home>همه‌ی برنامه‌ها</a></div></section></div>`;
+  },
+};
+// a link «همه‌ی برنامه‌ها» on any of these pages goes home
+document.addEventListener('click', (ev) => { const a = ev.target.closest('#evp [data-home]'); if (a) { ev.preventDefault(); page.close(); } });
 
 /* ════════════════════════════════════════════════════════════════
    the touch of the page: a soft light that follows the pointer over a panel, a buy button that leans toward the
@@ -4040,7 +4983,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

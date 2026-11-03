@@ -9,7 +9,7 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, the ninth owner round (the sixth round of version 9 itself). History of v9:
+**Status:** v9, the tenth owner round (the seventh round of version 9 itself). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
@@ -19,6 +19,7 @@
 - *Round G*: «take more ideas from the sample I gave you; I don't much like what you made for the next sections: the layouts and arrangements (**don't change the first section any more**, it turned out good)». The hero and the header were not touched (their panels are pixel-identical to the version the owner last saw: `tools/parity2.js`; only what round F added to the header and the rail's cards changed). The section under the hero was **made again after the sample's home page**: a category bar with a sliding pill that follows the page, a section for each category (name, how many, tickets), ticket-shaped cards with a perforation, labels, the countdown, a stamp for a full show and a tag for the city, and a footer with the trust badges' slots (§10). The old head panel, the filter chips and the three numbers are gone.
 - *Round H*: «I didn't much like it, especially since the organisers give **tall posters**; every place except the home page's first section must be poster-style; and put real posters, other concerts and theatre shows, from other Iranian ticket sites». The hero and the header are untouched. The list's cards are now **poster cards** (§10): a tall frame (2 : 3) with the poster whole, the words under it (or over it, as in the sample: an option), 6 across at 1920. The sample's content grew to the owner's own sample (its 26 events and their photos as posters) plus six finished posters and the real posters the owner sent (3 of the 6 real shows and SkyKings). **What could not be done:** the Iranian ticket sites do not answer from the server this was built on (every request is reset), so posters could not be fetched from them; the owner can send posters (a zip, as with the banners) or put them in from the panel (§14).
 - *Round I*: «use the sample I gave you more; make the sections more separate so they are clearer; add the **white theme** to the header so I can see it, and make the theme's change very smooth and attractive; I want it stronger, I'm still not that happy; then build the **next section**». The hero's panels and motion are untouched (pixel-identical in the dark theme: `tools/parity2.js`); the header gained one button. Built: a **light (white) theme** for the whole site, turned by a sun/moon button in the header, the new colours opening as a circle from the button (§9, §12); the list redone after the sample's home page (§10, *the list in round I*): the sample's search and city on top, every category **a panel of its own** with its own colour, icon and head, two rows and «نمایش همه», the presale as wide tickets with a big flip countdown, the sample's white buy buttons, its back-to-top ring and its trust badges; and the next section, **the show's page** (§10.1): the first of the four steps of a purchase (choose the session), after the sample's event page.
+- *Round J*: «continue and build the other sections, until the tokens run out» and «take the halls' plans and places from iranejra.com/maps, but make the maps much more professional». The site does not answer from the build server (the connection is reset; the fetch tool gets 503), so the plans are the TYPES of the sample's halls until the owner sends the real ones. Built: steps 2–4 of a purchase (§10.2): the hall plan engine (seven plan types with boxes, tables, standing), the live seat map, the 15-minute hold, guest checkout with an SMS code for busy shows, a discount code and VAT, a demo gateway, the tickets with QR codes; «مسیریابی» to Neshan, Balad, Google Maps, Waze.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -272,6 +273,55 @@ From top to bottom:
 6. **The footer** (the same as the list's).
 
 On a phone a **bar at the bottom** says the lowest price and «انتخاب سانس» (it takes you to the sessions, which flash in the section's colour). The sessions' seats and the map are made from the show's id, so they are the same on every visit; the real ones come from the hall's seat map and the sale.
+
+---
+
+## 10.2 Steps 2–4: the seats, the booking and payment, the tickets
+
+After the owner's sample (its seat page, payment and ticket) and the brief (§2.3 the hall designer, a live seat map, a
+15-minute hold; guest checkout by mobile; an SMS code for busy shows; 10 % VAT; a discount code; the ticket with its QR).
+The addresses: `#/e/<show>/s/<session>` (the seats), `…/pay` (the booking), `#/ticket/<code>` (the tickets). Everything is
+simulated until the real gateway and SMS panel are connected (brief §2.5); orders are kept in this browser
+(`localStorage` «blit.orders», the seats bought «blit.taken», the hold `sessionStorage` «blit.hold»).
+
+**The halls' plans** (`hall.js`: `PLANS`, `planOf`, `hallLayout`). A plan is a stage and its sections, each of a kind:
+`fan` (rows on arcs round the stage, in blocks with aisles), `rect` (straight rows; turned, the stands along a sports
+hall's sides), `boxes` (the لژ along a wall, four seats each), `tables` (round tables, six chairs each), `stand` (a standing
+area sold by number). Seat 1 is on the right of the row as you face the stage, row 1 is nearest the stage; a section's runs
+give its rows (boxes, tables) a price tier. Seven plans are the TYPES of the sample's halls: `opera` (a horseshoe: the
+parterre in three blocks, boxes on both walls, two balconies — تالار وحدت، تالار فجر، تالار مرکزی رشت), `fan-l` (a wide
+fan and a balcony — برج میلاد، مشهد), `fan-m`, `fan-s`, `rect-m`, `rect-s`, `arena` (a standing floor and three stands —
+آزادی), `cabaret` (tables before the stage, rows behind — سیتی سنتر). Each real hall's own plan (from its seating chart,
+e.g. iranejra.com/maps, which does not answer from the build server) replaces its type in `HALLS`. `HALLS` also has each
+hall's place (the sample's coordinates): «مسیریابی» on the show's page opens Neshan, Balad, Google Maps or Waze there.
+
+**The seats** (step 2): the show and the session (another session from a menu), the price chips (a tier's colour and
+price; a chip dims the other prices), the map and «صندلی‌های تو».
+- The map draws the **whole hall** (the stage, every section, the boxes' and tables' shapes, the standing area, the rows'
+  numbers, a label on every section); the tabs (کل سالن، پارتر، لژها …, each with its free seats) or a section's label
+  take the view into that section. Zoom: + − «کل سالن», Ctrl + wheel, two fingers; drag to move. The arrows go from seat
+  to seat (the nearest one that way), Enter picks, + and − zoom.
+- A seat: free (its tier's colour, its number), yours (solid), held by someone paying (amber stripes), sold, not for sale.
+  The map is **live**: every 2.6–5.2 s a free seat is held by another buyer, a held one is bought or let go (a small
+  pulse), «زنده · N نفر همین الان دارن صندلی انتخاب می‌کنن»; your own seats are never touched. A press on a seat that
+  can't be had says why.
+- Up to 10 seats; their list (zone, row, seat, price; × to drop), the sum without VAT, «ادامه و رزرو صندلی‌ها». Standing
+  places are added by a press on the area and counted with − +. On a phone a bar at the bottom says how many and the sum.
+
+**The booking** (step 3): the seats are **held for 15 minutes** (a ring and «صندلی‌هات تا ۱۴:۵۸ دیگه برات نگه داشته
+می‌شن»); when the time is up a window says so and the seats are let go. The buyer: the mobile number only (no sign-up;
+«بلیت همین‌جا نشونت داده می‌شه و پیامک هم می‌شه»), a name for the ticket (optional); a busy show (a best seller, a
+presale) asks for a **5-digit SMS code** (five boxes, the cursor moves on, a paste fills them; a resend timer of 90 s; the
+demo code is ۱۲۳۴۵). The way to pay: the bank gateway (Shaparak) or the wallet (balance 0, off). The invoice: the seats,
+a discount code (demo: BLIT10 = 10 %, HEDIYE = 50,000 toman), the sum, the discount, **VAT 10 %**, the total; «پرداخت …
+تومان» opens a **demo gateway** (card, CVV2, expiry, the dynamic password; any numbers), then the tickets.
+
+**The tickets** (step 4): a check that draws itself and a burst of the three kinds' colours, «پرداخت موفق بود؛ بلیت‌هات
+آماده‌ست», where they were sent by SMS (the number masked), the **tracking code** (copy), «افزودن به تقویم» (an .ics file),
+«چاپ یا ذخیره‌ی PDF», «پیگیری خرید»; then one **ticket per seat**: the poster, the show, the day, the hour, the seat, the
+hall and its address, a perforation, a real **QR code** (qrcode-generator, MIT, from cdnjs: `BLIT|code|seat`) and the
+price; and the notes for the night (an hour early, one scan per code). The seats bought are sold when the session is opened
+again.
 
 ---
 
