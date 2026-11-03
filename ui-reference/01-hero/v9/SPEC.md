@@ -19,7 +19,7 @@
 - *Round G*: «take more ideas from the sample I gave you; I don't much like what you made for the next sections: the layouts and arrangements (**don't change the first section any more**, it turned out good)». The hero and the header were not touched (their panels are pixel-identical to the version the owner last saw: `tools/parity2.js`; only what round F added to the header and the rail's cards changed). The section under the hero was **made again after the sample's home page**: a category bar with a sliding pill that follows the page, a section for each category (name, how many, tickets), ticket-shaped cards with a perforation, labels, the countdown, a stamp for a full show and a tag for the city, and a footer with the trust badges' slots (§10). The old head panel, the filter chips and the three numbers are gone.
 - *Round H*: «I didn't much like it, especially since the organisers give **tall posters**; every place except the home page's first section must be poster-style; and put real posters, other concerts and theatre shows, from other Iranian ticket sites». The hero and the header are untouched. The list's cards are now **poster cards** (§10): a tall frame (2 : 3) with the poster whole, the words under it (or over it, as in the sample: an option), 6 across at 1920. The sample's content grew to the owner's own sample (its 26 events and their photos as posters) plus six finished posters and the real posters the owner sent (3 of the 6 real shows and SkyKings). **What could not be done:** the Iranian ticket sites do not answer from the server this was built on (every request is reset), so posters could not be fetched from them; the owner can send posters (a zip, as with the banners) or put them in from the panel (§14).
 - *Round I*: «use the sample I gave you more; make the sections more separate so they are clearer; add the **white theme** to the header so I can see it, and make the theme's change very smooth and attractive; I want it stronger, I'm still not that happy; then build the **next section**». The hero's panels and motion are untouched (pixel-identical in the dark theme: `tools/parity2.js`); the header gained one button. Built: a **light (white) theme** for the whole site, turned by a sun/moon button in the header, the new colours opening as a circle from the button (§9, §12); the list redone after the sample's home page (§10, *the list in round I*): the sample's search and city on top, every category **a panel of its own** with its own colour, icon and head, two rows and «نمایش همه», the presale as wide tickets with a big flip countdown, the sample's white buy buttons, its back-to-top ring and its trust badges; and the next section, **the show's page** (§10.1): the first of the four steps of a purchase (choose the session), after the sample's event page.
-- *Round J*: «continue and build the other sections, until the tokens run out» and «take the halls' plans and places from iranejra.com/maps, but make the maps much more professional». The site does not answer from the build server (the connection is reset; the fetch tool gets 503), so the plans are the TYPES of the sample's halls until the owner sends the real ones. Built: steps 2–4 of a purchase (§10.2): the hall plan engine (seven plan types with boxes, tables, standing), the live seat map, the 15-minute hold, guest checkout with an SMS code for busy shows, a discount code and VAT, a demo gateway, the tickets with QR codes; «مسیریابی» to Neshan, Balad, Google Maps, Waze.
+- *Round J*: «continue and build the other sections, until the tokens run out» and «take the halls' plans and places from iranejra.com/maps, but make the maps much more professional». The site does not answer from the build server (the connection is reset; the fetch tool gets 503), so the plans are the TYPES of the sample's halls until the owner sends the real ones. Built: steps 2–4 of a purchase (§10.2): the hall plan engine (seven plan types with boxes, tables, standing), the live seat map, the 15-minute hold, guest checkout with an SMS code for busy shows, a discount code and VAT, a demo gateway, the tickets with QR codes; «مسیریابی» to Neshan, Balad, Google Maps, Waze. Then (§10.3): the purchase tracking, sign-in with an SMS code and «حساب من», the phone's menu, the rules / about / contact pages, the archive, the search's page, a page for each category and each city.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -322,6 +322,32 @@ a discount code (demo: BLIT10 = 10 %, HEDIYE = 50,000 toman), the sum, the disco
 hall and its address, a perforation, a real **QR code** (qrcode-generator, MIT, from cdnjs: `BLIT|code|seat`) and the
 price; and the notes for the night (an hour early, one scan per code). The seats bought are sold when the session is opened
 again.
+
+## 10.3 The other pages: tracking, sign-in, the phone's menu, the fixed pages, archive, search, a category, a city
+
+All in `pages.js` (inside `index.html`), all pages of the same router (§10.1) and the same look (a head with the page's
+icon and colour, panels, the footer under them):
+- **«بلیت‌های من» / «پیگیری خرید»** (`#/receipts`): by the tracking code (BL-XXXX-XXXX, Persian or Latin digits, any case)
+  it opens that order's tickets; by the mobile and an SMS code (the same five boxes as step 3) it lists every order of that
+  number (the poster, the show, the day, how many seats, the sum, «گذشته» for a past night) and signs the buyer in.
+- **Sign-in** (the header's «ورود / ثبت‌نام»): a window with the mobile and the SMS code, no password and no sign-up form
+  (brief: «ثبت‌نام اجباری نیست»); a short or wrong number is refused with why. Signed in, the button says «حساب من» and
+  opens a small menu: my tickets, the theme, sign out. The order's mobile in step 3 is filled from it.
+- **The phone's menu** (the header's ☰, only on a phone): a sheet from the right with the categories (each with its
+  count), the pages, sign-in and the theme. A link closes it.
+- **The fixed pages:** `#/p/rules` (the rules of buying: the hold, refunds when a show is cancelled or postponed, one
+  scan per code, …), `#/p/about` (what blit is, four numbers), `#/p/contact` (six questions and answers that open, a form
+  with a subject, a message and an optional order code; it says it was sent). The footer's links go to them.
+- **The archive** (`#/archive`): the shows that took place, poster cards, newest first.
+- **Search** (`#/search/<words>`): Enter in the list's search (when no row was picked with the arrows) opens this page:
+  every show whose name, artist, hall or city has the words, grouped by category, «چیزی پیدا نشد» with suggestions.
+- **A category** (`#/c/<kind>-tehran|other|soon`): «همه» at a section's head of the list opens its page: all its shows,
+  the city filter, the count.
+- **A city** (`#/city/<name>`): the city's shows by category and its **halls** (address, plan type, «مسیریابی»). The city
+  buttons of the list's «شهرستان‌ها» sections open them.
+
+In the real site these are ordinary pages with their own addresses (server-rendered for search engines); the SMS code and
+the orders come from the server (brief §2.5).
 
 ---
 

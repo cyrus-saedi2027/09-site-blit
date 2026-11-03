@@ -1245,6 +1245,94 @@ a.buy, a.chip { text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) { .seat, .bk-list li, .bk-live > i, .seat.is-pop, .seat.is-live, .tk-check.is-in circle, .tk-check.is-in path, .spin { animation: none !important; transition: none !important; } }
 
+/* ── the other pages (pages.js): their head, boxes, the purchase tracking, the questions, the sign-in window, the phone's menu ── */
+.pg-head { display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6); border-radius: calc(var(--r) * 1.15); }
+.pg-head .sec-ic { color: var(--sc, var(--ring)); background: color-mix(in oklab, var(--sc, var(--ring)) 15%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc, var(--ring)) 34%, transparent); }
+.pg-head h1 { margin: 0; font-size: calc(max(21px, calc(var(--u) * 1.55)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; }
+.pg-head p { margin: .15em 0 0; font-size: calc(max(12.5px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); line-height: 1.9; }
+.pg-box { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); border-radius: calc(var(--r) * 1.15); }
+.pg-box h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.pg-box h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc, var(--ring)); }
+.pg-box h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), .6); }
+.pg-box a:not(.chip):not(.buy):not(.rc-card) { color: var(--sc, var(--ring)); }
+.rc-row { display: flex; align-items: flex-end; gap: .7em; }
+.rc-row .fld { flex: 1; margin: 0; }
+.rc-row .buy, .rc-row .chip { flex: none; height: max(46px, calc(var(--u) * 2.9)); }
+.rc-row .buy { gap: .45em; min-width: 0; padding-inline: 1.4em; }
+.pg .otp { margin: .9em 0 .2em; }
+.pg-tips { margin: 0; padding-inline-start: 1.2em; display: grid; gap: .45em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), .76); }
+.rc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: calc(var(--u) * .5); }
+.rc-card { display: flex; align-items: center; gap: .9em; padding: .7em .9em; border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); color: inherit; text-decoration: none; transition: background-color .3s, transform .4s var(--ease); }
+.rc-card:hover { background: rgba(var(--fg), .08); transform: translateY(-2px); }
+.rc-t { flex: 1; min-width: 0; display: grid; line-height: 1.75; }
+.rc-t b { font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rc-t small { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.pg-doc p { margin: 0 0 1em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); line-height: 2.1; color: rgba(var(--fg), .8); }
+.pg-doc h2 { margin-top: 1.2em; }
+.pg-rules { margin: 0; padding-inline-start: 1.4em; display: grid; gap: .6em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); line-height: 2; color: rgba(var(--fg), .84); }
+.pg-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+.pg-stats .panel { display: grid; justify-items: center; gap: .2em; padding: calc(var(--u) * 1.3) 1em; border-radius: calc(var(--r) * 1.1); }
+.pg-stats b { font-size: calc(max(30px, calc(var(--u) * 2.4)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.2; background: linear-gradient(90deg, #a78bfa, #fb7185, #fbbf24); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.pg-stats span { font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); }
+.faq { display: grid; gap: calc(var(--u) * .4); }
+.faq details { border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); overflow: hidden; }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: .9em 1.1em; cursor: pointer; list-style: none; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary svg.i { width: 1.1em; height: 1.1em; transition: transform .4s var(--ease); }
+.faq details[open] summary svg.i { transform: rotate(180deg); }
+.faq details p { margin: 0; padding: 0 1.1em 1em; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); line-height: 2; color: rgba(var(--fg), .76); }
+.faq summary:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -2px; }
+.pg-form { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1em; }
+.pg-form .full { grid-column: 1 / -1; }
+.pg-form select, .pg-form textarea { box-sizing: border-box; width: 100%; padding: .7em 1em; border-radius: calc(var(--r) * .55); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 calc(max(13.5px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)) var(--font); outline: none; }
+.pg-form select { height: max(46px, calc(var(--u) * 2.9)); }
+.pg-form select option { background: var(--capsule); color: rgb(var(--fg)); }
+.pg-form textarea { resize: vertical; line-height: 1.9; }
+.pg-form select:focus, .pg-form textarea:focus { border-color: var(--sc, var(--ring)); }
+.pg-form .buy { justify-self: start; gap: .45em; }
+.pg-sugg { margin-inline-start: 0; justify-content: flex-start; }
+.cy-halls { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: calc(var(--u) * .5); }
+.cy-hall { display: grid; gap: .3em; padding: .9em 1em; border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
+.cy-hall span { color: rgba(var(--fg), .66); line-height: 1.8; }
+.cy-hall .chip { justify-self: start; margin-top: .3em; }
+.sec-all { margin-inline-start: auto; display: inline-flex; align-items: center; gap: .35em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .72); text-decoration: none; transition: color .3s; }
+.sec-all:hover { color: var(--sc); }
+.sec-all svg.i { width: 1.1em; height: 1.1em; transition: transform .4s var(--ease); }
+.sec-all:hover svg.i { transform: translateX(-3px); }
+.sec-chips + .sec-all { margin-inline-start: .6em; }
+
+/* the sign-in window */
+.au-box { position: relative; width: min(460px, 100%); display: grid; justify-items: center; text-align: center; }
+.au-box .rc-row { width: 100%; text-align: start; }
+.au-box .bk-note { justify-content: center; }
+.au-ic { margin-bottom: .5em; color: var(--ring); background: color-mix(in oklab, var(--ring) 15%, transparent); }
+.au-box h2 { margin: 0 0 .3em; font-size: calc(max(18px, calc(var(--u) * 1.2)) * var(--tx) * var(--tx-main)); }
+.au-x { all: unset; cursor: pointer; position: absolute; top: 12px; left: 12px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: rgba(var(--fg), .7); }
+.au-x:hover { background: rgba(var(--fg), .08); color: rgb(var(--fg)); }
+.au-x svg.i { width: 16px; height: 16px; }
+.login.is-in { background: color-mix(in oklab, rgb(var(--fg)) 90%, var(--ring)); }
+
+/* the phone's menu: a sheet from the right */
+.dr { place-items: stretch end; padding: 0; }
+.dr-sheet { width: min(360px, 88vw); height: 100%; overflow: auto; padding: 18px 16px 28px; border-radius: 22px 0 0 22px; display: grid; align-content: start; gap: 4px; }
+.dr-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 18px; }
+.dr-top .au-x { position: static; }
+.dr-sheet h3 { margin: 14px 4px 4px; font-size: 12px; font-weight: var(--fwm); color: rgba(var(--fg), .55); }
+.dr-sheet a, .dr-mode { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; font-size: 14px; color: rgb(var(--fg)); }
+.dr-sheet a:hover, .dr-mode:hover { background: rgba(var(--fg), .07); }
+.dr-sheet a svg.i, .dr-mode svg.i { width: 18px; height: 18px; color: var(--ring); }
+.dr-sheet a small { margin-inline-start: auto; font-size: 12px; color: rgba(var(--fg), .55); }
+.dr-login { background: rgba(var(--fg), .06); }
+.dr-mode { margin-top: 12px; box-shadow: inset 0 0 0 1px rgba(var(--fg), .14); }
+
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .pg-stats { grid-template-columns: 1fr 1fr; }
+  .pg-form { grid-template-columns: 1fr; }
+  .rc-row { flex-wrap: wrap; }
+  .rc-row .buy, .rc-row .chip { width: 100%; justify-content: center; }
+  .pg-head { padding: 16px; }
+}
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -3174,9 +3262,9 @@ const hd = {
       if (pop && pop.anchor === city) { closePop(); return; }
       menuPop(city, CITIES, TXT.city, (c) => { look.setText('city', c); const f = $('[data-ctl="city"] input'); if (f) f.value = c; s2.setCity(c); toast(`اجراهای ${c} رو نشون می‌دم.`); }, { cls: 'is-cities', cols: STK.matches ? 3 : 4, label: 'شهر' });
     });
-    $('#ticketsBtn').addEventListener('click', () => toast('اینجا بلیت‌های من باز می‌شه.'));
+    $('#ticketsBtn').addEventListener('click', () => page.go('#/receipts'));
     $('#bellBtn').addEventListener('click', (ev) => { const d = $('.dotn', ev.currentTarget); if (d) d.remove(); toast('اینجا اعلان‌ها باز می‌شه.'); });
-    $$('#loginBtn, #menuBtn').forEach((b) => b.addEventListener('click', () => toast('این بخش هنوز ساخته نشده.')));
+    auth.init(); drawer.init();
     $('.brand', nav).addEventListener('click', (ev) => { ev.preventDefault(); scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); });
     this.search.setPlaceholder();
   },
@@ -3396,7 +3484,7 @@ const s2 = {
       const cities = key.endsWith(':other') && !this.city ? [...new Set(list.map((e) => e.city))] : [];
       const chips = cities.length > 1 ? `<div class="sec-chips" role="group" aria-label="شهرها">${['', ...cities].map((c) => `<button type="button" class="chip" data-city="${esc(c)}" aria-pressed="${(this.chip[key] || '') === c}">${esc(c || 'همه')}${c ? `<small>${fa(list.filter((e) => e.city === c).length)}</small>` : ''}</button>`).join('')}</div>` : '';
       const sub = key === 'soon' ? `${fa(list.length)} برنامه · نزدیک‌ترین شروع فروش: ${saleMs(list[0]) > Date.now() ? esc(saleWhen(list[0])) : 'به‌زودی'}` : `${fa(list.length)} برنامه · ${esc(spanOf(list))}`;
-      sec.innerHTML = `<header class="sec-h" data-rv><span class="sec-ic" aria-hidden="true">${ico(iconOfCat(key))}</span><div class="sec-tt"><h2 id="${secId(key)}-h">${esc(catName(key))}</h2><p>${sub}</p></div>${chips}</header><div class="${wide ? 'ptk-grid' : 'tkt-grid'}"></div><div class="sec-more" hidden><button type="button" class="more-btn"><span></span>${ico('down')}</button></div>`;
+      sec.innerHTML = `<header class="sec-h" data-rv><span class="sec-ic" aria-hidden="true">${ico(iconOfCat(key))}</span><div class="sec-tt"><h2 id="${secId(key)}-h">${esc(catName(key))}</h2><p>${sub}</p></div>${chips}<a class="sec-all" href="#/c/${key.replace(':', '-')}">همه${ico('arrow-l')}</a></header><div class="${wide ? 'ptk-grid' : 'tkt-grid'}"></div><div class="sec-more" hidden><button type="button" class="more-btn"><span></span>${ico('down')}</button></div>`;
       const grid = $(wide ? '.ptk-grid' : '.tkt-grid', sec);
       list.forEach((e) => grid.appendChild(this.card(e, wide)));
       $$('.chip', sec).forEach((b) => b.addEventListener('click', () => { this.chip[key] = b.dataset.city; $$('.chip', sec).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); this.clamp(sec, true); }));
@@ -3546,7 +3634,7 @@ const s2 = {
   },
   wireFooter() {
     $$('#ft [data-go]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const k = a.dataset.go; if (k === 'top') scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); else this.go(k); }));
-    $$('#ft [data-page]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }));
+    $$('#ft [data-page]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); { const r = PAGE_ROUTE[a.dataset.page]; if (r) page.go(r); else toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }; }));
   },
 
   /* the search over the list, as in the sample: the answers open under the box while you type (the poster, the name with the
@@ -3559,10 +3647,11 @@ const s2 = {
       q.addEventListener('input', () => this.render());
       q.addEventListener('focus', () => { if (q.value.trim()) this.render(); });
       q.addEventListener('keydown', (ev) => {
-        if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') { ev.preventDefault(); if (box.hidden) this.render(); this.move(ev.key === 'ArrowDown' ? 1 : -1); }
+        if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') { ev.preventDefault(); if (box.hidden) this.render(); this.move(ev.key === 'ArrowDown' ? 1 : -1); this.nav = true; }
         else if (ev.key === 'Escape') { if (!box.hidden) { ev.stopPropagation(); this.hide(); } }
       });
-      f.addEventListener('submit', (ev) => { ev.preventDefault(); const r = this.rows[Math.max(0, this.sel)]; if (r) this.pick(r); else if (q.value.trim()) this.render(); });
+      f.addEventListener('submit', (ev) => { ev.preventDefault(); const r = this.rows[Math.max(0, this.sel)]; if (r && (this.nav || this.rows.length === 1)) this.pick(r); else if (q.value.trim()) { this.hide(); q.blur(); page.go(`#/search/${encodeURIComponent(q.value.trim())}`); } });
+      q.addEventListener('input', () => { this.nav = false; });
       document.addEventListener('pointerdown', (ev) => { if (!f.contains(ev.target)) this.hide(); });
     },
     search(text) {
@@ -4066,7 +4155,7 @@ const page = {
   },
   wireFooter(ft) {
     $$('[data-go]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const k = a.dataset.go; if (k === 'top') scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); else this.close({ then: () => s2.go(k) }); }));
-    $$('[data-page]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }));
+    $$('[data-page]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); { const r = PAGE_ROUTE[a.dataset.page]; if (r) page.go(r); else toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }; }));
   },
   title0: document.title,
 };
@@ -4139,7 +4228,7 @@ function qrSVG(text, cls = 'qr') {
   return `<svg class="${cls}" viewBox="-2 -2 ${n + 4} ${n + 4}" shape-rendering="crispEdges" role="img" aria-label="کد QR بلیت"><rect x="-2" y="-2" width="${n + 4}" height="${n + 4}" fill="#fff"/><path d="${d}" fill="#0b0a10"/></svg>`;
 }
 const codeOf = () => { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 8; i++) s += A[Math.floor(Math.random() * A.length)]; return `BL-${s.slice(0, 4)}-${s.slice(4)}`; };
-const maskPhone = (p) => { const d = enDigits(p); return fa(`${d.slice(0, 4)}•••${d.slice(-4)}`); };
+const maskPhone = (p) => { const d = enDigits(p); return `\u2066${fa(`${d.slice(0, 4)}•••${d.slice(-4)}`)}\u2069`; };   // isolated, so it reads left to right inside a Persian sentence
 const CODES = { BLIT10: { label: '۱۰٪ تخفیف', of: (sum) => Math.round(sum * 0.1 / 1000) * 1000 }, HEDIYE: { label: '۵۰ هزار تومان تخفیف', of: (sum) => Math.min(sum, 50000) } };
 
 const buy = {
@@ -4147,11 +4236,11 @@ const buy = {
   parse(h) {
     let m = /^#\/ticket\/([^/?#]+)$/.exec(h);
     if (m) return { kind: 'ticket', code: decodeURIComponent(m[1]) };
-    return null;
+    return pages.parse(h);
   },
   render(v) {
     clearInterval(this.tick); clearTimeout(this.live);
-    if (v.kind === 'seats') this.seats(v); else if (v.kind === 'pay') this.pay(v); else if (v.kind === 'ticket') this.ticket(v);
+    if (v.kind === 'seats') this.seats(v); else if (v.kind === 'pay') this.pay(v); else if (v.kind === 'ticket') this.ticket(v); else pages.render(v);
     // one clock for the hold's timers
     this.tick = setInterval(() => this.clock(), 1000); this.clock();
     page.leave = () => { clearInterval(this.tick); clearTimeout(this.live); this.tick = 0; this.live = 0; };
@@ -4606,6 +4695,221 @@ const buy = {
 document.addEventListener('click', (ev) => { const a = ev.target.closest('#evp [data-home]'); if (a) { ev.preventDefault(); page.close(); } });
 
 /* ════════════════════════════════════════════════════════════════
+   the rest of the site's pages, on the same panels: «پیگیری خرید» (#/receipts: by the tracking code, or by the mobile and an
+   SMS code), the sign-in with an SMS code (a window from the header's button), the phone's menu, the fixed pages (#/p/rules,
+   #/p/about, #/p/contact with its questions and a form), the archive (#/archive), the search's results (#/search/<words>), a
+   category's page (#/c/<kind>-<tehran|other> or #/c/soon) and a city's page (#/city/<name>, with its halls and the way there)
+   ════════════════════════════════════════════════════════════════ */
+const FAQ = [
+  ['چطور بلیت بخرم؟', 'برنامه رو انتخاب کن، قوانین رو بپذیر، سانس و صندلی رو انتخاب کن و پرداخت رو انجام بده. بلیت همون لحظه صادر می‌شه و پیامک هم می‌شه؛ ثبت‌نام لازم نیست.'],
+  ['بلیتم رو گم کردم، چی کار کنم؟', 'از «پیگیری خرید» با کد پیگیری، یا با شماره‌ی موبایلی که باهاش خریدی و کد پیامکی، همه‌ی بلیت‌هات دوباره پیدا می‌شن.'],
+  ['می‌تونم خریدم رو لغو کنم؟', 'طبق قوانین خرید، جابه‌جایی یا پس دادن بلیت ممکن نیست؛ مگر برگزارکننده برنامه رو لغو کنه که اون وقت همه‌ی مبلغ به کیف پول یا کارتت برمی‌گرده.'],
+  ['پول از حسابم کم شد ولی بلیت صادر نشد', 'اگه خرید کامل نشده باشه، مبلغ تا ۷۲ ساعت خودکار به حسابت برمی‌گرده. اگه برنگشت، از همین صفحه پیام بده تا پیگیری کنیم.'],
+  ['چند تا بلیت می‌تونم با هم بخرم؟', 'هر خرید تا ۱۰ صندلی. صندلی‌ها از لحظه‌ی «ادامه»، ۱۵ دقیقه برات نگه داشته می‌شن تا پرداخت کنی.'],
+  ['ورود افراد زیر ۴ سال', 'برای همه‌ی افراد بالای ۴ سال بلیت لازمه. بعضی اجراها محدودیت سنی دارن که تو صفحه‌ی همون اجرا نوشته شده.'],
+];
+const PAGES = {
+  rules: { t: 'قوانین خرید', icon: 'shield', lead: 'پیش از خرید این‌ها رو بخون؛ خرید یعنی پذیرفتن همین قوانین.' },
+  about: { t: 'درباره‌ی بلیت', icon: 'spark', lead: 'فروشگاه آنلاین بلیت کنسرت، تئاتر و جُنگ در سراسر ایران؛ با انتخاب زنده‌ی صندلی و بلیت آنی.' },
+  contact: { t: 'تماس و پشتیبانی', icon: 'headset', lead: 'سؤالی داری یا خریدت به مشکل خورده؟ اینجا جوابش هست، یا برامون بنویس.' },
+};
+const userOf = () => store.get('blit.user', null);
+const PAGE_ROUTE = { 'پیگیری خرید': '#/receipts', 'قوانین خرید': '#/p/rules', 'درباره‌ی ما': '#/p/about', 'تماس با ما': '#/p/contact', 'پشتیبانی': '#/p/contact', 'ثبت مشکل یا طرح پرسش': '#/p/contact', 'آرشیو برنامه‌ها': '#/archive' };
+
+const pages = {
+  parse(h) {
+    let m;
+    if (h === '#/receipts') return { kind: 'receipts' };
+    if ((m = /^#\/p\/(rules|about|contact)$/.exec(h))) return { kind: 'static', name: m[1] };
+    if (h === '#/archive') return { kind: 'archive' };
+    if ((m = /^#\/search\/(.*)$/.exec(h))) return { kind: 'search', q: decodeURIComponent(m[1]) };
+    if ((m = /^#\/c\/(soon|(?:concert|theatre|comedy)-(?:tehran|other))$/.exec(h))) return { kind: 'cat', key: m[1].replace('-', ':') };
+    if ((m = /^#\/city\/([^/?#]+)$/.exec(h))) return { kind: 'city', city: decodeURIComponent(m[1]) };
+    return null;
+  },
+  render(v) {
+    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city }[v.kind];
+    if (fn) fn.call(this, v);
+    const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', page.el).appendChild(c); page.wireFooter(c); }
+    $$('.evp-in .tkt', page.el).forEach((c) => c.classList.add('is-in'));
+  },
+  // the head of a page: the path and a panel with its icon, name and line
+  head(t, icon, lead, extra = '') {
+    return `<nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><b>${esc(t)}</b></nav>
+      <section class="panel pg-head evp-rise"><span class="sec-ic" aria-hidden="true">${ico(icon)}</span><div><h1>${esc(t)}</h1>${lead ? `<p>${esc(lead)}</p>` : ''}</div>${extra}</section>`;
+  },
+  grid(list) { const g = document.createElement('div'); g.className = 'tkt-grid'; list.forEach((e) => g.appendChild(s2.card(e, false))); return g; },
+  wrap(cls, html, sc) { page.el.innerHTML = `<div class="evp-in pg ${cls}"${sc ? ` style="--sc-d:${sc[0]};--sc-l:${sc[1]}"` : ''}>${html}</div>`; return $('.evp-in', page.el); },
+
+  /* ───── «پیگیری خرید»: by the code, or by the mobile and an SMS code (or at once when signed in) ───── */
+  receipts() {
+    document.title = 'پیگیری خرید · بلیت';
+    const u = userOf();
+    const box = this.wrap('pg-rc', `${this.head('پیگیری خرید', 'search', 'بلیت‌هات رو با کد پیگیری یا با شماره‌ی موبایلی که باهاش خریدی پیدا کن.')}
+      <div class="evp-cols">
+        <div class="evp-main">
+          <section class="panel pg-box evp-rise" aria-labelledby="rcCodeH"><h2 id="rcCodeH">${ico('ticket')}با کد پیگیری</h2>
+            <form class="rc-row" id="rcCode"><label class="fld"><span>کد پیگیری</span><input id="rcCodeIn" dir="ltr" placeholder="BL-XXXX-XXXX" autocomplete="off"></label><button type="submit" class="buy">${ico('search')}پیدا کن</button></form>
+            <p class="bk-code-st" id="rcCodeSt"></p></section>
+          <section class="panel pg-box evp-rise" aria-labelledby="rcPhH"><h2 id="rcPhH">${ico('users')}با شماره‌ی موبایل</h2>
+            ${u ? `<p class="bk-lead">وارد شدی با ${esc(maskPhone(u.phone))}؛ همه‌ی خریدهات پایین هست. <a href="#" data-act="out">خروج</a></p>` : `<div class="rc-row"><label class="fld"><span>شماره‌ی موبایل</span><input id="rcPhone" type="tel" inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹"></label><button type="button" class="chip" id="rcSend">فرستادن کد</button></div>
+            <div class="otp" id="rcOtp" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><p class="bk-otp-st" id="rcSt"></p>`}
+          </section>
+        </div>
+        <aside class="evp-side"><section class="panel pg-box evp-rise"><h2>${ico('info')}کمک</h2><ul class="pg-tips"><li>کد پیگیری بعد از پرداخت روی صفحه‌ی بلیت‌ها و تو پیامک هست.</li><li>اگه با چند شماره خریدی، هر شماره جدا پیدا می‌شه.</li><li>مشکل داری؟ <a href="#/p/contact">تماس و پشتیبانی</a></li></ul></section></aside>
+      </div>
+      <section class="panel pg-box rc-list evp-rise" id="rcList" ${u ? '' : 'hidden'}></section>`);
+    const show = (phone) => {
+      const l = $('#rcList', box), os = store.get('blit.orders', []).filter((o) => o.phone === phone);
+      l.hidden = false;
+      l.innerHTML = `<h2>${ico('ticket')}خریدهای ${esc(maskPhone(phone))}<small>${fa(os.length)} خرید</small></h2>` + (os.length ? `<div class="rc-grid">${os.map((o) => { const e = showById(o.eid); if (!e) return ''; const w = whenOf({ t: o.t }), past = o.t + 3 * HOUR < Date.now(), { src } = artOf(e); return `<a class="rc-card" href="#/ticket/${esc(encodeURIComponent(o.code))}"><figure class="bk-poster"><img src="${esc(src)}" alt=""></figure><span class="rc-t"><b>${esc(e.title)}</b><small>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)}</small><small>${fa(o.seats.length)} بلیت · ${money(o.total)} تومان · <span dir="ltr">${esc(o.code)}</span></small></span><em class="st" data-tone="${past ? 'mute' : 'good'}">${past ? 'برگزار شد' : 'پیش رو'}</em></a>`; }).join('')}</div>` : `<p class="bk-lead">با این شماره خریدی پیدا نشد. اگه با شماره‌ی دیگه‌ای خریدی، اون رو امتحان کن.</p>`);
+      if (MOTK()) gsap.from($$('.rc-card', l), { y: 16, opacity: 0, duration: 0.6, stagger: 0.05, ease: 'expo.out', clearProps: 'transform,opacity' });
+    };
+    if (u) show(u.phone);
+    $('#rcCode', box).addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const c = enDigits($('#rcCodeIn', box).value).trim().toUpperCase(), st = $('#rcCodeSt', box);
+      if (store.get('blit.orders', []).some((o) => o.code === c)) page.go(`#/ticket/${encodeURIComponent(c)}`);
+      else { st.className = 'bk-code-st bad'; st.textContent = c ? 'بلیتی با این کد پیدا نشد؛ کد رو دوباره ببین.' : 'کد پیگیری رو بنویس.'; }
+    });
+    const out = $('[data-act="out"]', box); if (out) out.addEventListener('click', (ev) => { ev.preventDefault(); auth.out(); page.route(); });
+    if (!u) auth.wireOtp(box, '#rcPhone', '#rcSend', '#rcOtp', '#rcSt', (phone) => { auth.in(phone); show(phone); });
+  },
+
+  /* ───── the fixed pages ───── */
+  static(v) {
+    const d = PAGES[v.name]; document.title = `${d.t} · بلیت`;
+    let body = '';
+    if (v.name === 'rules') {
+      body = `<section class="panel pg-box evp-rise pg-doc"><ol class="pg-rules">${RULES.map((r) => `<li>${esc(r)}</li>`).join('')}</ol>
+        <h2>${ico('ticket')}اگه برنامه لغو بشه</h2><p>همه‌ی مبلغ بلیت، بی‌کم‌وکاست، به کیف پول بلیت یا به همون کارتی که باهاش پرداخت کردی برمی‌گرده (به انتخاب خودت).</p>
+        <h2>${ico('shield')}حریم شخصی</h2><p>شماره‌ی موبایلت فقط برای فرستادن بلیت، پیدا کردن خریدهات و خبر دادن تغییرهای برنامه به کار می‌ره.</p></section>`;
+    } else if (v.name === 'about') {
+      const all = LIST(), cities = new Set(all.map((e) => e.city)), halls = new Set(all.map((e) => hallOf(e).name));
+      body = `<section class="pg-stats evp-rise">${[[all.length, 'برنامه'], [cities.size, 'شهر'], [halls.size, 'سالن'], [0, 'صف انتظار پشت در']].map(([n, l]) => `<div class="panel"><b>${fa(n)}</b><span>${l}</span></div>`).join('')}</section>
+        <section class="panel pg-box evp-rise pg-doc"><h2>${ico('music')}برای کی ساخته شده</h2><p>برای کسی که می‌خواد بی‌دردسر بلیت کنسرت، تئاتر یا جُنگ بخره: صندلی رو روی نقشه‌ی زنده‌ی سالن ببینه، بدون ثبت‌نام پرداخت کنه و بلیتش همون لحظه بیاد. برای برگزارکننده‌ای که می‌خواد فروشش رو لحظه‌به‌لحظه ببینه، و برای کنترل‌چی‌ای که دم در فقط یه کد QR اسکن می‌کنه.</p>
+        <h2>${ico('spark')}چی فرق داره</h2><ul class="pg-tips"><li>پلان واقعی هر سالن با بالکن، لژ، میز و جای ایستاده</li><li>شمارش معکوس شروع فروش و سایتی که زیر فشار همون لحظه هم سریع می‌مونه</li><li>تم تیره و روشن، روی گوشی و کامپیوتر</li></ul></section>`;
+    } else {
+      body = `<div class="evp-cols"><div class="evp-main"><section class="panel pg-box evp-rise"><h2>${ico('info')}پرسش‌های پرتکرار</h2><div class="faq">${FAQ.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(q)}${ico('down')}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
+        <section class="panel pg-box evp-rise"><h2>${ico('headset')}برامون بنویس</h2><form id="pgForm" class="pg-form"><label class="fld"><span>نام</span><input required autocomplete="name"></label><label class="fld"><span>شماره‌ی موبایل</span><input required type="tel" inputmode="numeric" dir="ltr" maxlength="11"></label><label class="fld full"><span>موضوع</span><select><option>پیگیری خرید</option><option>مشکل پرداخت</option><option>پیشنهاد</option><option>همکاری (برگزارکننده‌ها)</option></select></label><label class="fld full"><span>پیام</span><textarea rows="4" required></textarea></label><button type="submit" class="buy">${ico('check')}فرستادن</button></form></section></div>
+        <aside class="evp-side"><section class="panel pg-box evp-rise"><h2>${ico('headset')}پشتیبانی</h2><ul class="pg-tips"><li>هر روز از ۹ صبح تا ۱۲ شب</li><li>تلفن: <span dir="ltr">۰۲۱ ۰۰۰۰ ۰۰۰۰</span> (نمونه)</li><li>ایمیل: <span dir="ltr">support@blit.example</span></li><li>پیگیری خرید بدون تماس: <a href="#/receipts">اینجا</a></li></ul></section></aside></div>`;
+    }
+    const box = this.wrap(`pg-st pg-${v.name}`, this.head(d.t, d.icon, d.lead) + body);
+    const f = $('#pgForm', box); if (f) f.addEventListener('submit', (ev) => { ev.preventDefault(); toast(`پیامت ثبت شد؛ کد پیگیری‌اش ${fa(Math.floor(10000 + Math.random() * 89999))}. تا چند ساعت دیگه جواب می‌دیم.`); f.reset(); });
+  },
+
+  /* ───── the archive, the search's results, a category's page, a city's page ───── */
+  archive() {
+    document.title = 'آرشیو برنامه‌ها · بلیت';
+    const list = LIST().filter((e) => ['held', 'cancelled'].includes(statusOf(e).key)).sort((a, b) => Date.parse(b.startsAt) - Date.parse(a.startsAt));
+    const box = this.wrap('pg-ar', this.head('آرشیو برنامه‌ها', 'calendar', `${fa(list.length)} برنامه که برگزار شده یا لغو شده.`) + `<section class="panel pg-box evp-rise" id="pgGrid"></section>`);
+    const g = $('#pgGrid', box); if (list.length) g.appendChild(this.grid(list)); else g.innerHTML = '<p class="bk-lead">هنوز چیزی تو آرشیو نیست.</p>';
+  },
+  search(v) {
+    const q = v.q.trim(); document.title = `جستجوی «${q}» · بلیت`;
+    const list = s2.find.search(q);
+    const box = this.wrap('pg-sr', this.head(`نتیجه‌های «${q}»`, 'search', list.length ? `${fa(list.length)} برنامه پیدا شد.` : 'چیزی پیدا نشد. اسم هنرمند، نمایش، سالن یا شهر رو امتحان کن.') + `<section class="panel pg-box evp-rise" id="pgGrid"></section>`);
+    const g = $('#pgGrid', box);
+    if (list.length) g.appendChild(this.grid(list));
+    else g.innerHTML = `<p class="bk-lead">چند پیشنهاد:</p><div class="sec-chips pg-sugg">${['کنسرت', 'تئاتر', 'تهران', 'اصفهان', 'ویژه بانوان', 'کودک'].map((w) => `<a class="chip" href="#/search/${encodeURIComponent(w)}">${w}</a>`).join('')}</div>`;
+  },
+  cat(v) {
+    const key = v.key, list = LIST().filter((e) => inCat(e, key)).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt)), name = catName(key);
+    document.title = `${name} · بلیت`;
+    const box = this.wrap('pg-ct', this.head(name, iconOfCat(key), `${fa(list.length)} برنامه · ${list.length ? spanOf(list) : ''}`), secColor(key));
+    const sec = document.createElement('section'); sec.className = 'panel pg-box evp-rise'; sec.appendChild(this.grid(list)); box.appendChild(sec);
+  },
+  city(v) {
+    const c = v.city, list = LIST().filter((e) => e.city === c && !['held', 'cancelled'].includes(statusOf(e).key)).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
+    document.title = `برنامه‌های ${c} · بلیت`;
+    const halls = [...new Map(LIST().filter((e) => e.city === c).map((e) => { const h = hallOf(e); return [h.name, h]; })).values()];
+    const box = this.wrap('pg-cy', this.head(`برنامه‌های ${c}`, 'pin', list.length ? `${fa(list.length)} برنامه پیش رو` : 'فعلاً برنامه‌ای پیش رو نیست.') + `<section class="panel pg-box evp-rise" id="pgGrid"></section>` + (halls.length ? `<section class="panel pg-box evp-rise"><h2>${ico('pin')}سالن‌های ${esc(c)}</h2><div class="cy-halls">${halls.map((h) => `<div class="cy-hall"><b>${esc(h.name)}</b><span>${esc(h.addr)}</span><a class="chip" target="_blank" rel="noopener" href="${h.lat ? `https://neshan.org/maps/@${h.lat},${h.lng},16z` : `https://neshan.org/maps/search/${encodeURIComponent(h.addr)}`}">${ico('route')}مسیریابی</a></div>`).join('')}</div></section>` : ''));
+    const g = $('#pgGrid', box); if (list.length) g.appendChild(this.grid(list)); else g.innerHTML = `<p class="bk-lead">برای ${esc(c)} هنوز برنامه‌ای ثبت نشده؛ <a href="#" data-home>همه‌ی برنامه‌ها</a> رو ببین.</p>`;
+  },
+};
+
+/* ───── the sign-in with an SMS code: the header's button opens a window (the mobile, then five boxes); signed in, the same
+   button says «حساب من» and opens a small menu ───── */
+const auth = {
+  in(phone) { store.set('blit.user', { phone, at: Date.now() }); this.sync(); },
+  out() { store.set('blit.user', null); try { localStorage.removeItem('blit.user'); } catch (err) { /* nothing */ } this.sync(); toast('از حسابت خارج شدی.'); },
+  sync() { const b = $('#loginBtn'); if (!b) return; const u = userOf(); b.textContent = u ? 'حساب من' : TXT.login; b.classList.toggle('is-in', !!u); b.setAttribute('aria-label', u ? `حساب من، ${maskPhone(u.phone)}` : TXT.login); },
+  // a mobile field, a «send» button, five boxes and a line for what happens; done(phone) when the code (demo ۱۲۳۴۵) is right
+  wireOtp(root, phSel, sendSel, otpSel, stSel, done) {
+    const ph = $(phSel, root), send = $(sendSel, root), otp = $(otpSel, root), st = $(stSel, root), boxes = $$('input', otp);
+    let phone = '', wait = 0, t = 0;
+    ph.addEventListener('input', () => { const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); phone = d; ph.closest('.fld').classList.remove('is-bad'); });
+    const tick = () => { if (wait <= 0) { send.disabled = false; send.textContent = 'فرستادن دوباره‌ی کد'; return; } send.textContent = `فرستادن دوباره تا ${mmss(wait * 1000)}`; wait--; t = setTimeout(tick, 1000); };
+    send.addEventListener('click', () => {
+      if (!/^09\d{9}$/.test(phone)) { ph.closest('.fld').classList.add('is-bad'); st.className = 'bk-otp-st bad'; st.textContent = 'شماره‌ی موبایل ۱۱ رقمه و با ۰۹ شروع می‌شه.'; ph.focus(); return; }
+      otp.hidden = false; boxes.forEach((b) => { b.value = ''; b.disabled = false; }); boxes[0].focus(); send.disabled = true; wait = 90; clearTimeout(t); tick();
+      st.className = 'bk-otp-st'; st.textContent = `کد ۵ رقمی به ${maskPhone(phone)} پیامک شد (برای آزمایش: ۱۲۳۴۵).`;
+    });
+    const check = () => { const v = enDigits(boxes.map((b) => b.value).join('')); if (v.length < 5) return; if (v === '12345') { clearTimeout(t); st.className = 'bk-otp-st ok'; st.textContent = 'تأیید شد.'; boxes.forEach((b) => { b.disabled = true; }); done(phone); } else { st.className = 'bk-otp-st bad'; st.textContent = 'کد درست نیست.'; boxes.forEach((b) => { b.value = ''; }); boxes[0].focus(); } };
+    boxes.forEach((b, i) => {
+      b.addEventListener('input', () => { b.value = fa(enDigits(b.value).replace(/\D/g, '').slice(-1)); if (b.value && boxes[i + 1]) boxes[i + 1].focus(); check(); });
+      b.addEventListener('keydown', (ev) => { if (ev.key === 'Backspace' && !b.value && boxes[i - 1]) boxes[i - 1].focus(); });
+      b.addEventListener('paste', (ev) => { const d = enDigits((ev.clipboardData || window.clipboardData).getData('text')).replace(/\D/g, '').slice(0, 5); if (!d) return; ev.preventDefault(); d.split('').forEach((c, k) => { if (boxes[k]) boxes[k].value = fa(c); }); check(); });
+    });
+    return () => clearTimeout(t);
+  },
+  open() {
+    const box = document.createElement('div'); box.className = 'evp-modal'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'ورود یا ثبت‌نام');
+    box.innerHTML = `<div class="evp-dlg panel au-box"><button type="button" class="au-x" data-x aria-label="بستن">${ico('x')}</button>
+      <span class="sec-ic au-ic" aria-hidden="true">${ico('users')}</span><h2>ورود یا ثبت‌نام</h2><p class="bk-lead">با شماره‌ی موبایل و یه کد پیامکی؛ رمز عبور لازم نیست. اگه حساب نداشته باشی همین‌جا ساخته می‌شه.</p>
+      <div class="rc-row"><label class="fld"><span>شماره‌ی موبایل</span><input id="auPhone" type="tel" inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" autocomplete="tel"></label><button type="button" class="chip" id="auSend">فرستادن کد</button></div>
+      <div class="otp" id="auOtp" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr" autocomplete="${i === 0 ? 'one-time-code' : 'off'}">`).join('')}</div>
+      <p class="bk-otp-st" id="auSt"></p><p class="bk-note">${ico('shield')}با ورود، <a href="#/p/rules" data-x>قوانین بلیت</a> رو می‌پذیری.</p></div>`;
+    $('#app').appendChild(box);
+    const prev = document.activeElement, k = MOTK();
+    let stop = () => {};
+    const shut = () => { stop(); document.removeEventListener('keydown', key, true); gsap.to(box, { opacity: 0, duration: 0.25, onComplete: () => box.remove() }); if (prev && prev.focus) prev.focus(); };
+    const key = (ev) => { if (ev.key === 'Escape') { ev.preventDefault(); shut(); } };
+    document.addEventListener('keydown', key, true);
+    box.addEventListener('click', (ev) => { if (ev.target === box || ev.target.closest('[data-x]')) shut(); });
+    stop = this.wireOtp(box, '#auPhone', '#auSend', '#auOtp', '#auSt', (phone) => { this.in(phone); setTimeout(() => { shut(); toast(`خوش اومدی؛ با ${maskPhone(phone)} وارد شدی.`); }, 600); });
+    gsap.fromTo(box, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    gsap.fromTo($('.au-box', box), { y: 24 * k, scale: 0.97 }, { y: 0, scale: 1, duration: 0.6, ease: 'expo.out', clearProps: 'transform' });
+    $('#auPhone', box).focus();
+  },
+  init() {
+    const b = $('#loginBtn');
+    if (b) b.addEventListener('click', () => {
+      if (!userOf()) { this.open(); return; }
+      if (pop && pop.anchor === b) { closePop(); return; }
+      menuPop(b, [{ t: 'بلیت‌های من', v: 'tickets' }, { t: 'تم روشن / تیره', v: 'mode' }, { t: 'خروج از حساب', v: 'out' }], '', (v) => { if (v === 'tickets') page.go('#/receipts'); else if (v === 'mode') modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', b); else { this.out(); if (page.v && page.v.kind === 'receipts') page.route(); } }, { label: 'حساب من' });
+    });
+    this.sync();
+  },
+};
+
+/* ───── the phone's menu: the header's ☰ opens a sheet with the categories, the pages, the sign-in and the theme ───── */
+const drawer = {
+  open() {
+    const box = document.createElement('div'); box.className = 'evp-modal dr'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'منو');
+    const u = userOf(), cat = (k) => `<a href="#/c/${k.replace(':', '-')}" data-x>${ico(iconOfCat(k))}<span>${esc(catName(k))}</span><small>${fa(catCount(k))}</small></a>`;
+    box.innerHTML = `<nav class="dr-sheet panel" aria-label="منو"><div class="dr-top"><b>بلیت</b><button type="button" class="au-x" data-x aria-label="بستن">${ico('x')}</button></div>
+      <a class="dr-login" href="#" data-act="login">${ico('users')}<span>${u ? `حساب من · ${esc(maskPhone(u.phone))}` : 'ورود یا ثبت‌نام'}</span></a>
+      <h3>دسته‌ها</h3>${SEC_ORDER.map(cat).join('')}
+      <h3>صفحه‌ها</h3><a href="#/receipts" data-x>${ico('ticket')}<span>پیگیری خرید و بلیت‌های من</span></a><a href="#/archive" data-x>${ico('calendar')}<span>آرشیو برنامه‌ها</span></a><a href="#/p/rules" data-x>${ico('shield')}<span>قوانین خرید</span></a><a href="#/p/contact" data-x>${ico('headset')}<span>تماس و پشتیبانی</span></a><a href="#/p/about" data-x>${ico('spark')}<span>درباره‌ی بلیت</span></a>
+      <button type="button" class="dr-mode" data-act="mode">${ico('spark')}<span>${LOOK.mode === 'light' ? 'تم تیره' : 'تم روشن (سفید)'}</span></button></nav>`;
+    $('#app').appendChild(box);
+    const shut = () => { document.removeEventListener('keydown', key, true); gsap.to($('.dr-sheet', box), { x: '100%', duration: 0.35, ease: 'power2.in' }); gsap.to(box, { opacity: 0, duration: 0.35, onComplete: () => box.remove() }); };
+    const key = (ev) => { if (ev.key === 'Escape') { ev.preventDefault(); shut(); } };
+    document.addEventListener('keydown', key, true);
+    box.addEventListener('click', (ev) => {
+      if (ev.target === box || ev.target.closest('[data-x]')) { shut(); return; }
+      const a = ev.target.closest('[data-act]'); if (!a) return; ev.preventDefault();
+      if (a.dataset.act === 'login') { shut(); if (userOf()) page.go('#/receipts'); else auth.open(); }
+      if (a.dataset.act === 'mode') { shut(); modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', a); }
+    });
+    gsap.fromTo(box, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    gsap.fromTo($('.dr-sheet', box), { x: '100%' }, { x: 0, duration: 0.55, ease: 'expo.out' });
+  },
+  init() { const b = $('#menuBtn'); if (b) b.addEventListener('click', () => this.open()); },
+};
+
+/* ════════════════════════════════════════════════════════════════
    the touch of the page: a soft light that follows the pointer over a panel, a buy button that leans toward the
    pointer and ripples, banners that can be dragged to the next show, and the keys
    ════════════════════════════════════════════════════════════════ */
@@ -4983,7 +5287,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
