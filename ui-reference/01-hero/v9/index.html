@@ -85,11 +85,24 @@
 :root[data-caps="off"], :root[data-caps="over"] { --cap-h: 0px; --cap-gap: 0px; }
 :root[data-story="off"] { --pin: 0px; }
 
+/* the theme: dark (the approved one) or light (white). The look writes the panel, page and text colours of the theme in use
+   (--capsule, --bg, --fg); here only what the light page needs on top: softer shadows, a light veil, the browser's own light parts */
+:root { --shk: 1; --veil: #000; --stage: var(--bg); color-scheme: dark; }
+:root[data-mode="light"] { --shk: .2; --veil: var(--bg); --stage: #0b0a10; color-scheme: light; }
+/* the change of theme (modeFx): the new colours open as a circle from the button over the old page, which sinks back a little.
+   While it runs nothing else animates its colours (the icon in the button does: the sun turns into the moon) */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
+:root.vt-mode *, :root.vt-mode *::before, :root.vt-mode *::after { transition-duration: 0s !important; }
+:root.vt-mode .mode-i * { transition-duration: .8s !important; }
+/* a browser without View Transitions: every colour that comes from the theme cross-fades */
+:root.mode-fade *, :root.mode-fade *::before, :root.mode-fade *::after { transition: background-color .8s ease, color .8s ease, border-color .8s ease, fill .8s ease, stroke .8s ease, box-shadow .8s ease !important; }
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; }
 html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
-body { background: var(--bg); color: #fff; font-family: var(--font); font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx)); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+body { background: var(--bg); color: rgb(var(--fg)); font-family: var(--font); font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx)); line-height: 1.7; -webkit-font-smoothing: antialiased; }
 [hidden] { display: none !important; }
 button { font: inherit; color: inherit; }
 img { display: block; max-width: 100%; }
@@ -100,7 +113,7 @@ a { color: inherit; }
 svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 
 /* every panel: a solid frame, soft corners, a hair of light on its top edge */
-.nav, .rail, .dock, .panel { position: relative; isolation: isolate; background: var(--capsule); color: rgb(var(--fg)); border: var(--bw) solid rgba(var(--fg), var(--bo)); border-radius: var(--r); box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 14px 40px -20px rgba(0, 0, 0, var(--shadow)); }
+.nav, .rail, .dock, .panel { position: relative; isolation: isolate; background: var(--capsule); color: rgb(var(--fg)); border: var(--bw) solid rgba(var(--fg), var(--bo)); border-radius: var(--r); box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 14px 40px -20px rgba(0, 0, 0, calc(var(--shadow) * var(--shk))); }
 /* a soft light that follows the pointer over a panel (made by the script) */
 .spot { position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .45s; background: radial-gradient(calc(var(--u) * 15) circle at var(--mx, 50%) var(--my, 50%), rgba(var(--fg), .08), transparent 72%); }
 .is-spot > .spot { opacity: 1; }
@@ -111,7 +124,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .pin { position: relative; z-index: 1; height: calc(var(--hero-h) + var(--pin)); }
 .hero { position: sticky; top: 0; height: var(--hero-h); overflow: hidden; isolation: isolate; background: var(--bg); transform-origin: 50% 35%; }
 :root[data-story="off"] .hero { position: relative; }
-.veil { position: absolute; inset: 0; z-index: 12; background: #000; opacity: 0; pointer-events: none; }
+.veil { position: absolute; inset: 0; z-index: 12; background: var(--veil); opacity: 0; pointer-events: none; }
 
 /* ── hero and scenes: one grid ──────────────────────────────────── */
 /* the header's row is empty (the header itself is fixed above it); under it the rail and, next to it, the banner
@@ -146,6 +159,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 
 /* scenes: one per show, stacked; the new one fades in over the old one */
 .scenes { position: absolute; inset: 0; z-index: 0; background: var(--bg); }
+:root[data-mode="light"] .frame, :root[data-mode="light"] .scene .frame { background: var(--stage); }
 .scene { position: absolute; inset: 0; z-index: 0; isolation: isolate; overflow: hidden; background: var(--bg); opacity: 0; visibility: hidden; }
 .scene.is-on { visibility: visible; }
 
@@ -161,7 +175,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .stage { grid-area: main; min-width: 0; min-height: 0; display: grid; }
 /* the banner's column: the banner's panel takes all the height that is left, the facts' panel is under it */
 .tk { min-width: 0; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) var(--dock-h); row-gap: var(--gap); }
-.frame { position: relative; min-height: 0; display: block; overflow: hidden; isolation: isolate; border-radius: var(--r); background: var(--bg); border: var(--bw) solid rgba(var(--fg), var(--bo)); box-shadow: 0 18px 50px -24px rgba(0, 0, 0, calc(var(--shadow) + .1)); transition: border-color .35s; touch-action: pan-y; }
+.frame { position: relative; min-height: 0; display: block; overflow: hidden; isolation: isolate; border-radius: var(--r); background: var(--bg); border: var(--bw) solid rgba(var(--fg), var(--bo)); box-shadow: 0 18px 50px -24px rgba(0, 0, 0, calc((var(--shadow) + .1) * var(--shk))); transition: border-color .35s; touch-action: pan-y; }
 .frame:hover { border-color: rgba(var(--fg), .42); }
 .frame, .frame img { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
 /* the picture and its extension are one layer, so the zoom-out moves them together */
@@ -302,7 +316,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   border-radius: var(--r);
   gap: calc(var(--u) * (2.2 - 1 * var(--hs)));
   padding-inline: calc(var(--u) * 1.3) calc(var(--u) * .6);
-  box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 calc(14px + 16px * var(--hs)) calc(40px + 24px * var(--hs)) -20px rgba(0, 0, 0, calc(var(--shadow) + .15 * var(--hs)));
+  box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 calc(14px + 16px * var(--hs)) calc(40px + 24px * var(--hs)) -20px rgba(0, 0, 0, calc((var(--shadow) + .15 * var(--hs)) * var(--shk)));
 }
 .nav.is-compact { --hs: 1; transition-duration: var(--hd-t, .8s); transition-timing-function: cubic-bezier(.22, 1, .36, 1); }
 .nav.is-still { transition: none; }
@@ -339,6 +353,20 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .city .ct { flex: 1; min-width: 0; text-align: start; opacity: var(--hq); overflow: hidden; text-overflow: ellipsis; }
 .city .cv { width: .9em; height: .9em; opacity: var(--hq); }
 .nb-grp { display: flex; align-items: center; gap: calc(var(--u) * .7); max-width: calc((var(--ib) * 2 + var(--u) * .7) * (1 - var(--hw))); margin-inline-end: calc(var(--u) * -.7 * var(--hw)); opacity: var(--hq); overflow: hidden; }
+/* the light theme: the windows over the page throw a soft shadow, and the page under the search window dims less */
+:root[data-mode="light"] .cmdk { background: rgba(30, 26, 48, .32); }
+:root[data-mode="light"] .cmdk-box, :root[data-mode="light"] .menu-pop { box-shadow: 0 30px 80px -24px rgba(24, 18, 48, .32); }
+/* the theme button: a sun in the dark theme, a moon in the light one (the sun's disc grows and a dark circle slides over its corner) */
+.nb-mode .mode-i { width: 1.38em; height: 1.38em; overflow: visible; }
+.mode-i .core { transform-origin: 12px 12px; transition: transform .8s var(--ease); }
+.mode-i .mm { transform-origin: 17.6px 6.4px; transform: translate(7px, -7px) scale(.3); transition: transform .8s var(--ease); }
+.mode-i .rays { transform-origin: 12px 12px; transition: transform .8s var(--ease), opacity .5s; }
+.nb-mode:hover .mode-i .rays { transform: rotate(45deg); }
+:root[data-mode="light"] .mode-i .core { transform: scale(1.68); }
+:root[data-mode="light"] .mode-i .mm { transform: none; }
+:root[data-mode="light"] .mode-i .rays, :root[data-mode="light"] .nb-mode:hover .mode-i .rays { transform: rotate(120deg) scale(.3); opacity: 0; }
+:root[data-mode="light"] .nb-mode:hover .mode-i .core { transform: scale(1.68) rotate(-14deg); }
+@media (prefers-reduced-motion: reduce) { .mode-i .core, .mode-i .mm, .mode-i .rays { transition: none; } }
 .login { all: unset; box-sizing: border-box; position: relative; cursor: pointer; display: inline-flex; align-items: center; flex: none; height: var(--ib); padding-inline: calc(var(--u) * 1.1); border-radius: var(--rb); background: rgb(var(--fg)); color: var(--capsule); font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-nav)); font-weight: var(--fwm); white-space: nowrap; transition: transform .4s var(--ease), filter .3s; }
 .login:hover { transform: translateY(-1px); filter: brightness(.94); }
 .login:active { transform: scale(.97); }
@@ -459,53 +487,118 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 :root[data-progress="ring"] .c-ring { display: block; }
 :root[data-progress="off"] .c-bar, :root[data-progress="off"] .c-ring { display: none; }
 
-/* ── the list under the hero: the category bar, a section for each category (name, number, tickets), the footer. Made of the
-   hero's own panels, gaps, margins, radii and colours, so every setting changes it too. It slides over the hero like a
-   sheet (the hero stays put under it), so its top corners are round ── */
-.s2 { position: relative; z-index: 2; min-height: var(--hero-h); margin-top: calc(var(--pin) * -1); background: var(--bg); color: rgb(var(--fg)); border-radius: calc(var(--r) * 1.7) calc(var(--r) * 1.7) 0 0; box-shadow: 0 -1px 0 rgba(var(--fg), .14), 0 -40px 90px -30px rgba(0, 0, 0, .9); }
+/* ── the list under the hero: the search and the city, the category bar, a panel for each category (its own colour, icon, head
+   and posters), the footer. Made of the hero's own panels, gaps, margins, radii and colours, so every setting (and the theme)
+   changes it too. It slides over the hero like a sheet (the hero stays put under it), so its top corners are round ── */
+.s2 { position: relative; z-index: 2; min-height: var(--hero-h); margin-top: calc(var(--pin) * -1); background: var(--bg); color: rgb(var(--fg)); border-radius: calc(var(--r) * 1.7) calc(var(--r) * 1.7) 0 0; box-shadow: 0 -1px 0 rgba(var(--fg), .14), 0 -40px 90px -30px rgba(0, 0, 0, calc(.9 * var(--shk))); }
 .s2::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 2px; border-radius: inherit; background: linear-gradient(to left, var(--ring), transparent 55%); opacity: .8; pointer-events: none; }
-.s2-in { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--gap) * 2.4); align-content: start; padding: calc(var(--nav-h) + var(--gap) * 3.2) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); }
+.s2-in { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--gap) * 2); align-content: start; padding: calc(var(--nav-h) + var(--gap) * 3.2) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); }
 
-/* the bar of the categories: a pill slides to the one in view; under the header it stays with the page */
+/* the search and the city, as in the sample: a wide box with its answers under it, and the city next to it */
+.s2-top { position: relative; z-index: 7; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--gap); }
+.s2-find { display: flex; align-items: center; gap: calc(var(--u) * .7); height: max(54px, calc(var(--u) * 3.6)); padding-inline: calc(var(--u) * 1.2) calc(var(--u) * .45); border-radius: calc(var(--r) * 1.1); transition: border-color .3s, box-shadow .3s; }
+.s2-find:focus-within { border-color: rgba(var(--fg), .32); box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 0 0 4px rgba(var(--fg), .06), 0 14px 40px -20px rgba(0, 0, 0, calc(var(--shadow) * var(--shk))); }
+.s2-fi { width: 1.35em; height: 1.35em; color: rgba(var(--fg), .55); }
+.s2-find input { all: unset; flex: 1; min-width: 0; height: 100%; font-size: calc(max(14px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); color: rgb(var(--fg)); }
+.s2-find input::placeholder { color: rgba(var(--fg), .5); }
+.s2-find input::-webkit-search-cancel-button { display: none; }
+.s2-go { all: unset; box-sizing: border-box; cursor: pointer; flex: none; display: grid; place-items: center; width: max(42px, calc(var(--u) * 2.75)); aspect-ratio: 1; border-radius: 50%; background: rgb(var(--fg)); color: var(--capsule); transition: transform .4s var(--ease), filter .3s; }
+.s2-go svg.i { width: 1.25em; height: 1.25em; stroke-width: 2.2; }
+.s2-go:hover { transform: scale(1.06); }
+.s2-go:active { transform: scale(.95); }
+.s2-go:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.s2-sug { position: absolute; z-index: 8; top: calc(100% + 8px); inset-inline: 0; display: grid; gap: 2px; max-width: min(100%, max(520px, calc(var(--u) * 36))); padding: calc(var(--u) * .35); background: var(--capsule); color: rgb(var(--fg)); border: 1px solid rgba(var(--fg), .16); border-radius: var(--r); box-shadow: 0 30px 80px -24px rgba(0, 0, 0, calc(.95 * var(--shk) + .15)); }
+.sg { display: flex; align-items: center; gap: calc(var(--u) * .75); padding: calc(var(--u) * .35) calc(var(--u) * .5); border-radius: calc(var(--r) * .65); text-decoration: none; color: inherit; }
+.sg[aria-selected="true"] { background: rgba(var(--fg), .08); }
+.sg img { flex: none; width: max(34px, calc(var(--u) * 2.3)); aspect-ratio: 2 / 3; object-fit: cover; border-radius: calc(var(--rt) * .8); background: #14121d; }
+.sg-t { flex: 1; min-width: 0; display: grid; line-height: 1.6; }
+.sg-t b { font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sg-t small { font-size: calc(max(11.5px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sg mark { background: none; color: inherit; font-weight: 900; box-shadow: inset 0 -.42em 0 color-mix(in oklab, var(--ring) 45%, transparent); }
+.sg-none, .sg-more { margin: 0; padding: calc(var(--u) * .7) calc(var(--u) * .8); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); }
+.sg-more { border-top: 1px solid rgba(var(--fg), .1); }
+.s2-city { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .55em; height: max(54px, calc(var(--u) * 3.6)); min-width: max(230px, calc(var(--u) * 15)); padding-inline: calc(var(--u) * 1.15); border-radius: calc(var(--r) * 1.1); font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); white-space: nowrap; background: var(--capsule); color: rgb(var(--fg)); border: var(--bw) solid rgba(var(--fg), var(--bo)); box-shadow: inset 0 1px 0 rgba(var(--fg), .05), 0 14px 40px -20px rgba(0, 0, 0, calc(var(--shadow) * var(--shk))); transition: border-color .3s; }
+.s2-city:hover, .s2-city[aria-expanded="true"] { border-color: rgba(var(--fg), .3); }
+.s2-city:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.s2-city svg.i { width: 1.3em; height: 1.3em; }
+.s2-city .lab { color: rgba(var(--fg), .6); }
+.s2-city b { font-weight: var(--fwb); }
+.s2-city .cv { margin-inline-start: auto; width: 1em; height: 1em; opacity: .6; transition: transform .35s var(--ease); }
+.s2-city[aria-expanded="true"] .cv { transform: rotate(180deg); }
+
+/* the bar of the categories: a pill slides to the one in view, in the colour of its section; under the header it stays with the page */
 .catnav { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); z-index: 6; padding: calc(var(--u) * .42); border-radius: calc(var(--r) * 1.1); transition: box-shadow .4s, border-color .4s; }
-.catnav.is-stuck { border-color: rgba(var(--fg), .24); box-shadow: inset 0 1px 0 rgba(var(--fg), .06), 0 calc(var(--u) * 1.3) calc(var(--u) * 3) calc(var(--u) * -.9) rgba(0, 0, 0, .95); }
-.cat-track { position: relative; display: flex; gap: calc(var(--u) * .25); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+.catnav.is-stuck { border-color: rgba(var(--fg), .24); box-shadow: inset 0 1px 0 rgba(var(--fg), .06), 0 calc(var(--u) * 1.3) calc(var(--u) * 3) calc(var(--u) * -.9) rgba(0, 0, 0, calc(.95 * var(--shk) + .05)); }
+.cat-track { --sc: var(--sc-d, #e5e7eb); position: relative; display: flex; gap: calc(var(--u) * .25); overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+:root[data-mode="light"] .cat-track, :root[data-mode="light"] .cat { --sc: var(--sc-l, #334155); }
 .cat-track::-webkit-scrollbar { display: none; }
-.cat { position: relative; z-index: 1; flex: none; display: inline-flex; align-items: center; gap: .55em; padding: .66em 1.2em; border-radius: 999px; text-decoration: none; white-space: nowrap; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-nav)); font-weight: var(--fwm); color: rgba(var(--fg), .7); transition: color .3s; }
-.cat svg.i { width: 1.3em; height: 1.3em; }
+.cat { --sc: var(--sc-d); position: relative; z-index: 1; flex: none; display: inline-flex; align-items: center; gap: .55em; padding: .66em 1.2em; border-radius: 999px; text-decoration: none; white-space: nowrap; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-nav)); font-weight: var(--fwm); color: rgba(var(--fg), .7); transition: color .3s; }
+.cat svg.i { width: 1.3em; height: 1.3em; transition: color .3s; }
 .cat:hover, .cat[aria-current] { color: rgb(var(--fg)); }
+.cat:hover svg.i, .cat[aria-current] svg.i { color: var(--sc); }
 .cat[data-empty] { opacity: .55; }
 .cat:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -2px; }
-.cat-ind { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 0; border-radius: 999px; background: rgba(var(--fg), .1); box-shadow: inset 0 0 0 1px rgba(var(--fg), .16); transition: transform .6s var(--ease), width .6s var(--ease); pointer-events: none; }
+.cat-ind { position: absolute; z-index: 0; top: 0; bottom: 0; left: 0; width: 0; border-radius: 999px; background: color-mix(in oklab, var(--sc) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 42%, transparent); transition: transform .6s var(--ease), width .6s var(--ease), background-color .6s, box-shadow .6s; pointer-events: none; }
+.s2-filter { display: flex; flex-wrap: wrap; align-items: center; gap: .6em 1em; margin: calc(var(--gap) * -.6) 0 0; padding-inline: calc(var(--u) * .6); font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .8); }
+.s2-filter svg.i { width: 1.25em; height: 1.25em; color: var(--ring); }
+.s2-filter b { color: rgb(var(--fg)); }
 
-/* a section: its name with a dot in the show's colour, how many shows, and its cards */
-.s2-secs { display: grid; gap: calc(var(--gap) * 3.6); }
-.tkt-sec { display: grid; gap: calc(var(--gap) * 1.7); align-content: start; }
-.tkt-sec h2 { display: flex; align-items: center; gap: .6em; margin: 0; padding-inline: calc(var(--u) * .5); font-size: calc(max(20px, calc(var(--u) * 1.5)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
-.tkt-sec h2::before { content: ""; flex: none; width: .42em; height: .42em; border-radius: 50%; background: var(--ring); box-shadow: 0 0 .9em var(--ring); transition: background-color .8s, box-shadow .8s; }
-.tkt-sec .cnt { font-size: .56em; font-weight: var(--fwm); line-height: 1.6; padding: .06em .95em; border-radius: 999px; color: rgba(var(--fg), .72); background: rgba(var(--fg), .08); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); }
-.tkt-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(6, minmax(0, 1fr)); }
-@media (min-width: 2200px) { .tkt-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
-@media (max-width: 1499px) { .tkt-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-@media (max-width: 1249px) { .tkt-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
-@media (max-width: 999px) { .tkt-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 699px) { .tkt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* a section: a panel of its own, its colour as a line on its top edge and a glow in its corner; its head (icon, name, how many,
+   the days, the city chips), its posters, and «نمایش همه» when it has more than its rows */
+.s2-secs { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--gap) * 2); }
+.tkt-sec { --sc: var(--sc-d); background: color-mix(in oklab, var(--capsule) 95%, var(--sc)); display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: calc(var(--u) * 1.15); padding: calc(var(--u) * 1.35) calc(var(--u) * 1.35) calc(var(--u) * 1.5); border-radius: calc(var(--r) * 1.15); }
+:root[data-mode="light"] .tkt-sec { --sc: var(--sc-l); background: color-mix(in oklab, var(--capsule) 97.5%, var(--sc)); }
+.tkt-sec::before { content: ""; position: absolute; z-index: 1; top: -1px; inset-inline: calc(var(--r) * .9); height: 3px; border-radius: 0 0 3px 3px; background: linear-gradient(to left, var(--sc), color-mix(in oklab, var(--sc) 30%, transparent) 45%, transparent 80%); pointer-events: none; }
+.tkt-sec::after { content: ""; position: absolute; z-index: -1; inset: 0; border-radius: inherit; background: radial-gradient(48% 70% at 100% 0%, color-mix(in oklab, var(--sc) 15%, transparent), transparent 72%); pointer-events: none; }
+:root[data-mode="light"] .tkt-sec::after { background: radial-gradient(48% 70% at 100% 0%, color-mix(in oklab, var(--sc) 9%, transparent), transparent 72%); }
+.sec-h { display: flex; flex-wrap: wrap; align-items: center; gap: calc(var(--u) * .5) calc(var(--u) * .9); padding-inline: calc(var(--u) * .15); }
+.sec-ic { flex: none; display: grid; place-items: center; width: max(46px, calc(var(--u) * 3)); aspect-ratio: 1; border-radius: calc(var(--r) * .7); color: var(--sc); background: color-mix(in oklab, var(--sc) 15%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 34%, transparent); }
+.sec-ic svg.i { width: 46%; height: 46%; stroke-width: 1.9; }
+.sec-tt { flex: 1 1 16em; min-width: 0; display: grid; }
+.sec-tt h2 { margin: 0; font-size: calc(max(19px, calc(var(--u) * 1.38)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.45; }
+.sec-tt p { margin: 0; font-size: calc(max(12px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); line-height: 1.7; color: rgba(var(--fg), .62); }
+.sec-chips { margin-inline-start: auto; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: calc(var(--u) * .3); }
+.chip { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .45em; height: max(32px, calc(var(--u) * 2)); padding-inline: 1em; border-radius: 999px; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .78); background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); transition: background-color .3s, color .3s, box-shadow .3s; white-space: nowrap; }
+.chip small { font-size: .86em; opacity: .7; font-variant-numeric: tabular-nums; }
+.chip svg.i { width: 1.1em; height: 1.1em; }
+.chip:hover { color: rgb(var(--fg)); background: rgba(var(--fg), .09); }
+.chip[aria-pressed="true"] { color: rgb(var(--fg)); background: color-mix(in oklab, var(--sc, var(--ring)) 18%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc, var(--ring)) 55%, transparent); }
+.chip:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.sec-more { display: flex; justify-content: center; padding-top: calc(var(--u) * .2); }
+.more-btn { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .6em; height: max(40px, calc(var(--u) * 2.5)); padding-inline: 1.5em 1.2em; border-radius: 999px; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgb(var(--fg)); background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), .16); transition: background-color .3s, box-shadow .3s; }
+.more-btn:hover { background: color-mix(in oklab, var(--sc) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 50%, transparent); }
+.more-btn svg.i { width: 1.15em; height: 1.15em; transition: transform .45s var(--ease); }
+.sec-more.is-open .more-btn svg.i { transform: rotate(180deg); }
+.more-btn:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.tkt-grid { display: grid; gap: var(--gap); grid-template-columns: repeat(var(--cols, 6), minmax(0, 1fr)); }
+@media (min-width: 2200px) { .tkt-grid { --cols: 7; } }
+@media (max-width: 1499px) { .tkt-grid { --cols: 5; } }
+@media (max-width: 1249px) { .tkt-grid { --cols: 4; } }
+@media (max-width: 999px) { .tkt-grid { --cols: 3; } }
+@media (max-width: 699px) { .tkt-grid { --cols: 2; } }
+/* the look's choice of columns on a wide window */
+@media (min-width: 1500px) { :root[data-cols="5"] .tkt-grid { --cols: 5; } :root[data-cols="6"] .tkt-grid { --cols: 6; } :root[data-cols="7"] .tkt-grid { --cols: 7; } :root[data-cols="8"] .tkt-grid { --cols: 8; } }
 .s2-empty { margin: 0; padding: calc(var(--u) * 3) calc(var(--u) * 2); text-align: center; font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
 
-/* a ticket: the banner whole on top, a perforation with a notch at each side, and under it the words on a soft copy of the banner */
+/* a ticket: the poster whole on top, a perforation with a notch at each side, and under it the words on a soft copy of the poster */
 .tkt { --nr: calc(var(--u) * .6); --notch: max(calc(var(--u) * 10.4 * var(--tx)), calc(134px * var(--tx))); --art: none; position: relative; transition: transform .6s var(--ease), filter .5s; -webkit-tap-highlight-color: transparent; }
-.tkt:hover, .tkt:focus-within { transform: translateY(calc(var(--u) * -.3 * var(--mot))); filter: drop-shadow(0 calc(var(--u) * 1) calc(var(--u) * 1.3) rgba(0, 0, 0, .6)); }
+.tkt:hover, .tkt:focus-within { transform: translateY(calc(var(--u) * -.3 * var(--mot))); filter: drop-shadow(0 calc(var(--u) * 1) calc(var(--u) * 1.3) rgba(0, 0, 0, calc(.5 * var(--shk) + .1))); }
 .tkt-in { position: relative; display: grid; grid-template-rows: auto var(--notch); overflow: hidden; isolation: isolate; border-radius: var(--r); background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo));
   -webkit-mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat;
   mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat; }
 /* the poster's frame (--pr: width ÷ height). The poster is shown whole: it fills the frame when its shape is the frame's, else the frame is filled by a soft copy of it */
 .tkt-pic { position: relative; display: block; aspect-ratio: var(--pr, .667); overflow: hidden; background: #14121d; cursor: pointer; }
-.tkt-pic::before { content: ""; position: absolute; inset: -14%; background: var(--art) center / cover no-repeat; filter: blur(16px) brightness(.72) saturate(1.2); }
-.tkt-pic.is-fill::before { display: none; }
-.tkt-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
-.tkt-pic.is-fill img { object-fit: fill; }
-.tkt:hover .tkt-pic img { transform: scale(1.04); }
-.tkt-pic:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
+.tkt-pic::before, .ptk-pic::before { content: ""; position: absolute; inset: -14%; background: var(--art) center / cover no-repeat; filter: blur(16px) brightness(.72) saturate(1.2); }
+.tkt-pic.is-fill::before, .ptk-pic.is-fill::before { display: none; }
+.tkt-pic img, .ptk-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
+.tkt-pic.is-fill img, .ptk-pic.is-fill img { object-fit: fill; }
+.tkt:hover .tkt-pic img, .ptk:hover .ptk-pic img { transform: scale(1.04); }
+.tkt-pic:focus-visible, .ptk-pic:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
+/* a sheen that crosses the poster once when the pointer arrives (as in the sample) */
+.tkt-glare { position: absolute; z-index: 2; inset: 0; overflow: hidden; pointer-events: none; }
+.tkt-glare::before { content: ""; position: absolute; top: -20%; bottom: -20%; left: -60%; width: 45%; background: linear-gradient(105deg, transparent, rgba(255, 255, 255, .22) 45%, rgba(255, 255, 255, .06) 60%, transparent); transform: translateX(-120%) skewX(-12deg); opacity: 0; }
+.tkt:hover .tkt-glare::before, .ptk:hover .tkt-glare::before { animation: glare 1.1s var(--ease) both; }
+@keyframes glare { 0% { transform: translateX(-60%) skewX(-12deg); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateX(460%) skewX(-12deg); opacity: 0; } }
 .tkt-lbl { position: absolute; z-index: 3; top: 0; left: 0; display: inline-flex; align-items: center; gap: .45em; padding: .5em 1.1em .5em .95em; border-radius: 0 0 calc(var(--r) * .75) 0; font-size: calc(max(11.5px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); line-height: 1.5; background: rgba(8, 8, 12, .88); color: rgb(var(--st-d)); box-shadow: inset 0 0 0 1px rgba(var(--st), .6); }
 .tkt-lbl svg.i { width: 1.2em; height: 1.2em; }
 :root[data-theme="light"] .tkt-lbl { color: rgb(var(--st-d)); }
@@ -535,12 +628,17 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .tkt-price small { margin-inline-start: .3em; font-size: max(10.5px, .62em); font-weight: 500; opacity: .75; }
 .tkt .buy { gap: .5em; height: max(36px, calc(var(--u) * 2.4)); min-width: calc(var(--u) * 7.4); padding-inline: calc(var(--u) * 1.3); font-size: calc(max(13px, calc(var(--u) * .78)) * var(--tx) * var(--tx-main)); }
 .tkt .buy svg.i { width: 1.35em; height: 1.35em; }
-.tkt-off { align-self: end; display: grid; place-items: center; height: max(36px, calc(var(--u) * 2.4)); padding-inline: 1em; border-radius: var(--rb); background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); color: rgba(255, 255, 255, .74); font-size: calc(max(12.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); white-space: nowrap; cursor: default; }
+/* the buy button white, as in the sample (a look option keeps each show's own colour) */
+:root[data-buy="white"] .tkt .buy { background: #fff; color: #0b0a10; box-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 1.4) calc(var(--u) * -.4) rgba(0, 0, 0, .6); }
+:root[data-buy="white"] .tkt .buy:hover { filter: none; background: #f0eef6; }
+.tkt-off { align-self: end; display: grid; place-items: center; height: max(36px, calc(var(--u) * 2.4)); padding-inline: 1em; border-radius: var(--rb); background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); color: rgba(255, 255, 255, .74); font-size: calc(max(12.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); white-space: nowrap; cursor: pointer; }
 .tkt-cd { align-self: end; display: flex; align-items: flex-end; justify-content: space-between; gap: .8em; }
 .cd-l { font-size: calc(max(11.5px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(255, 255, 255, .82); padding-bottom: .5em; }
-.cd-b { display: flex; align-items: flex-start; gap: .35em; direction: ltr; }
+.cd-b { display: flex; align-items: flex-start; gap: .35em; direction: ltr; perspective: 300px; }
 .cd-b .u { display: grid; justify-items: center; gap: .25em; }
-.cd-b b { min-width: 2.35em; padding: .28em .3em; border-radius: .5em; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); font-size: calc(max(14.5px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.25; text-align: center; font-variant-numeric: tabular-nums; }
+.cd-b b { min-width: 2.35em; padding: .28em .3em; border-radius: .5em; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); font-size: calc(max(14.5px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.25; text-align: center; font-variant-numeric: tabular-nums; transform-origin: 50% 100%; }
+.cd-b b.fl { animation: flip .55s var(--ease); }
+@keyframes flip { 0% { transform: rotateX(-88deg); opacity: .25; } 100% { transform: none; opacity: 1; } }
 .cd-b i { font-size: calc(max(10.5px, calc(var(--u) * .6)) * var(--tx) * var(--tx-small)); font-style: normal; color: rgba(255, 255, 255, .7); }
 .cd-b em { padding-top: .3em; font-style: normal; font-weight: 800; color: rgba(255, 255, 255, .6); }
 
@@ -550,8 +648,58 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 :root[data-pinfo="over"] .tkt-info { position: absolute; inset-inline: 0; bottom: 0; height: var(--notch); }
 :root[data-pinfo="over"] .tkt-tag { bottom: calc(var(--notch) + 1px); }
 
-/* the footer */
-.ft { padding: calc(var(--u) * 2.4) calc(var(--u) * 2.6) calc(var(--u) * 1.4); }
+/* the presale: wide tickets, the poster on one side of a vertical perforation (a notch at its top and its bottom), and on the other
+   the show, when its sale starts, a big countdown that turns its numbers over, the lowest price and «یادم بنداز» */
+/* three in a row on a wide window (two, one on narrower ones); a short last row sits in the middle */
+.ptk-grid { --pc: 3; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
+.ptk-grid > .ptk { flex: 0 1 calc((100% - (var(--pc) - 1) * var(--gap)) / var(--pc)); min-width: 0; }
+@media (max-width: 1499px) { .ptk-grid { --pc: 2; } }
+@media (max-width: 999px) { .ptk-grid { --pc: 1; } }
+.ptk { --nr: calc(var(--u) * .62); --pw: clamp(124px, calc(var(--u) * 11.4), 250px); --art: none; position: relative; display: grid; grid-template-columns: var(--pw) minmax(0, 1fr); border-radius: var(--r); overflow: hidden; isolation: isolate; background: #14121d; transition: transform .6s var(--ease), filter .5s; -webkit-tap-highlight-color: transparent;
+  -webkit-mask: radial-gradient(circle var(--nr) at calc(100% - var(--pw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--pw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle var(--nr) at calc(100% - var(--pw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--pw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat; }
+.ptk:hover, .ptk:focus-within { transform: translateY(calc(var(--u) * -.25 * var(--mot))); filter: drop-shadow(0 calc(var(--u) * 1) calc(var(--u) * 1.3) rgba(0, 0, 0, calc(.5 * var(--shk) + .1))); }
+.ptk-pic { position: relative; display: block; aspect-ratio: var(--pr, .667); overflow: hidden; background: #14121d; cursor: pointer; }
+.ptk-perf { position: absolute; z-index: 3; top: calc(var(--nr) + 6px); bottom: calc(var(--nr) + 6px); right: calc(var(--pw) - 1px); border-right: 2px dashed rgba(255, 255, 255, .28); pointer-events: none; transition: border-color .5s; }
+.ptk:hover .ptk-perf { border-color: rgba(255, 255, 255, .6); }
+.ptk-info { position: relative; isolation: isolate; display: grid; align-content: start; gap: calc(var(--u) * .1); padding: calc(var(--u) * 1.15) calc(var(--u) * 1.4) calc(var(--u) * 1.05); color: #fff; --fg: 255, 255, 255; min-width: 0; }
+.ptk-top { display: flex; align-items: center; gap: .7em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(255, 255, 255, .78); }
+:root[data-theme] .ptk-top .st { color: rgb(var(--st-d)); }
+.ptk-top .st { display: inline-flex; align-items: center; gap: .35em; color: rgb(var(--st-d)); background: rgba(var(--st), .16); box-shadow: inset 0 0 0 1px rgba(var(--st), .55); }
+.ptk-top .st svg.i { width: 1.15em; height: 1.15em; }
+.ptk-name { margin: calc(var(--u) * .3) 0 calc(var(--u) * .15); font-size: calc(max(18px, calc(var(--u) * 1.4)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ptk-name a { color: inherit; text-decoration: none; }
+.ptk-name a:hover { text-decoration: underline; text-underline-offset: .25em; text-decoration-thickness: 1px; }
+.ptk-sale { display: grid; gap: calc(var(--u) * .4); margin-top: calc(var(--u) * .65); padding-top: calc(var(--u) * .7); border-top: 1px solid rgba(255, 255, 255, .14); }
+.ptk-l { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(255, 255, 255, .8); }
+.ptk-cd .cd-b { justify-content: flex-end; gap: .45em; }
+.ptk-cd .cd-b b { min-width: 2.2em; padding: .2em .25em; font-size: calc(max(20px, calc(var(--u) * 1.55)) * var(--tx) * var(--tx-main)); border-radius: .32em; background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .26), inset 0 -.55em 0 rgba(0, 0, 0, .14); }
+.ptk-cd .cd-b em { padding-top: .45em; font-size: calc(max(16px, calc(var(--u) * 1.1)) * var(--tx) * var(--tx-main)); }
+.ptk-cd .cd-b i { font-size: calc(max(10.5px, calc(var(--u) * .64)) * var(--tx) * var(--tx-small)); }
+.ptk-soon { margin: 0; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(255, 255, 255, .8); }
+.ptk-foot { display: flex; align-items: flex-end; justify-content: space-between; gap: .8em; margin-top: calc(var(--u) * .75); }
+.ptk-rem { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .5em; height: max(36px, calc(var(--u) * 2.35)); padding-inline: 1.1em; border-radius: var(--rb); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .45); transition: background-color .3s, color .3s, box-shadow .3s; }
+.ptk-rem svg.i { width: 1.3em; height: 1.3em; }
+.ptk-rem:hover { background: rgba(255, 255, 255, .1); }
+.ptk-rem[aria-pressed="true"] { background: #fff; color: #0b0a10; box-shadow: none; }
+.ptk-rem[aria-pressed="true"] svg.i { animation: ring .7s var(--ease); }
+@keyframes ring { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(18deg); } 45% { transform: rotate(-14deg); } 70% { transform: rotate(8deg); } }
+.ptk-rem:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.ptk .tkt-tag { z-index: 3; }
+
+/* back to the top (bottom right), a ring fills as the page goes down */
+.totop { all: unset; box-sizing: border-box; position: fixed; z-index: 40; right: max(16px, var(--pad-r)); bottom: max(16px, calc(var(--pad-b) + var(--gap))); display: grid; place-items: center; width: max(48px, calc(var(--u) * 3)); aspect-ratio: 1; border-radius: 50%; cursor: pointer; background: var(--capsule); color: rgb(var(--fg)); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12), 0 18px 40px -14px rgba(0, 0, 0, calc(.9 * var(--shk) + .1)); opacity: 0; transform: translateY(14px) scale(.9); pointer-events: none; transition: opacity .45s, transform .6s var(--ease); }
+.totop.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.totop:hover svg.i { transform: translateY(-2px); }
+.totop svg.i { width: 40%; height: 40%; stroke-width: 2.1; transition: transform .4s var(--ease); }
+.totop .ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 2.4; }
+.totop .ring circle { stroke: rgba(var(--fg), .1); }
+.totop .ring .pr { stroke: var(--ring); stroke-linecap: round; stroke-dasharray: 100px; stroke-dashoffset: calc((1 - var(--p, 0)) * 100px); }
+.totop:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+
+/* the footer: a coloured line on its top edge, four columns, the two trust badges' places as cards (as in the sample) */
+.ft { padding: calc(var(--u) * 2.4) calc(var(--u) * 2.6) calc(var(--u) * 1.4); overflow: hidden; }
+.ft::before { content: ""; position: absolute; top: -1px; inset-inline: 0; height: 2px; background: linear-gradient(to left, #a78bfa, #fb7185 50%, #fbbf24); opacity: .85; }
 .ft-grid { display: grid; grid-template-columns: 1.25fr 1fr 1fr 1.25fr; gap: calc(var(--u) * 2.4); }
 .ft-col { display: grid; align-content: start; gap: calc(var(--u) * .55); min-width: 0; }
 .ft-col h4 { display: flex; align-items: center; gap: .5em; margin: 0 0 calc(var(--u) * .3); font-size: calc(max(14px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
@@ -564,7 +712,8 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .ft-col a.ft-logo { display: inline-flex; align-items: center; gap: .55em; width: fit-content; text-decoration: none; color: rgb(var(--fg)); font-size: calc(max(19px, calc(var(--u) * 1.35)) * var(--tx) * var(--tx-nav)); line-height: 1; }
 .ft-logo b { font-weight: var(--fwb); }
 .ft-trust { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .5); margin-top: calc(var(--u) * .3); }
-.ft-trust span { display: grid; place-items: center; min-width: calc(var(--u) * 6.4); height: calc(var(--u) * 4.2); padding: .4em .9em; border-radius: calc(var(--rt) * 1.1); border: 1px dashed rgba(var(--fg), .3); font-size: calc(max(10.5px, calc(var(--u) * .62)) * var(--tx) * var(--tx-small)); line-height: 1.6; text-align: center; color: rgba(var(--fg), .55); }
+.ft-trust span { display: grid; place-items: center; align-content: center; gap: .45em; min-width: calc(var(--u) * 5.6); height: calc(var(--u) * 5.6); padding: .5em .9em; border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); font-size: calc(max(10.5px, calc(var(--u) * .62)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); line-height: 1.6; text-align: center; color: rgba(var(--fg), .72); }
+.ft-trust svg.i { width: 1.9em; height: 1.9em; color: var(--ring); stroke-width: 1.6; }
 .ft-end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6em 1.6em; margin-top: calc(var(--u) * 1.6); padding-top: calc(var(--u) * 1.1); border-top: 1px solid rgba(var(--fg), .12); font-size: calc(max(12px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
 .ft-end a { display: inline-flex; align-items: center; gap: .4em; text-decoration: none; color: rgba(var(--fg), .72); }
 .ft-end a:hover { color: rgb(var(--fg)); }
@@ -572,7 +721,13 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
   .s2 { border-radius: 22px 22px 0 0; }
   .s2-in { padding: calc(var(--nav-h) + 26px) 10px 48px; }
+  .s2-top { grid-template-columns: 1fr; }
+  .s2-city { min-width: 0; height: 48px; }
+  .s2-find { height: 52px; }
   .catnav { top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); }
+  .tkt-sec { padding: 14px 10px 16px; gap: 14px; }
+  .sec-h { gap: 10px 12px; }
+  .sec-chips { margin-inline-start: 0; width: 100%; justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
   .ft { padding: 20px 18px 14px; }
   .ft-grid { grid-template-columns: 1fr; gap: 22px; }
 }
@@ -584,8 +739,233 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   .tkt-info { padding-inline: 12px; }
   .cd-l { display: none; }
   .tkt-cd { justify-content: center; }
+  .ptk { --pw: 112px; }
+  .ptk-info { padding: 12px 14px 12px; }
+  .ptk-name { font-size: 17px; }
+  .ptk-cd .cd-b b { font-size: 17px; }
+  .ptk-foot .tkt-price { display: grid; }
 }
-@media (prefers-reduced-motion: reduce) { .tkt, .tkt-pic img, .cat, .cat-ind, .catnav, .tkt-perf { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .tkt, .ptk, .tkt-pic img, .ptk-pic img, .cat, .cat-ind, .catnav, .tkt-perf, .ptk-perf, .totop, .more-btn svg.i { transition: none; } .tkt-glare { display: none; } .cd-b b.fl, .ptk-rem svg.i { animation: none !important; } }
+
+/* ── the show's page (#/e/<show>): the home page steps aside (the hero and the list are kept, hidden, and come back where they
+   were); the page is made of the same panels, gaps, margins and colours ── */
+.evp { display: none; }
+.is-page .stack, .is-page .notes { display: none; }
+.is-page .evp { display: block; }
+.evp-in { --sc: var(--sc-d); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); align-content: start; min-height: 100svh; padding: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.8) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); color: rgb(var(--fg)); }
+:root[data-mode="light"] .evp-in { --sc: var(--sc-l); }
+/* the page in and out (a View Transition): the poster that was pressed flies, the rest cross-fades and rises a little */
+:root.vt-page::view-transition-old(root) { animation: vt-out .42s cubic-bezier(.4, 0, 1, 1) both; }
+:root.vt-page::view-transition-new(root) { animation: vt-in .62s cubic-bezier(.16, 1, .3, 1) both; }
+::view-transition-group(poster) { animation-duration: .72s; animation-timing-function: cubic-bezier(.22, 1, .36, 1); z-index: 3; }
+::view-transition-old(poster), ::view-transition-new(poster) { animation-duration: .72s; height: 100%; object-fit: contain; }
+@keyframes vt-out { to { opacity: 0; transform: scale(.985); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(18px); } }
+
+.evp-crumb { display: flex; flex-wrap: wrap; align-items: center; gap: .3em .7em; padding-inline: calc(var(--u) * .5); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .55); }
+.evp-crumb a { display: inline-flex; align-items: center; gap: .4em; color: rgba(var(--fg), .78); text-decoration: none; transition: color .3s; }
+.evp-crumb a:hover { color: rgb(var(--fg)); }
+.evp-crumb a:first-child { font-weight: var(--fwm); color: rgb(var(--fg)); }
+.evp-crumb svg.i { width: 1.2em; height: 1.2em; transition: transform .4s var(--ease); }
+.evp-crumb a:first-child:hover svg.i { transform: translateX(3px); }
+.evp-crumb b { font-weight: var(--fwm); color: rgba(var(--fg), .8); }
+.evp-crumb a:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; border-radius: 4px; }
+
+/* the four steps of a purchase; a bar under the one you are on */
+.steps { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0 calc(var(--u) * .6); list-style: none; border-radius: calc(var(--r) * 1.1); overflow: hidden; }
+.steps li { display: flex; align-items: center; justify-content: center; gap: .65em; height: max(52px, calc(var(--u) * 3.3)); font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgba(var(--fg), .5); white-space: nowrap; }
+.steps li[aria-current] { color: rgb(var(--fg)); }
+.steps .n { display: grid; place-items: center; width: 1.9em; aspect-ratio: 1; border-radius: 50%; font-size: .9em; font-weight: var(--fwb); background: rgba(var(--fg), .08); color: rgba(var(--fg), .7); }
+.steps li[aria-current] .n { background: rgb(var(--fg)); color: var(--capsule); }
+.steps .bar { position: absolute; bottom: 0; right: calc(var(--u) * .6); width: calc((100% - var(--u) * 1.2) / 4); height: 3px; border-radius: 3px 3px 0 0; background: linear-gradient(to left, var(--sc), var(--ring)); transform: translateX(40%) scaleX(.2); opacity: 0; transition: transform .9s var(--ease) .15s, opacity .5s .15s; }
+.steps .bar.is-in { transform: none; opacity: 1; }
+
+/* the cover: the banner (or the poster, softened) behind, a few motes in its light, the poster standing on it, the name */
+.evp-cover { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: calc(var(--u) * 2); min-height: clamp(300px, calc(var(--u) * 21), 470px); padding: calc(var(--u) * 2) calc(var(--u) * 2.4); overflow: hidden; color: #fff; --fg: 255, 255, 255; background: #0c0b11; border-radius: calc(var(--r) * 1.15); }
+.evp-bg { position: absolute; inset: 0; z-index: -2; background: var(--art) center / cover no-repeat; transform: scale(1.06); filter: saturate(1.1); animation: evp-drift 24s ease-in-out infinite alternate; }
+.evp-cover.is-soft .evp-bg { inset: -60px; filter: blur(34px) saturate(1.35) brightness(.78); }
+.evp-cover::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to left, rgba(8, 8, 12, .86) 0%, rgba(8, 8, 12, .58) 38%, rgba(8, 8, 12, .2) 70%, rgba(8, 8, 12, .5) 100%), linear-gradient(to top, rgba(8, 8, 12, .72), transparent 55%); }
+@keyframes evp-drift { to { transform: scale(1.13) translate(-1.2%, -1%); } }
+.evp-motes { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.evp-motes i { position: absolute; bottom: -10px; left: calc(8% + var(--m) * 9%); width: calc(3px + var(--m) * .3px); aspect-ratio: 1; border-radius: 50%; background: rgba(255, 255, 255, .7); box-shadow: 0 0 8px rgba(255, 255, 255, .6); opacity: 0; animation: mote calc(9s + var(--m) * 1.3s) linear infinite; animation-delay: calc(var(--m) * -1.7s); }
+@keyframes mote { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: .75; } 80% { opacity: .5; } 100% { transform: translate(calc(var(--u) * 2), calc(var(--u) * -20)); opacity: 0; } }
+.evp-poster { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; width: clamp(150px, calc(var(--u) * 13.2), 300px); aspect-ratio: 2 / 3; border-radius: calc(var(--r) * .7); overflow: hidden; background: var(--pa) center / cover no-repeat; box-shadow: 0 30px 60px -22px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .14); transform: perspective(900px) rotateY(-7deg) rotate(1.2deg); transition: transform .9s var(--ease); }
+.evp-poster:hover { transform: perspective(900px) rotateY(0) rotate(0); }
+.evp-poster img { width: 100%; height: 100%; object-fit: contain; background: rgba(12, 11, 17, .55); backdrop-filter: none; }
+.evp-title { grid-column: 1; grid-row: 2; display: grid; gap: calc(var(--u) * .45); min-width: 0; padding-bottom: calc(var(--u) * .3); }
+.evp-kind { display: flex; flex-wrap: wrap; align-items: center; gap: .55em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.evp-kind > span { display: inline-flex; align-items: center; gap: .45em; padding: .28em .9em; border-radius: 999px; background: rgba(255, 255, 255, .14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); font-weight: var(--fwm); }
+.evp-kind svg.i { width: 1.25em; height: 1.25em; }
+:root[data-theme] .evp-kind .st { color: rgb(var(--st-d)); }
+.evp-kind .st { color: rgb(var(--st-d)); background: rgba(var(--st), .2); box-shadow: inset 0 0 0 1px rgba(var(--st), .6); }
+.evp-badge { font-style: normal; font-weight: var(--fwb); padding: .2em .8em; border-radius: 999px; background: var(--ring); color: var(--on-accent); }
+.evp-title h1 { margin: 0; font-size: calc(max(26px, calc(var(--u) * 2.35)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; text-wrap: balance; text-shadow: 0 2px 22px rgba(0, 0, 0, .35); }
+.evp-title h1 .w { display: inline-block; }
+.evp-title p { display: flex; flex-wrap: wrap; align-items: center; gap: .45em .6em; margin: 0; font-size: calc(max(13px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); color: rgba(255, 255, 255, .86); }
+.evp-title p svg.i { width: 1.25em; height: 1.25em; opacity: .85; }
+.evp-tools { position: absolute; top: calc(var(--u) * 1.2); right: calc(var(--u) * 1.2); display: flex; gap: calc(var(--u) * .45); }
+.ev-ic { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: max(42px, calc(var(--u) * 2.6)); aspect-ratio: 1; border-radius: 50%; color: #fff; background: rgba(12, 11, 17, .5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .26); transition: background-color .3s, transform .4s var(--ease); }
+.ev-ic:hover { background: rgba(12, 11, 17, .72); transform: scale(1.06); }
+.ev-ic svg.i { width: 45%; height: 45%; }
+.ev-ic[aria-pressed="true"] { color: #fb7185; }
+.ev-ic[aria-pressed="true"] svg.i { fill: currentColor; animation: ring .6s var(--ease); }
+.ev-ic:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* the body: the facts, the map, what it is and the prices on one side; the sessions on the other (they follow the page) */
+.evp-cols { display: grid; grid-template-columns: minmax(0, 1fr) clamp(360px, calc(var(--u) * 28), 560px); gap: var(--gap); align-items: start; }
+.evp-main { display: grid; gap: var(--gap); min-width: 0; }
+.evp-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); min-width: 0; }
+.evp-main > .panel, .evp-side > .panel, .evp-more { border-radius: calc(var(--r) * 1.15); }
+.evp-facts { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 1) calc(var(--u) * 1.6); padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5); }
+.fact { display: flex; align-items: center; gap: calc(var(--u) * .75); min-width: 0; }
+.fact.wide { grid-column: 1 / -1; }
+.fi { flex: none; display: grid; place-items: center; width: max(42px, calc(var(--u) * 2.6)); aspect-ratio: 1; border-radius: calc(var(--r) * .6); color: var(--sc); background: color-mix(in oklab, var(--sc) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 32%, transparent); }
+.fi svg.i { width: 46%; height: 46%; }
+.fact > span:last-child { display: grid; min-width: 0; line-height: 1.6; }
+.fact small { font-size: calc(max(11.5px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .58); }
+.fact b { font-size: calc(max(14px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.fact em { font-style: normal; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .72); }
+
+/* the map: drawn streets in the theme's colours, the hall's pin with a pulse, zoom, and the way there */
+.evp-map { --map-bg: #17151f; --map-b: #1f1c2a; --map-park: #15281f; --map-water: #1a2a44; --map-r1: #2a2636; --map-r2: #34303f; --map-h1: #5a4320; --map-h2: #7a5c2a; position: relative; height: clamp(190px, calc(var(--u) * 12), 300px); overflow: hidden; padding: 0; }
+:root[data-mode="light"] .evp-map { --map-bg: #f2eefc; --map-b: #e9e3f8; --map-park: #d9f2e4; --map-water: #d3e3fb; --map-r1: #e1d9f6; --map-r2: #ffffff; --map-h1: #f6d3ad; --map-h2: #ffe6c9; }
+.mp { position: absolute; inset: 0; width: 100%; height: 100%; transform-origin: 50% 50%; transition: transform .7s var(--ease); }
+.mp-bg { fill: var(--map-bg); } .mp-b { fill: var(--map-b); } .mp-park { fill: var(--map-park); }
+.mp-water { fill: none; stroke: var(--map-water); stroke-width: 26; stroke-linecap: round; }
+.mp-r1 { fill: none; stroke: var(--map-r1); stroke-width: 11; } .mp-r2 { fill: none; stroke: var(--map-r2); stroke-width: 7; }
+.mp-h1 { fill: none; stroke: var(--map-h1); stroke-width: 17; } .mp-h2 { fill: none; stroke: var(--map-h2); stroke-width: 12; }
+.mp-pin { position: absolute; left: 50%; top: 50%; width: max(38px, calc(var(--u) * 2.4)); aspect-ratio: 1; translate: -50% -88%; pointer-events: none; }
+.mp-pin svg { position: relative; width: 100%; height: 100%; fill: var(--sc); stroke: rgba(0, 0, 0, .25); stroke-width: .8; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .35)); animation: pin-drop 1s var(--ease) both .35s; }
+.mp-pin circle { fill: #fff; stroke: none; }
+.mp-pin i { position: absolute; left: 50%; bottom: -6%; width: 70%; aspect-ratio: 2.4; translate: -50% 50%; border-radius: 50%; background: color-mix(in oklab, var(--sc) 55%, transparent); animation: pulse 2.2s ease-out infinite; }
+@keyframes pin-drop { from { transform: translateY(-40%); opacity: 0; } }
+@keyframes pulse { from { transform: scale(.4); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
+.mp-zoom { position: absolute; top: calc(var(--u) * .7); left: calc(var(--u) * .7); display: grid; overflow: hidden; border-radius: calc(var(--r) * .55); background: var(--capsule); box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(var(--fg), .14); }
+.mp-zoom button { all: unset; cursor: pointer; display: grid; place-items: center; width: 36px; height: 34px; color: rgb(var(--fg)); }
+.mp-zoom button + button { border-top: 1px solid rgba(var(--fg), .12); }
+.mp-zoom button:hover { background: rgba(var(--fg), .08); }
+.mp-zoom svg.i { width: 16px; height: 16px; }
+.mp-route { all: unset; box-sizing: border-box; cursor: pointer; position: absolute; bottom: calc(var(--u) * .7); left: calc(var(--u) * .7); display: inline-flex; align-items: center; gap: .5em; height: 38px; padding-inline: 1em; border-radius: 999px; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); background: rgb(var(--fg)); color: var(--capsule); box-shadow: 0 8px 22px -10px rgba(0, 0, 0, .6); transition: transform .4s var(--ease); }
+.mp-route:hover { transform: translateY(-2px); }
+.mp-route svg.i { width: 1.2em; height: 1.2em; }
+.mp-zoom button:focus-visible, .mp-route:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+
+/* what the show is: its people as tags (as in the sample), a line in its colour, the words */
+.evp-about, .evp-plan, .evp-book, .evp-more { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
+.evp-main h2, .evp-side h2, .evp-more h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
+.evp-main h2 svg.i, .evp-side h2 svg.i, .evp-more h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc); }
+.evp-main h2 small, .evp-side h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), .6); }
+.evp-tags { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .4); margin-bottom: calc(var(--u) * .7); }
+.evp-tags span { display: inline-flex; align-items: baseline; gap: .5em; padding: .35em .95em; border-radius: calc(var(--r) * .45); font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); color: #fff; background: linear-gradient(to left, #8b5cf6, #ec4899); box-shadow: 0 8px 20px -12px #8b5cf6; }
+.evp-tags small { font-size: .82em; font-weight: var(--fwm); opacity: .85; }
+.evp-line { margin: 0 0 .4em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); color: #f43f5e; }
+:root[data-mode="dark"] .evp-line { color: #fb7185; }
+.evp-about p:last-child { margin: 0; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); line-height: 2.1; color: rgba(var(--fg), .8); }
+
+/* the price plan: each run of rows with the colour of its tier, its price, and a bar for how dear it is */
+.evp-plan ul { display: grid; gap: calc(var(--u) * .35); margin: 0; padding: 0; list-style: none; }
+.evp-plan li { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8em; padding: .7em 1em; border-radius: calc(var(--r) * .55); background: rgba(var(--fg), .035); overflow: hidden; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); }
+.evp-plan li > i { width: .7em; aspect-ratio: 1; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 25%, transparent); }
+.evp-plan li b { font-weight: var(--fwb); white-space: nowrap; }
+.evp-plan li small { font-weight: 400; opacity: .7; font-size: .85em; }
+.evp-plan li em { position: absolute; inset-block: 0; right: 0; width: calc(var(--w) * 100%); background: linear-gradient(to left, color-mix(in oklab, var(--c) 14%, transparent), transparent); pointer-events: none; z-index: -1; }
+.evp-plan li { isolation: isolate; }
+
+/* the sessions: small tickets (a dark stub with the day, a perforation, the seats left and the buy button); the rules first */
+.evp-book { position: relative; }
+.evp-book.is-flash { animation: book-flash 1.4s var(--ease); }
+@keyframes book-flash { 0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--sc) 70%, transparent); } 40% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--sc) 35%, transparent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.evp-sale { display: grid; gap: .5em; margin-bottom: calc(var(--u) * .9); padding: calc(var(--u) * .9) calc(var(--u) * 1); border-radius: calc(var(--r) * .7); color: #fff; --fg: 255, 255, 255; background: linear-gradient(135deg, #0c4a6e, #1e1b4b); box-shadow: inset 0 0 0 1px rgba(56, 189, 248, .35); font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.evp-sale .cd-b { justify-content: flex-start; }
+.evp-rules { position: relative; display: flex; align-items: flex-start; gap: .7em; margin-bottom: calc(var(--u) * .9); padding: .8em 1em; border-radius: calc(var(--r) * .6); cursor: pointer; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); line-height: 1.9; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); transition: background-color .3s, box-shadow .3s; }
+.evp-rules input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.evp-rules .box { flex: none; display: grid; place-items: center; width: 1.45em; aspect-ratio: 1; margin-top: .25em; border-radius: .4em; box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .45); color: transparent; transition: background-color .3s, color .3s, box-shadow .3s, transform .4s var(--ease); }
+.evp-rules .box svg.i { width: 75%; height: 75%; stroke-width: 3; }
+.evp-rules.is-on { background: color-mix(in oklab, #22c55e 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, #22c55e 45%, transparent); }
+.evp-rules.is-on .box { background: #22c55e; box-shadow: none; color: #fff; transform: scale(1.06); }
+.evp-rules input:focus-visible + .box { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.evp-rules a { color: var(--sc); font-weight: var(--fwb); text-decoration: none; }
+.evp-rules a:hover { text-decoration: underline; text-underline-offset: .25em; }
+.evp-rules.is-shake { animation: shake .55s cubic-bezier(.36, .07, .19, .97); box-shadow: inset 0 0 0 1.5px #f43f5e; }
+@keyframes shake { 15%, 85% { transform: translateX(-2px); } 30%, 70% { transform: translateX(4px); } 45%, 55% { transform: translateX(-6px); } }
+.ses-list { display: grid; gap: calc(var(--u) * .45); max-height: min(60vh, calc(var(--u) * 30)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 2px; margin: -2px; }
+.ses { --nr: 7px; display: grid; grid-template-columns: max(84px, calc(var(--u) * 5.2)) minmax(0, 1fr) auto; align-items: center; gap: 0 calc(var(--u) * .8); padding-inline-end: calc(var(--u) * .65); border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); overflow: hidden; animation: ses-in .7s var(--ease) both; animation-delay: var(--d, 0s);
+  -webkit-mask: radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat; }
+@keyframes ses-in { from { opacity: 0; transform: translateY(10px); } }
+.ses.is-picked { box-shadow: inset 0 0 0 2px var(--sc); background: color-mix(in oklab, var(--sc) 8%, transparent); }
+.ses-stub { display: grid; justify-items: center; align-content: center; gap: .05em; align-self: stretch; padding: .65em .4em; color: #fff; background: linear-gradient(160deg, #2b2440, #121019); line-height: 1.5; }
+.ses-stub b { font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.ses-stub span { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); opacity: .86; }
+.ses-stub i { margin-top: .15em; padding: 0 .55em; border-radius: 999px; font-style: normal; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); background: rgba(255, 255, 255, .14); font-variant-numeric: tabular-nums; }
+.ses-body { display: grid; gap: .3em; min-width: 0; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.ses-st { display: inline-flex; align-items: center; gap: .4em; font-weight: var(--fwb); }
+.ses-st svg.i { width: 1.25em; height: 1.25em; padding: .12em; border-radius: 50%; color: #fff; stroke-width: 2.6; }
+.ses[data-st="ok"] .ses-st { color: #16a34a; } .ses[data-st="ok"] .ses-st svg.i { background: #22c55e; }
+.ses[data-st="low"] .ses-st { color: #d97706; } .ses[data-st="low"] .ses-st svg.i { background: #f59e0b; }
+.ses[data-st="full"] .ses-st, .ses[data-st="soon"] .ses-st { color: rgba(var(--fg), .6); } .ses[data-st="full"] .ses-st svg.i, .ses[data-st="soon"] .ses-st svg.i { background: rgba(var(--fg), .35); }
+:root[data-mode="dark"] .ses[data-st="ok"] .ses-st { color: #4ade80; } :root[data-mode="dark"] .ses[data-st="low"] .ses-st { color: #fbbf24; }
+.ses-cap { display: inline-flex; align-items: center; gap: .5em; color: rgba(var(--fg), .62); }
+.ses-cap svg.i { width: 1.25em; height: 1.25em; }
+.ses-cap i { position: relative; width: min(100%, 7em); height: 5px; border-radius: 5px; background: rgba(var(--fg), .12); overflow: hidden; }
+.ses-cap i::after { content: ""; position: absolute; inset-block: 0; right: 0; width: calc(var(--v) * 100%); border-radius: inherit; background: linear-gradient(to left, #22c55e, #84cc16); }
+.ses[data-st="low"] .ses-cap i::after { background: linear-gradient(to left, #f59e0b, #f97316); }
+.ses-buy { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: .45em; height: max(38px, calc(var(--u) * 2.4)); padding-inline: 1.1em; border-radius: var(--rb); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); white-space: nowrap; background: rgb(var(--fg)); color: var(--capsule); transition: transform .4s var(--ease), opacity .3s, filter .3s; }
+.ses-buy svg.i { width: 1.3em; height: 1.3em; }
+.ses-buy:hover { transform: translateY(-1px); }
+.ses-buy:active { transform: scale(.97); }
+.ses-buy[aria-disabled="true"] { opacity: .45; }
+.ses-buy:disabled { cursor: default; opacity: 1; background: rgba(var(--fg), .08); color: rgba(var(--fg), .55); }
+.ses-buy:disabled:hover { transform: none; }
+.ses-buy:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.ses-none { margin: 0; padding: 1em; text-align: center; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); }
+.evp-note { display: flex; align-items: center; gap: .55em; margin: calc(var(--u) * .9) 0 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .62); }
+.evp-note svg.i { width: 1.3em; height: 1.3em; color: var(--sc); }
+.evp-note b { color: rgb(var(--fg)); font-weight: var(--fwb); }
+.evp-more .tkt-grid { --cols: 6; }
+@media (max-width: 1499px) { .evp-more .tkt-grid { --cols: 5; } }
+@media (max-width: 1249px) { .evp-more .tkt-grid { --cols: 4; } }
+.evp-ft { margin-top: calc(var(--gap) * 1.5); }
+
+/* the rules' window */
+.evp-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: rgba(6, 5, 10, .62); }
+.evp-dlg { width: min(640px, 100%); max-height: min(86vh, 760px); overflow: auto; padding: calc(var(--u) * 1.5) calc(var(--u) * 1.7); border-radius: calc(var(--r) * 1.15); }
+.evp-dlg h2 { display: flex; align-items: center; gap: .5em; margin: 0 0 .8em; font-size: calc(max(17px, calc(var(--u) * 1.1)) * var(--tx) * var(--tx-main)); }
+.evp-dlg h2 svg.i { width: 1.25em; height: 1.25em; color: var(--ring); }
+.evp-dlg ol { display: grid; gap: .55em; margin: 0; padding-inline-start: 1.4em; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); line-height: 2; color: rgba(var(--fg), .86); }
+.evp-dlg-end { display: flex; flex-wrap: wrap; align-items: center; gap: .8em; margin-top: 1.2em; }
+.evp-dlg .buy { gap: .5em; background: #22c55e; color: #052e16; box-shadow: none; }
+
+/* on a phone (or a tall window): one column; the sessions after the facts, and a bar at the bottom that takes you to them */
+.evp-cta { display: none; }
+@media (max-width: 1099px), (max-aspect-ratio: 5/4) {
+  .evp-cols { grid-template-columns: minmax(0, 1fr); }
+  .evp-side { position: static; order: -1; }
+  .evp-main { display: contents; }
+  .evp-cols { display: flex; flex-direction: column; align-items: stretch; }
+  .evp-facts { order: -3; }
+  .evp-side { order: -2; }
+}
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .evp-in { padding: calc(var(--pad-t) + var(--nav-h) + 18px) 10px 96px; }
+  .steps { padding: 0 4px; }
+  .steps li { flex-direction: column; gap: 2px; height: 58px; font-size: 11px; }
+  .steps .bar { right: 4px; width: calc((100% - 8px) / 4); }
+  .evp-cover { grid-template-columns: 1fr; justify-items: start; min-height: 0; padding: 18px; gap: 16px; }
+  .evp-poster { grid-column: 1; grid-row: 1; width: 132px; }
+  .evp-tools { right: auto; left: 14px; top: 14px; }
+  .evp-title { grid-row: 2; }
+  .evp-title h1 { font-size: 24px; }
+  .evp-facts { grid-template-columns: 1fr; padding: 16px; }
+  .evp-about, .evp-plan, .evp-book, .evp-more { padding: 16px; }
+  .evp-more .tkt-grid { --cols: 2; }
+  .ses-list { max-height: none; }
+  .evp-cta { position: fixed; z-index: 35; inset-inline: 10px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; padding-inline: 16px 8px; border-radius: 999px; background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 18px 40px -14px rgba(0, 0, 0, calc(.9 * var(--shk) + .1)), inset 0 0 0 1px rgba(var(--fg), .14); font-size: 13px; }
+  .evp-cta b { font-weight: var(--fwb); }
+  .evp-cta .buy { height: 44px; min-width: 0; padding-inline: 18px; gap: .45em; }
+  .is-page .totop { bottom: 78px; }
+}
+@media (prefers-reduced-motion: reduce) { .evp-bg, .evp-motes i, .mp-pin svg, .mp-pin i, .ses, .evp-book.is-flash, .evp-rules.is-shake { animation: none !important; } .steps .bar, .mp, .evp-poster { transition: none; } }
 
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -842,6 +1222,21 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
   <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6.2 8.2h11.6l1 10.9a1 1 0 0 1-1 1.1H6.2a1 1 0 0 1-1-1.1l1-10.9Z"/><path d="M9 8.2V7a3 3 0 0 1 6 0v1.2"/></symbol>
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.6 5.2 6v5.4c0 4.3 2.8 7.4 6.8 8.9 4-1.5 6.8-4.6 6.8-8.9V6L12 3.6Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
   <symbol id="i-headset" viewBox="0 0 24 24"><path d="M5 14v-2a7 7 0 0 1 14 0v2"/><rect x="3.8" y="13.4" width="3.6" height="5.2" rx="1.6"/><rect x="16.6" y="13.4" width="3.6" height="5.2" rx="1.6"/><path d="M18.4 18.6c0 1.2-1.4 2-3.4 2h-1.8"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-arrow-l" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+  <symbol id="i-arrow-r" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><path d="M3 11 22 2l-9 19-2-8-8-2z"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-shield-ok" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
 <div class="app" id="app">
@@ -855,6 +1250,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
           <button type="button" class="nb icon nb-t" id="ticketsBtn" aria-label="بلیت‌های من"><svg class="i"><use href="#i-ticket"/></svg></button>
           <button type="button" class="nb icon nb-b" id="bellBtn" aria-label="اعلان‌ها"><svg class="i"><use href="#i-bell"/></svg><i class="dotn" aria-hidden="true"></i></button>
         </div>
+        <button type="button" class="nb icon nb-mode" id="modeBtn" aria-pressed="false" aria-label="تم روشن (سفید)" title="تم روشن (سفید)"><svg class="mode-i" viewBox="0 0 24 24" aria-hidden="true"><mask id="modeMask" maskUnits="userSpaceOnUse" x="-6" y="-6" width="36" height="36"><rect x="-6" y="-6" width="36" height="36" fill="#fff"/><circle class="mm" cx="17.6" cy="6.4" r="6.3" fill="#000"/></mask><circle class="core" cx="12" cy="12" r="4.4" fill="currentColor" mask="url(#modeMask)"/><g class="rays" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 2.3v2.3M12 19.4v2.3M2.3 12h2.3M19.4 12h2.3M5.15 5.15l1.6 1.6M17.25 17.25l1.6 1.6M5.15 18.85l1.6-1.6M17.25 6.75l1.6-1.6"/></g></svg></button>
         <button type="button" class="login" id="loginBtn" data-t="login">ورود | ثبت‌نام</button>
         <button type="button" class="menu-btn" id="menuBtn" aria-label="منو"><svg class="i"><use href="#i-menu"/></svg></button>
       </div>
@@ -881,7 +1277,17 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 
     <section class="s2" id="s2" aria-label="برنامه‌ها">
     <div class="s2-in">
+      <div class="s2-top" data-rv>
+        <form class="s2-find panel" id="s2Find" role="search" autocomplete="off">
+          <svg class="i s2-fi" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="s2Q" type="search" enterkeyhint="search" placeholder="جستجوی برنامه، هنرمند یا سالن…" aria-label="جستجوی برنامه‌ها" role="combobox" aria-controls="s2Sug" aria-expanded="false" aria-autocomplete="list">
+          <button type="submit" class="s2-go" aria-label="جستجو"><svg class="i"><use href="#i-search"/></svg></button>
+          <div class="s2-sug" id="s2Sug" role="listbox" aria-label="نتیجه‌های جستجو" hidden></div>
+        </form>
+        <button type="button" class="s2-city panel" id="s2City" aria-haspopup="menu" aria-expanded="false"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg><span class="lab">شهر:</span><b id="s2CityName">همه‌ی شهرها</b><svg class="i cv" aria-hidden="true"><use href="#i-down"/></svg></button>
+      </div>
       <nav class="catnav panel" id="catnav" aria-label="دسته‌بندی برنامه‌ها"><div class="cat-track" id="catTrack"></div></nav>
+      <p class="s2-filter" id="s2Filter" hidden></p>
       <div class="s2-secs" id="s2Secs"></div>
       <footer class="ft panel" id="ft" data-rv>
         <div class="ft-grid">
@@ -912,19 +1318,22 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
               <li><a href="#" data-page="پیگیری خرید">پیگیری خرید</a></li>
               <li><a href="#" data-page="ثبت مشکل یا طرح پرسش">ثبت مشکل یا طرح پرسش</a></li>
               <li><a href="#" data-page="قوانین خرید">قوانین خرید</a></li>
+              <li><a href="#" data-page="تماس با ما">تماس با ما</a></li>
             </ul>
           </div>
           <div class="ft-col">
             <h4><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg>خرید امن</h4>
             <p>پرداخت از درگاه‌های معتبر بانکی، رزرو هم‌زمان صندلی و صدور آنی بلیت الکترونیکی با کد QR.</p>
-            <div class="ft-trust"><span>جای نماد اعتماد الکترونیکی</span><span>جای نماد ساماندهی</span></div>
+            <div class="ft-trust" aria-label="جای نمادهای اعتماد"><span><svg class="i" aria-hidden="true"><use href="#i-shield-ok"/></svg>نماد اعتماد<br>الکترونیکی</span><span><svg class="i" aria-hidden="true"><use href="#i-award"/></svg>نشان<br>ساماندهی</span></div>
           </div>
         </div>
-        <div class="ft-end"><span>همه‌ی حقوق برای بلیت محفوظ است.</span><a href="#hero" data-go="top"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg>برگشت به بالای صفحه</a></div>
+        <div class="ft-end"><span>همه‌ی حقوق برای بلیت محفوظ است · خرید آنلاین بلیت کنسرت، تئاتر و جُنگ</span><a href="#hero" data-go="top"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg>برگشت به بالای صفحه</a></div>
       </footer>
     </div>
   </section>
   </div>
+
+  <main class="evp" id="evp" aria-label="صفحه‌ی برنامه"></main>
 
   <section class="notes" id="notes" aria-labelledby="notes-h">
     <div>
@@ -1101,6 +1510,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
   </div>
   <div class="dims" id="dims" aria-hidden="true"></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button type="button" class="totop" id="toTop" tabindex="-1" aria-label="برگشت به بالای صفحه"><svg class="ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21"/><circle class="pr" cx="24" cy="24" r="21" pathLength="100"/></svg><svg class="i"><use href="#i-up"/></svg></button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
@@ -1142,6 +1552,10 @@ const LOOK_DEF = {
   mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
   // the list under the hero: the sample shows that fill it, the shape of a poster's frame (width ÷ height), the words under the poster or over it
   listFill: true, posterRatio: 0.667, posterInfo: 'below',
+  // how many rows of posters a section shows before «نمایش همه» (0: all), the presale's wide tickets, the cards' buy button (white as in the sample, or the show's colour), the columns on a wide window
+  secRows: 2, presale: 'wide', buyStyle: 'white', listCols: 'auto',
+  // the site's theme: dark (the approved one) or light (white); the light one keeps its own panel and page colours; the motion of the change
+  mode: 'dark', lightPanel: '#ffffff', lightBg: '#eceef3', themeFx: 'circle',
   // tools
   dims: false,
 };
@@ -1168,7 +1582,7 @@ const VIS = 4;
 // eye can't see): no bars, nothing cut. A wider difference leaves the banner whole, with black (or its mirrored
 // edge) in the rest.
 const FILL_TOL = 0.025;
-const state = { i: 0, userPaused: false, hover: false, visible: true, intro: true, admin: false, palette: false };
+const state = { i: 0, userPaused: false, hover: false, visible: true, intro: true, admin: false, palette: false, page: false };
 
 /* ════════════════════════════════════════════════════════════════
    the fixed palette: sixteen colour sets (the first eight are what the picture can suggest; the rest are for
@@ -1371,8 +1785,10 @@ const sale = {
     // the boxes on a card: hours (they can pass 24), minutes, seconds
     $$('[data-sale-box]').forEach((box) => {
       const e = showById(box.dataset.saleBox); if (!e || !saleMs(e)) return;
-      const s = Math.max(0, Math.ceil((saleMs(e) - now) / 1000)), v = { h: Math.floor(s / 3600), m: Math.floor((s % 3600) / 60), s: s % 60 };
-      $$('b[data-u]', box).forEach((b) => { const t = fa(String(v[b.dataset.u]).padStart(2, '0')); if (b.textContent !== t) b.textContent = t; });
+      const s = Math.max(0, Math.ceil((saleMs(e) - now) / 1000)), days = !!box.querySelector('b[data-u="d"]');
+      const v = { d: Math.floor(s / 86400), h: days ? Math.floor((s % 86400) / 3600) : Math.floor(s / 3600), m: Math.floor((s % 3600) / 60), s: s % 60 };
+      // a number that changes turns over (a flip clock), as in the sample
+      $$('b[data-u]', box).forEach((b) => { const t = fa(String(v[b.dataset.u]).padStart(2, '0')); if (b.textContent !== t) { b.textContent = t; if (MOTK() && !document.hidden) { b.classList.remove('fl'); void b.offsetWidth; b.classList.add('fl'); } } });
     });
     LIST().forEach((e) => { if (saleMs(e) && saleMs(e) <= now) sale.open(e); });
   },
@@ -1382,6 +1798,7 @@ const sale = {
     const i = EVENTS.indexOf(e);
     if (i >= 0) cards.refresh(i);
     s2.refresh(); hd.refreshCats(); if (stage.top && stage.top.e === e) look.wordsInPlace();
+    if (page.on && page.e === e) page.render(e);   // the show's page that is open gets its sessions
     panel.sync();
     toast(`فروش بلیت «${e.title}» شروع شد!`);
   },
@@ -1773,7 +2190,7 @@ if ('ResizeObserver' in window) new ResizeObserver(() => railMode()).observe($('
    the search window open or the tab hidden */
 const timer = {
   tw: null, p: { v: 0 },
-  running() { return !reduceMotion && !state.userPaused && !state.hover && !state.intro && !state.admin && !state.palette && state.visible && !document.hidden; },
+  running() { return !reduceMotion && !state.userPaused && !state.hover && !state.intro && !state.admin && !state.palette && !state.page && state.visible && !document.hidden; },
   start() {
     this.stop(); this.p.v = 0; cards.paint(0);
     this.tw = gsap.to(this.p, { v: 1, duration: LOOK.dur, ease: 'none', onUpdate: () => cards.paint(this.p.v), onComplete: () => { this.tw = null; next('auto'); } });
@@ -1820,8 +2237,11 @@ function toast(msg) {
 $('#scenes').addEventListener('click', (ev) => {
   const e = EVENTS[state.i];
   if (fx.dragged) { ev.preventDefault(); fx.dragged = false; return; }
-  if (ev.target.closest('.buy')) toast(buyMessage(e));
-  else if (ev.target.closest('.frame')) { ev.preventDefault(); toast(`اینجا صفحه‌ی «${e.title}» باز می‌شه.`); }
+  // the banner opens the show's page, its buy button opens it at the sessions
+  const bb = ev.target.closest('.buy');
+  if (bb && (bb.classList.contains('is-wait') || bb.classList.contains('is-off'))) toast(buyMessage(e));   // a sale not started, a show full or over: it says so
+  else if (bb) page.open(e, { to: 'sessions' });
+  else if (ev.target.closest('.frame')) { ev.preventDefault(); page.open(e); }
 });
 $('#upBtn').addEventListener('click', prev);
 $('#downBtn').addEventListener('click', () => next('user'));
@@ -1858,14 +2278,27 @@ function loadFont(f) { if (!f.css || f.loaded) return; f.loaded = true; const l 
 const BTN = { pill: '999px', soft: 'calc(var(--r) * .55)', sharp: '4px' };
 
 function theme() {
-  const pc = HEX.test(LOOK.panelColor) ? LOOK.panelColor : LOOK_DEF.panelColor, lum = lumOf(pc);
+  const light = LOOK.mode === 'light';
+  const pc = light ? (HEX.test(LOOK.lightPanel) ? LOOK.lightPanel : LOOK_DEF.lightPanel) : (HEX.test(LOOK.panelColor) ? LOOK.panelColor : LOOK_DEF.panelColor), lum = lumOf(pc);
   css('--capsule', pc);
   let fg;
-  if (LOOK.textColor === 'white') fg = [255, 255, 255]; else if (LOOK.textColor === 'black') fg = [17, 14, 26]; else if (LOOK.textColor === 'custom' && HEX.test(LOOK.textCustom)) fg = rgb(LOOK.textCustom); else fg = lum > 0.22 ? [17, 14, 26] : [255, 255, 255];
+  if (light) fg = lum > 0.22 ? [17, 14, 26] : [255, 255, 255];   // the light theme: the words follow the panels
+  else if (LOOK.textColor === 'white') fg = [255, 255, 255]; else if (LOOK.textColor === 'black') fg = [17, 14, 26]; else if (LOOK.textColor === 'custom' && HEX.test(LOOK.textCustom)) fg = rgb(LOOK.textCustom); else fg = lum > 0.22 ? [17, 14, 26] : [255, 255, 255];
   css('--fg', fg.join(', '));
   root.dataset.theme = lum > 0.22 ? 'light' : 'dark';
+  root.dataset.mode = light ? 'light' : 'dark';
+  bgApply();
+  if (typeof hd !== 'undefined' && hd.syncMode) hd.syncMode();
 }
-function bgApply() { attr('data-bg', LOOK.bg); css('--bg', LOOK.bg === 'color' && HEX.test(LOOK.bgColor) ? LOOK.bgColor : '#000000'); }
+function bgApply() {
+  attr('data-bg', LOOK.bg);
+  const light = LOOK.mode === 'light', c = light ? (HEX.test(LOOK.lightBg) ? LOOK.lightBg : LOOK_DEF.lightBg) : (LOOK.bg === 'color' && HEX.test(LOOK.bgColor) ? LOOK.bgColor : '#000000');
+  css('--bg', c);
+  // the browser's own bars (on a phone) take the page's colour
+  let m = document.querySelector('meta[name="theme-color"]');
+  if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+  m.content = c;
+}
 function digitsApply() {
   FA = LOOK.digits === 'en' ? '0123456789' : '۰۱۲۳۴۵۶۷۸۹'; mkF();
   EVENTS.concat(MORE).forEach((e) => { e.w = when(e); e.ver++; });
@@ -1880,7 +2313,7 @@ const APPLY = {
   caps: (v) => { attr('data-caps', v); if (typeof railMode === 'function' && look.ready) railMode(); }, capDate: (v) => attr('data-capdate', v ? 'on' : 'off'), dim: num('--dim', 100), progress: (v) => { attr('data-progress', v); cards.paint(timer.p.v); },
   radius: num('--r-n'), radiusThumb: num('--rt-n'), btn: (v) => css('--rb', BTN[v] || BTN.pill),
   borderW: (v) => css('--bw', v + 'px'), borderO: num('--bo', 100), shadow: num('--shadow', 100),
-  panelColor: theme, textColor: theme, textCustom: theme,
+  panelColor: theme, textColor: theme, textCustom: theme, mode: theme, lightPanel: theme, lightBg: theme, themeFx: (v) => attr('data-themefx', v),
   font: (v) => { const f = FONTS[v] || FONTS.vazir; loadFont(f); css('--font', f.stack); },
   weight: (v) => { const [b, m] = WEIGHTS[v] || WEIGHTS.normal; css('--fwb', b); css('--fwm', m); },
   tx: num('--tx', 100), txNav: num('--tx-nav', 100), txMain: num('--tx-main', 100), txSmall: num('--tx-small', 100), txCap: num('--tx-cap', 100), txCopy: num('--tx-copy', 100), digits: digitsApply,
@@ -1890,6 +2323,7 @@ const APPLY = {
   story: (v) => { attr('data-story', v ? 'on' : 'off'); scrollFx.apply(true); },
   scroll: () => smoothScroll.sync(),
   listFill: () => { if (look.ready) { s2.refresh(); hd.refreshCats(); } },
+  secRows: () => { if (look.ready) s2.clampAll(); }, presale: () => { if (look.ready) s2.refresh(); }, buyStyle: (v) => attr('data-buy', v), listCols: (v) => { attr('data-cols', v); if (look.ready) s2.clampAll(); },
   posterRatio: (v) => { css('--pr', v); if (look.ready) { s2.refit(); panel.posterNote(); } }, posterInfo: (v) => attr('data-pinfo', v),
   dims: (v) => dims.on(v),
 };
@@ -1909,6 +2343,8 @@ const PRESETS = [
 ];
 const PANEL_SW = [['#0d0d0d', 'سیاه ملایم'], ['#120f1b', 'بنفش تیره'], ['#000000', 'سیاه'], ['#0d0d12', 'گرافیت'], ['#1b1b23', 'خاکستری تیره'], ['#10192f', 'سرمه‌ای'], ['#ffffff', 'سفید'], ['#f3efe6', 'کرم']];
 const BG_SW = [['#000000', 'سیاه'], ['#0a0a10', 'سیاه مایل به آبی'], ['#161616', 'خاکستری تیره'], ['#f4f4f6', 'خاکستری روشن'], ['#ffffff', 'سفید']];
+const LIGHT_PANEL_SW = [['#ffffff', 'سفید'], ['#fbfaf8', 'کاغذی'], ['#f7f6fc', 'یاسی خیلی روشن'], ['#f3efe6', 'کرم']];
+const LIGHT_BG_SW = [['#eceef3', 'خاکستری روشن'], ['#f1eff8', 'یاسی روشن'], ['#efebe2', 'کرم'], ['#e4e7ee', 'سربی روشن'], ['#ffffff', 'سفید']];
 const TX_SW = [['#ffffff', 'سفید'], ['#e9e2d0', 'کرم'], ['#f5d48b', 'طلایی'], ['#11101a', 'سیاه']];
 
 /* what the panel shows: R slider, S choice, W switch, Cs colour, X text */
@@ -1947,9 +2383,18 @@ const UI = {
     { h: 'لیست زیر هیرو (پوستری)', n: 'تو همه‌ی بخش‌های بعد از هیرو هر اجرا یه پوستر عمودیه که کامل (بدون برش) تو کادر پوستر می‌شینه؛ پوستری که با این نسبت فرق داشته باشه با نسخه‌ی محوِ خودش پر می‌شه. اجراهای نمونه (از نمونه‌ی خودت، با عکس‌هاش به‌جای پوستر، به‌اضافه‌ی چند پوستر نهایی) لیست رو پر می‌کنن؛ تو هیرو فقط همون شش اجرای واقعی هستن.', c: [
       R('posterRatio', 'نسبت کادر پوستر (عرض ÷ ارتفاع)', 0.5, 1, 0.01, ''),
       S('posterInfo', 'نوشته‌های کارت', [['below', 'زیر پوستر (پوستر کامل دیده می‌شه)'], ['over', 'روی پوستر (مثل نمونه)']]),
-      W('listFill', 'اجراهای نمونه برای پر کردن لیست')] },
+      W('listFill', 'اجراهای نمونه برای پر کردن لیست'),
+      S('secRows', 'ردیف‌های هر بخش (بقیه با «نمایش همه»)', [[1, '۱ ردیف'], [2, '۲ ردیف'], [3, '۳ ردیف'], [0, 'همه']]),
+      S('listCols', 'تعداد پوستر در هر ردیف (پنجره‌ی پهن)', [['auto', 'خودکار (۶ در ۱۹۲۰)'], ['5', '۵'], ['6', '۶'], ['7', '۷'], ['8', '۸']]),
+      S('presale', 'بخش پیش‌فروش', [['wide', 'بلیت افقی با شمارنده‌ی بزرگ'], ['cards', 'مثل بقیه‌ی بخش‌ها (مثل نمونه)']]),
+      S('buyStyle', 'دکمه‌ی خرید کارت‌ها', [['white', 'سفید (مثل نمونه)'], ['accent', 'رنگ خود اجرا']])] },
   ],
   style: [
+    { h: 'تم سایت', n: 'تم روشن (سفید) و تیره با دکمه‌ی خورشید و ماه تو هدر هم عوض می‌شه. رنگ کادرها و زمینه‌ی تم روشن جدا نگه داشته می‌شه؛ تنظیم‌های «رنگ‌ها» و «پس‌زمینه‌ی صفحه» مال تم تیره‌ان.', c: [
+      S('mode', 'تم', [['dark', 'تیره'], ['light', 'روشن (سفید)']]),
+      Cs('lightPanel', 'رنگ کادرها در تم روشن', LIGHT_PANEL_SW),
+      Cs('lightBg', 'زمینه‌ی صفحه در تم روشن', LIGHT_BG_SW),
+      S('themeFx', 'حرکت عوض‌شدن تم', [['circle', 'دایره‌ای که از دکمه باز می‌شه'], ['fade', 'محو نرم'], ['off', 'بدون حرکت']])] },
     { h: 'گوشه‌ها و لبه‌ها', c: [
       R('radius', 'گردی گوشه‌ی کادرها', 0, 60, 1, 'px'),
       R('radiusThumb', 'گردی کارت‌ها و عکس‌ها', 0, 40, 0.5, 'px'),
@@ -2307,7 +2752,8 @@ const cmdk = {
   render(q) {
     const n = norm(q);
     const hay = (e) => norm([e.title, e.type, e.name, e.venue, e.badge || '', e.city || '', statusOf(e).label, e.w.short, e.desc].join(' '));
-    const rows = EVENTS.map((e, i) => ({ e, i })).filter((r) => !n || hay(r.e).includes(n));
+    // no words yet: the featured shows; words: every show (the list's too), the closest first
+    const rows = (n ? LIST().filter((e) => hay(e).includes(n)).sort((a, b) => (['held', 'cancelled'].includes(statusOf(a).key) ? 1 : 0) - (['held', 'cancelled'].includes(statusOf(b).key) ? 1 : 0) || Date.parse(a.startsAt) - Date.parse(b.startsAt)).slice(0, 8) : EVENTS.slice()).map((e) => ({ e, i: EVENTS.indexOf(e) }));
     this.rows = rows;
     this.list.textContent = '';
     if (!rows.length) { const d = document.createElement('div'); d.className = 'cmdk-empty'; d.textContent = `چیزی برای «${q}» پیدا نشد.`; this.list.appendChild(d); return; }
@@ -2315,7 +2761,7 @@ const cmdk = {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'cmdk-row'; b.setAttribute('role', 'option'); b.setAttribute('aria-selected', 'false'); b.id = `cmdk-${k}`;
       b.style.setProperty('--accent', r.e.accent); b.style.setProperty('--accent-l', r.e.accentL);
       // the end of the row: the status label if the show has one, else its own label or its kind
-      b.innerHTML = `<img alt="" src="${esc(r.e.banner.fake || r.e.banner.thumb)}"><span><b>${esc(r.e.title)}</b><small>${esc(r.e.venue)} · ${esc(r.e.w.short)}</small></span>${statusOf(r.e).label ? statusChip(r.e) : `<em>${esc(r.e.badge || r.e.type)}</em>`}`;
+      b.innerHTML = `<img alt="" src="${esc(r.e.banner ? r.e.banner.fake || r.e.banner.thumb : artOf(r.e).src)}"><span><b>${esc(r.e.title)}</b><small>${esc(r.e.venue)} · ${esc(r.e.w.short)}</small></span>${statusOf(r.e).label ? statusChip(r.e) : `<em>${esc(r.e.badge || r.e.type)}</em>`}`;
       b.addEventListener('click', () => this.pick(k));
       b.addEventListener('pointermove', () => { if (this.sel !== k) { this.sel = k; this.mark(); } });
       this.list.appendChild(b);
@@ -2331,8 +2777,40 @@ const cmdk = {
   pick(k) {
     const r = this.rows[k]; if (!r) return;
     this.close();
-    if (window.scrollY > 4) scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-    go(r.i, 'user'); toast(`«${r.e.title}» رو باز کردم.`);
+    page.open(r.e);   // the show's page
+  },
+};
+
+/* the theme (dark / light): the button in the header turns it, and the new colours open as a circle that grows from the button
+   (a View Transition: the page as it was stays under, the page as it is now is revealed through the circle). Without that in
+   the browser the colours cross-fade; with reduced motion they change at once. */
+const modeFx = {
+  busy: false,
+  set(m, from) {
+    if (m === LOOK.mode || this.busy) return;
+    const apply = () => { look.set('mode', m); if (look.ctl && look.ctl.mode) look.ctl.mode(); };
+    const how = LOOK.themeFx, k = MOTK();
+    if (how === 'off' || !k) { apply(); return; }
+    if (!document.startViewTransition) {   // the colours cross-fade (every colour that comes from the theme)
+      root.classList.add('mode-fade'); apply();
+      setTimeout(() => root.classList.remove('mode-fade'), 900); return;
+    }
+    const r = from && from.getBoundingClientRect(), x = r ? r.left + r.width / 2 : innerWidth / 2, y = r ? r.top + r.height / 2 : 0;
+    const R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 8;
+    this.busy = true; root.classList.add('vt-mode');
+    let t;
+    try { t = document.startViewTransition(apply); } catch (err) { root.classList.remove('vt-mode'); this.busy = false; apply(); return; }
+    t.ready.then(() => {
+      const dur = 1150 / Math.max(k, 0.6), ease = 'cubic-bezier(.76, 0, .24, 1)';
+      if (how === 'fade') {
+        root.animate({ opacity: [0, 1] }, { duration: dur * 0.7, easing: 'cubic-bezier(.4, 0, .2, 1)', pseudoElement: '::view-transition-new(root)' });
+        return;
+      }
+      root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${R}px at ${x}px ${y}px)`] }, { duration: dur, easing: ease, pseudoElement: '::view-transition-new(root)' });
+      // the page that goes stays under it and sinks back a little, so the new one seems to come forward
+      root.animate({ transform: ['scale(1)', 'scale(.965)'], filter: ['brightness(1)', `brightness(${m === 'light' ? 0.72 : 1.18})`] }, { duration: dur, easing: ease, pseudoElement: '::view-transition-old(root)' });
+    }).catch(() => {});
+    t.finished.finally(() => { root.classList.remove('vt-mode'); this.busy = false; });
   },
 };
 
@@ -2399,7 +2877,15 @@ const hd = {
     const fresh = +gsap.getProperty(h, 'opacity') < 0.05, k = MOTK();
     gsap.to(h, { x: a.offsetLeft, width: a.offsetWidth, opacity: 1, duration: fresh || !k ? 0 : 0.5, ease: 'expo.out', overwrite: true });
   },
+  // the theme button says what it will do
+  syncMode() {
+    const b = $('#modeBtn'); if (!b) return;
+    const l = LOOK.mode === 'light', t = l ? 'تم تیره' : 'تم روشن (سفید)';
+    b.setAttribute('aria-pressed', String(l)); b.setAttribute('aria-label', t); b.title = t;
+  },
   init() {
+    const mb = $('#modeBtn'); if (mb) mb.addEventListener('click', () => modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', mb));
+    this.syncMode();
     this.links.addEventListener('pointerleave', () => { if (this.hl) gsap.to(this.hl, { opacity: 0, duration: 0.3, overwrite: true }); this.hoverLeave(); });
     this.links.addEventListener('focusout', (ev) => { if (!this.links.contains(ev.relatedTarget) && this.hl) gsap.to(this.hl, { opacity: 0, duration: 0.3, overwrite: true }); });
     $('#searchBtn').addEventListener('click', () => cmdk.open());
@@ -2407,7 +2893,7 @@ const hd = {
     city.setAttribute('aria-expanded', 'false');
     city.addEventListener('click', () => {
       if (pop && pop.anchor === city) { closePop(); return; }
-      menuPop(city, CITIES, TXT.city, (c) => { look.setText('city', c); const f = $('[data-ctl="city"] input'); if (f) f.value = c; toast(`اجراهای ${c} رو نشون می‌دم.`); }, { cls: 'is-cities', cols: STK.matches ? 3 : 4, label: 'شهر' });
+      menuPop(city, CITIES, TXT.city, (c) => { look.setText('city', c); const f = $('[data-ctl="city"] input'); if (f) f.value = c; s2.setCity(c); toast(`اجراهای ${c} رو نشون می‌دم.`); }, { cls: 'is-cities', cols: STK.matches ? 3 : 4, label: 'شهر' });
     });
     $('#ticketsBtn').addEventListener('click', () => toast('اینجا بلیت‌های من باز می‌شه.'));
     $('#bellBtn').addEventListener('click', (ev) => { const d = $('.dotn', ev.currentTarget); if (d) d.remove(); toast('اینجا اعلان‌ها باز می‌شه.'); });
@@ -2519,39 +3005,51 @@ const smoothScroll = {
 };
 
 /* ════════════════════════════════════════════════════════════════
-   the list under the hero, laid out the way the owner's own sample lays out its home page: a bar of the categories that
-   follows the page and shows where you are (a pill slides to the section in view), then one section for each category (its
-   name, how many shows, and its tickets as cards), and the footer. A show whose sale hasn't started is in its category and
-   also in «به‌زودی (پیش‌فروش)». The panels, gaps, margins, radii and colours are the hero's own, so the look's settings
-   change this too.
+   the list under the hero, laid out the way the owner's own sample lays out its home page: the search and the city on top,
+   a bar of the categories that follows the page and shows where you are (a pill slides to the section in view), then one
+   section for each category and the footer. Every section is a panel of its own, with its own colour and icon, a head (the
+   name, how many shows, the days they cover, a city filter where the cities differ) and its posters; a section with many
+   shows shows two rows and opens the rest on a press. «به‌زودی (پیش‌فروش)» has wide tickets with a big countdown. A show whose
+   sale hasn't started is in its category and also in the presale. The panels, gaps, margins, radii and colours are the hero's
+   own, so the look's settings (and the theme) change this too. A poster opens the show's page (page.js).
    ════════════════════════════════════════════════════════════════ */
 const SEC_ORDER = ['soon', 'concert:tehran', 'concert:other', 'theatre:tehran', 'theatre:other', 'comedy:tehran', 'comedy:other'];
 const secId = (key) => `sec-${key.replace(':', '-')}`;
 const iconOfCat = (key) => ({ all: 'grid', soon: 'clock', concert: 'music', theatre: 'mask', comedy: 'smile' }[key.split(':')[0]] || 'grid');
+// each kind of section has its own colour: [on the dark theme, on the light one]
+const SEC_COLOR = { all: ['#e5e7eb', '#334155'], soon: ['#38bdf8', '#0284c7'], concert: ['#a78bfa', '#7c3aed'], theatre: ['#fb7185', '#e11d48'], comedy: ['#fbbf24', '#c2410c'] };
+const secColor = (key) => SEC_COLOR[key.split(':')[0]] || SEC_COLOR.all;
 const STATUS_ICON = { soon: 'clock', extended: 'check', held: 'check', cancelled: 'x', postponed: 'clock' };
 // what a card says in place of the buy button when the show can't be bought
 const OFF_TEXT = { soldout: 'بلیت‌ها به اتمام رسید', held: 'این برنامه برگزار شده است', cancelled: 'این برنامه لغو شد', postponed: 'این برنامه به‌تعویق افتاد', soon: 'فروش به‌زودی شروع می‌شه' };
 const ico = (n) => `<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const artOf = (e) => { const a = e.poster || e.banner; return { a, src: a.fake || (e.poster ? a.src : a.thumb) || '' }; };
+// the days a list of shows covers: "۱۵ آبان تا ۲۴ آذر"
+function spanOf(list) {
+  const t = list.map((e) => Date.parse(e.startsAt)), u = list.map((e) => Date.parse(e.endsAt || e.startsAt));
+  const a = new Date(Math.min(...t)), b = new Date(Math.max(...u)), d = (x) => `${F.day.format(x)} ${F.month.format(x)}`;
+  return d(a) === d(b) ? d(a) : F.month.format(a) === F.month.format(b) ? `${F.day.format(a)} تا ${d(b)}` : `${d(a)} تا ${d(b)}`;
+}
+const unitHTML = (u, w, v) => `<span class="u"><b data-u="${u}">${fa(String(v).padStart(2, '0'))}</b><i>${w}</i></span>`;
 
-// one ticket: the banner whole on top (a label in its corner, the city's tag, the stamp of a full show), the perforation, and under it
+// one ticket: the poster whole on top (a label in its corner, the city's tag, the stamp of a full show), the perforation, and under it
 // the kind and name, the place, the day, and the buy button (or the countdown, or the reason it can't be bought)
 function ticketHTML(e) {
   const st = statusOf(e), timed = st.key === 'soon' && saleMs(e) > Date.now();
   const lbl = st.label && st.key !== 'soldout' ? `<em class="st tkt-lbl" data-tone="${st.tone}">${STATUS_ICON[st.key] ? ico(STATUS_ICON[st.key]) : ''}${esc(st.label)}</em>` : '';
   const stamp = st.key === 'soldout' ? '<span class="tkt-stamp" aria-hidden="true">تمام شد</span>' : '';
   const tag = e.city !== 'تهران' ? `<span class="tkt-tag">${esc(e.city)}</span>` : '';
-  const unit = (u, w, v) => `<span class="u"><b data-u="${u}">${fa(String(v).padStart(2, '0'))}</b><i>${w}</i></span>`;
   let foot;
   if (timed) {
     const s = Math.max(0, Math.ceil((saleMs(e) - Date.now()) / 1000));
-    foot = `<div class="tkt-cd" data-sale-box="${esc(e.id)}" role="timer" aria-label="${esc(`فروش بلیت ${e.title} از ${saleWhen(e)} شروع می‌شه`)}"><span class="cd-l">شروع فروش</span><span class="cd-b" aria-hidden="true">${unit('h', 'ساعت', Math.floor(s / 3600))}<em>:</em>${unit('m', 'دقیقه', Math.floor((s % 3600) / 60))}<em>:</em>${unit('s', 'ثانیه', s % 60)}</span></div>`;
+    foot = `<div class="tkt-cd" data-sale-box="${esc(e.id)}" role="timer" aria-label="${esc(`فروش بلیت ${e.title} از ${saleWhen(e)} شروع می‌شه`)}"><span class="cd-l">شروع فروش</span><span class="cd-b" aria-hidden="true">${unitHTML('h', 'ساعت', Math.floor(s / 3600))}<em>:</em>${unitHTML('m', 'دقیقه', Math.floor((s % 3600) / 60))}<em>:</em>${unitHTML('s', 'ثانیه', s % 60)}</span></div>`;
   } else if (st.cta) foot = `<span class="tkt-off" aria-disabled="true">${esc(OFF_TEXT[st.key])}</span>`;
   else foot = `<div class="tkt-foot"><span class="tkt-price"><span>${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="buy" aria-label="${esc(`${TXT.buy} ${e.title}، از ${dg(e.price)} ${TXT.unit}`)}">${ico('bag')}${esc(TXT.buy)}</button></div>`;
-  const art = e.poster || e.banner, src = art.fake || (e.poster ? art.src : art.thumb) || '';
+  const { a, src } = artOf(e);
   return `<div class="tkt-in">
-      <a class="tkt-pic" href="#" draggable="false" aria-label="${esc(e.title)}${st.label ? `، ${esc(st.label)}` : ''}">
-        <img alt="" decoding="async" ${src ? `src="${esc(src)}"${!art.fake && !e.poster && art.srcset ? ` srcset="${esc(art.srcset)}" sizes="(max-width: 520px) 50vw, (max-width: 1100px) 34vw, 17vw"` : ''}` : `data-fake="${esc(e.id)}"`}>
-        ${lbl}${stamp}${tag}
+      <a class="tkt-pic" href="#/e/${esc(e.id)}" draggable="false" aria-label="${esc(e.title)}${st.label ? `، ${esc(st.label)}` : ''}">
+        <img alt="" decoding="async" ${src ? `src="${esc(src)}"${!a.fake && !e.poster && a.srcset ? ` srcset="${esc(a.srcset)}" sizes="(max-width: 520px) 50vw, (max-width: 1100px) 34vw, 17vw"` : ''}` : `data-fake="${esc(e.id)}"`}>
+        ${lbl}${stamp}${tag}<i class="tkt-glare" aria-hidden="true"></i>
       </a>
       <span class="tkt-perf" aria-hidden="true"></span>
       <div class="tkt-info"><i class="tkt-bg" aria-hidden="true"></i>
@@ -2563,25 +3061,48 @@ function ticketHTML(e) {
     </div>`;
 }
 
+// a presale ticket: wide, the poster on one side of a perforation, and on the other the show, when its sale starts and a big
+// countdown (days, hours, minutes, seconds; each number turns over like a flip clock when it changes)
+function presaleHTML(e) {
+  const { a, src } = artOf(e), timed = saleMs(e) > Date.now();
+  const s = timed ? Math.max(0, Math.ceil((saleMs(e) - Date.now()) / 1000)) : 0;
+  const cd = timed
+    ? `<div class="ptk-cd" data-sale-box="${esc(e.id)}" role="timer" aria-label="${esc(`فروش بلیت ${e.title} از ${saleWhen(e)} شروع می‌شه`)}"><span class="cd-b" aria-hidden="true">${unitHTML('d', 'روز', Math.floor(s / 86400))}<em>:</em>${unitHTML('h', 'ساعت', Math.floor((s % 86400) / 3600))}<em>:</em>${unitHTML('m', 'دقیقه', Math.floor((s % 3600) / 60))}<em>:</em>${unitHTML('s', 'ثانیه', s % 60)}</span></div>`
+    : '<p class="ptk-soon">فروش به‌زودی شروع می‌شه؛ زمانش اعلام می‌شه.</p>';
+  return `<a class="ptk-pic" href="#/e/${esc(e.id)}" draggable="false" aria-label="${esc(e.title)}، پیش‌فروش"><img alt="" decoding="async" ${src ? `src="${esc(src)}"` : `data-fake="${esc(e.id)}"`}>${e.city !== 'تهران' ? `<span class="tkt-tag">${esc(e.city)}</span>` : ''}<i class="tkt-glare" aria-hidden="true"></i></a>
+    <span class="ptk-perf" aria-hidden="true"></span>
+    <div class="ptk-info"><i class="tkt-bg" aria-hidden="true"></i>
+      <div class="ptk-top"><em class="st" data-tone="info">${ico('clock')}پیش‌فروش</em><span>${esc(e.type)}</span></div>
+      <h3 class="ptk-name"><a href="#/e/${esc(e.id)}">${esc(e.name)}</a></h3>
+      <div class="tkt-row">${ico('pin')}<span title="${esc(e.venue)}">${esc(e.venue)}</span></div>
+      <div class="tkt-row">${ico('calendar')}<span>${esc(e.w.short)}</span></div>
+      <div class="ptk-sale"><span class="ptk-l">${timed ? `شروع فروش · ${esc(saleWhen(e))}` : 'شروع فروش'}</span>${cd}</div>
+      <div class="ptk-foot"><span class="tkt-price"><span>${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></span><button type="button" class="ptk-rem" aria-pressed="false">${ico('bell')}<span>یادم بنداز</span></button></div>
+    </div>`;
+}
+
 const s2 = {
   secs: $('#s2Secs'), track: $('#catTrack'), bar: $('#catnav'), cur: 'all', seen: new Set(), io: null, stuckIo: null, lazy: null, sp: 0, lockUntil: 0,
+  city: '', open: new Set(), chip: {}, reminded: new Set(),
   init() {
-    this.build(); this.buildNav(); this.watch(); this.wireFooter();
+    this.build(); this.buildNav(); this.watch(); this.wireFooter(); this.find.init(); this.wireCity(); this.toTop.init();
     // the bar is "stuck" (floating) when it sits under the header; its shadow tells it
     if ('IntersectionObserver' in window) {
       const arm = () => { if (this.stuckIo) this.stuckIo.disconnect(); this.stuckIo = new IntersectionObserver(([en]) => this.bar.classList.toggle('is-stuck', en.intersectionRatio < 1), { threshold: [1], rootMargin: `${-((parseFloat(getComputedStyle(this.bar).top) || 0) + 1)}px 0px 0px 0px` }); this.stuckIo.observe(this.bar); };
       arm(); this.arm = arm;
     }
-    addEventListener('resize', () => { clearTimeout(this.rz); this.rz = setTimeout(() => { if (this.arm) this.arm(); this.moveInd(this.cur, true); }, 150); });
+    addEventListener('resize', () => { clearTimeout(this.rz); this.rz = setTimeout(() => { if (this.arm) this.arm(); this.clampAll(); this.moveInd(this.cur, true); }, 150); });
     // the wheel, a touch or a key are the visitor's own: the pill follows the page again
     ['wheel', 'touchstart', 'keydown'].forEach((t) => addEventListener(t, () => { this.lockUntil = 0; }, { passive: true }));
     // the section in view sets the pill: asked once a frame while the page moves
     addEventListener('scroll', () => { if (this.sp) return; this.sp = requestAnimationFrame(() => { this.sp = 0; this.probe(); }); }, { passive: true });
     requestAnimationFrame(() => { this.moveInd('all', true); this.probe(); });
   },
+  // the shows of the list in the city that was chosen (or all)
+  shows() { const all = LIST(); return this.city ? all.filter((e) => e.city === this.city) : all; },
   // the sections, in the order of the list; an empty one is not drawn (its pill stays in the bar and says so when pressed)
   sections() {
-    const all = LIST(), by = (key) => all.filter((e) => inCat(e, key));
+    const all = this.shows(), by = (key) => all.filter((e) => inCat(e, key));
     const over = (e) => (['held', 'cancelled'].includes(statusOf(e).key) ? 1 : 0);   // a show that is over (or cancelled) goes last
     return SEC_ORDER.map((key) => ({ key, list: by(key).sort((a, b) => over(a) - over(b) || (key === 'soon' ? saleMs(a) - saleMs(b) : Date.parse(a.startsAt) - Date.parse(b.startsAt))) })).filter((s) => s.list.length);
   },
@@ -2589,38 +3110,83 @@ const s2 = {
     this.secs.textContent = '';
     this.lazyOff();
     this.sections().forEach(({ key, list }) => {
-      const sec = document.createElement('section'); sec.className = 'tkt-sec'; sec.id = secId(key); sec.dataset.sec = key; sec.setAttribute('aria-labelledby', `${secId(key)}-h`);
-      sec.innerHTML = `<h2 id="${secId(key)}-h" data-rv>${esc(catName(key))}<span class="cnt">${fa(list.length)} برنامه</span></h2><div class="tkt-grid"></div>`;
-      const grid = $('.tkt-grid', sec);
-      list.forEach((e) => {
-        const c = document.createElement('article'); c.className = 'tkt'; c.dataset.id = e.id; c.dataset.cat = catOf(e); c.dataset.st = statusOf(e).key;
-        c.style.setProperty('--accent', e.accent); c.style.setProperty('--accent-l', e.accentL); c.style.setProperty('--on-accent', e.onAccent); c.style.setProperty('--ring', e.ring || e.accent);
-        c.innerHTML = ticketHTML(e);
-        const im = $('img', c), art = e.poster || e.banner, pic = $('.tkt-pic', c);
-        // the soft copy of the picture behind it (it fills what the picture leaves) and behind the words
-        const bg = (u) => c.style.setProperty('--art', `url("${u}")`);
-        if (art.fake) bg(art.fake); else if (e.poster ? art.src : art.thumb) bg(e.poster ? art.src : art.thumb);
-        const tall = !!e.poster, size = tall ? { w: 2, h: 3 } : art;
-        // a file that isn't there is drawn by the page; and the picture is shown whole: it fills the frame if its shape is the frame's (to FILL_TOL), else the soft copy fills the rest
-        im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); const u = art.fake = fakeArt(e, size); im.src = u; bg(u); };
-        im.addEventListener('load', () => this.fit(pic, im));
-        if (im.complete && im.naturalWidth) this.fit(pic, im);
-        // open it in the hero (a featured show) or say where its page will be
-        const open = (ev) => { ev.preventDefault(); const i = EVENTS.indexOf(e); if (i >= 0) { scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); go(i, 'user'); } else toast(`اینجا صفحه‌ی «${e.title}» باز می‌شه.`); };
-        $('.tkt-pic', c).addEventListener('click', open);
-        $('.tkt-name', c).addEventListener('click', open);
-        const b = $('.buy', c); if (b) b.addEventListener('click', () => toast(buyMessage(e)));
-        const off = $('.tkt-off', c); if (off) off.addEventListener('click', () => toast(buyMessage(e)));
-        grid.appendChild(c);
-      });
+      const sec = document.createElement('section'), [cd, cl] = secColor(key), wide = key === 'soon' && LOOK.presale === 'wide';
+      sec.className = `tkt-sec panel${wide ? ' is-presale' : ''}`; sec.id = secId(key); sec.dataset.sec = key; sec.setAttribute('aria-labelledby', `${secId(key)}-h`);
+      sec.style.setProperty('--sc-d', cd); sec.style.setProperty('--sc-l', cl);
+      // where the cities differ (the other cities' sections), a chip for each city filters the section
+      const cities = key.endsWith(':other') && !this.city ? [...new Set(list.map((e) => e.city))] : [];
+      const chips = cities.length > 1 ? `<div class="sec-chips" role="group" aria-label="شهرها">${['', ...cities].map((c) => `<button type="button" class="chip" data-city="${esc(c)}" aria-pressed="${(this.chip[key] || '') === c}">${esc(c || 'همه')}${c ? `<small>${fa(list.filter((e) => e.city === c).length)}</small>` : ''}</button>`).join('')}</div>` : '';
+      const sub = key === 'soon' ? `${fa(list.length)} برنامه · نزدیک‌ترین شروع فروش: ${saleMs(list[0]) > Date.now() ? esc(saleWhen(list[0])) : 'به‌زودی'}` : `${fa(list.length)} برنامه · ${esc(spanOf(list))}`;
+      sec.innerHTML = `<header class="sec-h" data-rv><span class="sec-ic" aria-hidden="true">${ico(iconOfCat(key))}</span><div class="sec-tt"><h2 id="${secId(key)}-h">${esc(catName(key))}</h2><p>${sub}</p></div>${chips}</header><div class="${wide ? 'ptk-grid' : 'tkt-grid'}"></div><div class="sec-more" hidden><button type="button" class="more-btn"><span></span>${ico('down')}</button></div>`;
+      const grid = $(wide ? '.ptk-grid' : '.tkt-grid', sec);
+      list.forEach((e) => grid.appendChild(this.card(e, wide)));
+      $$('.chip', sec).forEach((b) => b.addEventListener('click', () => { this.chip[key] = b.dataset.city; $$('.chip', sec).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); this.clamp(sec, true); }));
+      $('.more-btn', sec).addEventListener('click', () => { if (this.open.has(key)) this.open.delete(key); else this.open.add(key); this.clamp(sec, true, true); });
       this.secs.appendChild(sec);
     });
-    if (!this.secs.children.length) this.secs.innerHTML = '<p class="s2-empty panel">فعلاً برنامه‌ای ثبت نشده.</p>';
+    if (!this.secs.children.length) this.secs.innerHTML = `<p class="s2-empty panel">${this.city ? `فعلاً برنامه‌ای تو ${esc(this.city)} ثبت نشده.` : 'فعلاً برنامه‌ای ثبت نشده.'}</p>`;
+    this.filterNote();
+    requestAnimationFrame(() => this.clampAll());
   },
-  // the bar: «همه‌ی برنامه‌ها» and each category, a pill slides to the one in view
+  // one card (a poster ticket, or a wide presale ticket)
+  card(e, wide) {
+    const c = document.createElement('article'); c.className = wide ? 'ptk' : 'tkt'; c.dataset.id = e.id; c.dataset.cat = catOf(e); c.dataset.st = statusOf(e).key; c.dataset.city = e.city;
+    c.style.setProperty('--accent', e.accent); c.style.setProperty('--accent-l', e.accentL); c.style.setProperty('--on-accent', e.onAccent); c.style.setProperty('--ring', e.ring || e.accent);
+    c.innerHTML = wide ? presaleHTML(e) : ticketHTML(e);
+    const im = $('img', c), { a: art } = artOf(e), pic = $(wide ? '.ptk-pic' : '.tkt-pic', c);
+    // the soft copy of the picture behind it (it fills what the picture leaves) and behind the words
+    const bg = (u) => c.style.setProperty('--art', `url("${u}")`);
+    const u0 = art.fake || (e.poster ? art.src : art.thumb); if (u0) bg(u0);
+    const size = e.poster ? { w: 2, h: 3 } : art;
+    // a file that isn't there is drawn by the page; and the picture is shown whole: it fills the frame if its shape is the frame's (to FILL_TOL), else the soft copy fills the rest
+    im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); const u = art.fake = fakeArt(e, size); im.src = u; bg(u); };
+    im.addEventListener('load', () => this.fit(pic, im));
+    if (im.complete && im.naturalWidth) this.fit(pic, im);
+    // the poster and the name open the show's page; the buy button opens it at its sessions
+    const open = (ev, to) => { ev.preventDefault(); page.open(e, { from: im, to }); };
+    $$(`${wide ? '.ptk-pic, .ptk-name a' : '.tkt-pic, .tkt-name'}`, c).forEach((x) => x.addEventListener('click', (ev) => open(ev)));
+    const b = $('.buy', c); if (b) b.addEventListener('click', (ev) => open(ev, 'sessions'));
+    const off = $('.tkt-off', c); if (off) off.addEventListener('click', (ev) => open(ev));
+    const rem = $('.ptk-rem', c);
+    if (rem) {
+      const mark = () => { const on = this.reminded.has(e.id); rem.setAttribute('aria-pressed', String(on)); $('span', rem).textContent = on ? 'یادت می‌ندازم' : 'یادم بنداز'; };
+      mark();
+      rem.addEventListener('click', () => { if (this.reminded.has(e.id)) this.reminded.delete(e.id); else this.reminded.add(e.id); mark(); toast(this.reminded.has(e.id) ? `ده دقیقه قبل از شروع فروش «${e.title}» پیامک می‌گیری.` : 'یادآوری برداشته شد.'); });
+    }
+    return c;
+  },
+  // how many rows a section shows before «نمایش همه»; the city chips of the section filter it too
+  clamp(sec, anim, opening) {
+    const key = sec.dataset.sec, grid = $('.tkt-grid, .ptk-grid', sec); if (!grid || !grid.offsetParent) return;
+    const cards = [...grid.children], want = this.chip[key] || '', rows = grid.classList.contains('ptk-grid') ? 0 : +LOOK.secRows || 0;
+    const cols = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length);
+    const match = cards.filter((c) => !want || c.dataset.city === want), lim = rows && !this.open.has(key) ? cols * rows : Infinity;
+    const before = new Set(cards.filter((c) => !c.hidden));
+    cards.forEach((c) => { c.hidden = !match.includes(c) || match.indexOf(c) >= lim; });
+    const more = $('.sec-more', sec), extra = match.length - Math.min(match.length, lim);
+    more.hidden = !(extra > 0 || this.open.has(key) && rows && match.length > cols * rows);
+    $('.more-btn span', more).textContent = this.open.has(key) ? 'بستن' : `نمایش همه‌ی ${fa(match.length)} برنامه`;
+    more.classList.toggle('is-open', this.open.has(key));
+    if (anim && MOTK()) {
+      const fresh = cards.filter((c) => !c.hidden && !before.has(c));
+      fresh.forEach((c) => { c.classList.add('is-in'); if (c.dataset.id) this.seen.add(c.dataset.id); });
+      if (fresh.length) gsap.fromTo(fresh, { y: 26 * MOTK(), opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.05, ease: 'expo.out', clearProps: 'transform,opacity' });
+    }
+    if (opening === true && !this.open.has(key)) { const r = sec.getBoundingClientRect(); if (r.top < 0) scrollTo({ top: scrollY + r.top - 140, behavior: reduceMotion ? 'auto' : 'smooth' }); }
+  },
+  clampAll() { $$('.tkt-sec', this.secs).forEach((sec) => this.clamp(sec)); },
+  // a line under the bar when a city is chosen
+  filterNote() {
+    const n = $('#s2Filter'); if (!n) return;
+    if (!this.city) { n.hidden = true; return; }
+    const k = this.shows().length;
+    n.hidden = false; n.innerHTML = `${ico('pin')}<span>برنامه‌های <b>${esc(this.city)}</b> · ${fa(k)} برنامه</span><button type="button" class="chip" id="s2All">همه‌ی شهرها ${ico('x')}</button>`;
+    $('#s2All', n).addEventListener('click', () => this.setCity(''));
+  },
+  // the bar: «همه‌ی برنامه‌ها» and each category, a pill slides to the one in view (in the colour of its section)
   buildNav() {
-    const keys = ['all', ...SEC_ORDER];
-    this.track.innerHTML = '<i class="cat-ind" aria-hidden="true"></i>' + keys.map((k) => `<a class="cat" href="#${k === 'all' ? 's2Secs' : secId(k)}" data-cat="${k}"${k !== 'all' && !catCount(k) ? ' data-empty' : ''}${k === this.cur ? ' aria-current="true"' : ''}>${ico(iconOfCat(k))}<span>${esc(k === 'all' ? 'همه‌ی برنامه‌ها' : catName(k))}</span></a>`).join('');
+    const keys = ['all', ...SEC_ORDER], shown = this.shows();
+    this.track.innerHTML = '<i class="cat-ind" aria-hidden="true"></i>' + keys.map((k) => { const [d, l] = secColor(k); return `<a class="cat" href="#${k === 'all' ? 's2Secs' : secId(k)}" data-cat="${k}" style="--sc-d:${d};--sc-l:${l}"${k !== 'all' && !shown.some((e) => inCat(e, k)) ? ' data-empty' : ''}${k === this.cur ? ' aria-current="true"' : ''}>${ico(iconOfCat(k))}<span>${esc(k === 'all' ? 'همه‌ی برنامه‌ها' : catName(k))}</span></a>`; }).join('');
     $$('.cat', this.track).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); this.go(a.dataset.cat); }));
     this.moveInd(this.cur, true);
   },
@@ -2628,6 +3194,7 @@ const s2 = {
     const ind = $('.cat-ind', this.track), a = $(`.cat[data-cat="${key}"]`, this.track); if (!ind || !a || !a.offsetWidth) return;
     if (instant || !MOTK()) ind.style.transition = 'none';
     ind.style.width = `${a.offsetWidth}px`; ind.style.transform = `translateX(${a.offsetLeft}px)`;
+    const [d, l] = secColor(key); this.track.style.setProperty('--sc-d', d); this.track.style.setProperty('--sc-l', l);
     if (instant || !MOTK()) { void ind.offsetWidth; ind.style.transition = ''; }
     $$('.cat', this.track).forEach((x) => { if (x === a) x.setAttribute('aria-current', 'true'); else x.removeAttribute('aria-current'); });
     // the bar scrolls (on a narrow window) so the pill in view is in view
@@ -2635,10 +3202,11 @@ const s2 = {
   },
   // the last section whose top is above the line just under the bar is the one in view
   probe() {
-    if (performance.now() < this.lockUntil) return;   // the page is travelling to the pill that was pressed: it stays on that one
+    if (performance.now() < this.lockUntil || page.on) return;   // the page is travelling to the pill that was pressed: it stays on that one
     const line = this.bar.getBoundingClientRect().bottom + Math.max(60, innerHeight * 0.28); let cur = 'all';   // a section is the one in view once its title is in the upper part of the window
     $$('.tkt-sec', this.secs).forEach((x) => { if (x.getBoundingClientRect().top <= line) cur = x.dataset.sec; });
     if (cur !== this.cur) { this.cur = cur; this.moveInd(cur); hd.markCat(); }
+    this.toTop.sync();
   },
   // everything that should rise on arrival: starts a little low and clear (the cards that were already seen don't)
   watch() {
@@ -2647,11 +3215,11 @@ const s2 = {
         const now = ens.filter((en) => en.isIntersecting); now.forEach((en, k) => { this.io.unobserve(en.target); en.target.classList.add('is-in'); if (en.target.dataset.id) this.seen.add(en.target.dataset.id); gsap.to(en.target, { y: 0, opacity: 1, duration: 1.05, delay: k * 0.07, ease: 'expo.out', clearProps: 'transform,opacity,transition' }); });
       }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
     }
-    if (this.io) $$('[data-rv], .tkt', this.secs.parentNode).forEach((el) => { if (el.classList.contains('is-in')) return; if (el.dataset.id && this.seen.has(el.dataset.id)) { el.classList.add('is-in'); return; } gsap.set(el, { y: 34 * MOTK(), opacity: 0, transition: 'none' }); this.io.observe(el); });
+    if (this.io) $$('[data-rv], .tkt, .ptk', this.secs.parentNode).forEach((el) => { if (el.classList.contains('is-in')) return; if (el.dataset.id && this.seen.has(el.dataset.id)) { el.classList.add('is-in'); return; } gsap.set(el, { y: 34 * MOTK(), opacity: 0, transition: 'none' }); this.io.observe(el); });
     // a stand-in picture is drawn only when its card comes near the screen, one at a time, and not while the page is making its entrance
     const fakes = $$('img[data-fake]', this.secs);
     if (fakes.length) {
-      const draw = (im) => { const e = showById(im.dataset.fake); if (!e || !im.isConnected) return; const u = e.banner.fake || (e.banner.fake = fakeArt(e, e.banner)); im.src = u; im.closest('.tkt').style.setProperty('--art', `url("${u}")`); };
+      const draw = (im) => { const e = showById(im.dataset.fake); if (!e || !im.isConnected) return; const u = e.banner.fake || (e.banner.fake = fakeArt(e, e.banner)); im.src = u; im.closest('.tkt, .ptk').style.setProperty('--art', `url("${u}")`); };
       const queue = [], pump = () => { if (this.pumping) return; this.pumping = true; const step = () => { if (state.intro) { setTimeout(step, 400); return; } const im = queue.shift(); if (!im) { this.pumping = false; return; } draw(im); setTimeout(step, 30); }; setTimeout(step, 60); };
       if ('IntersectionObserver' in window) {
         this.lazy = new IntersectionObserver((ens) => ens.forEach((en) => { if (en.isIntersecting) { this.lazy.unobserve(en.target); queue.push(en.target); pump(); } }), { rootMargin: '900px 0px' });
@@ -2662,26 +3230,436 @@ const s2 = {
   lazyOff() { if (this.lazy) { this.lazy.disconnect(); this.lazy = null; } },
   // the picture whole in the poster's frame: its own shape (to FILL_TOL of the frame's) fills it, any other leaves the soft copy round it
   fit(pic, im) { if (!im.naturalWidth) return; pic.classList.toggle('is-fill', Math.abs(Math.log(im.naturalWidth / im.naturalHeight / LOOK.posterRatio)) < FILL_TOL); },
-  refit() { $$('.tkt-pic', this.secs).forEach((pic) => this.fit(pic, $('img', pic))); },
+  refit() { $$('.tkt-pic, .ptk-pic', this.secs).forEach((pic) => this.fit(pic, $('img', pic))); },
   later() { clearTimeout(this.lt); this.lt = setTimeout(() => this.refresh(), 160); },
-  // the cards are drawn again (a text, a colour or a status changed)
+  // the cards are drawn again (a text, a colour, a status or the city changed)
   refresh() {
     clearTimeout(this.lt);
     const y = scrollY; this.build(); this.buildNav(); this.watch(); this.moveInd(this.cur, true);
-    if (Math.abs(scrollY - y) > 1) scrollTo(0, y);
+    if (Math.abs(scrollY - y) > 1 && !page.on) scrollTo(0, y);
   },
-  // a link in the header, a pill in the bar: take the page to this category's section (its title lands just under the bar)
+  // a link in the header, a pill in the bar: take the page to this category's section (its head lands just under the bar)
   go(key) {
-    const el = key === 'all' ? this.secs : $(`#${secId(key)}`);
+    if (page.on) { page.close({ then: () => this.go(key) }); return; }
+    const el = key === 'all' ? $('.s2-top', this.secs.parentNode) : $(`#${secId(key)}`);
     this.cur = key; this.moveInd(key); hd.markCat(); this.lockUntil = performance.now() + 1800;
-    if (!el) { toast(`فعلاً اجرایی تو «${catName(key)}» نیست.`); return; }
-    const gap = parseFloat(getComputedStyle(hero).rowGap) || 9, off = (parseFloat(getComputedStyle(this.bar).top) || 0) + this.bar.offsetHeight + gap * 1.6;
+    if (!el) { toast(this.city ? `تو ${this.city} فعلاً اجرایی تو «${catName(key)}» نیست.` : `فعلاً اجرایی تو «${catName(key)}» نیست.`); return; }
+    const gap = parseFloat(getComputedStyle(hero).rowGap) || 9, off = key === 'all' ? $('#nav').getBoundingClientRect().bottom + gap * 2.5 : (parseFloat(getComputedStyle(this.bar).top) || 0) + this.bar.offsetHeight + gap * 1.6;
     scrollTo({ top: Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - off)), behavior: reduceMotion ? 'auto' : 'smooth' });
+  },
+  // the city of the list (the header's city menu sets it too): only that city's shows, in every section
+  setCity(c) {
+    if (c === this.city) return;
+    this.city = c; this.chip = {};
+    $('#s2CityName').textContent = c || 'همه‌ی شهرها';
+    this.refresh(); hd.markCat && hd.markCat();
+    const top = $('.s2-top'); if (top && top.getBoundingClientRect().top < 0 && !page.on) this.go('all');
+  },
+  wireCity() {
+    const b = $('#s2City');
+    b.addEventListener('click', () => {
+      if (pop && pop.anchor === b) { closePop(); return; }
+      const all = LIST(), n = (c) => all.filter((e) => e.city === c && !['held', 'cancelled'].includes(statusOf(e).key)).length;
+      const extra = [...new Set(all.map((e) => e.city))].filter((c) => !CITIES.includes(c));
+      const items = [{ t: 'همه‌ی شهرها', v: '', n: all.filter((e) => !['held', 'cancelled'].includes(statusOf(e).key)).length }, ...CITIES.concat(extra).map((c) => ({ t: c, v: c, n: n(c) }))];
+      menuPop(b, items, this.city, (c) => this.setCity(c), { cols: STK.matches ? 2 : 4, cls: 'is-cities', label: 'شهر', align: 'center' });
+    });
   },
   wireFooter() {
     $$('#ft [data-go]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const k = a.dataset.go; if (k === 'top') scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); else this.go(k); }));
     $$('#ft [data-page]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }));
   },
+
+  /* the search over the list, as in the sample: the answers open under the box while you type (the poster, the name with the
+     words you typed marked, the city, the hall and the day); the arrows move, Enter opens, Esc closes */
+  find: {
+    sel: -1, rows: [],
+    init() {
+      const f = $('#s2Find'), q = $('#s2Q'), box = $('#s2Sug'); if (!f) return;
+      this.f = f; this.q = q; this.box = box;
+      q.addEventListener('input', () => this.render());
+      q.addEventListener('focus', () => { if (q.value.trim()) this.render(); });
+      q.addEventListener('keydown', (ev) => {
+        if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') { ev.preventDefault(); if (box.hidden) this.render(); this.move(ev.key === 'ArrowDown' ? 1 : -1); }
+        else if (ev.key === 'Escape') { if (!box.hidden) { ev.stopPropagation(); this.hide(); } }
+      });
+      f.addEventListener('submit', (ev) => { ev.preventDefault(); const r = this.rows[Math.max(0, this.sel)]; if (r) this.pick(r); else if (q.value.trim()) this.render(); });
+      document.addEventListener('pointerdown', (ev) => { if (!f.contains(ev.target)) this.hide(); });
+    },
+    search(text) {
+      const toks = norm(text).split(/\s+/).filter(Boolean); if (!toks.length) return [];
+      const over = (e) => (['held', 'cancelled'].includes(statusOf(e).key) ? 1 : 0);
+      return LIST().filter((e) => { const h = norm([e.title, e.type, e.name, e.venue, e.city, e.w.short, statusOf(e).label].join(' ')); return toks.every((t) => h.includes(t)); })
+        .sort((a, b) => over(a) - over(b) || Date.parse(a.startsAt) - Date.parse(b.startsAt));
+    },
+    mark(text, q) {
+      let s = esc(text);
+      norm(q).split(/\s+/).filter((t) => t.length > 1).forEach((t) => {
+        const re = new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/ی/g, '[یيى]').replace(/ک/g, '[کك]').replace(/\d/g, (d) => `[${d}${'۰۱۲۳۴۵۶۷۸۹'[d]}]`)})`, 'gi');
+        s = s.replace(re, '<mark>$1</mark>');
+      });
+      return s;
+    },
+    render() {
+      const v = this.q.value, all = this.search(v); this.rows = all.slice(0, 6); this.sel = this.rows.length ? 0 : -1;
+      if (!v.trim()) { this.hide(); return; }
+      this.box.innerHTML = this.rows.length
+        ? this.rows.map((e, k) => { const { src } = artOf(e); return `<a class="sg" role="option" id="sg-${k}" href="#/e/${esc(e.id)}" data-k="${k}" aria-selected="${k === 0}"><img alt="" src="${esc(src || '')}"><span class="sg-t"><b>${this.mark(`${e.type} ${e.name}`, v)}</b><small>${esc(e.venue)} · ${esc(e.w.short)}</small></span>${statusChip(e)}</a>`; }).join('') + (all.length > 6 ? `<p class="sg-more">${fa(all.length - 6)} نتیجه‌ی دیگه هم هست؛ دقیق‌ترش کن.</p>` : '')
+        : '<p class="sg-none">چیزی پیدا نشد. اسم هنرمند، نمایش، سالن یا شهر رو امتحان کن.</p>';
+      $$('.sg', this.box).forEach((a) => {
+        a.addEventListener('click', (ev) => { ev.preventDefault(); this.pick(this.rows[+a.dataset.k]); });
+        a.addEventListener('pointermove', () => { if (this.sel !== +a.dataset.k) { this.sel = +a.dataset.k; this.paint(); } });
+      });
+      const was = this.box.hidden; this.box.hidden = false; this.q.setAttribute('aria-expanded', 'true'); this.paint();
+      if (was && MOTK()) gsap.fromTo(this.box, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out', clearProps: 'transform,opacity' });
+    },
+    move(d) { if (!this.rows.length) return; this.sel = (this.sel + d + this.rows.length) % this.rows.length; this.paint(); },
+    paint() { $$('.sg', this.box).forEach((a) => a.setAttribute('aria-selected', String(+a.dataset.k === this.sel))); if (this.sel >= 0) this.q.setAttribute('aria-activedescendant', `sg-${this.sel}`); else this.q.removeAttribute('aria-activedescendant'); },
+    hide() { if (!this.box || this.box.hidden) return; this.box.hidden = true; this.q.setAttribute('aria-expanded', 'false'); this.q.removeAttribute('aria-activedescendant'); },
+    pick(e) { this.hide(); this.q.blur(); const im = $(`.tkt[data-id="${e.id}"] img, .ptk[data-id="${e.id}"] img`); page.open(e, { from: im && im.offsetParent ? im : null }); },
+  },
+
+  /* back to the top, with a ring that fills as the page goes down (as in the sample); it shows once the hero is passed */
+  toTop: {
+    el: null, on: false,
+    init() {
+      const b = $('#toTop'); if (!b) return; this.el = b;
+      b.addEventListener('click', () => scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
+      addEventListener('scroll', () => this.sync(), { passive: true }); this.sync();
+    },
+    sync() {
+      if (!this.el) return;
+      const max = document.documentElement.scrollHeight - innerHeight, p = max > 0 ? clamp(scrollY / max, 0, 1) : 0, on = scrollY > innerHeight * 0.9;
+      this.el.style.setProperty('--p', p.toFixed(4));
+      if (on !== this.on) { this.on = on; this.el.classList.toggle('is-on', on); this.el.tabIndex = on ? 0 : -1; }
+    },
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the show's page: the first of the four steps of a purchase (choose the session → the seats → book and pay → the ticket),
+   after the owner's sample: the steps, a cover with the poster, the facts (the days, the time and how long, the hall and its
+   address, a map), what the show is, the price plan (+ 10 % VAT), the rules to accept, and the sessions as small tickets. On a
+   wide window the sessions stay beside the rest (they follow the page); on a phone a bar at the bottom takes you to them.
+   Its address is #/e/<show>: the back button and a shared link work. A poster flies from the list into the page (a View
+   Transition) and back. Everything comes from the show's data; what the data doesn't have yet (the address, the sessions'
+   seats, the zones' prices) is made from it here, the way the admin panel will fill it later.
+   ════════════════════════════════════════════════════════════════ */
+// the halls we know: their address, their size (it sets the zones of the price plan) and where they are on the map
+const HALLS = [
+  [/وحدت/, 'تهران، خیابان حافظ، خیابان استاد شهریار، تالار وحدت', 'grand'],
+  [/میلاد/, 'تهران، بزرگراه شهید همت، برج میلاد', 'grand'],
+  [/آزادی/, 'تهران، بزرگراه شهید همت، مجموعه‌ی ورزشی آزادی', 'grand'],
+  [/ارسباران/, 'تهران، خیابان شریعتی، بالاتر از پل صدر، خیابان یخچال', 'medium'],
+  [/نیاوران/, 'تهران، خیابان پاسداران، روبه‌روی پارک نیاوران', 'medium'],
+  [/شهرزاد/, 'تهران، خیابان کریم‌خان زند، خیابان ایرانشهر', 'medium'],
+  [/تئاترشهر/, 'تهران، تقاطع خیابان انقلاب و ولیعصر، پارک دانشجو', 'medium'],
+  [/مهرگان/, 'تهران، خیابان انقلاب، خیابان دانشگاه، خیابان وحید نظری', 'small'],
+  [/تالار هنر$|، تالار هنر/, 'تهران، خیابان استاد نجات‌اللهی، خیابان سپند', 'medium'],
+  [/سیتی سنتر/, 'اصفهان، بزرگراه شهید خرازی، مجتمع سیتی سنتر', 'grand'],
+  [/حافظ/, 'شیراز، بلوار چمران، تالار حافظ', 'medium'],
+  [/همایش‌های بین‌المللی/, 'مشهد، بلوار سجاد، سالن همایش‌های بین‌المللی', 'grand'],
+  [/فجر/, 'تبریز، خیابان امام خمینی، تالار فجر', 'medium'],
+  [/اکومال/, 'کرج، بلوار جمهوری، مجتمع اکومال', 'medium'],
+  [/مرکزی رشت/, 'رشت، خیابان سعدی، تالار مرکزی', 'medium'],
+  [/کرمان|مرکزی فرهنگ و هنر/, 'کرمان، بلوار جمهوری اسلامی، مجتمع فرهنگی و هنری', 'small'],
+  [/یزد/, 'یزد، بلوار جمهوری، فرهنگسرای یزد', 'small'],
+  [/بوعلی/, 'همدان، میدان بوعلی، مجتمع فرهنگی بوعلی', 'medium'],
+  [/ورزش و جوانان/, 'اردبیل، خیابان امام، اداره‌ی کل ورزش و جوانان', 'small'],
+  [/هنر اهواز/, 'اهواز، کیانپارس، خیابان شهید چمران', 'medium'],
+  [/سلیمان‌?نژاد/, 'رامسر، خیابان مطهری، آمفی‌تئاتر شهید سلیمان‌نژاد', 'small'],
+  [/آزادشاد/, 'ساری، بلوار طالقانی، مجتمع فرهنگی هنری آزادشاد', 'medium'],
+  [/بصیرت/, 'تهران، بزرگراه شهید حکیم، مجتمع فرهنگی هنری بصیرت', 'medium'],
+  [/اداره فرهنگ و ارشاد/, 'تهران، سالن اصلی اداره‌ی فرهنگ و ارشاد اسلامی', 'medium'],
+];
+const hallOf = (e) => { const v = e.venue; const h = HALLS.find(([re]) => re.test(v)); const name = v.replace(new RegExp(`^${e.city}[،,]\\s*`), ''); return { name, addr: h ? h[1] : `${e.city}، ${name}`, size: h ? h[2] : 'medium' }; };
+// the zones of a hall and the tier of each run of rows (A is the dearest); a tier's price is a step above the lowest price of the show
+const ZONES = {
+  grand: [['همکف', [[1, 6, 'A'], [7, 13, 'B'], [14, 20, 'C']]], ['بالکن یک', [[1, 3, 'B'], [4, 7, 'C']]], ['بالکن دو', [[1, 6, 'D']]]],
+  medium: [['همکف', [[1, 5, 'A'], [6, 10, 'B'], [11, 14, 'C']]], ['بالکن', [[1, 5, 'D']]]],
+  small: [['سالن اصلی', [[1, 3, 'A'], [4, 7, 'B'], [8, 10, 'C']]]],
+};
+const TIER = { A: { k: 2.2, c: '#8b5cf6' }, B: { k: 1.6, c: '#ec4899' }, C: { k: 1.25, c: '#f97316' }, D: { k: 1, c: '#0ea5e9' } };
+const DUR = { concert: 120, theatre: 90, comedy: 100 };
+const priceNum = (e) => { const d = String(e.price).replace(/[۰-۹]/g, (x) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(x)).replace(/[^\d]/g, ''); return (+d || 0) * (/هزار/.test(e.price) ? 1000 : 1); };
+const money = (n) => fa(Math.round(n).toLocaleString('en-US')).replace(/,/g, '٬');
+function tiersOf(e) {
+  const low = priceNum(e), z = ZONES[hallOf(e).size], used = [...new Set(z.flatMap(([, r]) => r.map((x) => x[2])))].sort().reverse();
+  // the cheapest tier in this hall is the show's lowest price; the others are steps above it (rounded to 10,000 toman)
+  const base = TIER[used[0]].k, p = (t) => Math.round((low * TIER[t].k / base) / 1e4) * 1e4;
+  return z.flatMap(([zone, runs]) => runs.map(([a, b, t]) => ({ zone, a, b, t, c: TIER[t].c, price: p(t) })));
+}
+// a small number that is always the same for the same show (so its seats and its map don't change on a reload)
+const seedOf = (s) => { let h = 2166136261; for (const ch of String(s)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const rngOf = (seed) => () => { seed = (seed + 0x6D2B79F5) | 0; let t = seed; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+// the sessions: every day from the first night to the last at the show's hour (the past ones left out, ten at most)
+function sessionsOf(e) {
+  const st = statusOf(e).key, a = Date.parse(e.startsAt), b = Date.parse(e.endsAt || e.startsAt), now = Date.now(), R = rngOf(seedOf(e.id));
+  const out = [];
+  for (let t = a, k = 0; t <= b + 1000 && out.length < 10; t += DAY, k++) {
+    const r = R(); if (t + 2 * HOUR < now) continue;
+    const seats = st === 'soldout' ? 0 : r < 0.12 ? 0 : r < 0.36 ? 0.08 + r * 0.4 : 0.3 + r * 0.6;
+    out.push({ id: `${e.id}-${k}`, t, seats });
+  }
+  return out;
+}
+const CREDITS = {
+  'dokhtar-pesar': { tags: [['گروه', 'تئاتر فردا'], ['نویسنده', 'فرهاد تقدعلی'], ['کارگردان', 'شیوا علیخانیان']], line: 'با مجوز اداره‌ی فرهنگ و ارشاد اسلامی شهرستان رامسر' },
+  'hani-nazarian': { tags: [['رهبر ارکستر', 'هانی نظریان'], ['ارکستر', 'ارکستر سینمایی Sequence']], line: 'اجرای زنده‌ی موسیقی فیلم' },
+  'zendegi-shayad': { tags: [['نویسنده، طراح و کارگردان', 'محمدجواد ملک‌محمودی']] },
+  barfab: { tags: [['گروه', 'نمایشی صنم'], ['نویسنده و کارگردان', 'میثم رایکا']], line: 'نمایش درام مدرن' },
+  'do-daghighe': { tags: [['نویسنده و کارگردان', 'علی اصغری'], ['تهیه‌کننده', 'فاطمه مجریان']] },
+  aman: { tags: [['کارگردان', 'مجتبی جدی'], ['تهیه‌کننده', 'فرید مقدم']] },
+};
+function aboutOf(e) {
+  const h = hallOf(e), c = CREDITS[e.id] || {};
+  const text = e.desc || ({ concert: `شبی با اجرای زنده‌ی «${e.name}» در ${h.name}. درهای سالن یک ساعت پیش از شروع باز می‌شه و صندلی‌ها از قبل شماره‌گذاری شده‌ان.`, theatre: `نمایش «${e.name}» روی صحنه‌ی ${h.name}. اجرا سر وقت شروع می‌شه و پس از شروع، ورود به سالن ممکن نیست.`, comedy: `«${e.name}»، شبی پر از خنده در ${h.name}؛ برای همه‌ی خانواده.` }[e.kind] || '');
+  return { tags: c.tags || [], line: c.line || '', text };
+}
+// a map of the streets round the hall, drawn (no map service is called): blocks, parks, a river, roads and two avenues
+function mapSVG(e) {
+  const R = rngOf(seedOf(e.id + 'map')), W = 1200, H = 360;
+  let s = `<svg class="mp" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect class="mp-bg" width="${W}" height="${H}"/>`;
+  for (let i = 0; i < 64; i++) s += `<rect class="mp-b" x="${(R() * W) | 0}" y="${(R() * H) | 0}" width="${(36 + R() * 80) | 0}" height="${(22 + R() * 50) | 0}" rx="6"/>`;
+  for (let i = 0; i < 4; i++) s += `<ellipse class="mp-park" cx="${(R() * W) | 0}" cy="${(R() * H) | 0}" rx="${(46 + R() * 70) | 0}" ry="${(26 + R() * 40) | 0}"/>`;
+  const ry = H * (0.2 + R() * 0.6);
+  s += `<path class="mp-water" d="M-20 ${ry | 0} C ${W * 0.25 | 0} ${(ry - H * 0.3) | 0}, ${W * 0.5 | 0} ${(ry + H * 0.33) | 0}, ${W + 20} ${(ry - H * 0.1) | 0}"/>`;
+  const roads = [];
+  for (let i = 0; i < 14; i++) { const v = R() < 0.5, p = R(), a = R() * 0.2 - 0.1; roads.push(v ? `M${p * W | 0} -10 L${(p * W + a * H) | 0} ${H + 10}` : `M-10 ${p * H | 0} L${W + 10} ${(p * H + a * W) | 0}`); }
+  roads.forEach((d) => { s += `<path class="mp-r1" d="${d}"/>`; }); roads.forEach((d) => { s += `<path class="mp-r2" d="${d}"/>`; });
+  const av = [`M-20 ${H * 0.64 | 0} Q ${W * 0.45 | 0} ${H * 0.36 | 0} ${W + 20} ${H * 0.56 | 0}`, `M${W * 0.62 | 0} -20 Q ${W * 0.5 | 0} ${H / 2} ${W * 0.56 | 0} ${H + 20}`];
+  av.forEach((d) => { s += `<path class="mp-h1" d="${d}"/><path class="mp-h2" d="${d}"/>`; });
+  return `${s}</svg>`;
+}
+const RULES = [
+  'پس از خرید، جابه‌جایی یا پس دادن بلیت ممکن نیست؛ با دقت انتخاب کنید.',
+  'صندلی‌ها از لحظه‌ی انتخاب ۱۵ دقیقه برای شما نگه داشته می‌شن تا پرداخت تمام بشه.',
+  'تنها رسیدی که بلیت صادر می‌کنه نشانه‌ی خرید موفقه، نه پیامک بانک.',
+  'برای همه‌ی افراد بالای ۴ سال بلیت لازمه.',
+  'یک ساعت پیش از شروع در محل برگزاری باشید؛ پس از شروع، ورود ممکن نیست.',
+  'بلیت برای استفاده‌ی شخصیه و فروش دوباره‌ی اون مجاز نیست.',
+  'اگر برگزارکننده برنامه رو لغو کنه، همه‌ی مبلغ به کیف پول یا کارت شما برمی‌گرده.',
+  'هر مشکلی در خرید یا ورود به سالن رو از بخش پشتیبانی ثبت کنید.',
+];
+const STEPS = ['انتخاب سانس', 'انتخاب صندلی', 'رزرو و پرداخت', 'دریافت بلیت'];
+
+const page = {
+  on: false, el: $('#evp'), e: null, y: 0, accepted: new Set(), from: null, to: null, then: null, trail: [],
+  init() {
+    addEventListener('hashchange', () => this.route());
+    this.route(true);
+  },
+  // the address decides: #/e/<show> is a show's page, anything else is the home page
+  route(first) {
+    const m = /^#\/e\/([^/?#]+)/.exec(location.hash), e = m && showById(decodeURIComponent(m[1]));
+    if (e) {
+      const t = this.trail;
+      if (t.length > 1 && t[t.length - 2] === e.id) t.pop(); else if (t[t.length - 1] !== e.id) t.push(e.id);
+      this.show(e, first === true);
+    } else { this.trail = []; if (this.on) this.hide(); }
+  },
+  open(e, { from = null, to = null } = {}) {
+    this.from = from; this.to = to; if (!this.on) this.trail = []; this.fromList = true;
+    const h = `#/e/${encodeURIComponent(e.id)}`;
+    if (location.hash === h) this.route(); else location.hash = h;
+  },
+  // back to the list: through the browser's own history when the page was opened from it (so «back» stays honest)
+  close({ then } = {}) {
+    this.then = then || null;
+    const n = this.fromList ? this.trail.length : 0;
+    if (n > 0) history.go(-n);   // the hashchange that follows closes the page
+    else { this.trail = []; history.replaceState(null, '', location.pathname + location.search); this.hide(); }
+  },
+  // with a View Transition: the poster that was pressed flies into the page's poster (and back), the rest cross-fades
+  vt(change, fromEl, toSel) {
+    if (!document.startViewTransition || !MOTK() || modeFx.busy) { change(); return null; }
+    root.classList.add('vt-page');
+    if (fromEl) fromEl.style.viewTransitionName = 'poster';
+    let t;
+    try {
+      t = document.startViewTransition(() => {
+        if (fromEl) fromEl.style.viewTransitionName = '';
+        change();
+        const to = toSel && toSel(); if (to) { to.style.viewTransitionName = 'poster'; this.vtEl = to; }
+      });
+    } catch (err) { root.classList.remove('vt-page'); if (fromEl) fromEl.style.viewTransitionName = ''; change(); return null; }
+    t.finished.finally(() => { root.classList.remove('vt-page'); if (this.vtEl) { this.vtEl.style.viewTransitionName = ''; this.vtEl = null; } });
+    return t;
+  },
+  show(e, first) {
+    const from = this.from && this.from.isConnected && this.from.getBoundingClientRect().bottom > 0 && this.from.getBoundingClientRect().top < innerHeight ? this.from : null;
+    const was = this.on;
+    const change = () => {
+      if (!was) this.y = scrollY;
+      this.e = e; this.on = true; state.page = true; timer.sync(); closePop();
+      this.render(e);
+      root.classList.add('is-page');
+      scrollTo({ top: 0, behavior: 'instant' }); smoothScroll.stop();
+      scrollFx.apply(true); s2.toTop.sync();
+      document.title = `${e.title} · بلیت`;
+      this.enter(!vt);
+    };
+    const vt = !first && !!document.startViewTransition && !!MOTK() && !modeFx.busy;
+    const t = first ? (change(), null) : this.vt(change, from, () => $('.evp-poster img', this.el));
+    this.from = null;
+    const after = () => { if (this.to === 'sessions') this.toBook(); this.to = null; };
+    if (t) t.finished.then(after, after); else after();
+  },
+  hide() {
+    if (!this.on) return;
+    const e = this.e, y = location.hash === '#hero' ? 0 : this.y;
+    const change = () => {
+      root.classList.remove('is-page');
+      this.on = false; state.page = false; this.el.textContent = ''; this.e = null;
+      scrollTo({ top: y, behavior: 'instant' }); smoothScroll.stop();
+      s2.clampAll(); timer.sync(); scrollFx.apply(true); s2.probe(); s2.toTop.sync();
+      document.title = this.title0;
+    };
+    const card = () => { const im = $(`.tkt[data-id="${e.id}"]:not([hidden]) img, .ptk[data-id="${e.id}"] img`); if (!im) return null; const r = im.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight ? im : null; };
+    const pst = $('.evp-poster img', this.el);
+    const t = this.vt(change, pst && pst.getBoundingClientRect().bottom > 0 ? pst : null, card);
+    const done = () => { this.fromList = false; if (this.then) { const f = this.then; this.then = null; f(); } };
+    if (t) t.finished.then(done, done); else done();
+  },
+  // the page arrives: the steps' bar slides to step 1, the title's words rise one after another, the panels come up
+  enter(full) {
+    const k = MOTK(), el = this.el;
+    const bar = $('.steps .bar', el); if (bar) requestAnimationFrame(() => bar.classList.add('is-in'));
+    if (!k) return;
+    gsap.from($$('.evp-title .w', el), { y: 16 * k, opacity: 0, duration: 0.8, stagger: 0.05, ease: 'expo.out', delay: 0.12, clearProps: 'transform,opacity' });
+    gsap.from($$('.evp-rise', el), { y: 26 * k, opacity: 0, duration: 0.75, stagger: 0.045, ease: 'expo.out', delay: 0.06, clearProps: 'transform,opacity' });
+    if (full) gsap.from($('.evp-poster', el), { y: 24 * k, rotate: -3, opacity: 0, duration: 1.1, ease: 'expo.out', clearProps: 'transform,opacity' });
+  },
+  toBook() {
+    const b = $('#evpBook'); if (!b) return;
+    const top = b.getBoundingClientRect().top + scrollY - ($('#nav').getBoundingClientRect().bottom + 16);
+    if (Math.abs(top - scrollY) > 40) scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+    b.classList.remove('is-flash'); void b.offsetWidth; b.classList.add('is-flash');
+  },
+  render(e) {
+    const st = statusOf(e), h = hallOf(e), tiers = tiersOf(e), ses = sessionsOf(e), ab = aboutOf(e), dur = DUR[e.kind] || 100;
+    const { a: art, src } = artOf(e), cover = e.banner && !e.banner.sample && e.banner.src && !e.banner.fake ? e.banner.src : src;
+    const kindIcon = iconOfCat(e.kind), cat = catOf(e), [cd, cl] = secColor(cat);
+    const words = esc(e.title).split(' ').map((w) => `<span class="w">${w}</span>`).join(' ');
+    const open = !st.cta && st.key !== 'soon', timed = st.key === 'soon' && saleMs(e) > Date.now();
+    const acc = this.accepted.has(e.id);
+    const sesHTML = ses.length ? ses.map((x, i) => {
+      const d = new Date(x.t), full = x.seats === 0, low = !full && x.seats < 0.25;
+      const state = st.key === 'soon' ? 'soon' : full ? 'full' : low ? 'low' : 'ok';
+      const label = { soon: 'به‌زودی', full: 'تکمیل ظرفیت', low: 'رو به اتمام', ok: 'موجود است' }[state];
+      const btn = !open || full ? `<button type="button" class="ses-buy" disabled>${esc(st.key === 'soon' ? 'به‌زودی' : full ? 'تکمیل' : st.cta || 'خرید بلیت')}</button>` : `<button type="button" class="ses-buy" data-s="${i}"${acc ? '' : ' aria-disabled="true"'}>${ico('bag')}خرید بلیت</button>`;
+      return `<div class="ses" data-st="${state}" style="--d:${i * 70}ms"><div class="ses-stub"><b>${esc(F.week.format(d))}</b><span>${esc(`${F.day.format(d)} ${F.month.format(d)}`)}</span><i>${esc(F.time.format(d))}</i></div><div class="ses-body"><span class="ses-st">${ico(state === 'ok' ? 'check' : state === 'full' ? 'x' : 'clock')}${label}</span><span class="ses-cap" aria-label="ظرفیت باقی‌مانده">${ico('users')}<i style="--v:${full ? 0 : Math.max(0.06, x.seats).toFixed(2)}"></i></span></div>${btn}</div>`;
+    }).join('') : `<p class="ses-none">${st.key === 'held' ? 'این برنامه برگزار شده و فروش بلیتش تمام شده.' : 'سانسی برای فروش باز نیست.'}</p>`;
+    const steps = `<ol class="steps panel evp-rise" aria-label="مراحل خرید">${STEPS.map((n, i) => `<li${i === 0 ? ' aria-current="step"' : ''}><span class="n">${fa(i + 1)}</span>${n}</li>`).join('')}<i class="bar" aria-hidden="true"></i></ol>`;
+    const plan = tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(t.zone)}، ردیف ${fa(t.a)} تا ${fa(t.b)}</span><b>${money(t.price)} <small>تومان</small></b><em aria-hidden="true" style="--w:${(t.price / tiers.reduce((m, x) => Math.max(m, x.price), 1)).toFixed(3)}"></em></li>`).join('');
+    const similar = LIST().filter((x) => x !== e && x.kind === e.kind && !['held', 'cancelled'].includes(statusOf(x).key)).sort((a, b) => (a.city === e.city ? 0 : 1) - (b.city === e.city ? 0 : 1) || Date.parse(a.startsAt) - Date.parse(b.startsAt)).slice(0, 6);
+    this.el.innerHTML = `<div class="evp-in" style="--sc-d:${cd};--sc-l:${cl}">
+      <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
+      ${steps}
+      <section class="evp-cover panel${cover === src ? ' is-soft' : ''}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
+        <div class="evp-bg" aria-hidden="true"></div><span class="evp-motes" aria-hidden="true">${Array.from({ length: 10 }, (_, i) => `<i style="--m:${i}"></i>`).join('')}</span>
+        <figure class="evp-poster"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure>
+        <div class="evp-title">
+          <div class="evp-kind"><span>${ico(kindIcon)}${esc(e.type)}</span>${statusChip(e)}${e.badge ? `<em class="evp-badge">${esc(e.badge)}</em>` : ''}</div>
+          <h1>${words}</h1>
+          <p>${ico('pin')}${esc(h.name)}، ${esc(e.city)}<span aria-hidden="true">·</span>${ico('calendar')}${esc(e.w.short)}</p>
+        </div>
+        <div class="evp-tools"><button type="button" class="ev-ic" data-act="save" aria-pressed="false" aria-label="نشان کردن">${ico('heart')}</button><button type="button" class="ev-ic" data-act="share" aria-label="هم‌رسانی">${ico('share')}</button></div>
+      </section>
+      <div class="evp-cols">
+        <div class="evp-main">
+          <section class="evp-facts panel evp-rise" aria-label="مشخصات اجرا">
+            <div class="fact"><span class="fi">${ico('calendar')}</span><span><small>دوره‌ی اجرا</small><b>${esc(e.w.short)}</b></span></div>
+            <div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(e.w.time)} · ${fa(dur)} دقیقه</b></span></div>
+            <div class="fact wide"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${esc(h.name)}</b><em>${esc(h.addr)}</em></span></div>
+          </section>
+          <section class="evp-map panel evp-rise" aria-label="نقشه">${mapSVG(e)}<span class="mp-pin" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12.1A7 7 0 0 0 5 9.9C5 15.8 12 22 12 22z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+            <div class="mp-zoom"><button type="button" data-z="1" aria-label="بزرگ‌نمایی نقشه">${ico('plus')}</button><button type="button" data-z="-1" aria-label="کوچک‌نمایی نقشه">${ico('minus')}</button></div>
+            <button type="button" class="mp-route" data-act="route">${ico('route')}مسیریابی</button></section>
+          <section class="evp-about panel evp-rise" aria-labelledby="evpAboutH">
+            <h2 id="evpAboutH">${ico('info')}درباره‌ی اجرا</h2>
+            ${ab.tags.length ? `<div class="evp-tags">${ab.tags.map(([k, v]) => `<span><small>${esc(k)}</small>${esc(v)}</span>`).join('')}</div>` : ''}
+            ${ab.line ? `<p class="evp-line">${esc(ab.line)}</p>` : ''}
+            <p>${esc(ab.text)}</p>
+          </section>
+          <section class="evp-plan panel evp-rise" aria-labelledby="evpPlanH">
+            <h2 id="evpPlanH">${ico('ticket')}طرح بها<small>+ ۱۰٪ مالیات بر ارزش افزوده</small></h2>
+            <ul>${plan}</ul>
+          </section>
+        </div>
+        <aside class="evp-side">
+          <section class="evp-book panel evp-rise" id="evpBook" aria-labelledby="evpBookH">
+            <h2 id="evpBookH">${ico('calendar')}انتخاب سانس${ses.length ? `<small>${fa(ses.length)} سانس</small>` : ''}</h2>
+            ${timed ? `<div class="evp-sale"><span>شروع فروش · ${esc(saleWhen(e))}</span><div class="ptk-cd" data-sale-box="${esc(e.id)}"><span class="cd-b" aria-hidden="true">${unitHTML('d', 'روز', 0)}<em>:</em>${unitHTML('h', 'ساعت', 0)}<em>:</em>${unitHTML('m', 'دقیقه', 0)}<em>:</em>${unitHTML('s', 'ثانیه', 0)}</span></div></div>` : ''}
+            ${open ? `<label class="evp-rules${acc ? ' is-on' : ''}"><input type="checkbox" id="evpRules"${acc ? ' checked' : ''}><span class="box" aria-hidden="true">${ico('check')}</span><span>اینجانب <a href="#" data-act="rules">قوانین خرید</a> را خوانده‌ام و همه‌ی شرایط را می‌پذیرم.</span></label>` : ''}
+            <div class="ses-list">${sesHTML}</div>
+            <p class="evp-note">${ico('tag')}<span>از <b>${esc(dg(e.price))} ${esc(TXT.unit)}</b> · قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان.</span></p>
+          </section>
+        </aside>
+      </div>
+      ${similar.length ? `<section class="evp-more panel evp-rise" aria-labelledby="evpMoreH"><h2 id="evpMoreH">${ico(kindIcon)}${esc({ concert: 'کنسرت‌های دیگه', theatre: 'نمایش‌های دیگه', comedy: 'جُنگ‌ها و کمدی‌های دیگه' }[e.kind] || 'برنامه‌های دیگه')}</h2><div class="tkt-grid"></div></section>` : ''}
+      <div class="evp-cta" aria-hidden="false"><span>از <b>${esc(dg(e.price))}</b> ${esc(TXT.unit)}</span><button type="button" class="buy" data-act="book">${ico('calendar')}انتخاب سانس</button></div>
+    </div>`;
+    const grid = $('.evp-more .tkt-grid', this.el); if (grid) similar.forEach((x) => grid.appendChild(s2.card(x, false)));
+    const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', this.el).appendChild(c); this.wireFooter(c); }
+    $$('.evp-more .tkt', this.el).forEach((c) => c.classList.add('is-in'));
+    this.wire(e, ses);
+    sale.tick();
+  },
+  wire(e, ses) {
+    const pim = $('.evp-poster img', this.el), { a: pa } = artOf(e);
+    if (pim) pim.onerror = () => { pim.onerror = null; const u = pa.fake || (pa.fake = fakeArt(e, e.poster ? { w: 2, h: 3 } : pa)); pim.src = u; const cv = $('.evp-cover', this.el); cv.style.setProperty('--pa', `url('${u}')`); if (!e.banner || e.banner === pa) cv.style.setProperty('--art', `url('${u}')`); };
+    const el = this.el, on = (sel, f) => $$(sel, el).forEach((x) => x.addEventListener('click', (ev) => { ev.preventDefault(); f(x, ev); }));
+    on('[data-back]', () => this.close());
+    on('.evp-crumb [data-cat]', (a) => { const k = a.dataset.cat; this.close({ then: () => s2.go(k) }); });
+    on('[data-act="rules"]', () => this.rules());
+    on('[data-act="book"]', () => this.toBook());
+    on('[data-act="route"]', () => toast(`اینجا مسیریاب (نشان، بلد یا گوگل‌مپ) با نشانی «${hallOf(e).addr}» باز می‌شه.`));
+    on('[data-act="save"]', (b) => { const p = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', String(p)); toast(p ? 'به برنامه‌های نشان‌شده‌ات اضافه شد.' : 'از نشان‌شده‌ها برداشته شد.'); });
+    on('[data-act="share"]', async () => {
+      const url = location.href, data = { title: e.title, text: `${e.title} · ${e.w.short}`, url };
+      try { if (navigator.share) { await navigator.share(data); return; } await navigator.clipboard.writeText(url); toast('نشانی این صفحه کپی شد.'); } catch (err) { toast('نشانی این صفحه: ' + url); }
+    });
+    // the rules: until they are accepted, a session's buy button shakes the box and says so
+    const chk = $('#evpRules', el);
+    const sync = () => { const ok = chk && chk.checked; $$('.ses-buy[data-s]', el).forEach((b) => { if (ok) b.removeAttribute('aria-disabled'); else b.setAttribute('aria-disabled', 'true'); }); if (chk) chk.closest('.evp-rules').classList.toggle('is-on', ok); };
+    if (chk) chk.addEventListener('change', () => { if (chk.checked) this.accepted.add(e.id); else this.accepted.delete(e.id); sync(); });
+    on('.ses-buy[data-s]', (b) => {
+      if (b.getAttribute('aria-disabled') === 'true') {
+        const r = $('.evp-rules', el); r.classList.remove('is-shake'); void r.offsetWidth; r.classList.add('is-shake');
+        toast('اول قوانین خرید رو بخون و تیکش رو بزن.'); return;
+      }
+      const s = ses[+b.dataset.s], d = new Date(s.t);
+      $$('.ses', el).forEach((x) => x.classList.remove('is-picked')); b.closest('.ses').classList.add('is-picked');
+      toast(`سانس ${F.week.format(d)} ${F.day.format(d)} ${F.month.format(d)}، ساعت ${F.time.format(d)}. مرحله‌ی بعد (انتخاب صندلی) بخش بعدیه که با تأیید تو ساخته می‌شه.`);
+    });
+    // the map zooms round the hall
+    let z = 1; const mp = $('.mp', el);
+    on('.mp-zoom [data-z]', (b) => { z = clamp(z + +b.dataset.z * 0.4, 1, 2.6); mp.style.transform = `scale(${z})`; });
+  },
+  rules() {
+    const box = document.createElement('div'); box.className = 'evp-modal'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'قوانین خرید');
+    box.innerHTML = `<div class="evp-dlg panel"><h2>${ico('shield')}قوانین خرید</h2><ol>${RULES.map((r) => `<li>${esc(r)}</li>`).join('')}</ol><div class="evp-dlg-end"><button type="button" class="buy" data-ok>${ico('check')}خوندم و می‌پذیرم</button><button type="button" class="chip" data-x>بستن</button></div></div>`;
+    $('#app').appendChild(box);
+    const prev = document.activeElement, k = MOTK();
+    const shut = (ok) => {
+      if (ok) { const c = $('#evpRules'); if (c && !c.checked) { c.checked = true; c.dispatchEvent(new Event('change')); } }
+      document.removeEventListener('keydown', key, true);
+      gsap.to(box, { opacity: 0, duration: 0.25, onComplete: () => box.remove() }); if (prev) prev.focus();
+    };
+    const key = (ev) => { if (ev.key === 'Escape') { ev.preventDefault(); shut(false); } else if (ev.key === 'Tab') { const f = $$('button, a', box); const i = f.indexOf(document.activeElement); if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); } } };
+    document.addEventListener('keydown', key, true);
+    box.addEventListener('click', (ev) => { if (ev.target === box || ev.target.closest('[data-x]')) shut(false); else if (ev.target.closest('[data-ok]')) shut(true); });
+    gsap.fromTo(box, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    gsap.fromTo($('.evp-dlg', box), { y: 24 * k, scale: 0.97 }, { y: 0, scale: 1, duration: 0.6, ease: 'expo.out', clearProps: 'transform' });
+    gsap.from($$('.evp-dlg li', box), { x: -14 * k, opacity: 0, duration: 0.5, stagger: 0.035, ease: 'expo.out', delay: 0.1, clearProps: 'transform,opacity' });
+    $('[data-ok]', box).focus();
+  },
+  wireFooter(ft) {
+    $$('[data-go]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const k = a.dataset.go; if (k === 'top') scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); else this.close({ then: () => s2.go(k) }); }));
+    $$('[data-page]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }));
+  },
+  title0: document.title,
 };
 
 /* ════════════════════════════════════════════════════════════════
@@ -3033,6 +4011,7 @@ panel.init();
 look.init();
 hd.init();
 s2.init();
+page.init();
 fx.init();
 scrollFx.init();
 smoothScroll.init();
@@ -3061,7 +4040,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

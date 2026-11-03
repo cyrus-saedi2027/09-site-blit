@@ -9,7 +9,7 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, the eighth owner round (the fifth round of version 9 itself). History of v9:
+**Status:** v9, the ninth owner round (the sixth round of version 9 itself). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
@@ -18,6 +18,7 @@
 - *Round F*: «now let's build the rest» (the list in `../../BRIEF.md`) and one note: «make the city part bigger from left and right, and put almost all the cities in it, only the counties not yet, because the names are not read whole». Built in the hero and the header, **without changing anything the owner approved** (the panels, the sizes, the motion are as they were): the **city button** is wider and the **city menu** is a wide grid of 32 cities (§9); the **status labels** (§9.1); the **sale-start countdown** (§9.1); the header's **categories** as menus that take the page to a list (§9.2). The sample keeps the dates the banners print (§13).
 - *Round G*: «take more ideas from the sample I gave you; I don't much like what you made for the next sections: the layouts and arrangements (**don't change the first section any more**, it turned out good)». The hero and the header were not touched (their panels are pixel-identical to the version the owner last saw: `tools/parity2.js`; only what round F added to the header and the rail's cards changed). The section under the hero was **made again after the sample's home page**: a category bar with a sliding pill that follows the page, a section for each category (name, how many, tickets), ticket-shaped cards with a perforation, labels, the countdown, a stamp for a full show and a tag for the city, and a footer with the trust badges' slots (§10). The old head panel, the filter chips and the three numbers are gone.
 - *Round H*: «I didn't much like it, especially since the organisers give **tall posters**; every place except the home page's first section must be poster-style; and put real posters, other concerts and theatre shows, from other Iranian ticket sites». The hero and the header are untouched. The list's cards are now **poster cards** (§10): a tall frame (2 : 3) with the poster whole, the words under it (or over it, as in the sample: an option), 6 across at 1920. The sample's content grew to the owner's own sample (its 26 events and their photos as posters) plus six finished posters and the real posters the owner sent (3 of the 6 real shows and SkyKings). **What could not be done:** the Iranian ticket sites do not answer from the server this was built on (every request is reset), so posters could not be fetched from them; the owner can send posters (a zip, as with the banners) or put them in from the panel (§14).
+- *Round I*: «use the sample I gave you more; make the sections more separate so they are clearer; add the **white theme** to the header so I can see it, and make the theme's change very smooth and attractive; I want it stronger, I'm still not that happy; then build the **next section**». The hero's panels and motion are untouched (pixel-identical in the dark theme: `tools/parity2.js`); the header gained one button. Built: a **light (white) theme** for the whole site, turned by a sun/moon button in the header, the new colours opening as a circle from the button (§9, §12); the list redone after the sample's home page (§10, *the list in round I*): the sample's search and city on top, every category **a panel of its own** with its own colour, icon and head, two rows and «نمایش همه», the presale as wide tickets with a big flip countdown, the sample's white buy buttons, its back-to-top ring and its trust badges; and the next section, **the show's page** (§10.1): the first of the four steps of a purchase (choose the session), after the sample's event page.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -25,7 +26,7 @@ What comes from where:
 
 | From v8 | From v7 | New in v9 |
 |---|---|---|
-| the panels, the solid colours, the two layouts, the facts panel, the scenes and their fades, the admin panel, the palette | the picture's zoom-out and fade; the capsule header | panels that tile the window; a banner panel that takes what is left; cards with a line of words under them; the look system (67 settings, 10 modes, copy/paste); 16 colours and light panels; a fixed header that becomes a pill; the search window; the second section and the pinned hero; the measuring layer; the preview sizes. **Removed:** the music |
+| the panels, the solid colours, the two layouts, the facts panel, the scenes and their fades, the admin panel, the palette | the picture's zoom-out and fade; the capsule header | panels that tile the window; a banner panel that takes what is left; cards with a line of words under them; the look system (75 settings, 10 modes, copy/paste); 16 colours and light panels; a fixed header that becomes a pill; the search window; the second section and the pinned hero; the measuring layer; the preview sizes. **Removed:** the music |
 
 Shared with earlier versions and unchanged:
 - **Sizing unit:** `--u` (`../v5/SPEC.md`).
@@ -189,6 +190,8 @@ The nearest piece to the header's edge (the login button) is 10.2 px away at eve
 
 A 2px line in the ring colour along the bottom edge shows how far down the page is (`--pg`). The morph, its width and the line can be switched off. The header never wraps or overflows during the morph (`overflow: hidden`, popups are separate elements).
 
+**The theme button** (round I): a round button like the bell, between the bell and the login button; it stays in the narrow header and on a phone. It shows a **sun** in the dark theme and a **moon** in the light one (the sun's disc grows and a dark circle slides over its corner; the rays turn and shrink away; 0.8 s, `--ease`). A press changes `LOOK.mode` (dark ⇄ light, kept with the look). The change is a **View Transition**: the page as it was is captured, the page in the new theme is shown through a **circle that grows from the button** to the farthest corner (`clip-path: circle()`, 1.15 s, `cubic-bezier(.76, 0, .24, 1)`), while the old page under it sinks back a little (scale 1 → 0.965, darker going to light, brighter going to dark). While it runs, nothing else animates its colours (`.vt-mode`: every transition is 0 s, except the icon's). Options (`themeFx`): the circle (default), a soft fade, none. A browser without View Transitions cross-fades every colour that comes from the theme (`.mode-fade`, 0.8 s); with reduced motion the colours change at once.
+
 ### The city button and the city menu
 
 The button is **as wide as the longest name needs, and the same width for every name** (so the search field beside it never moves when a city is picked): `width: ib + max(112 px of the 1920 design, enough for «بندرعباس» + the icons at the type size's floor)`, a select-like layout (the pin, the name from the start, the chevron at the end). At 1920 it is 154 px (it was at most 126, and cut «بندرعباس»); at 1280×720 it is 121 px; checked at five window sizes for every name (`tools/status-test.js`). In the narrow header it is, as before, a round icon (its width goes to the icon's, with the words fading first).
@@ -236,6 +239,40 @@ The brief's six automatic categories come from a show's **kind** (کنسرت، �
 
 Pieces rise as they come into view (`IntersectionObserver`; a card that has been seen doesn't rise again when the list is redrawn). The list is drawn again a moment after the last change in the settings' fields (160 ms, so typing doesn't redraw twenty cards on every key), at once on a kind, city, status or colour change. Layout shift while the whole page is scrolled through: 0.0004 from the list (the sliding pill), the rest is the header's own width morph (§18).
 
+**The list in round I** («use the sample more; make the sections more separate»). From top to bottom:
+
+1. **The search and the city** (`.s2-top`, as on the sample's home page): a wide panel with a field, its answers open under it while you type (up to six: the poster, the name with the typed words marked, the hall and the day, the status label; «N نتیجه‌ی دیگه» when there are more); the arrows move, Enter opens the show's page, Esc closes. Beside it the **city** (`شهر: همه‌ی شهرها`): the 32 cities in a grid with how many shows each has; a city **filters the whole list** (every section, the bar's pills), a line under the bar says so with «همه‌ی شهرها ×». The header's city menu sets the same city (its old message «اجراهای … رو نشون می‌دم» is now true).
+2. **The category bar**: as before, but the sliding pill and the icon of the pill in view take **the colour of that section**.
+3. **Each category is a panel of its own** (`.tkt-sec.panel`), with a gap of two gaps between panels. Each kind has **its own colour** (`SEC_COLOR`: presale sky `#38bdf8`, concerts violet `#a78bfa`, theatre rose `#fb7185`, comedy amber `#fbbf24`; deeper tones on the light theme): a line of it on the panel's top edge, a glow of it in the panel's corner, a breath of it in the panel's colour (5 % dark, 2.5 % light), and the head's **icon tile** (46 px, the kind's icon). The head: the name (19–27 px), under it how many shows and the days they cover («۱۲ برنامه · ۷ آبان تا ۲۴ آذر»; for the presale: the nearest sale's start). The sections of the other cities have **city chips** (همه، اصفهان ۱، مشهد ۱ …) that filter that section. A section shows **two rows** (`secRows`: 1, 2, 3 or all) and then «نمایش همه‌ی N برنامه» (the rest rise in, a stagger of 50 ms; «بستن» closes and brings the section's head back into view).
+4. **The presale** (`presale: wide`; `cards` makes it like the others, as in the sample): **wide tickets**, three in a row at 1920 (two under 1500 px, one under 1000 px), a short last row in the middle. The poster (2 : 3, 11.4u wide) on one side of a **vertical perforation** with a notch at its top and bottom, and on the other: a «پیش‌فروش» label and the kind, the name (18–27 px), the hall and the days, **when the sale starts** («شروع فروش · سه‌شنبه ۱۲ آبان، ساعت ۱۶:۴۲») and a **big countdown** (days : hours : minutes : seconds, read left to right like the cards' clock; each number **turns over like a flip clock** when it changes: `rotateX(-88°) → 0`, 0.55 s), the lowest price and «یادم بنداز» (it turns white with a little ring of the bell; «ده دقیقه قبل از شروع فروش … پیامک می‌گیری»).
+5. **The poster cards** as in round H, plus: the buy button is **white**, as in the sample (`buyStyle: accent` gives each show's own colour); a **sheen** crosses the poster once when the pointer arrives (as the sample's «glare»); every countdown's numbers turn over; a poster, its name and its buy button open **the show's page** (the buy button opens it at the sessions).
+6. **Back to the top** (bottom right, as in the sample): a round button with a ring that fills as the page goes down; it shows once the hero is passed.
+7. **The footer**: a line of the three kinds' colours on its top edge, a «تماس با ما» link, and the two trust badges' places as **cards with an icon** (as in the sample: «نماد اعتماد الکترونیکی»، «نشان ساماندهی»).
+
+---
+
+## 10.1 The show's page (the next section)
+
+The first of the four steps of a purchase (**choose the session** → the seats → book and pay → the ticket), after the sample's event page (`#/e/{slug}`), on our panels. Its address is **`#/e/<show>`** (a shared link opens it; the browser's back button closes it). The home page steps aside (`.is-page`: the hero and the list are hidden, not destroyed) and comes back **where it was** (the scroll is kept); «همه‌ی برنامه‌ها» goes back through every show opened since the list (the history stays honest). The hero's timer stops while the page is open.
+
+**In and out.** A poster that is pressed **flies** into the page's poster (a View Transition with `view-transition-name: poster`, 0.72 s) while the rest fades out and the page rises in (0.42 s / 0.62 s); closing flies it back into its card when the card is on the screen. The page's panels rise one after another (26 px, 0.75 s, a stagger of 45 ms), the title's words rise one by one (50 ms apart), the steps' bar slides under step 1. Without View Transitions or with reduced motion: no flight, the panels just appear.
+
+From top to bottom:
+
+1. **A path**: «← همه‌ی برنامه‌ها / کنسرت‌های تهران / name» (the category takes the list to its section).
+2. **The steps** (a panel): four steps with their numbers, the current one dark-on-light with a bar in the section's colour under it.
+3. **The cover** (a panel, 300–470 px tall): the show's **banner** behind (drifting slowly, 24 s), or, when the show has no banner, its **poster softened** (blur 34 px), darkened toward the words; a few **motes** float up in its light (the sample's «motes»); the **poster** stands on it (13.2u wide, tilted a little in 3D, straightens on hover); the kind (an icon and «کنسرت»), the status label and the show's own label; the **title** (26–45 px, weight 900, its words rise); the hall, the city and the days. At its corner: **نشان کردن** (a heart) and **هم‌رسانی** (the system's share sheet, or the address copied).
+4. Two columns on a wide window (on a phone, and under 1100 px, one; the sessions come right after the facts):
+   - **The facts** (a panel): the days, the hour and how long (concert 120, theatre 90, comedy 100 minutes), the hall and its **address** (`HALLS`: the real public addresses of the halls of the sample and of the six shows; an unknown hall shows its own name), each with an icon tile in the section's colour.
+   - **The map** (a panel, 190–300 px): the streets round the hall **drawn** from the show's id (blocks, parks, a river, roads, two avenues; the theme's colours, the sample's on the light theme), the hall's **pin** dropping in with a pulse under it, zoom (+ −, up to 2.6×) and «مسیریابی» (Neshan, Balad or Google Maps later).
+   - **About** (a panel): the show's people as **gradient tags** (as in the sample: «نویسنده فرهاد تقدعلی»، «کارگردان شیوا علیخانیان» …, from the six real shows' banners), a line in red when the show has one, and its text.
+   - **The price plan** (a panel, «طرح بها + ۱۰٪ مالیات بر ارزش افزوده»): each run of rows of each zone (همکف، بالکن …, by the hall's size) with **the colour of its tier** (A violet, B pink, C orange, D sky, as in the sample), its price in toman and a bar that shows how dear it is. The cheapest tier is the show's «قیمت از»; the others are steps above it (×1.25, ×1.6, ×2.2, rounded to 10,000) until the organiser's real prices come from the admin panel.
+   - **The sessions** (a panel that **follows the page** on a wide window): «انتخاب سانس» and how many; for a presale show, the sale's start and the big flip countdown; **the rules to accept** («اینجانب قوانین خرید را خوانده‌ام و همه‌ی شرایط را می‌پذیرم»; the link opens the rules in a window with «خوندم و می‌پذیرم»); then each session as a **small ticket**: a dark stub with the weekday, the day and the hour, a perforation with notches, its state (موجود است · رو به اتمام · تکمیل ظرفیت · به‌زودی) and a bar of the seats left, and «خرید بلیت». Until the rules are accepted, «خرید بلیت» is dim and a press **shakes** the rules' box and says so; once accepted, a session is chosen (a ring in the section's colour) and step 2 (the seats) is the next section to build. A line at the end: «از ۹۸۰ هزار تومان · قیمت‌ها بدون ۱۰٪ مالیات…».
+5. **More of the same kind** (a panel): up to six poster cards (same city first); each opens its own page.
+6. **The footer** (the same as the list's).
+
+On a phone a **bar at the bottom** says the lowest price and «انتخاب سانس» (it takes you to the sessions, which flash in the section's colour). The sessions' seats and the map are made from the show's id, so they are the same on every visit; the real ones come from the hall's seat map and the sale.
+
 ---
 
 ## 11. The look: what the owner can change
@@ -272,11 +309,19 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 | `posterRatio` | لیست زیر هیرو · نسبت کادر پوستر (عرض ÷ ارتفاع) | ۰٫۵–۱ | ۰٫۶۶۷ (۲ به ۳) |
 | `posterInfo` | لیست زیر هیرو · نوشته‌های کارت | زیر پوستر / روی پوستر | زیر پوستر |
 | `listFill` | لیست زیر هیرو · اجراهای نمونه برای پر کردن لیست | روشن / خاموش | روشن |
+| `secRows` | لیست زیر هیرو · ردیف‌های هر بخش (بقیه با «نمایش همه») | ۱ / ۲ / ۳ / همه | ۲ |
+| `listCols` | لیست زیر هیرو · تعداد پوستر در هر ردیف (پنجره‌ی پهن) | خودکار / ۵ / ۶ / ۷ / ۸ | خودکار (۶ در ۱۹۲۰) |
+| `presale` | لیست زیر هیرو · بخش پیش‌فروش | بلیت افقی با شمارنده‌ی بزرگ / مثل بقیه | بلیت افقی |
+| `buyStyle` | لیست زیر هیرو · دکمه‌ی خرید کارت‌ها | سفید (مثل نمونه) / رنگ خود اجرا | سفید |
 
 **تب «سبک»**
 
 | کلید | چی رو عوض می‌کنه | مقدارها | پیش‌فرض |
 |---|---|---|---|
+| `mode` | تم سایت · تم (دکمه‌ی خورشید و ماه هدر هم همین رو عوض می‌کنه) | تیره / روشن (سفید) | تیره |
+| `lightPanel` | تم سایت · رنگ کادرها در تم روشن | ۴ رنگ + دلخواه | `#ffffff` |
+| `lightBg` | تم سایت · زمینه‌ی صفحه در تم روشن | ۵ رنگ + دلخواه | `#eceef3` |
+| `themeFx` | تم سایت · حرکت عوض‌شدن تم | دایره از دکمه / محو نرم / بدون حرکت | دایره |
 | `radius` | گوشه‌ها و لبه‌ها · گردی گوشه‌ی کادرها | 0–60 px | 19 |
 | `radiusThumb` | گوشه‌ها و لبه‌ها · گردی کارت‌ها و عکس‌ها | 0–40 px | 7 |
 | `btn` | گوشه‌ها و لبه‌ها · شکل دکمه‌ها | pill / soft / sharp | pill |
@@ -346,6 +391,8 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 ## 12. Colours
 
 Sixteen sets (`PALETTE`): violet, blue, teal, green, gold, orange, crimson, pink, **white, silver, black**, cyan, lime, yellow, indigo, brown, and a colour of the owner's (`custom`, the other values are made from it). A set is: `accent` (the buy button's fill, the date's band), `light` (the badge's text), `onAccent` (the text on the fill), `ring` (the thin things: the active card's ring and glow, the hairline, the dot, the time sign, the logo's bars; the accent itself unless the accent is too dark to be seen on a dark panel, as black is: then white). The picture suggests one of the first eight on upload (`suggestPalette()`); on the six sample banners it gives crimson, orange, crimson, violet, orange and violet (a black-and-white picture gets the brand violet); the sample data hand-picks gold for the golden concert banner and white for the black-and-white one.
+
+**The light theme** (round I, `mode: light`). The look keeps two sets of page colours: the dark one (`panelColor`, `bg`, `bgColor`, `textColor`: what the owner approved) and the light one (`lightPanel` white, `lightBg` `#eceef3`; the words follow the panels: `#110e1a`). `theme()` writes `--capsule`, `--fg`, `--bg` for the theme in use and `data-mode` on the page; the stylesheet adds what a light page needs: shadows at a fifth (`--shk: .2`), the veil over the hero (when the list slides over it) in the page's colour instead of black, the browser's own light parts (`color-scheme`), a softer shadow for the menus and the search window, and the phone's bars in the page's colour (`<meta name="theme-color">`). What is a picture stays dark: the stage behind the banner (`--stage: #0b0a10`, so the fade between two banners goes through dark, as in a cinema), the words of the poster cards (they sit on a soft dark copy of the poster, as in the sample), the presale tickets, the cover of the show's page. The status labels and the sections' colours have a deeper tone on light panels.
 
 ---
 
