@@ -374,6 +374,7 @@ shift.
   occupancy), the last two hours of sales by 5 minutes (columns with a readout and a table), the last purchases (live),
   the sessions ahead (sold of capacity), the best sellers (ranked bars).
 - برنامه‌ها: what is on the site, what waits for the admin, the drafts and what came back (with the reason).
+  **نقشه‌ی فروش** (`#/org/show/<show>`): a session at a time, its hall with every seat in its state, live (sold in its tier's colour, held as a ring, free, not for sale), each section's sold of capacity, the money by tier.
 - برنامه‌ی جدید (six steps, a draft at every step, the card as it will look in the list beside them): what it is; the
   poster (a file, scaled in the browser; or a stand-in from the name and a colour); the hall from the **library**, each
   with its plan drawn small; the sessions on a **Persian calendar** (days × hours) and the sale's start (at once, or a time

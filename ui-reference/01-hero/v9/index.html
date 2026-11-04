@@ -1967,6 +1967,15 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
   .vz-bars path, .vz-rank i::after, .gt-d i::after, #gtSpark i, .gt-ring .fg, .wz-steps .bar, .dk-tabs a, .wz-hall, .gt-ses, .q-line i, .wz-days button, .rc-card { transition: none !important; }
 }
 
+/* the organiser's sales map */
+.os-ses { justify-content: flex-start; margin: 0; }
+.os-ses .chip[aria-checked="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.os-map { height: auto; aspect-ratio: 4 / 3; max-height: 640px; }
+.os-map circle { transition: fill .5s; }
+.os-leg { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin-top: .8em; }
+.dk-tile > b small { font-size: .5em; font-weight: 600; color: rgba(var(--fg), .55); }
+.os-leg i.os-ring { background: none; box-shadow: inset 0 0 0 2.5px var(--c); border-radius: 50%; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -6099,7 +6108,7 @@ const desk = {
     page.el.innerHTML = `<div class="evp-in dk dk-${v.kind}">
       <aside class="dk-nav panel evp-rise" aria-label="${esc(D.title)}">
         <div class="dk-who"><span class="dk-av" aria-hidden="true">${esc(D.av)}</span><span><b>${esc(D.who)}</b><small>${esc(D.role)}</small></span></div>
-        <nav class="dk-tabs">${tabs.map((t) => `<a href="#/${v.kind}${t.id === 'home' ? '' : `/${t.id}`}"${t.id === tab.id ? ' aria-current="page"' : ''}>${ico(t.icon)}<span>${esc(t.t)}</span>${t.n ? `<small>${esc(t.n)}</small>` : ''}</a>`).join('')}</nav>
+        <nav class="dk-tabs">${tabs.filter((t) => !t.parent).map((t) => `<a href="#/${v.kind}${t.id === 'home' ? '' : `/${t.id}`}"${t.id === tab.id || t.id === tab.parent ? ' aria-current="page"' : ''}>${ico(t.icon)}<span>${esc(t.t)}</span>${t.n ? `<small>${esc(t.n)}</small>` : ''}</a>`).join('')}</nav>
         <div class="dk-foot">${D.foot || ''}<a href="#" data-home>${ico('arrow-r')}برگشت به سایت</a></div>
       </aside>
       <div class="dk-main" id="dkMain"></div></div>`;
@@ -6139,6 +6148,7 @@ const org = {
       { id: 'settle', t: 'فروش و تسویه', icon: 'bag', render: this.settle },
       { id: 'codes', t: 'کدهای تخفیف', icon: 'tag', render: (el) => codes.render(el) },
       { id: 'staff', t: 'کنترل‌چی‌ها', icon: 'users', render: this.staff },
+      { id: 'show', t: 'نقشه‌ی فروش', icon: 'ruler', parent: 'shows', render: this.show },
     ];
   },
 
@@ -6203,12 +6213,47 @@ const org = {
       <div class="dk-show-n">${o.cap ? `<span class="dk-meter" style="--p:${(o.sold / o.cap).toFixed(3)}"><i></i></span><small>${money(o.sold)} از ${money(o.cap)} بلیت · ${fa(o.n)} سانس</small><b>${short(o.gross)} تومان</b>` : `<small>${esc(o.hint || '')}</small>`}</div>
       <div class="dk-show-a">${o.acts}</div></article>`;
     const rows = own.map((d) => ({ title: d.title || 'برنامه‌ی بی‌نام', src: d.poster || '', line: `${d.city || '—'} · ${d.venue || 'سالن انتخاب نشده'} · ${fa((d.days || []).length * (d.times || []).length)} سانس`, st: desk.status(d.status), note: d.status === 'rejected' && d.note ? `دلیل: ${d.note}` : d.status === 'review' ? `فرستاده شد ${ago(d.sent || d.at)}` : '', hint: d.status === 'draft' ? 'هنوز فرستاده نشده؛ تا تأیید مدیر روی سایت نمی‌آد.' : '', acts: d.status === 'live' ? `<a class="chip" href="#/e/${esc(encodeURIComponent(d.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a>` : `<a class="chip" href="#/org/new/${esc(encodeURIComponent(d.id))}">${ico('sliders')}${d.status === 'review' ? 'دیدن' : 'ادامه‌ی ساختن'}</a>` }));
-    const lives = live.map((e) => { const x = showStats(e), h = hallOf(e), { src } = artOf(e); return { title: e.title, src, line: `${e.city} · ${h.name}`, st: ['منتشر شده', 'good'], ...x, acts: `<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a><a class="chip" href="#/org/codes" data-code="${esc(e.id)}">${ico('tag')}کد تخفیف</a>` }; });
+    const lives = live.map((e) => { const x = showStats(e), h = hallOf(e), { src } = artOf(e); return { title: e.title, src, line: `${e.city} · ${h.name}`, st: ['منتشر شده', 'good'], ...x, acts: `${x.n ? `<a class="chip" href="#/org/show/${esc(encodeURIComponent(e.id))}">${ico('ruler')}نقشه‌ی فروش</a>` : ''}<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a><a class="chip" href="#/org/codes" data-code="${esc(e.id)}">${ico('tag')}کد تخفیف</a>` }; });
     el.innerHTML = `${desk.head('برنامه‌ها', `${fa(lives.length)} برنامه روی سایت${own.length ? ` · ${fa(own.length)} برنامه‌ی ساخته‌شده تو پنل` : ''}. هر برنامه‌ی تازه یا هر تغییر تا تأیید مدیر روی سایت نمی‌آد.`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
       ${rows.length ? `<h2 class="dk-sub evp-rise">ساخته‌شده تو پنل</h2><div class="dk-shows">${rows.map(card).join('')}</div>` : ''}
       <h2 class="dk-sub evp-rise">روی سایت</h2><div class="dk-shows">${lives.map(card).join('')}</div>`;
     $$('img', el).forEach((im) => { im.onerror = () => { im.onerror = null; im.closest('figure').classList.add('is-none'); }; if (!im.getAttribute('src')) im.closest('figure').classList.add('is-none'); });
     $$('[data-code]', el).forEach((a) => a.addEventListener('click', () => store.sset('blit.codeFor', a.dataset.code)));
+  },
+
+  // one show's sales, live: a session at a time, its hall with every seat in its state (sold in its tier's colour, held, free,
+  // not for sale), each section's sold of capacity, the money by tier
+  show(el, v) {
+    const e = v.arg && showById(v.arg), ses = e ? sessionsOf(e) : [];
+    if (!e || !ses.length) { el.innerHTML = `${desk.head('نقشه‌ی فروش', e ? 'این برنامه سانس بازی نداره.' : 'این برنامه پیدا نشد.')}<a class="chip" href="#/org/shows">${ico('arrow-r')}برنامه‌ها</a>`; return; }
+    const sid = store.sget('blit.orgSes', null), s = ses.find((x) => x.id === sid) || ses[0];
+    const L = seatPlan(e, s), w = whenOf(s);
+    const C = { sold: null, held: '#f59e0b', free: 'rgba(var(--fg), .16)', off: '#6b7280' };
+    const paint = () => {
+      let cap = 0, sold = 0, held = 0, gross = 0; const byT = {}, bySec = [];
+      for (const z of L.secs) {
+        if (z.ga) { const n = Math.max(0, z.sec.cap - z.ga.left); cap += z.sec.cap; sold += n; gross += n * z.ga.price; byT[z.ga.t] = (byT[z.ga.t] || 0) + n * z.ga.price; bySec.push({ t: z.sec.t, sold: n, cap: z.sec.cap }); continue; }
+        let zc = 0, zs = 0; for (const p of z.seats) { if (p.st === 'off') continue; zc++; if (p.st === 'sold') { zs++; gross += p.price; byT[p.t] = (byT[p.t] || 0) + p.price; } if (p.st === 'held') held++; }
+        cap += zc; sold += zs; bySec.push({ t: z.sec.t, sold: zs, cap: zc });
+      }
+      $('#osNums', el).innerHTML = `${desk.tile('فروخته‌شده', `${money(sold)} <small>از ${money(cap)}</small>`, null)}${desk.tile('پرشدگی', pct(sold / Math.max(1, cap)), null)}${desk.tile('در حال پرداخت', money(held), null)}${desk.tile('فروش این سانس (تومان)', short(gross), null)}`;
+      $('#osSecs', el).innerHTML = `<table class="dk-tbl dk-num"><thead><tr><th>بخش</th><th>فروش</th><th>ظرفیت</th><th></th></tr></thead><tbody>${bySec.map((x) => `<tr><td>${esc(x.t)}</td><td>${money(x.sold)}</td><td>${money(x.cap)}</td><td><span class="dk-meter" style="--p:${(x.sold / Math.max(1, x.cap)).toFixed(3)}"><i></i></span></td></tr>`).join('')}</tbody></table>`;
+      $('#osTiers', el).innerHTML = viz.ranked(Object.entries(byT).sort((a, b) => b[1] - a[1]).map(([t, v2]) => ({ t: t === 'V' ? 'صندلی‌های ویژه' : tierZones(hallOf(e).plan, t).join('، '), v: v2 })));
+      $$('#osMap circle', el).forEach((c) => { const p = L.by.get(c.dataset.k); if (!p) return; c.dataset.st = p.st; if (p.st === 'held') { c.setAttribute('fill', 'none'); c.setAttribute('stroke', C.held); c.setAttribute('stroke-width', '4'); } else { c.setAttribute('fill', p.st === 'sold' ? p.c : C[p.st]); c.removeAttribute('stroke'); } });   // held: a ring, so it never reads as a tier's colour
+    };
+    const cx = L.cx, cy = L.cy, stage = L.stage === 'arc' ? `<path d="M ${cx - 230} ${cy - 96} H ${cx + 230} V ${cy - 20} Q ${cx} ${cy + 70} ${cx - 230} ${cy - 20} Z" class="hpm-st"/>` : `<rect x="${cx - 250}" y="${cy - 96}" width="500" height="96" rx="14" class="hpm-st"/>`;
+    const ga = L.secs.filter((z) => z.ga).map((z) => { const p = z.shapes[0]; return `<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="20" fill="${z.ga.c}" opacity=".35"/><text x="${p.x + p.w / 2}" y="${p.y + p.h / 2 + 10}" text-anchor="middle" class="hpm-l">${esc(z.sec.t)}</text>`; }).join('');
+    const dots = L.secs.flatMap((z) => z.seats.map((p) => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="8" data-k="${p.key}"/>`)).join('');
+    el.innerHTML = `${desk.head(`نقشه‌ی فروش · ${e.title}`, `${esc(hallOf(e).name)} · هر صندلی با وضعیتش، همین لحظه. <span class="dk-live"><i></i>زنده</span>`, `<a class="chip" href="#/org/shows">${ico('arrow-r')}برنامه‌ها</a>`)}
+      <div class="sec-chips os-ses evp-rise" role="radiogroup" aria-label="سانس">${ses.map((x) => { const ww = whenOf(x); return `<button type="button" class="chip" role="radio" data-s="${esc(x.id)}" aria-checked="${x.id === s.id}">${esc(ww.wd)} ${esc(ww.dm)} · ${esc(ww.tm)}</button>`; }).join('')}</div>
+      <section class="dk-tiles" id="osNums"></section>
+      <div class="dk-cols"><section class="panel dk-box evp-rise" aria-labelledby="osMapH"><h2 id="osMapH">${ico('ruler')}سالن · ${esc(w.wd)} ${esc(w.dm)} · ${esc(w.tm)}</h2><div id="osMap"><svg viewBox="0 0 ${L.W} ${L.H}" class="hpm os-map" role="img" aria-label="صندلی‌ها با وضعیتشان">${stage}<text x="${cx}" y="${cy - 40}" text-anchor="middle" class="hpm-w">صحنه</text>${ga}${dots}</svg></div>
+        <ul class="vz-leg os-leg"><li><i style="--c:var(--viz-1)"></i>فروخته‌شده (به رنگ رده‌ی قیمتش)</li><li><i class="os-ring" style="--c:#f59e0b"></i>در حال پرداخت</li><li><i style="--c:rgba(var(--fg), .16)"></i>آزاد</li><li><i style="--c:#6b7280"></i>فروشی نیست</li></ul></section>
+        <div class="dk-stack"><section class="panel dk-box evp-rise"><h2>${ico('grid')}هر بخش</h2><div class="dk-tbl-w" id="osSecs"></div></section><section class="panel dk-box evp-rise"><h2>${ico('tag')}فروش هر رده<small>تومان</small></h2><div id="osTiers"></div></section></div></div>`;
+    paint();
+    $$('.os-ses [data-s]', el).forEach((b) => b.addEventListener('click', () => { store.sset('blit.orgSes', b.dataset.s); this.show(el, v); }));
+    // live: someone holds a seat, someone pays
+    desk.every(2600, () => { if (!el.isConnected) return; const all = [...L.by.values()], free = all.filter((p) => p.st === 'free'), held = all.filter((p) => p.st === 'held'); if (held.length && Math.random() < 0.6) held[Math.floor(Math.random() * held.length)].st = 'sold'; for (let i = 0; i < 1 + Math.floor(Math.random() * 3); i++) { const p = free[Math.floor(Math.random() * free.length)]; if (p) p.st = 'held'; } paint(); });
   },
 
   // the money: per show, what the buyers paid, the VAT, the fee, the discounts, the organiser's share; the payouts; a CSV
