@@ -1993,6 +1993,34 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .nt-ic[data-tone="info"] { color: #38bdf8; background: rgba(56, 189, 248, .12); }
 .nt-empty { margin: 0; padding: 8px 8px 12px; font-size: 12.5px; line-height: 2; color: rgba(var(--fg), .62); }
 
+/* the buyer's account (account.js) */
+.ac-in .buy { gap: .45em; }
+.ac-rem { list-style: none; margin: 0; padding: 0; display: grid; gap: .45em; }
+.ac-rem li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .8em; padding: .55em .7em; border-radius: 12px; background: rgba(var(--fg), .035); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
+.ac-rem a { color: inherit; font-weight: var(--fwb); text-decoration: none; }
+.ac-rem small { color: rgba(var(--fg), .58); }
+.ac-h { margin-top: calc(var(--u) * 1.2) !important; }
+.ac-acts { display: flex; flex-wrap: wrap; gap: .5em; margin-top: 1em; }
+.ac-acts .chip { gap: .4em; }
+.pg-ac .bk-fld input:disabled { opacity: .7; }
+
+/* the SMS templates */
+.sm-fields { display: flex; flex-wrap: wrap; align-items: center; gap: .4em .5em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.sm-fields code { padding: .15em .55em; border-radius: 8px; background: rgba(var(--fg), .07); color: rgb(var(--fg)); font-family: var(--font); }
+.sm-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 620px), 1fr)); gap: var(--gap); }
+.sm-g { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1em; align-items: start; }
+.sm-g .bk-fld { margin: 0; }
+.sm-g textarea { box-sizing: border-box; width: 100%; padding: .7em .9em; border-radius: 12px; border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 13.5px/1.9 var(--font); resize: vertical; }
+.sm-phone { display: grid; gap: .4em; padding: 14px; border-radius: 22px; background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+.sm-bub { justify-self: start; max-width: 100%; padding: .7em .9em; border-radius: 16px 16px 16px 4px; background: color-mix(in oklab, var(--viz-1) 22%, var(--capsule)); font-size: 13px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
+.sm-phone small { font-size: 11px; color: rgba(var(--fg), .5); }
+.sm-n[data-tone="good"] { color: #22c55e !important; }
+.sm-n[data-tone="warn"] { color: #f59e0b !important; }
+.sm-n[data-tone="bad"] { color: #f43f5e !important; }
+.sm-acts { display: flex; justify-content: flex-end; margin-top: .6em; }
+.sm-acts .chip { gap: .4em; }
+@media (max-width: 760px) { .sm-g { grid-template-columns: minmax(0, 1fr); } }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -5189,7 +5217,7 @@ const buy = {
             <h2 id="bkWhoH">${ico('users')}خریدار<small>بدون ثبت‌نام</small></h2>
             <p class="bk-lead">فقط شماره‌ی موبایلت لازمه: بلیت همین‌جا نشونت داده می‌شه و پیامک هم می‌شه؛ بعداً با همین شماره و کد پیامکی همه‌ی بلیت‌هات پیدا می‌شن.</p>
             <label class="bk-fld"><span>شماره‌ی موبایل</span><input id="bkPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" maxlength="13" value="${esc(this.payState.phone ? fa(this.payState.phone) : '')}" dir="ltr"></label>
-            <label class="bk-fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی"></label>
+            <label class="bk-fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی" value="${esc(store.get('blit.profile', {}).name || '')}"></label>
             ${need ? `<div class="bk-otp" id="bkOtp"><p>${ico('shield-ok')}${busy ? 'این اجرا پرطرفداره؛' : 'برای امنیت خریدت،'} برای اینکه ربات‌ها بلیت نخرن، شماره با یه کد پیامکی تأیید می‌شه.</p><div class="bk-otp-row"><button type="button" class="chip" id="bkSend">فرستادن کد</button><div class="otp" id="bkCode" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><span class="bk-otp-st" id="bkOtpSt"></span></div></div>` : ''}
           </section>
           <section class="panel bk-way evp-rise" aria-labelledby="bkWayH">
@@ -5403,10 +5431,11 @@ const pages = {
     if ((m = /^#\/c\/(soon|(?:concert|theatre|comedy)-(?:tehran|other))$/.exec(h))) return { kind: 'cat', key: m[1].replace('-', ':') };
     if ((m = /^#\/city\/([^/?#]+)$/.exec(h))) return { kind: 'city', city: decodeURIComponent(m[1]) };
     if (h === '#/wallet') return { kind: 'wallet' };
+    if (h === '#/account') return { kind: 'account' };
     return queue.parse(h) || hallsPage.parse(h) || gate.parse(h) || desk.parse(h);
   },
   render(v) {
-    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x), queue: (x) => queue.render(x) }[v.kind];
+    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), account: () => account.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x), queue: (x) => queue.render(x) }[v.kind];
     if (!fn) { if (v.kind === 'gate') gate.render(v); else desk.render(v); return; }
     fn.call(this, v);
     const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', page.el).appendChild(c); page.wireFooter(c); }
@@ -5471,8 +5500,8 @@ const pages = {
     } else if (v.name === 'map') {
       const e = LIST().find((x) => statusOf(x).key === 'normal' && sessionsOf(x).length) || LIST()[0], s = e && sessionsOf(e)[0];
       const g = (t, icon, rows) => `<section class="panel pg-box evp-rise"><h2>${ico(icon)}${esc(t)}</h2><ul class="pg-ml">${rows.map(([h, n, d]) => `<li><a href="${esc(h)}">${esc(n)}</a><span>${esc(d)}</span></li>`).join('')}</ul></section>`;
-      body = `<div class="pg-maps">${g('برای خریدار', 'ticket', [['#', 'صفحه‌ی اصلی', 'جایگاه ویژه، لیست برنامه‌ها به تفکیک دسته، پیش‌فروش، جستجو و شهر'], ['#/c/concert-tehran', 'صفحه‌ی هر دسته', 'همه‌ی برنامه‌های یه دسته (مثلاً کنسرت‌های تهران)'], ['#/city/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86', 'صفحه‌ی هر شهر', 'برنامه‌ها و سالن‌های یه شهر'], [e ? `#/e/${encodeURIComponent(e.id)}` : '#', 'صفحه‌ی برنامه (گام ۱)', 'سانس‌ها، مشخصات، طرح بها، قوانین، مسیریابی'], [e && s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : '#', 'انتخاب صندلی (گام ۲)', 'نقشه‌ی زنده‌ی کل سالن، زوم، فیلتر قیمت'], ['#/receipts', 'پیگیری خرید و بلیت‌های من', 'با کد پیگیری یا موبایل و کد پیامکی'], ['#/wallet', 'کیف پول', 'شارژ، کد هدیه، گردش حساب'], ['#/halls', 'سالن‌ها', 'کتابخانه‌ی سالن‌ها با پلان و برنامه‌های هر سالن'], ['#/archive', 'آرشیو', 'برنامه‌های برگزارشده'], ['#/search/%DA%A9%D9%86%D8%B3%D8%B1%D8%AA', 'نتیجه‌ی جستجو', 'Enter تو جستجوی لیست'], ['#/p/rules', 'قوانین خرید', ''], ['#/p/contact', 'تماس و پشتیبانی', 'پرسش‌های پرتکرار و فرم'], ['#/p/about', 'درباره‌ی ما', '']])}
-        ${g('برای همکاران', 'users', [['#/org', 'پنل برگزارکننده', 'فروش زنده، برنامه‌ها، تسویه'], ['#/org/new', 'ساخت برنامه‌ی جدید', 'شش قدم تا تأیید مدیر: سالن، تقویم شمسی، قیمت روی پلان و تک‌صندلی'], ['#/org/codes', 'کدهای تخفیف', 'پیام تبلیغاتی و کارت چاپی A4'], ['#/org/staff', 'کنترل‌چی‌ها', 'کد ورود هر کنترل‌چی'], ['#/gate', 'کنترل ورود', 'اسکن QR با دوربین، اسکنر یا کد؛ آفلاین'], ['#/admin', 'پنل مدیر', 'پیشخوان کل سایت'], ['#/admin/shows', 'صف تأیید و لغو برنامه', 'با برگشت پول'], ['#/admin/orders', 'سفارش‌ها', 'جستجو، فیلتر، برگشت پول، فایل'], ['#/admin/team', 'کاربرها و نقش‌ها', 'مدیر کل، مالی، اپراتور'], ['#/admin/site', 'دسته‌ها، شهرها و تنظیمات خرید', 'کد پیامکی، صف انتظار'], ['#/admin/halls', 'طراح سالن', 'ساختن پلان سالن تازه'], ['#/admin/reports', 'گزارش‌ها', 'با فیلتر و فایل'], ['#/admin/gifts', 'کد هدیه‌ی سازمانی', ''], ['#/admin/log', 'تاریخچه‌ی تغییرات', '']])}</div>`;
+      body = `<div class="pg-maps">${g('برای خریدار', 'ticket', [['#', 'صفحه‌ی اصلی', 'جایگاه ویژه، لیست برنامه‌ها به تفکیک دسته، پیش‌فروش، جستجو و شهر'], ['#/c/concert-tehran', 'صفحه‌ی هر دسته', 'همه‌ی برنامه‌های یه دسته (مثلاً کنسرت‌های تهران)'], ['#/city/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86', 'صفحه‌ی هر شهر', 'برنامه‌ها و سالن‌های یه شهر'], [e ? `#/e/${encodeURIComponent(e.id)}` : '#', 'صفحه‌ی برنامه (گام ۱)', 'سانس‌ها، مشخصات، طرح بها، قوانین، مسیریابی'], [e && s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : '#', 'انتخاب صندلی (گام ۲)', 'نقشه‌ی زنده‌ی کل سالن، زوم، فیلتر قیمت'], ['#/receipts', 'پیگیری خرید و بلیت‌های من', 'با کد پیگیری یا موبایل و کد پیامکی'], ['#/account', 'حساب من', 'بلیت‌های پیش رو، یادآوری‌ها، نام روی بلیت، پیامک‌ها'], ['#/wallet', 'کیف پول', 'شارژ، کد هدیه، گردش حساب'], ['#/halls', 'سالن‌ها', 'کتابخانه‌ی سالن‌ها با پلان و برنامه‌های هر سالن'], ['#/archive', 'آرشیو', 'برنامه‌های برگزارشده'], ['#/search/%DA%A9%D9%86%D8%B3%D8%B1%D8%AA', 'نتیجه‌ی جستجو', 'Enter تو جستجوی لیست'], ['#/p/rules', 'قوانین خرید', ''], ['#/p/contact', 'تماس و پشتیبانی', 'پرسش‌های پرتکرار و فرم'], ['#/p/about', 'درباره‌ی ما', '']])}
+        ${g('برای همکاران', 'users', [['#/org', 'پنل برگزارکننده', 'فروش زنده، برنامه‌ها، تسویه'], ['#/org/new', 'ساخت برنامه‌ی جدید', 'شش قدم تا تأیید مدیر: سالن، تقویم شمسی، قیمت روی پلان و تک‌صندلی'], ['#/org/codes', 'کدهای تخفیف', 'پیام تبلیغاتی و کارت چاپی A4'], ['#/org/staff', 'کنترل‌چی‌ها', 'کد ورود هر کنترل‌چی'], ['#/gate', 'کنترل ورود', 'اسکن QR با دوربین، اسکنر یا کد؛ آفلاین'], ['#/admin', 'پنل مدیر', 'پیشخوان کل سایت'], ['#/admin/shows', 'صف تأیید و لغو برنامه', 'با برگشت پول'], ['#/admin/orders', 'سفارش‌ها', 'جستجو، فیلتر، برگشت پول، فایل'], ['#/admin/team', 'کاربرها و نقش‌ها', 'مدیر کل، مالی، اپراتور'], ['#/admin/site', 'دسته‌ها، شهرها و تنظیمات خرید', 'کد پیامکی، صف انتظار'], ['#/admin/halls', 'طراح سالن', 'ساختن پلان سالن تازه'], ['#/admin/reports', 'گزارش‌ها', 'با فیلتر و فایل'], ['#/admin/gifts', 'کد هدیه‌ی سازمانی', ''], ['#/admin/sms', 'پیامک‌ها', 'متن پیامک‌ها با پیش‌نمایش و شمار پیامک'], ['#/admin/content', 'محتوای صفحه‌ی اصلی', 'شش جایگاه ویژه'], ['#/admin/log', 'تاریخچه‌ی تغییرات', '']])}</div>`;
     } else {
       body = `<div class="evp-cols"><div class="evp-main"><section class="panel pg-box evp-rise"><h2>${ico('info')}پرسش‌های پرتکرار</h2><div class="faq">${FAQ.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(q)}${ico('down')}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
         <section class="panel pg-box evp-rise"><h2>${ico('headset')}برامون بنویس</h2><form id="pgForm" class="pg-form"><label class="bk-fld"><span>نام</span><input required autocomplete="name"></label><label class="bk-fld"><span>شماره‌ی موبایل</span><input required type="tel" inputmode="numeric" dir="ltr" maxlength="11"></label><label class="bk-fld full"><span>موضوع</span><select><option>پیگیری خرید</option><option>مشکل پرداخت</option><option>پیشنهاد</option><option>همکاری (برگزارکننده‌ها)</option></select></label><label class="bk-fld full"><span>پیام</span><textarea rows="4" required></textarea></label><button type="submit" class="buy">${ico('check')}فرستادن</button></form></section></div>
@@ -5561,7 +5590,7 @@ const auth = {
     if (b) b.addEventListener('click', () => {
       if (!userOf()) { this.open(); return; }
       if (pop && pop.anchor === b) { closePop(); return; }
-      menuPop(b, [{ t: 'بلیت‌های من', v: 'tickets' }, { t: `کیف پول · ${money(wallet.bal())} تومان`, v: 'wallet' }, { t: 'تم روشن / تیره', v: 'mode' }, { t: 'خروج از حساب', v: 'out' }], '', (v) => { if (v === 'tickets') page.go('#/receipts'); else if (v === 'wallet') page.go('#/wallet'); else if (v === 'mode') modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', b); else { this.out(); if (page.v && page.v.kind === 'receipts') page.route(); } }, { label: 'حساب من' });
+      menuPop(b, [{ t: 'حساب من', v: 'account' }, { t: 'بلیت‌های من', v: 'tickets' }, { t: `کیف پول · ${money(wallet.bal())} تومان`, v: 'wallet' }, { t: 'تم روشن / تیره', v: 'mode' }, { t: 'خروج از حساب', v: 'out' }], '', (v) => { if (v === 'account') page.go('#/account'); else if (v === 'tickets') page.go('#/receipts'); else if (v === 'wallet') page.go('#/wallet'); else if (v === 'mode') modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', b); else { this.out(); if (page.v && page.v.kind === 'receipts') page.route(); } }, { label: 'حساب من' });
     });
     this.sync();
   },
@@ -5585,7 +5614,7 @@ const drawer = {
     box.addEventListener('click', (ev) => {
       if (ev.target === box || ev.target.closest('[data-x]')) { shut(); return; }
       const a = ev.target.closest('[data-act]'); if (!a) return; ev.preventDefault();
-      if (a.dataset.act === 'login') { shut(); if (userOf()) page.go('#/receipts'); else auth.open(); }
+      if (a.dataset.act === 'login') { shut(); if (userOf()) page.go('#/account'); else auth.open(); }
       if (a.dataset.act === 'mode') { shut(); modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', a); }
     });
     gsap.fromTo(box, { opacity: 0 }, { opacity: 1, duration: 0.3 });
@@ -6779,6 +6808,7 @@ const admin = {
       { id: 'halls', t: 'سالن‌ها', icon: 'ruler', render: this.halls },
       { id: 'reports', t: 'گزارش‌ها', icon: 'award', render: this.reports },
       { id: 'gifts', t: 'کیف پول و کد هدیه', icon: 'tag', render: this.gifts },
+      { id: 'sms', t: 'پیامک‌ها', icon: 'bell', render: (el) => this.sms(el) },
       { id: 'log', t: 'تاریخچه‌ی تغییرات', icon: 'clock', render: this.log },
     ];
   },
@@ -7134,6 +7164,68 @@ const notif = {
   },
   shut() { if (!this.box) return; const box = this.box; this.box = null; document.removeEventListener('pointerdown', this.out, true); document.removeEventListener('keydown', this.key, true); if (MOTK()) gsap.to(box, { opacity: 0, y: -6, duration: 0.2, onComplete: () => box.remove() }); else box.remove(); },
   init() { this.dot(); addEventListener('hashchange', () => { this.shut(); this.dot(); }); },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the buyer's account (#/account, «حساب من»): the mobile it was made with (no password, no form), the name printed on the
+   tickets, the tickets ahead, the reminders, the wallet, the notices by SMS; and the admin's SMS templates (#/admin/sms):
+   the texts the site sends (the code, the tickets, a reminder, the night itself, a cancellation, a controller's code) with
+   their fields, a preview on a phone and the count of SMS parts (70 Persian letters in one, 67 in each part of a long one).
+   ════════════════════════════════════════════════════════════════ */
+const account = {
+  render() {
+    document.title = 'حساب من · بلیت';
+    const u = userOf();
+    if (!u) {
+      const box = pages.wrap('pg-ac', `${pages.head('حساب من', 'users', 'با شماره‌ی موبایل و یه کد پیامکی وارد شو؛ رمز و فرم ثبت‌نام لازم نیست.')}<section class="panel pg-box evp-rise ac-in"><p class="bk-lead">بلیت‌هات، یادآوری‌ها و کیف پولت اینجاست. بدون ورود هم می‌تونی بلیت بخری و با کد پیگیری پیداش کنی.</p><button type="button" class="buy" id="acIn">${ico('users')}ورود یا ثبت‌نام</button> <a class="chip" href="#/receipts">${ico('search')}پیگیری با کد</a></section>`);
+      $('#acIn', box).addEventListener('click', () => auth.open());
+      return;
+    }
+    const pf = store.get('blit.profile', { name: '', sms: { remind: true, city: true, news: false }, city: TXT.city || 'تهران' });
+    const os = store.get('blit.orders', []).filter((o) => o.phone === u.phone || !o.phone), up = os.filter((o) => o.t + 3 * HOUR > Date.now() && o.st !== 'refunded'), rem = store.get('blit.remind', []).map(showById).filter(Boolean);
+    const box = pages.wrap('pg-ac', `${pages.head('حساب من', 'users', `وارد شدی با ${maskPhone(u.phone)} · از ${ago(u.at)}`)}
+      <section class="pg-stats evp-rise">${[[up.length, 'بلیت پیش رو'], [os.length, 'خرید'], [rem.length, 'یادآوری'], [wallet.bal(), 'تومان تو کیف پول']].map(([n, l]) => `<div class="panel"><b>${n > 9999 ? short(n) : fa(n)}</b><span>${l}</span></div>`).join('')}</section>
+      <div class="evp-cols"><div class="evp-main">
+        <section class="panel pg-box evp-rise"><h2>${ico('ticket')}بلیت‌های پیش رو<small><a href="#/receipts">همه‌ی خریدها</a></small></h2>${up.length ? `<div class="rc-grid">${up.map((o) => { const e = showById(o.eid); if (!e) return ''; const w = whenOf({ t: o.t }), { src } = artOf(e); return `<a class="rc-card" href="#/ticket/${esc(encodeURIComponent(o.code))}"><figure class="bk-poster"><img src="${esc(src)}" alt=""></figure><span class="rc-t"><b>${esc(e.title)}</b><small>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)}</small><small>${fa(o.seats.length)} بلیت · <span dir="ltr">${esc(o.code)}</span></small></span></a>`; }).join('')}</div>` : '<p class="bk-lead">بلیت پیش رویی نداری. <a href="#" data-home>برنامه‌ها</a> رو ببین.</p>'}</section>
+        <section class="panel pg-box evp-rise"><h2>${ico('bell')}یادآوری‌ها</h2>${rem.length ? `<ul class="ac-rem">${rem.map((e) => `<li><a href="#/e/${esc(encodeURIComponent(e.id))}">${esc(e.title)}</a><small>${saleMs(e) > Date.now() ? `شروع فروش ${esc(saleWhen(e))}` : 'فروشش شروع شده'}</small><button type="button" class="chip gt-ic" data-rm="${esc(e.id)}" aria-label="برداشتن یادآوری ${esc(e.title)}">${ico('x')}</button></li>`).join('')}</ul>` : '<p class="bk-lead">تو بخش «به‌زودی» با «یادم بنداز»، ده دقیقه قبل از شروع فروش پیامک می‌گیری.</p>'}</section>
+      </div><aside class="evp-side">
+        <section class="panel pg-box evp-rise"><h2>${ico('users')}مشخصات</h2><label class="bk-fld"><span>نام روی بلیت‌ها <small>(اختیاری)</small></span><input id="acName" value="${esc(pf.name)}" maxlength="40" autocomplete="name"></label><label class="bk-fld"><span>شماره‌ی موبایل</span><input value="${esc(maskPhone(u.phone))}" disabled dir="ltr"></label>
+          <h2 class="ac-h">${ico('bell')}پیامک‌ها</h2>${[['remind', 'یادآوری شروع فروش و روز اجرا'], ['city', `برنامه‌های تازه‌ی ${esc(pf.city)}`], ['news', 'خبرنامه و تخفیف‌ها']].map(([k, t]) => `<label class="wz-sw"><input type="checkbox" data-sms="${k}"${pf.sms[k] ? ' checked' : ''}><span>${t}</span></label>`).join('')}
+          <div class="ac-acts"><a class="chip" href="#/wallet">${ico('tag')}کیف پول · ${money(wallet.bal())}</a><button type="button" class="chip" id="acOut">${ico('return')}خروج از حساب</button></div></section>
+      </aside></div>`);
+    const save = () => store.set('blit.profile', pf);
+    $('#acName', box).addEventListener('change', (ev) => { pf.name = ev.target.value.trim(); save(); toast('نام ذخیره شد؛ روی بلیت‌های بعدی چاپ می‌شه.'); });
+    $$('[data-sms]', box).forEach((c) => c.addEventListener('change', () => { pf.sms[c.dataset.sms] = c.checked; save(); }));
+    $$('[data-rm]', box).forEach((b) => b.addEventListener('click', () => { store.set('blit.remind', store.get('blit.remind', []).filter((id) => id !== b.dataset.rm)); s2.reminded.delete(b.dataset.rm); notif.dot(); this.render(); }));
+    $('#acOut', box).addEventListener('click', () => { auth.out(); page.go('#/receipts'); });
+  },
+};
+
+// the SMS templates: the fields in braces, a sample for each, a preview, the count of parts
+const SMS_FIELDS = { 'کد': '۴۸۲۱۶', 'برنامه': 'کنسرت شب‌های بتهوون', 'زمان': 'پنجشنبه ۲۸ آبان، ساعت ۲۰:۳۰', 'سالن': 'تالار وحدت', 'صندلی': 'پارتر ردیف ۵، صندلی ۱۲ و ۱۳', 'کد_پیگیری': 'BL-7Q2M-K4XR', 'لینک': 'blit.example/t/7Q2M', 'مبلغ': '۲٬۳۱۰٬۰۰۰', 'در': 'درِ ۱' };
+const SMS_DEF = [
+  { id: 'otp', t: 'کد ورود و خرید', v: 'کد تأیید بلیت: {کد}\nاین کد را به کسی ندهید.' },
+  { id: 'ticket', t: 'بلیت صادر شد', v: 'بلیت «{برنامه}»\n{زمان}، {سالن}\n{صندلی}\n{لینک}' },
+  { id: 'remind', t: 'یادآوری شروع فروش', v: 'فروش «{برنامه}» ده دقیقه دیگه: {لینک}' },
+  { id: 'night', t: 'یادآوری روز اجرا', v: 'امشب «{برنامه}»، {زمان}، {سالن}.\nدرها یک ساعت قبل باز می‌شن. بلیت: {لینک}' },
+  { id: 'cancel', t: 'لغو برنامه و برگشت پول', v: 'متأسفیم؛ «{برنامه}» لغو شد. {مبلغ} تومان به کیف پول بلیت شما برگشت.\nکد پیگیری: {کد_پیگیری}' },
+  { id: 'staff', t: 'کد کنترل‌چی', v: 'کنترل‌چی «{برنامه}»، {در}\nکد ورود: {کد}' },
+];
+const smsParts = (s) => { const n = [...s].length; return n <= 70 ? 1 : Math.ceil(n / 67); };
+const smsFill = (s) => s.replace(/\{([^}]+)\}/g, (m, k) => SMS_FIELDS[k] || m);
+admin.sms = function (el) {
+  const saved = store.get('blit.sms', {}), list = SMS_DEF.map((x) => ({ ...x, v: saved[x.id] || x.v }));
+  el.innerHTML = `${desk.head('پیامک‌ها', 'متن پیامک‌هایی که سایت می‌فرسته. فیلدها تو آکولاد پر می‌شن؛ هر پیامک فارسی ۷۰ حرفه و هر تکه‌ی پیامک بلند ۶۷ حرف. سامانه‌ی پیامک بعد از اینماد وصل می‌شه.')}
+    <div class="sm-fields evp-rise"><span>فیلدها:</span>${Object.keys(SMS_FIELDS).map((k) => `<code>{${esc(k)}}</code>`).join('')}</div>
+    <div class="sm-list">${list.map((x) => `<section class="panel dk-box sm-item evp-rise" data-id="${x.id}"><h2>${ico('bell')}${esc(x.t)}<small class="sm-n"></small></h2><div class="sm-g"><label class="bk-fld"><span class="sr">متن ${esc(x.t)}</span><textarea rows="5" dir="rtl">${esc(x.v)}</textarea></label><div class="sm-phone" aria-label="پیش‌نمایش"><div class="sm-bub"></div><small>بلیت · همین الان</small></div></div><div class="sm-acts"><button type="button" class="chip" data-reset>${ico('undo')}متن پیش‌فرض</button></div></section>`).join('')}</div>`;
+  $$('.sm-item', el).forEach((sec) => {
+    const ta = $('textarea', sec), bub = $('.sm-bub', sec), n = $('.sm-n', sec), def = SMS_DEF.find((x) => x.id === sec.dataset.id);
+    const upd = () => { const out = smsFill(ta.value), p = smsParts(out), len = [...out].length; bub.textContent = out; n.textContent = `${fa(len)} حرف · ${fa(p)} پیامک`; n.dataset.tone = p > 2 ? 'bad' : p > 1 ? 'warn' : 'good'; };
+    ta.addEventListener('input', () => { upd(); const s = store.get('blit.sms', {}); s[def.id] = ta.value; store.set('blit.sms', s); });
+    ta.addEventListener('change', () => auditLog(`متن پیامک «${def.t}» عوض شد`));
+    $('[data-reset]', sec).addEventListener('click', () => { ta.value = def.v; const s = store.get('blit.sms', {}); delete s[def.id]; store.set('blit.sms', s); upd(); });
+    upd();
+  });
 };
 
 /* ════════════════════════════════════════════════════════════════
@@ -7514,7 +7606,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, account, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
