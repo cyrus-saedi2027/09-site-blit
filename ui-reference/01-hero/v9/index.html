@@ -1976,6 +1976,23 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .dk-tile > b small { font-size: .5em; font-weight: 600; color: rgba(var(--fg), .55); }
 .os-leg i.os-ring { background: none; box-shadow: inset 0 0 0 2.5px var(--c); border-radius: 50%; }
 
+/* the notifications under the header's bell (notif.js) */
+.nt-pop { position: fixed; z-index: 80; max-height: min(70vh, 560px); overflow: auto; padding: 12px; border-radius: 18px; box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(var(--fg), .1); color: rgb(var(--fg)); font-family: var(--font); direction: rtl; }
+.nt-top { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 10px; }
+.nt-top b { font-size: 15px; font-weight: 800; }
+.nt-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.nt-list a { display: flex; align-items: flex-start; gap: 10px; padding: 9px 8px; border-radius: 12px; color: inherit; text-decoration: none; }
+.nt-list a:hover, .nt-list a:focus-visible { background: rgba(var(--fg), .06); outline: none; }
+.nt-list li.is-new a { background: color-mix(in oklab, var(--ring) 9%, transparent); }
+.nt-list a > span:last-child { display: grid; gap: 2px; line-height: 1.7; font-size: 12.5px; }
+.nt-list small { color: rgba(var(--fg), .55); font-size: 11.5px; }
+.nt-ic { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: rgba(var(--fg), .07); }
+.nt-ic svg.i { width: 16px; height: 16px; }
+.nt-ic[data-tone="good"] { color: #22c55e; background: rgba(34, 197, 94, .12); }
+.nt-ic[data-tone="warn"] { color: #f59e0b; background: rgba(245, 158, 11, .14); }
+.nt-ic[data-tone="info"] { color: #38bdf8; background: rgba(56, 189, 248, .12); }
+.nt-empty { margin: 0; padding: 8px 8px 12px; font-size: 12.5px; line-height: 2; color: rgba(var(--fg), .62); }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -3908,7 +3925,7 @@ const hd = {
       menuPop(city, CITIES, TXT.city, (c) => { look.setText('city', c); const f = $('[data-ctl="city"] input'); if (f) f.value = c; s2.setCity(c); toast(`اجراهای ${c} رو نشون می‌دم.`); }, { cls: 'is-cities', cols: STK.matches ? 3 : 4, label: 'شهر' });
     });
     $('#ticketsBtn').addEventListener('click', () => page.go('#/receipts'));
-    $('#bellBtn').addEventListener('click', (ev) => { const d = $('.dotn', ev.currentTarget); if (d) d.remove(); toast('اینجا اعلان‌ها باز می‌شه.'); });
+    $('#bellBtn').addEventListener('click', (ev) => notif.open(ev.currentTarget)); notif.init();   // the notifications (notif.js)
     auth.init(); drawer.init();
     $('.brand', nav).addEventListener('click', (ev) => { ev.preventDefault(); scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); });
     this.search.setPlaceholder();
@@ -4161,9 +4178,10 @@ const s2 = {
     const off = $('.tkt-off', c); if (off) off.addEventListener('click', (ev) => open(ev));
     const rem = $('.ptk-rem', c);
     if (rem) {
+      if (!this.remLoaded) { this.remLoaded = true; store.get('blit.remind', []).forEach((id) => this.reminded.add(id)); }   // the reminders are kept
       const mark = () => { const on = this.reminded.has(e.id); rem.setAttribute('aria-pressed', String(on)); $('span', rem).textContent = on ? 'یادت می‌ندازم' : 'یادم بنداز'; };
       mark();
-      rem.addEventListener('click', () => { if (this.reminded.has(e.id)) this.reminded.delete(e.id); else this.reminded.add(e.id); mark(); toast(this.reminded.has(e.id) ? `ده دقیقه قبل از شروع فروش «${e.title}» پیامک می‌گیری.` : 'یادآوری برداشته شد.'); });
+      rem.addEventListener('click', () => { if (this.reminded.has(e.id)) this.reminded.delete(e.id); else this.reminded.add(e.id); store.set('blit.remind', [...this.reminded]); notif.dot(); mark(); toast(this.reminded.has(e.id) ? `ده دقیقه قبل از شروع فروش «${e.title}» پیامک می‌گیری.` : 'یادآوری برداشته شد.'); });
     }
     return c;
   },
@@ -5280,7 +5298,7 @@ const buy = {
     const st = this.payState, code = codeOf();
     const order = { code, eid: st.e.id, sid: st.s.id, t: st.s.t, phone: st.phone, name: st.name || '', seats: st.seats.map(item), total: st.total, at: Date.now(), way: st.way || 'gate', disc: st.code || '' };
     if (st.code) codeUsed(st.code);
-    const orders = store.get('blit.orders', []); orders.unshift(order); store.set('blit.orders', orders.slice(0, 40));
+    const orders = store.get('blit.orders', []); orders.unshift(order); store.set('blit.orders', orders.slice(0, 40)); notif.dot();
     const taken = store.get('blit.taken', {}); taken[st.s.id] = (taken[st.s.id] || []).concat(order.seats.map((x) => x.key)); store.set('blit.taken', taken);
     store.sset('blit.hold', null); this.cart = new Map(); this.cartKey = null;
     page.go(`#/ticket/${encodeURIComponent(code)}`);
@@ -7083,6 +7101,42 @@ const queue = {
 };
 
 /* ════════════════════════════════════════════════════════════════
+   the notifications (the header's bell): what the buyer asked to be reminded of (a presale's start), the tickets bought, a
+   cancelled show's money back, the shows newly on the site, and the sales that started today. The dot says there is
+   something not seen yet; opening the list marks all of it seen. Kept in this browser (the real site sends the same by SMS).
+   ════════════════════════════════════════════════════════════════ */
+const notif = {
+  items() {
+    const out = [], now = Date.now();
+    for (const id of store.get('blit.remind', [])) { const e = showById(id); if (!e) continue; const t = saleMs(e); out.push({ at: t > now ? now - 1 : t, icon: 'bell', tone: 'info', t: t > now ? `یادآوری: فروش «${e.title}» ${saleWhen(e)} شروع می‌شه` : `فروش «${e.title}» شروع شد!`, h: `#/e/${encodeURIComponent(e.id)}`, soon: t > now }); }
+    for (const o of store.get('blit.orders', [])) { const e = showById(o.eid), name = e ? e.title : ''; out.push({ at: o.at, icon: 'ticket', tone: 'good', t: `${fa(o.seats.length)} بلیت «${name}» صادر شد · ${o.code}`, h: `#/ticket/${encodeURIComponent(o.code)}` }); if (o.st === 'refunded') out.push({ at: o.at + 1, icon: 'undo', tone: 'warn', t: `پول «${name}» ${o.refund === 'wallet' ? 'به کیف پولت برگشت' : 'به کارتت برمی‌گرده'}`, h: o.refund === 'wallet' ? '#/wallet' : `#/ticket/${encodeURIComponent(o.code)}` }); }
+    for (const d of drafts.all()) if (d.status === 'live' && d.ok) out.push({ at: d.ok, icon: 'spark', tone: 'info', t: `برنامه‌ی تازه روی سایت: ${d.type} «${d.title}»`, h: `#/e/${encodeURIComponent(d.id)}` });
+    for (const e of LIST()) { const t = saleMs(e); if (t && t < now && now - t < DAY) out.push({ at: t, icon: 'clock', tone: 'good', t: `فروش «${e.title}» شروع شد`, h: `#/e/${encodeURIComponent(e.id)}` }); }
+    return out.sort((a, b) => b.at - a.at).slice(0, 14);
+  },
+  unseen() { const seen = store.get('blit.seen', 0); return this.items().filter((x) => x.at > seen && !x.soon).length; },
+  dot() { const b = $('#bellBtn'); if (!b) return; const n = this.unseen(); let d = $('.dotn', b); if (n && !d) { d = document.createElement('i'); d.className = 'dotn'; d.setAttribute('aria-hidden', 'true'); b.appendChild(d); } else if (!n && d && store.get('blit.seen', 0)) d.remove(); b.setAttribute('aria-label', n ? `اعلان‌ها، ${fa(n)} تازه` : 'اعلان‌ها'); },
+  open(b) {
+    if (this.box) { this.shut(); return; }
+    const l = this.items(), seen = store.get('blit.seen', 0);
+    const box = document.createElement('div'); box.className = 'nt-pop panel'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'اعلان‌ها');
+    box.innerHTML = `<div class="nt-top"><b>اعلان‌ها</b><button type="button" class="chip" data-x>بستن</button></div>${l.length ? `<ol class="nt-list">${l.map((x) => `<li${x.at > seen && !x.soon ? ' class="is-new"' : ''}><a href="${esc(x.h)}" data-x><span class="nt-ic" data-tone="${x.tone}">${ico(x.icon)}</span><span><b>${esc(x.t)}</b><small>${esc(x.soon ? 'یادآوری فعاله' : ago(x.at))}</small></span></a></li>`).join('')}</ol>` : '<p class="nt-empty">هنوز اعلانی نیست. «یادم بنداز» پیش‌فروش‌ها یا یه خرید اینجا خبر داده می‌شه.</p>'}`;
+    document.body.appendChild(box);
+    const r = b.getBoundingClientRect(), W = Math.min(400, innerWidth - 24);
+    box.style.width = `${W}px`; box.style.top = `${Math.round(r.bottom + 10)}px`; box.style.left = `${Math.round(clamp(r.left + r.width / 2 - W / 2, 12, innerWidth - W - 12))}px`;
+    if (MOTK()) gsap.fromTo(box, { y: -8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'expo.out' });
+    this.box = box; store.set('blit.seen', Date.now()); const d = $('.dotn', b); if (d) d.remove(); b.setAttribute('aria-label', 'اعلان‌ها');
+    box.addEventListener('click', (ev) => { if (ev.target.closest('[data-x]')) this.shut(); });
+    this.out = (ev) => { if (!box.contains(ev.target) && !b.contains(ev.target)) this.shut(); };
+    this.key = (ev) => { if (ev.key === 'Escape') { this.shut(); b.focus(); } };
+    setTimeout(() => { document.addEventListener('pointerdown', this.out, true); document.addEventListener('keydown', this.key, true); }, 0);
+    const first = $('a, button', box); if (first) first.focus({ preventScroll: true });
+  },
+  shut() { if (!this.box) return; const box = this.box; this.box = null; document.removeEventListener('pointerdown', this.out, true); document.removeEventListener('keydown', this.key, true); if (MOTK()) gsap.to(box, { opacity: 0, y: -6, duration: 0.2, onComplete: () => box.remove() }); else box.remove(); },
+  init() { this.dot(); addEventListener('hashchange', () => { this.shut(); this.dot(); }); },
+};
+
+/* ════════════════════════════════════════════════════════════════
    the touch of the page: a soft light that follows the pointer over a panel, a buy button that leans toward the
    pointer and ripples, banners that can be dragged to the next show, and the keys
    ════════════════════════════════════════════════════════════════ */
@@ -7460,7 +7514,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

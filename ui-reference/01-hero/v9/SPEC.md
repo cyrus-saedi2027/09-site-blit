@@ -401,6 +401,8 @@ below follows; CSV); کیف پول و کد هدیه (batches of gift codes of an
 
 **The halls' pages** (`halls.js`): `#/halls` (every hall of the library by city, each with its plan small) and `#/hall/<city>/<name>` (the plan large with each section's name, a table of the sections and seats, the way there, sample facilities, the shows there); the show's page and a city's page link to them. **The SMS check at checkout** is the admin's choice (off, busy shows only, always: «دسته‌ها و شهرها»).
 
+**The notifications** (`notif.js`, the header's bell; the button itself is as it was): a list under it of the presales the buyer asked to be reminded of («یادم بنداز» is now kept), the tickets bought, a cancelled show's money back, the shows newly on the site and the sales that started today; each opens its page. The dot means something not seen yet (a first visit shows it, as before); opening the list marks all of it seen.
+
 **The waiting room** (`queue.js`, `#/q/<show>/<session>`; brief §2.2 «سایت زیر فشار سریع بماند»): when a busy show's sale opens, «خرید» leads into a line instead of the seat map: the people ahead (a big number that counts down), about how long, a line of dots moving to the door, the whole line, the rate of entry, the people behind; at the front «نوبت توئه!» and a pass of ten minutes for the seat map. The seats' address can't skip it (without a pass it comes back to the line). The admin's switch: off, busy shows (the default), all. The demo's line moves faster than a real one and has a skip link. In the real site the line is the server's (a token per buyer, admitted at the rate the seat map can bear).
 
 **The wallet** (`#/wallet`, from «حساب من» and the phone's menu): the balance, a charge by the gateway, a gift code (demo
