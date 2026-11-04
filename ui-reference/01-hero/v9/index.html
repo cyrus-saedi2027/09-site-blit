@@ -2021,6 +2021,12 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .sm-acts .chip { gap: .4em; }
 @media (max-width: 760px) { .sm-g { grid-template-columns: minmax(0, 1fr); } }
 
+/* a change asked for (changes.js) */
+.ch-box { width: min(720px, 100%); }
+.ch-box .bk-seg { margin-bottom: 1em; }
+.ch-pane { display: grid; gap: .5em; margin-bottom: 1em; }
+.ad-ch .sec-ic { width: 44px; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -6260,12 +6266,13 @@ const org = {
       <div class="dk-show-n">${o.cap ? `<span class="dk-meter" style="--p:${(o.sold / o.cap).toFixed(3)}"><i></i></span><small>${money(o.sold)} از ${money(o.cap)} بلیت · ${fa(o.n)} سانس</small><b>${short(o.gross)} تومان</b>` : `<small>${esc(o.hint || '')}</small>`}</div>
       <div class="dk-show-a">${o.acts}</div></article>`;
     const rows = own.map((d) => ({ title: d.title || 'برنامه‌ی بی‌نام', src: d.poster || '', line: `${d.city || '—'} · ${d.venue || 'سالن انتخاب نشده'} · ${fa((d.days || []).length * (d.times || []).length)} سانس`, st: desk.status(d.status), note: d.status === 'rejected' && d.note ? `دلیل: ${d.note}` : d.status === 'review' ? `فرستاده شد ${ago(d.sent || d.at)}` : '', hint: d.status === 'draft' ? 'هنوز فرستاده نشده؛ تا تأیید مدیر روی سایت نمی‌آد.' : '', acts: d.status === 'live' ? `<a class="chip" href="#/e/${esc(encodeURIComponent(d.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a>` : `<a class="chip" href="#/org/new/${esc(encodeURIComponent(d.id))}">${ico('sliders')}${d.status === 'review' ? 'دیدن' : 'ادامه‌ی ساختن'}</a>` }));
-    const lives = live.map((e) => { const x = showStats(e), h = hallOf(e), { src } = artOf(e); return { title: e.title, src, line: `${e.city} · ${h.name}`, st: ['منتشر شده', 'good'], ...x, acts: `${x.n ? `<a class="chip" href="#/org/show/${esc(encodeURIComponent(e.id))}">${ico('ruler')}نقشه‌ی فروش</a>` : ''}<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a><a class="chip" href="#/org/codes" data-code="${esc(e.id)}">${ico('tag')}کد تخفیف</a>` }; });
+    const lives = live.map((e) => { const x = showStats(e), h = hallOf(e), { src } = artOf(e), pend = changes.pending(e.id); return { title: e.title, src, line: `${e.city} · ${h.name}`, st: statusOf(e).key === 'cancelled' ? ['لغو شد', 'bad'] : ['منتشر شده', 'good'], note: pend.length ? `تغییر در انتظار تأیید: ${pend.map((c) => changes.KIND[c.kind]).join('، ')}` : '', ...x, acts: `<button type="button" class="chip" data-ask="${esc(e.id)}">${ico('sliders')}درخواست تغییر</button>${x.n ? `<a class="chip" href="#/org/show/${esc(encodeURIComponent(e.id))}">${ico('ruler')}نقشه‌ی فروش</a>` : ''}<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a><a class="chip" href="#/org/codes" data-code="${esc(e.id)}">${ico('tag')}کد تخفیف</a>` }; });
     el.innerHTML = `${desk.head('برنامه‌ها', `${fa(lives.length)} برنامه روی سایت${own.length ? ` · ${fa(own.length)} برنامه‌ی ساخته‌شده تو پنل` : ''}. هر برنامه‌ی تازه یا هر تغییر تا تأیید مدیر روی سایت نمی‌آد.`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
       ${rows.length ? `<h2 class="dk-sub evp-rise">ساخته‌شده تو پنل</h2><div class="dk-shows">${rows.map(card).join('')}</div>` : ''}
       <h2 class="dk-sub evp-rise">روی سایت</h2><div class="dk-shows">${lives.map(card).join('')}</div>`;
     $$('img', el).forEach((im) => { im.onerror = () => { im.onerror = null; im.closest('figure').classList.add('is-none'); }; if (!im.getAttribute('src')) im.closest('figure').classList.add('is-none'); });
     $$('[data-code]', el).forEach((a) => a.addEventListener('click', () => store.sset('blit.codeFor', a.dataset.code)));
+    $$('[data-ask]', el).forEach((b) => b.addEventListener('click', () => changes.ask(showById(b.dataset.ask))));
   },
 
   // one show's sales, live: a session at a time, its hall with every seat in its state (sold in its tier's colour, held, free,
@@ -6797,7 +6804,7 @@ const refund = (codesToRefund, to, why) => {
 const admin = {
   title: 'پنل مدیر', av: 'م', who: 'مدیر سایت', role: 'مدیر کل · همه‌ی دسترسی‌ها',
   tabs() {
-    const q = drafts.all().filter((d) => d.status === 'review').length + this.others().length;
+    const q = drafts.all().filter((d) => d.status === 'review').length + this.others().length + changes.pending().length;
     return [
       { id: 'home', t: 'پیشخوان', icon: 'grid', render: this.home },
       { id: 'shows', t: 'برنامه‌ها و تأیید', icon: 'ticket', n: q ? fa(q) : '', render: this.shows },
@@ -6838,6 +6845,7 @@ const admin = {
     const live = LIST().filter((e) => !['held'].includes(statusOf(e).key)).slice(0, 40);
     el.innerHTML = `${desk.head('برنامه‌ها و تأیید', 'هیچ برنامه‌ای (و هیچ تغییری) بدون تأیید روی سایت نمی‌آد. با لغو یه برنامه، پول همه‌ی خریدارهاش برمی‌گرده.')}
       <h2 class="dk-sub evp-rise">در انتظار تأیید <small>${fa(q.length)}</small></h2>${q.length ? `<div class="dk-shows">${q.map(item).join('')}</div>` : '<p class="bk-lead evp-rise">صف خالیه.</p>'}
+      ${changes.pending().length ? `<h2 class="dk-sub evp-rise">درخواست‌های تغییر <small>${fa(changes.pending().length)}</small></h2><div class="dk-shows">${changes.pending().map((c) => { const e = showById(c.eid); return `<article class="panel dk-show ad-q ad-ch evp-rise"><span class="sec-ic" aria-hidden="true">${ico(c.kind === 'cancel' ? 'x' : c.kind === 'prices' ? 'tag' : 'info')}</span><div class="dk-show-t"><b>${esc(changes.KIND[c.kind])} · ${esc(e ? e.title : c.eid)}</b><small>${esc(c.what)}</small><small>${esc(ORG.name)} · ${esc(ago(c.at))}${c.note ? ` · «${esc(c.note)}»` : ''}</small></div><div></div><div class="dk-show-a"><button type="button" class="buy" data-cyes="${esc(c.id)}">${ico('check')}تأیید</button><button type="button" class="chip" data-cno="${esc(c.id)}">${ico('undo')}رد</button></div></article>`; }).join('')}</div>` : ''}
       <h2 class="dk-sub evp-rise">روی سایت <small>${fa(live.length)}</small></h2>
       <div class="panel dk-box evp-rise"><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>برنامه</th><th>شهر</th><th>وضعیت</th><th></th></tr></thead><tbody>${live.map((e) => { const s = statusOf(e); return `<tr><td><a href="#/e/${esc(encodeURIComponent(e.id))}">${esc(e.title)}</a></td><td>${esc(e.city)}</td><td><em class="st" data-tone="${esc(s.label ? s.tone : 'good')}">${esc(s.label || 'در حال فروش')}</em></td><td>${s.key === 'cancelled' ? '' : `<button type="button" class="chip" data-cancel="${esc(e.id)}">${ico('x')}لغو برنامه</button>`}</td></tr>`; }).join('')}</tbody></table></div></div>`;
     $$('[data-yes]', el).forEach((b) => b.addEventListener('click', () => {
@@ -6850,6 +6858,8 @@ const admin = {
       const m = desk.modal('ad-no', `<h2>${ico('undo')}برگردوندن به برگزارکننده</h2><p class="bk-lead">دلیلش رو بنویس؛ برگزارکننده همین رو می‌بینه و درستش می‌کنه.</p><label class="bk-fld"><span>دلیل</span><textarea rows="3" id="adWhy">پوستر کیفیت کافی نداره؛ لطفاً نسخه‌ی بزرگ‌تر بفرستید.</textarea></label><div class="evp-dlg-end"><button type="button" class="buy" id="adNoGo">${ico('undo')}برگردوندن</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'برگردوندن');
       $('#adNoGo', m.box).addEventListener('click', () => { const why = $('#adWhy', m.box).value.trim() || 'بدون توضیح', d = drafts.get(b.dataset.no); if (d) { d.status = 'rejected'; d.note = why; drafts.put(d); } else store.set('blit.reviewed', store.get('blit.reviewed', []).concat(b.dataset.no)); auditLog(`برنامه برگردونده شد: ${why}`); m.shut(); toast('برگردونده شد؛ دلیلش برای برگزارکننده رفت.'); this.shows(el); });
     }));
+    $$('[data-cyes]', el).forEach((b) => b.addEventListener('click', () => { changes.yes(b.dataset.cyes); toast('تأیید شد؛ تغییر همین الان روی سایته.'); this.shows(el); }));
+    $$('[data-cno]', el).forEach((b) => b.addEventListener('click', () => { const why = 'با سیاست قیمت‌گذاری سایت هم‌خوان نیست.'; changes.no(b.dataset.cno, why); toast('رد شد؛ دلیلش برای برگزارکننده رفت.'); this.shows(el); }));
     $$('[data-cancel]', el).forEach((b) => b.addEventListener('click', () => {
       const e = showById(b.dataset.cancel), os = allOrders().filter((o) => o.eid === e.id && o.st === 'paid');
       const m = desk.modal('ad-no', `<h2>${ico('x')}لغو «${esc(e.title)}»</h2><p class="bk-lead">${fa(os.length)} سفارش پرداخت‌شده داره (${money(os.reduce((a, o) => a + o.total, 0))} تومان). پول همه‌شون برمی‌گرده و به همه پیامک می‌شه.</p>
@@ -7229,6 +7239,52 @@ admin.sms = function (el) {
 };
 
 /* ════════════════════════════════════════════════════════════════
+   a change to a show that is on the site (brief §2.4: «هر چیز تا تأیید مدیر روی سایت نمی‌آید»): the organiser asks (the
+   prices per tier, the words about it, or to cancel it), the admin sees what would change and says yes or no. A yes is kept
+   («blit.overlay») and laid over the show's data on every visit; a cancellation goes through the admin's cancel (refunds).
+   ════════════════════════════════════════════════════════════════ */
+const changes = {
+  all() { return store.get('blit.changes', []); },
+  save(l) { store.set('blit.changes', l); },
+  KIND: { prices: 'قیمت‌ها', desc: 'درباره‌ی برنامه', cancel: 'لغو برنامه' },
+  // the organiser's form, for one show
+  ask(e) {
+    const tiers = [...new Map(tiersOf(e).map((t) => [t.t, t])).values()];
+    const m = desk.modal('ch-box', `<h2>${ico('sliders')}درخواست تغییر · ${esc(e.title)}</h2><p class="bk-lead">تا مدیر تأیید نکنه، چیزی روی سایت عوض نمی‌شه.</p>
+      <div class="bk-seg" role="radiogroup" aria-label="چی عوض بشه">${Object.entries(this.KIND).map(([k, t], i) => `<button type="button" role="radio" data-k="${k}" aria-checked="${i === 0}">${t}</button>`).join('')}</div>
+      <div class="ch-pane" data-p="prices">${tiers.map((t) => `<label class="wz-tier" style="--c:${t.c}"><i aria-hidden="true"></i><span><b>${esc(t.t === 'V' ? 'صندلی‌های ویژه' : tierZones(hallOf(e).plan, t.t).join('، '))}</b></span><span class="wz-in"><input data-t="${t.t}" inputmode="numeric" dir="ltr" value="${fa(t.price.toLocaleString('en-US')).replace(/,/g, '٬')}" data-was="${t.price}"><small>تومان</small></span></label>`).join('')}</div>
+      <div class="ch-pane" data-p="desc" hidden><label class="bk-fld"><span>متن تازه</span><textarea rows="5" id="chDesc">${esc(aboutOf(e).text || '')}</textarea></label></div>
+      <div class="ch-pane" data-p="cancel" hidden><label class="bk-fld"><span>دلیل لغو</span><textarea rows="3" id="chWhy" placeholder="مثلاً: بیماری خواننده"></textarea></label><p class="bk-note">${ico('info')}با تأیید مدیر، پول همه‌ی خریدارها برمی‌گرده و به همه پیامک می‌شه.</p></div>
+      <label class="bk-fld"><span>یادداشت برای مدیر <small>(اختیاری)</small></span><input id="chNote" maxlength="120"></label>
+      <div class="evp-dlg-end"><button type="button" class="buy" id="chGo">${ico('check')}فرستادن برای تأیید</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'درخواست تغییر');
+    let kind = 'prices';
+    $$('[data-k]', m.box).forEach((b) => b.addEventListener('click', () => { kind = b.dataset.k; $$('[data-k]', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); $$('.ch-pane', m.box).forEach((p) => { p.hidden = p.dataset.p !== kind; }); }));
+    $$('.ch-pane [data-t]', m.box).forEach((x) => x.addEventListener('input', () => { const v = +enDigits(x.value).replace(/\D/g, '') || 0; x.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; }));
+    $('#chGo', m.box).addEventListener('click', () => {
+      let data = null, what = '';
+      if (kind === 'prices') { data = {}; const diff = []; $$('.ch-pane [data-t]', m.box).forEach((x) => { const v = +enDigits(x.value).replace(/\D/g, '') || 0, was = +x.dataset.was; if (v && v !== was) { data[x.dataset.t] = v; diff.push(`${money(was)} ← ${money(v)}`); } }); if (!diff.length) { toast('قیمتی عوض نشده.'); return; } what = diff.join('، '); }
+      if (kind === 'desc') { data = $('#chDesc', m.box).value.trim(); if (!data) { toast('متن رو بنویس.'); return; } what = `${fa([...data].length)} حرف`; }
+      if (kind === 'cancel') { data = $('#chWhy', m.box).value.trim(); if (!data) { toast('دلیل لغو رو بنویس.'); return; } what = data; }
+      const l = this.all(); l.unshift({ id: `c-${Date.now().toString(36)}`, eid: e.id, kind, data, what, note: $('#chNote', m.box).value.trim(), at: Date.now(), status: 'review' }); this.save(l);
+      auditLog(`درخواست تغییر «${this.KIND[kind]}» برای «${e.title}»`, ORG.name); m.shut(); toast('درخواست برای تأیید مدیر فرستاده شد.'); page.route();
+    });
+  },
+  pending(eid) { return this.all().filter((c) => c.status === 'review' && (!eid || c.eid === eid)); },
+  // the admin's yes: kept and laid over the show; a cancellation goes through the admin's cancel (with the refunds)
+  yes(id) {
+    const l = this.all(), c = l.find((x) => x.id === id); if (!c) return;
+    const e = showById(c.eid); c.status = 'done'; this.save(l);
+    if (c.kind === 'cancel') { store.set('blit.cancelled', [...new Set(cancelled().concat(c.eid))]); if (e) e.status = 'cancelled'; const os = allOrders().filter((o) => o.eid === c.eid && o.st === 'paid'); refund(os.map((o) => o.code), 'wallet', `لغو «${e ? e.title : ''}» به درخواست برگزارکننده`); }
+    else { const ov = store.get('blit.overlay', {}); ov[c.eid] = ov[c.eid] || {}; if (c.kind === 'prices') ov[c.eid].prices = { ...(ov[c.eid].prices || {}), ...c.data }; if (c.kind === 'desc') ov[c.eid].desc = c.data; store.set('blit.overlay', ov); this.apply(); }
+    auditLog(`تغییر «${this.KIND[c.kind]}» برای «${e ? e.title : c.eid}» تأیید شد`);
+  },
+  no(id, why) { const l = this.all(), c = l.find((x) => x.id === id); if (!c) return; c.status = 'rejected'; c.why = why; this.save(l); auditLog(`تغییر «${this.KIND[c.kind]}» رد شد: ${why}`); },
+  // the yeses, laid over the shows' data (on every visit)
+  apply() { const ov = store.get('blit.overlay', {}); for (const [id, o] of Object.entries(ov)) { const e = LIST().find((x) => x.id === id) || EVENTS.find((x) => x.id === id); if (!e) continue; if (o.prices) e.prices = { ...(e.prices || {}), ...o.prices }; if (o.desc) e.desc = o.desc; } if (typeof statCache !== 'undefined') statCache.clear(); },
+};
+changes.apply();
+
+/* ════════════════════════════════════════════════════════════════
    the touch of the page: a soft light that follows the pointer over a panel, a buy button that leans toward the
    pointer and ripples, banners that can be dragged to the next show, and the keys
    ════════════════════════════════════════════════════════════════ */
@@ -7606,7 +7662,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, account, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, account, changes, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
