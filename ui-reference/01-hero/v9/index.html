@@ -1447,6 +1447,11 @@ a.buy, a.chip { text-decoration: none; }
 .pg-ml a:hover { color: var(--ring); }
 .pg-ml span { color: rgba(var(--fg), .62); line-height: 1.8; }
 
+/* a link's colour in a page's panels is its section's (or the site's) colour, lightened on the dark theme and deepened on the
+   light one, so small text keeps a 4.5 : 1 contrast (WCAG AA) */
+:root:not([data-mode="light"]) .pg-box a:not(.chip):not(.buy):not(.rc-card) { color: color-mix(in oklab, var(--sc, var(--ring)) 66%, #fff); }
+:root[data-mode="light"] .pg-box a:not(.chip):not(.buy):not(.rc-card) { color: color-mix(in oklab, var(--sc, var(--ring)) 80%, #000); }
+
 /* ── the entry control (gate.js): the start (session, door, code) and the scanning (camera, the answer, the numbers, the log) ── */
 .gt { --ok: #22c55e; --bad: #f43f5e; --warn: #f59e0b; }
 .gt-sess { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: calc(var(--u) * .5); }
@@ -4999,7 +5004,7 @@ const page = {
       const state = st.key === 'soon' ? 'soon' : full ? 'full' : low ? 'low' : 'ok';
       const label = { soon: 'به‌زودی', full: 'تکمیل ظرفیت', low: 'رو به اتمام', ok: 'موجود است' }[state];
       const btn = !open || full ? `<button type="button" class="ses-buy" disabled>${esc(st.key === 'soon' ? 'به‌زودی' : full ? 'تکمیل' : st.cta || 'خرید بلیت')}</button>` : `<button type="button" class="ses-buy" data-s="${i}"${acc ? '' : ' aria-disabled="true"'}>${ico('bag')}خرید بلیت</button>`;
-      return `<div class="ses" data-st="${state}" style="--d:${i * 70}ms"><div class="ses-stub"><b>${esc(F.week.format(d))}</b><span>${esc(`${F.day.format(d)} ${F.month.format(d)}`)}</span><i>${esc(F.time.format(d))}</i></div><div class="ses-body"><span class="ses-st">${ico(state === 'ok' ? 'check' : state === 'full' ? 'x' : 'clock')}${label}</span><span class="ses-cap" aria-label="ظرفیت باقی‌مانده">${ico('users')}<i style="--v:${full ? 0 : Math.max(0.06, x.seats).toFixed(2)}"></i></span></div>${btn}</div>`;
+      return `<div class="ses" data-st="${state}" style="--d:${i * 70}ms"><div class="ses-stub"><b>${esc(F.week.format(d))}</b><span>${esc(`${F.day.format(d)} ${F.month.format(d)}`)}</span><i>${esc(F.time.format(d))}</i></div><div class="ses-body"><span class="ses-st">${ico(state === 'ok' ? 'check' : state === 'full' ? 'x' : 'clock')}${label}</span><span class="ses-cap" role="img" aria-label="ظرفیت باقی‌مانده: ${full ? 'تمام شد' : `${fa(Math.round(Math.max(0.06, x.seats) * 100))}٪`}">${ico('users')}<i style="--v:${full ? 0 : Math.max(0.06, x.seats).toFixed(2)}"></i></span></div>${btn}</div>`;
     }).join('') : `<p class="ses-none">${st.key === 'held' ? 'این برنامه برگزار شده و فروش بلیتش تمام شده.' : 'سانسی برای فروش باز نیست.'}</p>`;
     const steps = `<ol class="steps panel evp-rise" aria-label="مراحل خرید">${STEPS.map((n, i) => `<li${i === 0 ? ' aria-current="step"' : ''}><span class="n">${fa(i + 1)}</span>${n}</li>`).join('')}<i class="bar" aria-hidden="true"></i></ol>`;
     const plan = tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(runName(t))}</span><b>${money(t.price)} <small>تومان</small></b><em aria-hidden="true" style="--w:${(t.price / tiers.reduce((m, x) => Math.max(m, x.price), 1)).toFixed(3)}"></em></li>`).join('');
@@ -6649,7 +6654,7 @@ const viz = {
     const grid = Array.from({ length: Math.round(top / nice) + 1 }, (_, k) => k * nice).map((v) => `<line x1="${L}" x2="${W}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/><text x="${L - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${esc(tick(v))}</text>`).join('');
     const bar = (d, i) => { const h = Math.max(0, y(0) - y(d.v)), r = Math.min(4, h, bw / 2), X = x(i), Y = y(d.v); return h <= 0 ? '' : `<path d="M${X.toFixed(1)} ${y(0).toFixed(1)}V${(Y + r).toFixed(1)}Q${X.toFixed(1)} ${Y.toFixed(1)} ${(X + r).toFixed(1)} ${Y.toFixed(1)}H${(X + bw - r).toFixed(1)}Q${(X + bw).toFixed(1)} ${Y.toFixed(1)} ${(X + bw).toFixed(1)} ${(Y + r).toFixed(1)}V${y(0).toFixed(1)}Z"${i === n - 1 ? ' class="is-now"' : ''}/>`; };
     const xl = data.map((d, i) => (d.x && (i % (xlab || 6) === 0 || i === n - 1) ? `<text x="${(x(i) + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle">${esc(d.x)}</text>` : '')).join('');
-    const hits = data.map((d, i) => `<rect class="vz-hit" x="${(L + 4 + i * gx).toFixed(1)}" y="${T}" width="${gx.toFixed(1)}" height="${H - T - B}" data-i="${i}" data-y="${y(d.v).toFixed(1)}" data-h="${H}" tabindex="${i === n - 1 ? 0 : -1}" aria-label="${esc(d.x || '')}: ${esc(fmt(d.v))}"/>`).join('');
+    const hits = data.map((d, i) => `<rect class="vz-hit" x="${(L + 4 + i * gx).toFixed(1)}" y="${T}" width="${gx.toFixed(1)}" height="${H - T - B}" data-i="${i}" data-y="${y(d.v).toFixed(1)}" data-h="${H}" tabindex="${i === n - 1 ? 0 : -1}" role="img" aria-label="${esc(d.x || '')}: ${esc(fmt(d.v))}"/>`).join('');
     return `<div class="vz-wrap" id="${id}"><svg class="vz-cols" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}"><g class="vz-grid">${grid}</g><g class="vz-bars">${data.map(bar).join('')}</g><g class="vz-x">${xl}</g><g class="vz-hits">${hits}</g></svg><div class="vz-tip" hidden></div></div>`;
   },
   // the readout: the hovered (or focused) column lifts; the value leads, the time follows
@@ -6677,7 +6682,7 @@ const viz = {
   // ranked bars, one hue, largest first; the value at the tip, the name before the bar
   ranked(rows, fmt = short) {
     const mx = Math.max(1, ...rows.map((r) => r.v));
-    return `<ol class="vz-rank">${rows.map((r) => `<li><span>${esc(r.t)}</span><i style="--p:${(r.v / mx).toFixed(4)}" tabindex="0" aria-label="${esc(r.t)}: ${esc(fmt(r.v))}"></i><b>${esc(fmt(r.v))}</b></li>`).join('')}</ol>`;
+    return `<ol class="vz-rank">${rows.map((r) => `<li><span>${esc(r.t)}</span><i style="--p:${(r.v / mx).toFixed(4)}" tabindex="0" role="img" aria-label="${esc(r.t)}: ${esc(fmt(r.v))}"></i><b>${esc(fmt(r.v))}</b></li>`).join('')}</ol>`;
   },
   // one whole in parts: a tall segmented bar, a part's share printed inside it when it fits; the legend names them
   parts(parts, total) {
@@ -6988,7 +6993,7 @@ const wizard = {
     const run = () => {
       const c = $('#wzCard', this.el); if (!c) return;
       c.textContent = ''; c.appendChild(s2.card(draftEvent(this.d), false)); const t = $('.tkt', c); if (t) t.classList.add('is-in');
-      $$('a[href]', c).forEach((a) => { a.dataset.href = a.getAttribute('href'); a.removeAttribute('href'); a.setAttribute('role', 'presentation'); a.tabIndex = -1; });
+      $$('a[href]', c).forEach((a) => { a.dataset.href = a.getAttribute('href'); a.removeAttribute('href'); a.removeAttribute('aria-label'); a.setAttribute('role', 'presentation'); a.tabIndex = -1; });
       if (!c.dataset.wired) { c.dataset.wired = '1'; c.addEventListener('click', (ev) => { if (!ev.target.closest('a, button')) return; ev.preventDefault(); ev.stopPropagation(); toast('این فقط پیش‌نمایشه؛ بعد از تأیید مدیر، کارت به صفحه‌ی برنامه می‌ره.'); }, true); }
       const m = this.missing(), ok = WZ_STEPS.slice(0, 5).map((n, k) => !m.some((x) => x[0] === k));
       $('#wzCheck', this.el).innerHTML = WZ_STEPS.slice(0, 5).map((n, k) => `<li class="${ok[k] ? 'is-ok' : ''}">${ico(ok[k] ? 'check' : 'info')}${esc(n)}</li>`).join('');
@@ -7878,7 +7883,7 @@ admin.sms = function (el) {
   const saved = store.get('blit.sms', {}), list = SMS_DEF.map((x) => ({ ...x, v: saved[x.id] || x.v }));
   el.innerHTML = `${desk.head('پیامک‌ها', 'متن پیامک‌هایی که سایت می‌فرسته. فیلدها تو آکولاد پر می‌شن؛ هر پیامک فارسی ۷۰ حرفه و هر تکه‌ی پیامک بلند ۶۷ حرف. سامانه‌ی پیامک بعد از اینماد وصل می‌شه.')}
     <div class="sms-fields evp-rise"><span>فیلدها:</span>${Object.keys(SMS_FIELDS).map((k) => `<code>{${esc(k)}}</code>`).join('')}</div>
-    <div class="sms-list">${list.map((x) => `<section class="panel dk-box sms-item evp-rise" data-id="${x.id}"><h2>${ico('bell')}${esc(x.t)}<small class="sms-n"></small></h2><div class="sms-g"><label class="bk-fld"><span class="sr">متن ${esc(x.t)}</span><textarea rows="5" dir="rtl">${esc(x.v)}</textarea></label><div class="sms-phone" aria-label="پیش‌نمایش"><div class="sms-bub"></div><small>بلیت · همین الان</small></div></div><div class="sms-acts"><button type="button" class="chip" data-reset>${ico('undo')}متن پیش‌فرض</button></div></section>`).join('')}</div>`;
+    <div class="sms-list">${list.map((x) => `<section class="panel dk-box sms-item evp-rise" data-id="${x.id}"><h2>${ico('bell')}${esc(x.t)}<small class="sms-n"></small></h2><div class="sms-g"><label class="bk-fld"><span class="sr">متن ${esc(x.t)}</span><textarea rows="5" dir="rtl">${esc(x.v)}</textarea></label><div class="sms-phone" role="group" aria-label="پیش‌نمایش"><div class="sms-bub"></div><small>بلیت · همین الان</small></div></div><div class="sms-acts"><button type="button" class="chip" data-reset>${ico('undo')}متن پیش‌فرض</button></div></section>`).join('')}</div>`;
   $$('.sms-item', el).forEach((sec) => {
     const ta = $('textarea', sec), bub = $('.sms-bub', sec), n = $('.sms-n', sec), def = SMS_DEF.find((x) => x.id === sec.dataset.id);
     const upd = () => { const out = smsFill(ta.value), p = smsParts(out), len = [...out].length; bub.textContent = out; n.textContent = `${fa(len)} حرف · ${fa(p)} پیامک`; n.dataset.tone = p > 2 ? 'bad' : p > 1 ? 'warn' : 'good'; };

@@ -344,7 +344,7 @@ categories, cities, tracking, the account, the wallet, the halls, the gate, ever
 address), the buying flow (seats → payment → the bank's page → the tickets → tracking → the account), every step of the
 wizard and the gate's answers, in both themes at 1920, 1366 and 390 px wide: no script error, no sideways scroll, nothing
 cut by the window or by its box, no text spilling out, no broken picture, no label too long for its button, no press
-smaller than 24 px on the phone, and every link inside the site opens a page (`tools/qa-crawl.js`, `qa-flow.js`). A strip
+smaller than 24 px on the phone, and every link inside the site opens a page (`tools/qa-crawl.js`, `qa-flow.js`). An accessibility check (axe-core, WCAG 2.1 A and AA) of 21 pages in both themes, on a desktop and a phone, finds nothing: links in the pages' panels are a tint of their colour with 4.5 : 1 contrast, the charts' bars and the sessions' capacity meters are images with a name. A strip
 that scrolls sideways (the desks' tabs, the wizard's steps, the categories on a phone) fades at the edge with more to show.
 
 **A plan as a table of rows** (`planFromText`, and back `planToText`, in `admin.js`): the way a real hall's chart is typed in,
