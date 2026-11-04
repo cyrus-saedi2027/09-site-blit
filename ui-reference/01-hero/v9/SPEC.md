@@ -339,6 +339,14 @@ hall and its address, a perforation, a real **QR code** (qrcode-generator, MIT, 
 price; and the notes for the night (an hour early, one scan per code). The seats bought are sold when the session is opened
 again.
 
+**Checked everywhere (round J):** every page (41 addresses: the list, a show, its seats, the fixed pages, archive, search,
+categories, cities, tracking, the account, the wallet, the halls, the gate, every desk tab, the waiting room, an unknown
+address), the buying flow (seats → payment → the bank's page → the tickets → tracking → the account), every step of the
+wizard and the gate's answers, in both themes at 1920, 1366 and 390 px wide: no script error, no sideways scroll, nothing
+cut by the window or by its box, no text spilling out, no broken picture, no label too long for its button, no press
+smaller than 24 px on the phone, and every link inside the site opens a page (`tools/qa-crawl.js`, `qa-flow.js`). A strip
+that scrolls sideways (the desks' tabs, the wizard's steps, the categories on a phone) fades at the edge with more to show.
+
 ## 10.3 The other pages: tracking, sign-in, the phone's menu, the fixed pages, archive, search, a category, a city
 
 All in `pages.js` (inside `index.html`), all pages of the same router (§10.1) and the same look (a head with the page's
