@@ -338,6 +338,7 @@ icon and colour, panels, the footer under them):
 - **The fixed pages:** `#/p/rules` (the rules of buying: the hold, refunds when a show is cancelled or postponed, one
   scan per code, …), `#/p/about` (what blit is, four numbers), `#/p/contact` (six questions and answers that open, a form
   with a subject, a message and an optional order code; it says it was sent). The footer's links go to them.
+- **The map of every page** (`#/p/map`, «نقشه‌ی سایت» in the footer): every page for the buyer and for the partners, each with a line on what it does, so the whole prototype can be walked.
 - **The archive** (`#/archive`): the shows that took place, poster cards, newest first.
 - **Search** (`#/search/<words>`): Enter in the list's search (when no row was picked with the arrows) opens this page:
   every show whose name, artist, hall or city has the words, grouped by category, «چیزی پیدا نشد» with suggestions.

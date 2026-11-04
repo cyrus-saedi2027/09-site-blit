@@ -1333,6 +1333,15 @@ a.buy, a.chip { text-decoration: none; }
   .pg-head { padding: 16px; }
 }
 
+/* the map of every page */
+.pg-maps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: var(--gap); align-items: start; }
+.pg-ml { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.pg-ml li { display: grid; grid-template-columns: minmax(10em, 34%) minmax(0, 1fr); gap: 1em; align-items: baseline; padding: .55em .7em; border-radius: 10px; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
+.pg-ml li:nth-child(odd) { background: rgba(var(--fg), .035); }
+.pg-ml a { font-weight: var(--fwb); color: rgb(var(--fg)); text-decoration: none; }
+.pg-ml a:hover { color: var(--ring); }
+.pg-ml span { color: rgba(var(--fg), .62); line-height: 1.8; }
+
 /* ── the entry control (gate.js): the start (session, door, code) and the scanning (camera, the answer, the numbers, the log) ── */
 .gt { --ok: #22c55e; --bad: #f43f5e; --warn: #f59e0b; }
 .gt-sess { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: calc(var(--u) * .5); }
@@ -2273,6 +2282,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
             <ul>
               <li><a href="#s2Secs" data-go="all">برنامه‌ها</a></li>
               <li><a href="#/halls">سالن‌ها</a></li>
+              <li><a href="#/p/map">نقشه‌ی سایت</a></li>
               <li><a href="#" data-page="پشتیبانی">پشتیبانی</a></li>
               <li><a href="#" data-page="درباره‌ی ما">درباره‌ی ما</a></li>
               <li><a href="#" data-page="آرشیو برنامه‌ها">آرشیو برنامه‌ها</a></li>
@@ -5336,6 +5346,7 @@ const PAGES = {
   rules: { t: 'قوانین خرید', icon: 'shield', lead: 'پیش از خرید این‌ها رو بخون؛ خرید یعنی پذیرفتن همین قوانین.' },
   about: { t: 'درباره‌ی بلیت', icon: 'spark', lead: 'فروشگاه آنلاین بلیت کنسرت، تئاتر و جُنگ در سراسر ایران؛ با انتخاب زنده‌ی صندلی و بلیت آنی.' },
   contact: { t: 'تماس و پشتیبانی', icon: 'headset', lead: 'سؤالی داری یا خریدت به مشکل خورده؟ اینجا جوابش هست، یا برامون بنویس.' },
+  map: { t: 'نقشه‌ی سایت', icon: 'grid', lead: 'همه‌ی صفحه‌های بلیت، برای خریدار و برای همکاران؛ هر کدوم با یه خط که چی کار می‌کنه.' },
 };
 const userOf = () => store.get('blit.user', null);
 const PAGE_ROUTE = { 'پیگیری خرید': '#/receipts', 'قوانین خرید': '#/p/rules', 'درباره‌ی ما': '#/p/about', 'تماس با ما': '#/p/contact', 'پشتیبانی': '#/p/contact', 'ثبت مشکل یا طرح پرسش': '#/p/contact', 'آرشیو برنامه‌ها': '#/archive' };
@@ -5344,7 +5355,7 @@ const pages = {
   parse(h) {
     let m;
     if (h === '#/receipts') return { kind: 'receipts' };
-    if ((m = /^#\/p\/(rules|about|contact)$/.exec(h))) return { kind: 'static', name: m[1] };
+    if ((m = /^#\/p\/(rules|about|contact|map)$/.exec(h))) return { kind: 'static', name: m[1] };
     if (h === '#/archive') return { kind: 'archive' };
     if ((m = /^#\/search\/(.*)$/.exec(h))) return { kind: 'search', q: decodeURIComponent(m[1]) };
     if ((m = /^#\/c\/(soon|(?:concert|theatre|comedy)-(?:tehran|other))$/.exec(h))) return { kind: 'cat', key: m[1].replace('-', ':') };
@@ -5415,6 +5426,11 @@ const pages = {
       body = `<section class="pg-stats evp-rise">${[[all.length, 'برنامه'], [cities.size, 'شهر'], [halls.size, 'سالن'], [0, 'صف انتظار پشت در']].map(([n, l]) => `<div class="panel"><b>${fa(n)}</b><span>${l}</span></div>`).join('')}</section>
         <section class="panel pg-box evp-rise pg-doc"><h2>${ico('music')}برای کی ساخته شده</h2><p>برای کسی که می‌خواد بی‌دردسر بلیت کنسرت، تئاتر یا جُنگ بخره: صندلی رو روی نقشه‌ی زنده‌ی سالن ببینه، بدون ثبت‌نام پرداخت کنه و بلیتش همون لحظه بیاد. برای برگزارکننده‌ای که می‌خواد فروشش رو لحظه‌به‌لحظه ببینه، و برای کنترل‌چی‌ای که دم در فقط یه کد QR اسکن می‌کنه.</p>
         <h2>${ico('spark')}چی فرق داره</h2><ul class="pg-tips"><li>پلان واقعی هر سالن با بالکن، لژ، میز و جای ایستاده</li><li>شمارش معکوس شروع فروش و سایتی که زیر فشار همون لحظه هم سریع می‌مونه</li><li>تم تیره و روشن، روی گوشی و کامپیوتر</li></ul></section>`;
+    } else if (v.name === 'map') {
+      const e = LIST().find((x) => statusOf(x).key === 'normal' && sessionsOf(x).length) || LIST()[0], s = e && sessionsOf(e)[0];
+      const g = (t, icon, rows) => `<section class="panel pg-box evp-rise"><h2>${ico(icon)}${esc(t)}</h2><ul class="pg-ml">${rows.map(([h, n, d]) => `<li><a href="${esc(h)}">${esc(n)}</a><span>${esc(d)}</span></li>`).join('')}</ul></section>`;
+      body = `<div class="pg-maps">${g('برای خریدار', 'ticket', [['#', 'صفحه‌ی اصلی', 'جایگاه ویژه، لیست برنامه‌ها به تفکیک دسته، پیش‌فروش، جستجو و شهر'], ['#/c/concert-tehran', 'صفحه‌ی هر دسته', 'همه‌ی برنامه‌های یه دسته (مثلاً کنسرت‌های تهران)'], ['#/city/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86', 'صفحه‌ی هر شهر', 'برنامه‌ها و سالن‌های یه شهر'], [e ? `#/e/${encodeURIComponent(e.id)}` : '#', 'صفحه‌ی برنامه (گام ۱)', 'سانس‌ها، مشخصات، طرح بها، قوانین، مسیریابی'], [e && s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : '#', 'انتخاب صندلی (گام ۲)', 'نقشه‌ی زنده‌ی کل سالن، زوم، فیلتر قیمت'], ['#/receipts', 'پیگیری خرید و بلیت‌های من', 'با کد پیگیری یا موبایل و کد پیامکی'], ['#/wallet', 'کیف پول', 'شارژ، کد هدیه، گردش حساب'], ['#/halls', 'سالن‌ها', 'کتابخانه‌ی سالن‌ها با پلان و برنامه‌های هر سالن'], ['#/archive', 'آرشیو', 'برنامه‌های برگزارشده'], ['#/search/%DA%A9%D9%86%D8%B3%D8%B1%D8%AA', 'نتیجه‌ی جستجو', 'Enter تو جستجوی لیست'], ['#/p/rules', 'قوانین خرید', ''], ['#/p/contact', 'تماس و پشتیبانی', 'پرسش‌های پرتکرار و فرم'], ['#/p/about', 'درباره‌ی ما', '']])}
+        ${g('برای همکاران', 'users', [['#/org', 'پنل برگزارکننده', 'فروش زنده، برنامه‌ها، تسویه'], ['#/org/new', 'ساخت برنامه‌ی جدید', 'شش قدم تا تأیید مدیر: سالن، تقویم شمسی، قیمت روی پلان و تک‌صندلی'], ['#/org/codes', 'کدهای تخفیف', 'پیام تبلیغاتی و کارت چاپی A4'], ['#/org/staff', 'کنترل‌چی‌ها', 'کد ورود هر کنترل‌چی'], ['#/gate', 'کنترل ورود', 'اسکن QR با دوربین، اسکنر یا کد؛ آفلاین'], ['#/admin', 'پنل مدیر', 'پیشخوان کل سایت'], ['#/admin/shows', 'صف تأیید و لغو برنامه', 'با برگشت پول'], ['#/admin/orders', 'سفارش‌ها', 'جستجو، فیلتر، برگشت پول، فایل'], ['#/admin/team', 'کاربرها و نقش‌ها', 'مدیر کل، مالی، اپراتور'], ['#/admin/site', 'دسته‌ها، شهرها و تنظیمات خرید', 'کد پیامکی، صف انتظار'], ['#/admin/halls', 'طراح سالن', 'ساختن پلان سالن تازه'], ['#/admin/reports', 'گزارش‌ها', 'با فیلتر و فایل'], ['#/admin/gifts', 'کد هدیه‌ی سازمانی', ''], ['#/admin/log', 'تاریخچه‌ی تغییرات', '']])}</div>`;
     } else {
       body = `<div class="evp-cols"><div class="evp-main"><section class="panel pg-box evp-rise"><h2>${ico('info')}پرسش‌های پرتکرار</h2><div class="faq">${FAQ.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(q)}${ico('down')}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
         <section class="panel pg-box evp-rise"><h2>${ico('headset')}برامون بنویس</h2><form id="pgForm" class="pg-form"><label class="bk-fld"><span>نام</span><input required autocomplete="name"></label><label class="bk-fld"><span>شماره‌ی موبایل</span><input required type="tel" inputmode="numeric" dir="ltr" maxlength="11"></label><label class="bk-fld full"><span>موضوع</span><select><option>پیگیری خرید</option><option>مشکل پرداخت</option><option>پیشنهاد</option><option>همکاری (برگزارکننده‌ها)</option></select></label><label class="bk-fld full"><span>پیام</span><textarea rows="4" required></textarea></label><button type="submit" class="buy">${ico('check')}فرستادن</button></form></section></div>
