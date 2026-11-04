@@ -19,7 +19,7 @@
 - *Round G*: «take more ideas from the sample I gave you; I don't much like what you made for the next sections: the layouts and arrangements (**don't change the first section any more**, it turned out good)». The hero and the header were not touched (their panels are pixel-identical to the version the owner last saw: `tools/parity2.js`; only what round F added to the header and the rail's cards changed). The section under the hero was **made again after the sample's home page**: a category bar with a sliding pill that follows the page, a section for each category (name, how many, tickets), ticket-shaped cards with a perforation, labels, the countdown, a stamp for a full show and a tag for the city, and a footer with the trust badges' slots (§10). The old head panel, the filter chips and the three numbers are gone.
 - *Round H*: «I didn't much like it, especially since the organisers give **tall posters**; every place except the home page's first section must be poster-style; and put real posters, other concerts and theatre shows, from other Iranian ticket sites». The hero and the header are untouched. The list's cards are now **poster cards** (§10): a tall frame (2 : 3) with the poster whole, the words under it (or over it, as in the sample: an option), 6 across at 1920. The sample's content grew to the owner's own sample (its 26 events and their photos as posters) plus six finished posters and the real posters the owner sent (3 of the 6 real shows and SkyKings). **What could not be done:** the Iranian ticket sites do not answer from the server this was built on (every request is reset), so posters could not be fetched from them; the owner can send posters (a zip, as with the banners) or put them in from the panel (§14).
 - *Round I*: «use the sample I gave you more; make the sections more separate so they are clearer; add the **white theme** to the header so I can see it, and make the theme's change very smooth and attractive; I want it stronger, I'm still not that happy; then build the **next section**». The hero's panels and motion are untouched (pixel-identical in the dark theme: `tools/parity2.js`); the header gained one button. Built: a **light (white) theme** for the whole site, turned by a sun/moon button in the header, the new colours opening as a circle from the button (§9, §12); the list redone after the sample's home page (§10, *the list in round I*): the sample's search and city on top, every category **a panel of its own** with its own colour, icon and head, two rows and «نمایش همه», the presale as wide tickets with a big flip countdown, the sample's white buy buttons, its back-to-top ring and its trust badges; and the next section, **the show's page** (§10.1): the first of the four steps of a purchase (choose the session), after the sample's event page.
-- *Round J*: «continue and build the other sections, until the tokens run out» and «take the halls' plans and places from iranejra.com/maps, but make the maps much more professional». The site does not answer from the build server (the connection is reset; the fetch tool gets 503), so the plans are the TYPES of the sample's halls until the owner sends the real ones. Built: steps 2–4 of a purchase (§10.2): the hall plan engine (seven plan types with boxes, tables, standing), the live seat map, the 15-minute hold, guest checkout with an SMS code for busy shows, a discount code and VAT, a demo gateway, the tickets with QR codes; «مسیریابی» to Neshan, Balad, Google Maps, Waze. Then (§10.3): the purchase tracking, sign-in with an SMS code and «حساب من», the phone's menu, the rules / about / contact pages, the archive, the search's page, a page for each category and each city.
+- *Round J*: «continue and build the other sections, until the tokens run out» and «take the halls' plans and places from iranejra.com/maps, but make the maps much more professional». The site does not answer from the build server (the connection is reset; the fetch tool gets 503), so the plans are the TYPES of the sample's halls until the owner sends the real ones. Built: steps 2–4 of a purchase (§10.2): the hall plan engine (seven plan types with boxes, tables, standing), the live seat map, the 15-minute hold, guest checkout with an SMS code for busy shows, a discount code and VAT, a demo gateway, the tickets with QR codes; «مسیریابی» to Neshan, Balad, Google Maps, Waze. Then (§10.3): the purchase tracking, sign-in with an SMS code and «حساب من», the phone's menu, the rules / about / contact pages, the archive, the search's page, a page for each category and each city. Then (§10.4): the entry control at the doors (camera, hand scanner, offline), the organiser's panel (live sales, a six-step wizard, settlement, discount codes with a promo picture and printed cards, controllers), the admin's panel (the review queue, cancellations with refunds, orders, roles, cities, the hall designer, reports, gift codes, history) and the wallet.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -348,6 +348,59 @@ icon and colour, panels, the footer under them):
 
 In the real site these are ordinary pages with their own addresses (server-rendered for search engines); the SMS code and
 the orders come from the server (brief §2.5).
+
+## 10.4 The desks: the entry control, the organiser's panel, the admin's panel, the wallet
+
+Brief §2.4. All simulated in this browser (localStorage), all on the site's panels and both themes; the footer's line
+«همکاران» and the phone's menu open them.
+
+**The entry control** (`gate.js`, `#/gate` → `#/gate/<session>`): the session, the door (درِ ۱ اصلی، درِ ۲ بالکن و سکوها،
+درِ ۳ لژ و میزها) and the controller's 4-digit code (the organiser gives it; demo ۱۲۳۴). The session's list of tickets is
+downloaded first (the seats the seat map shows sold, in orders of one to four, and the ones bought in this browser), so the
+door works offline. A ticket is read by the **camera** (`getUserMedia`, BarcodeDetector where the browser has it, jsQR 1.4.0
+from jsDelivr otherwise; a QR left in front of the camera is read once), a **hand scanner** (it types and ends with Enter),
+or the code typed in (a tracking code with several tickets lists them: one by one or all in). The answer fills the camera's
+frame, with a sound and a buzz: green «ورود مجاز» (the seat; «۲ از ۴ بلیت این خرید»; amber when another door is nearer),
+red «قبلاً وارد شده» (when and at which door), amber «مال این سانس نیست» (which session it is for), red «بلیت نامعتبر».
+The ticket's QR is now `BLIT2|code|session|seat|signature` (a demo signature: a forged or edited QR is refused without the
+server). Live: the share in (a ring), each door's count, the last hour by 5 minutes, the problems, the last scans; the
+other doors are simulated. Offline (the browser's own state, or the button): the scans wait in a queue; back online they
+are sent, what the other doors did comes in, and a ticket let in at two doors meanwhile is reported. «پایان شیفت» sums the
+shift.
+
+**The organiser** (`desk.js`, `wizard.js`, `codes.js`, `#/org/<tab>`): a side bar (pills on a phone).
+- پیشخوان: four stat tiles (today's sales against yesterday up to the same hour, tickets, 30 days, the sessions'
+  occupancy), the last two hours of sales by 5 minutes (columns with a readout and a table), the last purchases (live),
+  the sessions ahead (sold of capacity), the best sellers (ranked bars).
+- برنامه‌ها: what is on the site, what waits for the admin, the drafts and what came back (with the reason).
+- برنامه‌ی جدید (six steps, a draft at every step, the card as it will look in the list beside them): what it is; the
+  poster (a file, scaled in the browser; or a stand-in from the name and a colour); the hall from the **library**, each
+  with its plan drawn small; the sessions on a **Persian calendar** (days × hours) and the sale's start (at once, or a time
+  with the countdown); the prices **per tier of the hall's plan** (the plan coloured by tier, the weekend 10 % dearer, what
+  a full house brings); a last look and «فرستادن برای تأیید مدیر».
+- فروش و تسویه: what the buyers paid in three parts (the organiser's share, the 8 % fee, the VAT), the payouts, per show,
+  a CSV file.
+- کدهای تخفیف: for a show or all, a percentage or an amount, uses and a last day; they work at checkout at once (a show's
+  code only for it) and count their uses. **The promo message**: a 1080 × 1080 picture drawn on a canvas (the poster, the
+  discount, the code in a ticket) to download, and its words to copy. **The printed cards**: 85.6 × 54 mm (a bank card),
+  ten to an A4 sheet with crop marks, music or theatre graphics, a unique code per card or one for all; print or PDF.
+- کنترل‌چی‌ها: name, mobile, doors, a code sent by SMS (it opens the entry control).
+
+**The admin** (`admin.js`, `#/admin/<tab>`): the dashboard (30 days); **برنامه‌ها و تأیید** (the queue: «تأیید و انتشار»
+puts a show on the site at once, «برگردوندن» with a reason; a show on the site can be **cancelled**: its label becomes «لغو
+شد» and every buyer's money goes back, to the wallet at once or to the card); سفارش‌ها (search by code, mobile or show;
+today / 7 / 30 days; the state; a refund; CSV); کاربرها و نقش‌ها (مدیر کل، مالی، اپراتور and what each may do);
+دسته‌ها و شهرها (a new category; which cities the buyers see in the header's and the list's city menus); سالن‌ها (the
+library, and **the hall designer**: the shape, rows, seats per row, blocks, a balcony, boxes, tables, a standing area, drawn
+as they change; a new hall is at once in the organisers' wizard); گزارش‌ها (a period, a city, a kind: every number and chart
+below follows; CSV); کیف پول و کد هدیه (batches of gift codes of an organisation: a file or printed cards);
+تاریخچه‌ی تغییرات (who changed what, when).
+
+**The wallet** (`#/wallet`, from «حساب من» and the phone's menu): the balance, a charge by the gateway, a gift code (demo
+code on the admin's page), what came in and went out; it pays at checkout (step 3) when it has enough; it has no paying out.
+
+The charts follow one method: a single series in one hue, thin marks, a readout on hover and focus, a table of the numbers
+under each chart; the four colours of the parts were checked for colour-blind separation on both themes.
 
 ---
 

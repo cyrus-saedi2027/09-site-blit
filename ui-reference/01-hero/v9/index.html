@@ -1503,6 +1503,386 @@ a.buy, a.chip { text-decoration: none; }
 .ft-work { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .3em 1em; }
 .ft-work span { color: rgba(var(--fg), .5); }
 
+/* ── the desks (desk.js, wizard.js, codes.js, admin.js): the shell, the numbers, the charts, the tables, the forms ── */
+.dk { --viz-1: #3987e5; --viz-2: #d95926; --viz-3: #199e70; --viz-4: #c98500; --vz-quiet: rgba(var(--fg), .32); grid-template-columns: clamp(230px, calc(var(--u) * 15), 300px) minmax(0, 1fr); align-items: start; }
+:root[data-mode="light"] .dk { --viz-1: #2a78d6; --viz-2: #eb6834; --viz-3: #1baf7a; --viz-4: #eda100; }
+.dk-nav { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); display: grid; gap: calc(var(--u) * .6); padding: calc(var(--u) * 1) calc(var(--u) * .8); border-radius: calc(var(--r) * 1.15); }
+.dk-who { display: flex; align-items: center; gap: .75em; padding: .3em .4em .8em; border-bottom: 1px solid rgba(var(--fg), .1); }
+.dk-who > span:last-child { display: grid; min-width: 0; line-height: 1.6; }
+.dk-who b { font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-who small { font-size: calc(max(11px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.dk-av { flex: none; display: grid; place-items: center; width: max(40px, calc(var(--u) * 2.6)); aspect-ratio: 1; border-radius: 50%; font-weight: 900; font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)); color: #fff; background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+.dk-tabs { display: grid; gap: 2px; }
+.dk-tabs a, .dk-foot a { display: flex; align-items: center; gap: .7em; padding: .62em .75em; border-radius: calc(var(--r) * .55); font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgba(var(--fg), .78); text-decoration: none; transition: background-color .25s, color .25s; }
+.dk-tabs a:hover, .dk-foot a:hover { background: rgba(var(--fg), .06); color: rgb(var(--fg)); }
+.dk-tabs a[aria-current="page"] { background: rgb(var(--fg)); color: var(--capsule); }
+.dk-tabs a svg.i, .dk-foot a svg.i { flex: none; width: 1.2em; height: 1.2em; }
+.dk-tabs a small { margin-inline-start: auto; padding: 0 .55em; border-radius: 999px; font-size: .78em; background: var(--viz-4); color: #1a1002; }
+.dk-tabs a:focus-visible, .dk-foot a:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.dk-foot { display: grid; gap: 2px; padding-top: .6em; border-top: 1px solid rgba(var(--fg), .1); }
+.dk-main { display: grid; gap: var(--gap); min-width: 0; align-content: start; }
+.dk-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8em 1.4em; padding: calc(var(--u) * .4) calc(var(--u) * .3); }
+.dk-head h1 { margin: 0; font-size: calc(max(22px, calc(var(--u) * 1.6)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; }
+.dk-head p { margin: .2em 0 0; max-width: 62em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.95; color: rgba(var(--fg), .66); }
+.dk-head .buy, .dk-head .chip { gap: .45em; }
+.dk-live { display: inline-flex; align-items: center; gap: .4em; margin-inline-start: .5em; font-size: .92em; font-weight: var(--fwm); color: #22c55e; }
+.dk-live i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: gtPing 2s ease-out infinite; }
+.dk-sub { margin: calc(var(--u) * .4) calc(var(--u) * .3) 0; font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: 800; }
+.dk-sub small { font-weight: var(--fwm); color: rgba(var(--fg), .55); }
+.dk-cols { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.dk-cols-r { grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); }
+.dk-stack { display: grid; gap: var(--gap); }
+.dk-box { padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); min-width: 0; }
+.dk-box h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(15.5px, calc(var(--u) * 1.04)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
+.dk-box h2 svg.i { width: 1.2em; height: 1.2em; color: var(--viz-1); }
+.dk-box h2 small { margin-inline-start: auto; font-size: .74em; font-weight: var(--fwm); color: rgba(var(--fg), .6); }
+.dk-empty { list-style: none; color: rgba(var(--fg), .5); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+
+/* stat tiles: a label, a value (one hero figure per page), a delta, a line */
+.dk-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--gap); }
+.dk-tile { position: relative; display: grid; align-content: start; gap: .25em; padding: calc(var(--u) * 1) calc(var(--u) * 1.2) calc(var(--u) * 1.1); border-radius: calc(var(--r) * 1.1); overflow: hidden; }
+.dk-tile > span { font-size: calc(max(12px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); }
+.dk-tile > b { font-size: calc(max(24px, calc(var(--u) * 1.65)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.35; }
+.dk-tile.dk-hero > b { font-size: calc(max(34px, calc(var(--u) * 2.4)) * var(--tx) * var(--tx-main)); font-weight: 900; }
+.dk-tile > b.is-tick { animation: dkTick .7s var(--ease); }
+@keyframes dkTick { 30% { color: #22c55e; transform: translateY(-2px); } }
+.dk-tile em { font-style: normal; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.dk-tile em[data-tone="good"] { color: #22c55e; }
+.dk-tile em[data-tone="bad"] { color: #f43f5e; }
+.dk-tile em small { margin-inline-start: .4em; color: rgba(var(--fg), .5); }
+.vz-spark { width: min(140px, 60%); height: 34px; margin-top: .2em; overflow: visible; }
+.vz-spark polyline { fill: none; stroke: var(--vz-quiet); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.vz-spark circle { fill: var(--viz-1); stroke: var(--capsule); stroke-width: 2; }
+
+/* the columns chart */
+.vz-wrap { position: relative; direction: ltr; }
+.vz-cols { display: block; width: 100%; height: auto; overflow: visible; }
+.vz-grid line { stroke: rgba(var(--fg), .1); stroke-width: 1; }
+.vz-grid text, .vz-x text { fill: rgba(var(--fg), .55); font: 500 11px var(--font); font-variant-numeric: tabular-nums; }
+.vz-bars path { fill: color-mix(in oklab, var(--viz-1) 72%, transparent); transition: fill .2s; }
+.vz-bars path.is-now { fill: var(--viz-1); }
+.vz-bars path.is-on { fill: color-mix(in oklab, var(--viz-1) 80%, #fff); }
+.vz-hit { fill: transparent; cursor: crosshair; outline: none; }
+.vz-hit:focus-visible { stroke: rgb(var(--fg)); stroke-width: 1.5; stroke-dasharray: none; }
+.vz-tip { position: absolute; z-index: 3; translate: -50% -100%; display: grid; gap: 1px; padding: .45em .75em; border-radius: 10px; background: var(--capsule); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(var(--fg), .14); pointer-events: none; white-space: nowrap; direction: rtl; text-align: center; }
+.vz-tip b { font-size: 14px; font-weight: 800; color: rgb(var(--fg)); }
+.vz-tip span { font-size: 11.5px; color: rgba(var(--fg), .62); }
+.vz-table { margin-top: .6em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.vz-table summary { display: inline-flex; align-items: center; gap: .4em; cursor: pointer; color: rgba(var(--fg), .6); list-style: none; }
+.vz-table summary::-webkit-details-marker { display: none; }
+.vz-table summary svg.i { width: 1.1em; height: 1.1em; }
+.vz-table .dk-tbl-w { max-height: 260px; margin-top: .5em; }
+/* ranked bars: one hue, the baseline on the right (where a Persian line starts), the value at the tip */
+.vz-rank { list-style: none; margin: 0; padding: 0; display: grid; gap: .7em; }
+.vz-rank li { display: grid; grid-template-columns: minmax(7em, 34%) minmax(0, 1fr) auto; align-items: center; gap: .8em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.vz-rank span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgba(var(--fg), .82); }
+.vz-rank i { position: relative; height: 18px; outline: none; }
+.vz-rank i::after { content: ""; position: absolute; inset-block: 0; right: 0; width: calc(var(--p) * 100%); min-width: 3px; border-radius: 4px 0 0 4px; background: var(--viz-1); transition: width .8s var(--ease), filter .2s; }
+.vz-rank i:hover::after, .vz-rank i:focus-visible::after { filter: brightness(1.18); }
+.vz-rank i:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; border-radius: 4px; }
+.vz-rank b { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* one whole in parts: blocks with a 2 px gap, the share inside where it fits, a legend of names */
+.vz-seg { display: flex; gap: 2px; height: 28px; margin: .2em 0 .9em; }
+.vz-seg span { flex: var(--w) 1 0; min-width: 3px; display: flex; align-items: center; padding-inline: .6em; border-radius: 4px; background: var(--c); color: #fff; font-size: 12px; font-weight: 800; white-space: nowrap; overflow: visible; }
+:root[data-mode="light"] .vz-seg span:nth-child(3) { color: #0b0b0b; }
+.vz-leg { list-style: none; margin: 0; padding: 0; display: grid; gap: .5em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.vz-leg li { display: flex; align-items: center; gap: .6em; color: rgba(var(--fg), .8); }
+.vz-leg i { width: 12px; height: 12px; border-radius: 3px; background: var(--c); }
+.vz-leg b { margin-inline-start: auto; font-variant-numeric: tabular-nums; color: rgb(var(--fg)); }
+
+/* tables, meters, feeds */
+.dk-tbl-w { overflow: auto; overscroll-behavior: contain; border-radius: calc(var(--r) * .5); }
+.dk-tbl { width: 100%; border-collapse: collapse; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.dk-tbl th { position: sticky; top: 0; z-index: 1; padding: .7em .8em; text-align: start; font-weight: var(--fwm); color: rgba(var(--fg), .6); background: var(--capsule); border-bottom: 1px solid rgba(var(--fg), .12); white-space: nowrap; }
+.dk-tbl td { padding: .7em .8em; border-bottom: 1px solid rgba(var(--fg), .07); vertical-align: middle; }
+.dk-tbl td small { display: block; margin-top: .25em; color: rgba(var(--fg), .55); white-space: nowrap; }
+.dk-tbl tbody tr:hover td { background: rgba(var(--fg), .03); }
+.dk-tbl a { color: inherit; font-weight: var(--fwm); text-decoration: none; }
+.dk-tbl a:hover { color: var(--viz-1); }
+.dk-tbl tfoot td { font-weight: 800; border-top: 1px solid rgba(var(--fg), .2); border-bottom: 0; }
+.dk-num td:not(:first-child), .dk-num th:not(:first-child) { text-align: end; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dk-meter { display: block; width: min(150px, 100%); height: 6px; border-radius: 3px; background: color-mix(in oklab, var(--viz-1) 18%, transparent); overflow: hidden; }
+.dk-meter i { display: block; height: 100%; width: calc(var(--p) * 100%); border-radius: 3px; background: var(--viz-1); margin-inline-start: 0; }
+.dk-meter[data-tone="warn"] i { background: var(--viz-4); }
+.dk-feed { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.dk-feed li { display: flex; align-items: center; gap: .8em; padding: .55em .5em; border-radius: 10px; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.dk-feed li:nth-child(odd) { background: rgba(var(--fg), .035); }
+.dk-feed-n { flex: none; display: grid; place-items: center; width: 2.2em; aspect-ratio: 1; border-radius: 50%; font-weight: 900; color: #fff; background: var(--viz-1); }
+.dk-feed li > span:nth-child(2) { flex: 1; min-width: 0; display: grid; line-height: 1.6; }
+.dk-feed b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-feed small { color: rgba(var(--fg), .58); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-feed-v { display: grid; justify-items: end; line-height: 1.6; white-space: nowrap; }
+.dk-pay { list-style: none; margin: 0; padding: 0; display: grid; gap: .5em; }
+.dk-pay li { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: .65em .8em; border-radius: 10px; background: rgba(var(--fg), .04); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.dk-pay span { display: grid; line-height: 1.7; }
+.dk-pay small { color: rgba(var(--fg), .58); }
+
+/* the shows' cards */
+.dk-shows { display: grid; gap: calc(var(--u) * .5); }
+.dk-show { display: grid; grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 1fr) auto; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * .7) calc(var(--u) * 1); border-radius: calc(var(--r) * .9); }
+.dk-show .bk-poster { width: max(52px, calc(var(--u) * 3.4)); }
+.dk-show .bk-poster.is-none { background: linear-gradient(160deg, var(--c, #8b5cf6), #0b0a10); }
+.dk-show .bk-poster.is-none img { display: none; }
+.dk-show-t { display: grid; gap: .2em; line-height: 1.7; min-width: 0; }
+.dk-show-t b { font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dk-show-t small { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.dk-show-st { display: flex; flex-wrap: wrap; align-items: center; gap: .5em; }
+.dk-show-n { display: grid; gap: .3em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.dk-show-n small { color: rgba(var(--fg), .6); }
+.dk-show-a { display: flex; flex-wrap: wrap; gap: .4em; justify-content: flex-end; }
+.dk-show-a .chip, .dk-show-a .buy { gap: .4em; }
+
+/* forms, staff */
+.dk-form { display: grid; gap: 0; }
+.dk-form .buy { justify-self: start; gap: .45em; margin-top: .4em; }
+.dk-form select, .dk-form textarea, .wz-body select, .wz-body textarea, .dk-filters select, .ad-role select, .cd-opts select, .ad-des select { box-sizing: border-box; width: 100%; height: max(46px, calc(var(--u) * 2.9)); padding: 0 1em; border-radius: calc(var(--r) * .55); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 calc(max(13.5px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)) var(--font); outline: none; }
+.dk-form textarea, .wz-body textarea { height: auto; padding: .7em 1em; line-height: 1.9; resize: vertical; }
+.dk-form select option, .wz-body select option, .dk-filters select option, .ad-role select option, .cd-opts select option, .ad-des select option { background: var(--capsule); color: rgb(var(--fg)); }
+.dk-form select:focus, .wz-body select:focus, .wz-body textarea:focus, .dk-form textarea:focus { border-color: var(--viz-1); }
+.dk-checks { display: flex; flex-wrap: wrap; gap: .5em; margin: 0 0 calc(var(--u) * .8); padding: 0; border: 0; }
+.dk-checks legend { margin-bottom: .45em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .8); }
+.dk-checks label { display: flex; align-items: center; gap: .5em; padding: .5em .8em; border-radius: 12px; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); cursor: pointer; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.dk-checks label span { display: grid; line-height: 1.5; }
+.dk-checks small { color: rgba(var(--fg), .55); }
+.dk-checks input { accent-color: var(--viz-1); width: 16px; height: 16px; }
+.dk-staff { list-style: none; margin: 0; padding: 0; display: grid; gap: .45em; }
+.dk-staff li { display: flex; align-items: center; gap: .8em; padding: .6em .7em; border-radius: 12px; background: rgba(var(--fg), .035); }
+.dk-staff-t { flex: 1; min-width: 0; display: grid; gap: .15em; line-height: 1.6; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.dk-staff-t small { color: rgba(var(--fg), .58); }
+.dk-staff-t > span { display: flex; flex-wrap: wrap; gap: .3em; }
+.dk-staff-t .chip { height: 24px; padding-inline: .7em; cursor: default; }
+.dk-pin { display: inline-flex; align-items: center; gap: .3em; }
+.dk-pin code { min-width: 3.4em; text-align: center; font: 700 15px ui-monospace, Menlo, monospace; letter-spacing: .15em; }
+.dk-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .8em 1em; }
+.dk-filters .bk-fld { margin: 0; min-width: min(260px, 100%); }
+.dk-filters .bk-seg { margin-bottom: 2px; }
+
+/* the wizard */
+.wz-steps { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); margin: 0; padding: 0 calc(var(--u) * .5); list-style: none; border-radius: calc(var(--r) * 1.1); overflow: hidden; }
+.wz-steps li { display: flex; justify-content: center; }
+.wz-steps button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .55em; width: 100%; height: max(52px, calc(var(--u) * 3.3)); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgba(var(--fg), .55); white-space: nowrap; }
+.wz-steps button:disabled { cursor: default; }
+.wz-steps .n { display: grid; place-items: center; width: 1.9em; aspect-ratio: 1; border-radius: 50%; background: rgba(var(--fg), .08); font-weight: 800; }
+.wz-steps li[aria-current="step"] button { color: rgb(var(--fg)); }
+.wz-steps li[aria-current="step"] .n { background: rgb(var(--fg)); color: var(--capsule); }
+.wz-steps li.is-done button { color: rgba(var(--fg), .8); }
+.wz-steps li.is-done .n { background: #22c55e; color: #fff; }
+.wz-steps .n svg.i { width: 62%; height: 62%; stroke-width: 3; }
+.wz-steps button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -4px; border-radius: 10px; }
+.wz-steps .bar { position: absolute; bottom: 0; right: calc(var(--u) * .5 + (100% - var(--u)) / 6 * var(--cur, 0)); width: calc((100% - var(--u)) / 6); height: 3px; border-radius: 3px; background: linear-gradient(90deg, #f97316, #ec4899, #8b5cf6); transition: right .7s var(--ease); }
+.wz-cols { align-items: start; }
+.wz-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); }
+.wz-card { max-width: 280px; margin: 0 auto; }
+.wz-card .tkt { pointer-events: none; }
+.wz-check { list-style: none; margin: calc(var(--u) * 1) 0 0; padding: 0; display: grid; gap: .35em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .55); }
+.wz-check li { display: flex; align-items: center; gap: .5em; }
+.wz-check svg.i { width: 1.1em; height: 1.1em; }
+.wz-check li.is-ok { color: rgb(var(--fg)); }
+.wz-check li.is-ok svg.i { color: #22c55e; }
+.wz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1em; }
+.wz-grid .full { grid-column: 1 / -1; }
+.wz-body .bk-seg { justify-self: start; }
+.wz-h3 { margin: calc(var(--u) * 1.2) 0 .6em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: 800; }
+.wz-h3 small { font-weight: 400; color: rgba(var(--fg), .55); }
+.wz-poster { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .8); align-items: stretch; }
+.wz-drop { position: relative; flex: 1 1 260px; display: grid; place-content: center; justify-items: center; gap: .45em; min-height: 220px; padding: 1.2em; border-radius: calc(var(--r) * .8); border: 1.5px dashed rgba(var(--fg), .25); text-align: center; cursor: pointer; transition: border-color .25s, background-color .25s; }
+.wz-drop:hover, .wz-drop.is-over { border-color: var(--viz-1); background: color-mix(in oklab, var(--viz-1) 8%, transparent); }
+.wz-drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.wz-drop:focus-within { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.wz-drop small { color: rgba(var(--fg), .58); }
+.wz-pic { position: relative; margin: 0; width: 160px; aspect-ratio: 2 / 3; border-radius: calc(var(--r) * .6); overflow: hidden; background: #111; }
+.wz-pic img { width: 100%; height: 100%; object-fit: contain; }
+.wz-pic .chip { position: absolute; bottom: 8px; left: 50%; translate: -50% 0; background: rgba(10, 9, 16, .7); color: #fff; }
+.wz-pal { display: flex; flex-wrap: wrap; gap: 10px; }
+.wz-pal button { all: unset; cursor: pointer; width: 30px; height: 30px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); transition: transform .2s; }
+.wz-pal button:hover { transform: scale(1.1); }
+.wz-pal button[aria-checked="true"] { box-shadow: 0 0 0 3px var(--capsule), 0 0 0 5px rgb(var(--fg)); }
+.wz-pal button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 4px; }
+.wz-hall-top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: .4em 1em; }
+.wz-sw { display: inline-flex; align-items: center; gap: .55em; margin: .4em 0; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); cursor: pointer; }
+.wz-sw input { width: 17px; height: 17px; accent-color: var(--viz-1); }
+.wz-sw small { color: rgba(var(--fg), .55); }
+.wz-halls { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: calc(var(--u) * .5); }
+.wz-hall { all: unset; box-sizing: border-box; display: grid; gap: .5em; padding: .7em; border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); cursor: pointer; transition: box-shadow .25s, background-color .25s, transform .4s var(--ease); }
+div.wz-hall { cursor: default; }
+button.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px); }
+.wz-hall[aria-checked="true"] { background: color-mix(in oklab, var(--viz-1) 12%, transparent); box-shadow: inset 0 0 0 2px var(--viz-1); }
+.wz-hall:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.wz-hall > span { display: grid; gap: .1em; line-height: 1.65; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.wz-hall b { font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); }
+.wz-hall small { color: rgba(var(--fg), .6); }
+.hpm { display: block; width: 100%; height: 120px; border-radius: calc(var(--r) * .5); background: radial-gradient(90% 80% at 50% 0%, rgba(var(--fg), .06), transparent 70%), rgba(var(--fg), .03); }
+.hpm .hpm-st { fill: rgba(var(--fg), .14); }
+.wz-cal { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: calc(var(--u) * .8) calc(var(--u) * 1.2); }
+.wz-month > b { display: block; margin-bottom: .5em; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); }
+.wz-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 3px; }
+.wz-days i { font-style: normal; text-align: center; font-size: 11px; color: rgba(var(--fg), .45); padding-bottom: 2px; }
+.wz-days button { all: unset; box-sizing: border-box; display: grid; place-items: center; aspect-ratio: 1; border-radius: 9px; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); cursor: pointer; background: rgba(var(--fg), .04); transition: background-color .2s, color .2s; }
+.wz-days button.is-fri { color: #f43f5e; }
+.wz-days button:hover { background: rgba(var(--fg), .1); }
+.wz-days button[aria-pressed="true"] { background: var(--viz-1); color: #fff; }
+.wz-days button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 1px; }
+.wz-times { margin: 0; justify-content: flex-start; flex-wrap: wrap; }
+.wz-times .chip[aria-pressed="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.wz-time { display: inline-flex; align-items: center; gap: .4em; }
+.wz-time input { height: max(32px, calc(var(--u) * 2)); padding: 0 .6em; border-radius: 999px; border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: inherit; }
+.wz-saleat { max-width: 320px; margin-top: .8em; }
+.wz-saleat input { color-scheme: dark; }
+:root[data-mode="light"] .wz-saleat input { color-scheme: light; }
+.wz-price { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: calc(var(--u) * 1); align-items: start; }
+.wz-plan .hpm { height: auto; aspect-ratio: 4 / 3; }
+.wz-tiers { display: grid; gap: .5em; }
+.wz-tier { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .7em; padding: .55em .7em; border-radius: 12px; background: rgba(var(--fg), .04); }
+.wz-tier > i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 25%, transparent); }
+.wz-tier span b { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); line-height: 1.6; }
+.wz-in { display: inline-flex; align-items: center; gap: .35em; }
+.wz-in input { width: 8.5em; height: 38px; padding: 0 .7em; border-radius: 10px; border: 1px solid rgba(var(--fg), .18); background: var(--capsule); color: rgb(var(--fg)); font: 700 14px var(--font); text-align: left; }
+.wz-in input:focus { outline: none; border-color: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 30%, transparent); }
+.wz-in small { font-size: 11px; color: rgba(var(--fg), .55); }
+.wz-est { display: grid; gap: .1em; margin-top: calc(var(--u) * .8); padding: .9em 1em; border-radius: 14px; background: color-mix(in oklab, var(--viz-1) 10%, transparent); font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.wz-est b { font-size: calc(max(20px, calc(var(--u) * 1.4)) * var(--tx) * var(--tx-main)); font-weight: 900; }
+.wz-est small { color: rgba(var(--fg), .65); }
+.wz-sum { display: grid; gap: 2px; margin: 0; }
+.wz-sum > div { display: grid; grid-template-columns: 7em minmax(0, 1fr) auto; align-items: center; gap: 1em; padding: .7em .8em; border-radius: 10px; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
+.wz-sum > div:nth-child(odd) { background: rgba(var(--fg), .035); }
+.wz-sum dt { color: rgba(var(--fg), .6); }
+.wz-sum dd { margin: 0; line-height: 1.9; }
+.wz-sum .neg { color: #f43f5e; }
+.wz-pt { display: inline-flex; align-items: center; gap: .35em; margin-inline-end: .9em; }
+.wz-pt i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.wz-msg { display: flex; align-items: center; gap: .55em; margin: 0 0 1em; padding: .8em 1em; border-radius: 12px; background: rgba(var(--fg), .05); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; }
+.wz-msg svg.i { flex: none; width: 1.3em; height: 1.3em; }
+.wz-msg.is-bad { background: rgba(244, 63, 94, .1); color: color-mix(in oklab, #f43f5e 70%, rgb(var(--fg))); }
+.wz-msg.is-ok { background: rgba(34, 197, 94, .1); }
+.wz-msg a { color: inherit; font-weight: 700; }
+.wz-end { display: flex; justify-content: flex-end; margin-top: 1em; }
+.wz-end .buy:disabled { opacity: .45; cursor: not-allowed; }
+.wz-nav { display: flex; justify-content: space-between; align-items: center; }
+.wz-nav .buy, .wz-nav .chip { gap: .45em; }
+
+/* discount codes, the promo, the printed cards */
+.cd-code { font: 700 13px ui-monospace, Menlo, monospace; letter-spacing: .06em; direction: ltr; unicode-bidi: isolate; }
+.cd-tbl td:first-child { white-space: nowrap; }
+.cd-tbl td:first-child .st { margin-inline-start: .5em; font-size: .86em; }
+.cd-acts { white-space: nowrap; }
+.cd-acts .chip { gap: .35em; height: 30px; padding-inline: .8em; }
+.cd-promo, .cd-print { width: min(1100px, 100%); max-height: 92vh; }
+.cd-promo-g { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(var(--u) * 1); align-items: start; }
+.cd-promo canvas { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .7); }
+.cd-promo-t textarea { box-sizing: border-box; width: 100%; padding: .8em 1em; border-radius: 12px; border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 14px/2 var(--font); resize: vertical; }
+.cd-opts { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .8em 1.2em; }
+.cd-opts .bk-fld { margin: 0; }
+.cd-sheets { display: grid; gap: 18px; justify-items: center; max-height: 56vh; overflow: auto; padding: 16px; border-radius: 14px; background: rgba(var(--fg), .06); }
+.cc-sheet { position: relative; width: 210mm; height: 297mm; flex: none; background: #fff; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); zoom: .42; }
+.cc-grid { position: absolute; left: 19.4mm; top: 13.5mm; display: grid; grid-template-columns: repeat(2, 85.6mm); grid-auto-rows: 53.98mm; }
+.cc-marks { position: absolute; inset: 0; pointer-events: none; background:
+  linear-gradient(#000, #000) 13.4mm 13.5mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 13.5mm / 5mm .2mm,
+  linear-gradient(#000, #000) 13.4mm 283.4mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 283.4mm / 5mm .2mm,
+  linear-gradient(#000, #000) 19.4mm 7.5mm / .2mm 5mm, linear-gradient(#000, #000) 105mm 7.5mm / .2mm 5mm, linear-gradient(#000, #000) 190.6mm 7.5mm / .2mm 5mm,
+  linear-gradient(#000, #000) 19.4mm 284.5mm / .2mm 5mm, linear-gradient(#000, #000) 105mm 284.5mm / .2mm 5mm, linear-gradient(#000, #000) 190.6mm 284.5mm / .2mm 5mm,
+  linear-gradient(#000, #000) 13.4mm 67.5mm / 5mm .2mm, linear-gradient(#000, #000) 13.4mm 121.5mm / 5mm .2mm, linear-gradient(#000, #000) 13.4mm 175.4mm / 5mm .2mm, linear-gradient(#000, #000) 13.4mm 229.4mm / 5mm .2mm,
+  linear-gradient(#000, #000) 191.6mm 67.5mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 121.5mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 175.4mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 229.4mm / 5mm .2mm; background-repeat: no-repeat; }
+.cc-card { --cc-acc: #8b5cf6; position: relative; box-sizing: border-box; overflow: hidden; padding: 4.2mm 4.6mm; color: #fff; font-family: var(--font); direction: rtl; background: radial-gradient(70% 90% at 15% 20%, color-mix(in oklab, var(--cc-acc) 70%, transparent), transparent 70%), radial-gradient(60% 80% at 100% 100%, rgba(236, 72, 153, .55), transparent 70%), linear-gradient(135deg, #120d1f, #06050b); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.cc-card::after { content: ""; position: absolute; inset: 2.2mm; border-radius: 3mm; border: .25mm solid rgba(255, 255, 255, .22); pointer-events: none; }
+.cc-card[data-g="theatre"] { background: radial-gradient(70% 90% at 15% 20%, color-mix(in oklab, var(--cc-acc) 70%, transparent), transparent 70%), repeating-linear-gradient(90deg, rgba(160, 20, 40, .55) 0 3mm, rgba(110, 10, 25, .55) 3mm 6mm), linear-gradient(135deg, #1c0610, #06050b); }
+.cc-top { display: flex; align-items: center; gap: 1.6mm; font-size: 3.2mm; }
+.cc-top b { font-size: 4.2mm; font-weight: 900; }
+.cc-top em { margin-inline-start: auto; font-style: normal; font-size: 2.6mm; padding: .5mm 2mm; border-radius: 99px; background: rgba(255, 255, 255, .16); }
+.cc-logo { display: inline-flex; align-items: center; gap: .6mm; height: 4.6mm; }
+.cc-logo i { width: .9mm; border-radius: .5mm; background: #fff; }
+.cc-logo i:nth-child(1) { height: 38%; } .cc-logo i:nth-child(2) { height: 72%; } .cc-logo i:nth-child(3) { height: 100%; background: var(--cc-acc); } .cc-logo i:nth-child(4) { height: 60%; } .cc-logo i:nth-child(5) { height: 34%; }
+.cc-art { position: absolute; left: 3.5mm; top: 9mm; width: 30mm; height: 20mm; opacity: .95; }
+.cc-off { position: absolute; right: 4.6mm; top: 12mm; display: grid; line-height: 1.1; }
+.cc-off b { font-size: 11mm; font-weight: 900; letter-spacing: -.02em; }
+.cc-off span { font-size: 3mm; font-weight: 700; opacity: .9; }
+.cc-for { position: absolute; right: 4.6mm; left: 4.6mm; top: 31mm; font-size: 2.9mm; font-weight: 700; opacity: .92; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-code { position: absolute; right: 4.6mm; left: 4.6mm; bottom: 4.2mm; display: flex; align-items: center; justify-content: space-between; gap: 2mm; }
+.cc-code code { padding: 1mm 2.6mm; border-radius: 1.6mm; background: #fff; color: #0b0a12; font: 800 3.4mm ui-monospace, Menlo, monospace; letter-spacing: .04em; direction: ltr; }
+.cc-code small { font-size: 2.3mm; opacity: .8; }
+@media print {
+  @page { size: A4; margin: 0; }
+  :root.is-printing-cards body > *:not(#app), :root.is-printing-cards #app > *:not(.evp-modal) { display: none !important; }
+  :root.is-printing-cards .evp-modal { position: static; display: block; padding: 0; background: none; }
+  :root.is-printing-cards .evp-dlg { width: auto; max-height: none; padding: 0; overflow: visible; box-shadow: none; background: none; }
+  :root.is-printing-cards .evp-dlg > *:not(.cd-sheets) { display: none !important; }
+  :root.is-printing-cards .cd-sheets { display: block; max-height: none; overflow: visible; padding: 0; background: none; }
+  :root.is-printing-cards .cc-sheet { zoom: 1; box-shadow: none; break-after: page; }
+}
+
+/* the admin */
+.ad-q .buy { background: #22c55e; color: #052e16; }
+.ad-danger { background: #f43f5e !important; color: #fff !important; }
+.ad-log { list-style: none; margin: 0 0 .8em; padding: 0; display: grid; gap: .5em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.ad-log li { display: grid; gap: .1em; line-height: 1.7; padding-inline-start: .9em; border-inline-start: 2px solid color-mix(in oklab, var(--viz-1) 60%, transparent); }
+.ad-log small, .ad-log time { color: rgba(var(--fg), .55); font-size: .92em; }
+.ad-log-l { gap: .8em; }
+.ad-sum { margin: 0 0 .8em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
+.ad-perm td, .ad-perm th { text-align: center; }
+.ad-perm td:first-child, .ad-perm th:first-child { text-align: start; }
+.ad-perm input { width: 18px; height: 18px; accent-color: var(--viz-1); }
+.ad-role select { height: 36px; width: auto; padding: 0 .7em; font-size: 12.5px; }
+.ad-add { margin-top: calc(var(--u) * 1); padding-top: calc(var(--u) * 1); border-top: 1px solid rgba(var(--fg), .1); }
+.ad-cats { list-style: none; margin: 0 0 1em; padding: 0; display: grid; gap: .45em; }
+.ad-cats li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .8em; padding: .5em .6em; border-radius: 12px; background: rgba(var(--fg), .035); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.ad-cats .sec-ic { width: 36px; }
+.ad-cats small { color: rgba(var(--fg), .55); }
+.ad-cities { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: .4em; }
+.ad-cities label { display: flex; align-items: center; gap: .45em; padding: .45em .6em; border-radius: 10px; background: rgba(var(--fg), .04); cursor: pointer; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.ad-cities label span { display: flex; justify-content: space-between; flex: 1; }
+.ad-cities small { color: rgba(var(--fg), .5); }
+.ad-cities input { accent-color: var(--viz-1); }
+.ad-des { display: grid; grid-template-columns: minmax(280px, .9fr) minmax(0, 1.3fr); gap: calc(var(--u) * 1.2); align-items: start; }
+.ad-des-c { display: grid; gap: .6em; }
+.ad-des-c .bk-fld { margin: 0; }
+.ad-des-c .buy { justify-self: start; gap: .45em; margin-top: .3em; }
+.ad-num { display: grid; gap: .2em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.ad-num span { display: flex; justify-content: space-between; color: rgba(var(--fg), .8); }
+.ad-num output { font-weight: 800; color: rgb(var(--fg)); }
+.ad-num input { width: 100%; accent-color: var(--viz-1); direction: ltr; }
+.ad-des-v .hpm { height: auto; aspect-ratio: 4 / 3; }
+.ad-lib .hpm { height: 110px; }
+.wl-bal { display: grid; gap: .15em; justify-items: start; }
+.wl-bal > span { font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .65); }
+.wl-bal b { font-size: calc(max(40px, calc(var(--u) * 2.8)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.25; }
+.wl-bal small { color: rgba(var(--fg), .6); }
+.wl-amts { justify-content: flex-start; margin: 0 0 1em; }
+.wl-amts .chip[aria-pressed="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.pg-wl .buy { gap: .45em; }
+.wl-log { list-style: none; margin: 0; padding: 0; display: grid; gap: .45em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.wl-log li { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: .5em .6em; border-radius: 10px; background: rgba(var(--fg), .035); }
+.wl-log span { display: grid; line-height: 1.6; }
+.wl-log small { color: rgba(var(--fg), .55); }
+.wl-log .pos { color: #22c55e; font-style: normal; font-weight: 800; }
+.wl-log .neg { color: #f43f5e; font-style: normal; font-weight: 800; }
+
+@media (max-width: 1180px) {
+  .dk-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dk-cols, .dk-cols-r { grid-template-columns: minmax(0, 1fr); }
+  .dk-show { grid-template-columns: auto minmax(0, 1fr); }
+  .dk-show-n, .dk-show-a { grid-column: 2; justify-content: flex-start; }
+  .wz-side { position: static; }
+  .ad-des { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .dk { grid-template-columns: minmax(0, 1fr); }
+  .dk-nav { position: static; padding: 10px; }
+  .dk-who { padding-bottom: 8px; }
+  .dk-tabs { display: flex; overflow-x: auto; scrollbar-width: none; gap: 4px; margin: 0 -2px; }
+  .dk-tabs a { flex: none; padding: .55em .8em; }
+  .dk-foot { display: flex; flex-wrap: wrap; }
+  .dk-tiles { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .dk-tile.dk-hero { grid-column: 1 / -1; }
+  .wz-steps { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .wz-steps li { flex: none; }
+  .wz-steps button { padding-inline: .9em; }
+  .wz-steps .bar { display: none; }
+  .wz-grid, .wz-price, .cd-promo-g { grid-template-columns: minmax(0, 1fr); }
+  .wz-sum > div { grid-template-columns: minmax(0, 1fr) auto; }
+  .wz-sum dt { grid-column: 1 / -1; }
+  .vz-rank li { grid-template-columns: minmax(0, 1fr) auto; }
+  .vz-rank span { grid-column: 1 / -1; }
+}
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -4034,7 +4414,7 @@ function tiersOf(e) {
   const low = priceNum(e), P = planOf(e), used = [...new Set(P.secs.flatMap((zn) => zn.runs.map((x) => x[2])))].sort().reverse();
   // the cheapest tier in this hall is the show's lowest price; the others are steps above it (rounded to 10,000 toman)
   const base = TIER[used[0]].k, p = (t) => Math.round((low * TIER[t].k / base) / 1e4) * 1e4;
-  return P.secs.flatMap((zn) => zn.runs.map(([a, b, t]) => ({ zone: zn.t, zid: zn.id, kind: zn.k, word: RUN_WORD[zn.k], a, b, t, c: TIER[t].c, price: p(t) })));
+  return P.secs.flatMap((zn) => zn.runs.map(([a, b, t]) => ({ zone: zn.t, zid: zn.id, kind: zn.k, word: RUN_WORD[zn.k], a, b, t, c: TIER[t].c, price: e.prices && e.prices[t] > 0 ? e.prices[t] : p(t) })));
 }
 const runName = (t) => (t.kind === 'stand' ? t.zone : `${t.zone}، ${t.word} ${fa(t.a)}${t.b > t.a ? ` تا ${fa(t.b)}` : ''}`);
 // a small number that is always the same for the same show (so its seats and its map don't change on a reload)
@@ -4043,6 +4423,7 @@ const rngOf = (seed) => () => { seed = (seed + 0x6D2B79F5) | 0; let t = seed; t 
 // the sessions: every day from the first night to the last at the show's hour (the past ones left out, ten at most)
 function sessionsOf(e) {
   const st = statusOf(e).key, a = Date.parse(e.startsAt), b = Date.parse(e.endsAt || e.startsAt), now = Date.now(), R = rngOf(seedOf(e.id));
+  if (e.sess) return e.sess.map((t, k) => ({ id: `${e.id}-${k}`, t, seats: 0.45 + R() * 0.5 })).filter((s) => s.t + 2 * HOUR >= now);
   const out = [];
   for (let t = a, k = 0; t <= b + 1000 && out.length < 10; t += DAY, k++) {
     const r = R(); if (t + 2 * HOUR < now) continue;
@@ -4694,7 +5075,7 @@ const buy = {
             <h2 id="bkWayH">${ico('shield')}روش پرداخت</h2>
             <div class="bk-ways" role="radiogroup">
               <label class="way is-on"><input type="radio" name="way" value="gate" checked><span class="way-ic">${ico('shield-ok')}</span><span><b>درگاه بانکی (شاپرک)</b><small>همه‌ی کارت‌های عضو شتاب</small></span></label>
-              <label class="way is-off"><input type="radio" name="way" value="wallet" disabled><span class="way-ic">${ico('tag')}</span><span><b>کیف پول بلیت</b><small>موجودی: ۰ تومان</small></span></label>
+              <label class="way${wallet.bal() > 0 ? '' : ' is-off'}"><input type="radio" name="way" value="wallet"${wallet.bal() > 0 ? '' : ' disabled'}><span class="way-ic">${ico('tag')}</span><span><b>کیف پول بلیت</b><small>موجودی: ${money(wallet.bal())} تومان</small></span></label>
             </div>
           </section>
         </div>
@@ -4728,7 +5109,7 @@ const buy = {
     $('#bkDiscGo', el).addEventListener('click', () => {
       const c = enDigits($('#bkDisc', el).value).trim().toUpperCase(), out = $('#bkDiscSt', el);
       if (!c) { st.code = ''; out.textContent = ''; this.invoice(); return; }
-      if (CODES[c]) { st.code = c; out.className = 'bk-code-st ok'; out.textContent = `کد «${c}» اعمال شد: ${CODES[c].label}.`; }
+      if (CODES[c] && (!CODES[c].eid || CODES[c].eid === st.e.id)) { st.code = c; out.className = 'bk-code-st ok'; out.textContent = `کد «${c}» اعمال شد: ${CODES[c].label}.`; }
       else { st.code = ''; out.className = 'bk-code-st bad'; out.textContent = 'این کد معتبر نیست یا مهلتش تموم شده.'; }
       this.invoice();
     });
@@ -4755,6 +5136,8 @@ const buy = {
       if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.bk-fld').classList.add('is-bad'); toast('شماره‌ی موبایل رو درست بنویس؛ بلیت به همین شماره پیامک می‌شه.'); ph.focus(); return; }
       if (!st.otp) { const o = $('#bkOtp', el); o.classList.remove('is-shake'); void o.offsetWidth; o.classList.add('is-shake'); toast('اول شماره رو با کد پیامکی تأیید کن.'); return; }
       store.set('blit.phone', st.phone); st.name = $('#bkName', el).value.trim();
+      const way = ($('input[name="way"]:checked', el) || {}).value;
+      if (way === 'wallet') { if (wallet.bal() < st.total) { toast(`موجودی کیف پول (${money(wallet.bal())} تومان) کافی نیست؛ شارژش کن یا با درگاه بپرداز.`); return; } wallet.add(-st.total, `خرید بلیت «${st.e.title}»`); st.way = 'wallet'; this.paid(); return; }
       this.gateway();
     });
   },
@@ -4792,7 +5175,8 @@ const buy = {
   // paid: the order is kept (and its seats become sold), the hold ends, the tickets come
   paid() {
     const st = this.payState, code = codeOf();
-    const order = { code, eid: st.e.id, sid: st.s.id, t: st.s.t, phone: st.phone, name: st.name || '', seats: st.seats.map(item), total: st.total, at: Date.now() };
+    const order = { code, eid: st.e.id, sid: st.s.id, t: st.s.t, phone: st.phone, name: st.name || '', seats: st.seats.map(item), total: st.total, at: Date.now(), way: st.way || 'gate', disc: st.code || '' };
+    if (st.code) codeUsed(st.code);
     const orders = store.get('blit.orders', []); orders.unshift(order); store.set('blit.orders', orders.slice(0, 40));
     const taken = store.get('blit.taken', {}); taken[st.s.id] = (taken[st.s.id] || []).concat(order.seats.map((x) => x.key)); store.set('blit.taken', taken);
     store.sset('blit.hold', null); this.cart = new Map(); this.cartKey = null;
@@ -4896,10 +5280,11 @@ const pages = {
     if ((m = /^#\/search\/(.*)$/.exec(h))) return { kind: 'search', q: decodeURIComponent(m[1]) };
     if ((m = /^#\/c\/(soon|(?:concert|theatre|comedy)-(?:tehran|other))$/.exec(h))) return { kind: 'cat', key: m[1].replace('-', ':') };
     if ((m = /^#\/city\/([^/?#]+)$/.exec(h))) return { kind: 'city', city: decodeURIComponent(m[1]) };
-    return gate.parse(h) || (typeof desk !== 'undefined' ? desk.parse(h) : null);
+    if (h === '#/wallet') return { kind: 'wallet' };
+    return gate.parse(h) || desk.parse(h);
   },
   render(v) {
-    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city }[v.kind];
+    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render() }[v.kind];
     if (!fn) { if (v.kind === 'gate') gate.render(v); else desk.render(v); return; }
     fn.call(this, v);
     const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', page.el).appendChild(c); page.wireFooter(c); }
@@ -5049,7 +5434,7 @@ const auth = {
     if (b) b.addEventListener('click', () => {
       if (!userOf()) { this.open(); return; }
       if (pop && pop.anchor === b) { closePop(); return; }
-      menuPop(b, [{ t: 'بلیت‌های من', v: 'tickets' }, { t: 'تم روشن / تیره', v: 'mode' }, { t: 'خروج از حساب', v: 'out' }], '', (v) => { if (v === 'tickets') page.go('#/receipts'); else if (v === 'mode') modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', b); else { this.out(); if (page.v && page.v.kind === 'receipts') page.route(); } }, { label: 'حساب من' });
+      menuPop(b, [{ t: 'بلیت‌های من', v: 'tickets' }, { t: `کیف پول · ${money(wallet.bal())} تومان`, v: 'wallet' }, { t: 'تم روشن / تیره', v: 'mode' }, { t: 'خروج از حساب', v: 'out' }], '', (v) => { if (v === 'tickets') page.go('#/receipts'); else if (v === 'wallet') page.go('#/wallet'); else if (v === 'mode') modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', b); else { this.out(); if (page.v && page.v.kind === 'receipts') page.route(); } }, { label: 'حساب من' });
     });
     this.sync();
   },
@@ -5063,7 +5448,8 @@ const drawer = {
     box.innerHTML = `<nav class="dr-sheet panel" aria-label="منو"><div class="dr-top"><b>بلیت</b><button type="button" class="au-x" data-x aria-label="بستن">${ico('x')}</button></div>
       <a class="dr-login" href="#" data-act="login">${ico('users')}<span>${u ? `حساب من · ${esc(maskPhone(u.phone))}` : 'ورود یا ثبت‌نام'}</span></a>
       <h3>دسته‌ها</h3>${SEC_ORDER.map(cat).join('')}
-      <h3>صفحه‌ها</h3><a href="#/receipts" data-x>${ico('ticket')}<span>پیگیری خرید و بلیت‌های من</span></a><a href="#/archive" data-x>${ico('calendar')}<span>آرشیو برنامه‌ها</span></a><a href="#/p/rules" data-x>${ico('shield')}<span>قوانین خرید</span></a><a href="#/p/contact" data-x>${ico('headset')}<span>تماس و پشتیبانی</span></a><a href="#/p/about" data-x>${ico('spark')}<span>درباره‌ی بلیت</span></a>
+      <h3>صفحه‌ها</h3><a href="#/receipts" data-x>${ico('ticket')}<span>پیگیری خرید و بلیت‌های من</span></a><a href="#/wallet" data-x>${ico('tag')}<span>کیف پول</span><small>${money(wallet.bal())}</small></a><a href="#/archive" data-x>${ico('calendar')}<span>آرشیو برنامه‌ها</span></a><a href="#/p/rules" data-x>${ico('shield')}<span>قوانین خرید</span></a><a href="#/p/contact" data-x>${ico('headset')}<span>تماس و پشتیبانی</span></a><a href="#/p/about" data-x>${ico('spark')}<span>درباره‌ی بلیت</span></a>
+      <h3>همکاران</h3><a href="#/org" data-x>${ico('grid')}<span>پنل برگزارکننده</span></a><a href="#/admin" data-x>${ico('shield')}<span>پنل مدیر</span></a><a href="#/gate" data-x>${ico('shield-ok')}<span>کنترل ورود</span></a>
       <button type="button" class="dr-mode" data-act="mode">${ico('spark')}<span>${LOOK.mode === 'light' ? 'تم تیره' : 'تم روشن (سفید)'}</span></button></nav>`;
     $('#app').appendChild(box);
     const shut = () => { document.removeEventListener('keydown', key, true); gsap.to($('.dr-sheet', box), { x: '100%', duration: 0.35, ease: 'power2.in' }); gsap.to(box, { opacity: 0, duration: 0.35, onComplete: () => box.remove() }); };
@@ -5185,7 +5571,7 @@ const gate = {
       b.addEventListener('keydown', (ev) => { if (ev.key === 'Backspace' && !b.value && boxes[i - 1]) boxes[i - 1].focus(); if (ev.key === 'Enter' && !go.disabled) go.click(); });
     });
     go.addEventListener('click', () => {
-      if (pin !== GATE_PIN) { pst.className = 'bk-otp-st bad'; pst.textContent = 'کد درست نیست؛ از برگزارکننده بپرس.'; boxes.forEach((x) => { x.value = ''; }); pin = ''; boxes[0].focus(); ready(); return; }
+      if (pin !== GATE_PIN && !org.staffList().some((k) => k.pin === pin)) { pst.className = 'bk-otp-st bad'; pst.textContent = 'کد درست نیست؛ از برگزارکننده بپرس.'; boxes.forEach((x) => { x.value = ''; }); pin = ''; boxes[0].focus(); ready(); return; }
       const x = sesById(sid); if (!x) return;
       go.disabled = true; const dl = $('#gtDl', box), bar = $('i', dl), tx = $('span', dl); dl.hidden = false;
       const n = gateTickets(x.e, x.s).T.size, t0 = performance.now(), D = reduceMotion ? 200 : 1300;
@@ -5483,6 +5869,936 @@ const gate = {
     document.addEventListener('keydown', key, true);
     boxEl.addEventListener('click', (ev) => { if (ev.target === boxEl || ev.target.closest('[data-x]')) shut(); else if (ev.target.closest('[data-out]')) { shut(); store.sset('blit.gateOk', null); toast('شیفت ثبت شد. خسته نباشی!'); page.go('#/gate'); } });
     $('[data-x]', boxEl).focus();
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the desks (brief §2.4): the organiser's panel #/org/<tab> and the admin's #/admin/<tab> (admin.js), on one shell: a side
+   bar with the tabs (a row of pills on a phone) and the tab's panels. All of it is simulated in this browser: the organiser is
+   a demo account; what they make (a show, a discount code, a controller) is kept in localStorage and goes through the admin's
+   review before it is on the site. The charts follow one method (a single series in one hue, thin marks, a hover readout,
+   a table of the numbers under each chart).
+   ════════════════════════════════════════════════════════════════ */
+const FEE = 0.08;   // the site's share of a ticket's price (demo)
+const ORG = { name: 'گروه هنری آوای نو', who: 'سارا محمدی', since: 'از ۱۴۰۱ با بلیت', iban: 'IR•• •••• •••• •••• ۴۲۷۱' };
+const KIND_T = { concert: 'کنسرت', theatre: 'نمایش', comedy: 'جُنگ' };
+const PLAN_T = { opera: 'تالار با لژ و دو بالکن', 'fan-l': 'سالن بزرگ نیم‌دایره با بالکن', 'fan-m': 'سالن نیم‌دایره', 'fan-s': 'سالن کوچیک نیم‌دایره', 'rect-m': 'سالن مستطیل با بالکن', 'rect-s': 'سالن کوچیک مستطیل', arena: 'ورزشگاه: ایستاده و سکوها', cabaret: 'میز و صندلی جلوی صحنه' };
+// the halls' library (every hall has its address, plan and place in HALLS; here its name and city)
+const VENUES = [['تهران', 'تالار وحدت'], ['تهران', 'برج میلاد - سالن همایش‌ها'], ['تهران', 'مجموعه ورزشی آزادی'], ['تهران', 'فرهنگسرای ارسباران'], ['تهران', 'فرهنگسرای نیاوران - سالن خلیج فارس'], ['تهران', 'پردیس تئاتر شهرزاد - سالن ۱'], ['تهران', 'تئاترشهر - سالن اصلی'], ['تهران', 'خانه نمایش مهرگان - سالن ۱'], ['تهران', 'تالار هنر'], ['اصفهان', 'سالن سیتی سنتر'], ['شیراز', 'تالار حافظ'], ['مشهد', 'سالن همایش‌های بین‌المللی'], ['تبریز', 'تالار فجر'], ['کرج', 'سالن اکومال'], ['رشت', 'تالار مرکزی رشت'], ['کرمان', 'تالار مرکزی فرهنگ و هنر'], ['یزد', 'سالن آمفی‌تئاتر فرهنگسرای یزد'], ['همدان', 'مجتمع فرهنگی بوعلی - تالار اصلی'], ['اردبیل', 'سالن آمفی‌تئاتر ورزش و جوانان'], ['اهواز', 'تالار هنر اهواز'], ['ساری', 'مجتمع فرهنگی هنری آزادشاد']];
+const capCache = new Map();
+const capOf = (key) => { if (!capCache.has(key)) { const L = hallLayout(PLANS[key] || PLANS['fan-m']); capCache.set(key, L.secs.reduce((n, z) => n + (z.sec.k === 'stand' ? z.sec.cap : z.seats.length), 0)); } return capCache.get(key); };
+const venueInfo = (city, name) => { const h = hallOf({ city, venue: `${city}، ${name}` }); return { city, name, addr: h.addr, plan: h.plan, cap: capOf(h.plan), lat: h.lat, lng: h.lng }; };
+const short = (n) => (n >= 1e9 ? `${fa((n / 1e9).toFixed(n >= 1e10 ? 0 : 1)).replace('.', '٫')} میلیارد` : n >= 1e6 ? `${fa((n / 1e6).toFixed(n >= 1e8 ? 0 : 1)).replace('.', '٫')} میلیون` : n >= 1e3 ? `${fa(Math.round(n / 1e3))} هزار` : fa(Math.round(n)));
+const pct = (x) => `${fa(Math.round(x * 100))}٪`;
+const ago = (t) => { const s = Math.round((Date.now() - t) / 1000); return s < 10 ? 'همین الان' : s < 60 ? `${fa(s)} ثانیه پیش` : s < 3600 ? `${fa(Math.round(s / 60))} دقیقه پیش` : s < 86400 ? `${fa(Math.round(s / 3600))} ساعت پیش` : `${fa(Math.round(s / 86400))} روز پیش`; };
+const dayFmt = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/Tehran', day: 'numeric', month: 'long' });
+const dayOf = (t) => dayFmt.format(new Date(t));
+const csvDownload = (name, rows) => {
+  const text = '﻿' + rows.map((r) => r.map((c) => { const v = String(c == null ? '' : c); return /[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v; }).join(',')).join('\r\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' })); a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+};
+
+// the organiser's shows: a fixed part of the list (the demo account) and what they made in the wizard
+const drafts = {
+  all() { return store.get('blit.drafts', []); },
+  save(l) { store.set('blit.drafts', l); },
+  get(id) { return this.all().find((d) => d.id === id) || null; },
+  put(d) { const l = this.all(), i = l.findIndex((x) => x.id === d.id); if (i >= 0) l[i] = d; else l.unshift(d); this.save(l); },
+};
+const orgShows = () => LIST().filter((e) => e.draft || (seedOf(e.id + ':org') % 5 < 3 && statusOf(e).key !== 'cancelled'));
+// a session's numbers from its seat map (the same draw the buyers see): capacity, sold, the money (before VAT and fee)
+const statCache = new Map();
+function sesStats(e, s) {
+  if (statCache.has(s.id)) return statCache.get(s.id);
+  const L = seatPlan(e, s); let cap = 0, sold = 0, gross = 0;
+  for (const z of L.secs) {
+    if (z.ga) { cap += z.sec.cap; const n = Math.max(0, z.sec.cap - z.ga.left); sold += n; gross += n * z.ga.price; continue; }
+    for (const p of z.seats) { if (p.st === 'off') continue; cap++; if (p.st === 'sold' || p.st === 'held') { sold++; gross += p.price; } }
+  }
+  const r = { cap, sold, gross }; statCache.set(s.id, r); return r;
+}
+const showStats = (e) => sessionsOf(e).reduce((a, s) => { const x = sesStats(e, s); a.cap += x.cap; a.sold += x.sold; a.gross += x.gross; a.n++; return a; }, { cap: 0, sold: 0, gross: 0, n: 0 });
+// the last 30 days of sales (a seeded series: weekdays quieter, Thursday and Friday busier) and the last two hours by 5 minutes
+function salesDays() {
+  const R = rngOf(seedOf('org-days')), out = [];
+  for (let k = 29; k >= 0; k--) { const d = new Date(Date.now() - k * DAY), wd = d.getDay(), busy = wd === 4 || wd === 5 ? 1.45 : wd === 3 ? 1.15 : 1; const n = Math.round((38 + R() * 46) * busy); out.push({ t: d.getTime(), n, sum: Math.round(n * (720000 + R() * 380000) / 1e4) * 1e4 }); }
+  const today = out[out.length - 1], h = (Date.now() - new Date(TEHRAN_DAY.format(new Date()) + 'T00:00:00+03:30').getTime()) / DAY;
+  today.n = Math.round(today.n * clamp(h, 0.05, 1)); today.sum = Math.round(today.sum * clamp(h, 0.05, 1) / 1e4) * 1e4;
+  out.part = clamp(h, 0.05, 1);
+  return out;
+}
+function salesSlots() { const R = rngOf(seedOf('org-slots:' + Math.floor(Date.now() / 3e5))), now = Date.now(); return Array.from({ length: 24 }, (_, i) => ({ t: now - (23 - i) * 3e5, sum: i === 23 ? 0 : Math.round((R() < 0.18 ? 0 : 0.6 + R() * 3.2) * 1.6e6 / 1e4) * 1e4 })); }
+
+/* ───── small charts, one method: the series in --viz-1, thin marks, a readout on hover and focus, the numbers in a table ───── */
+const viz = {
+  // a stat tile's line: twelve points in the quiet colour, the last one in the accent
+  spark(vals) {
+    const W = 120, H = 34, mx = Math.max(...vals, 1), mn = Math.min(...vals, 0), y = (v) => H - 3 - ((v - mn) / Math.max(1, mx - mn)) * (H - 8), x = (i) => 3 + i * ((W - 10) / (vals.length - 1));
+    const pts = vals.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    return `<svg class="vz-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><polyline points="${pts}"/><circle cx="${x(vals.length - 1).toFixed(1)}" cy="${y(vals[vals.length - 1]).toFixed(1)}" r="4"/></svg>`;
+  },
+  // columns over time (oldest on the left, now on the right): ≤ 24 px thick, a rounded top, one baseline, clean ticks
+  columns(id, data, { label, fmt = money, tick = short, xlab } = {}) {
+    const W = 720, H = 210, L = 54, B = 26, T = 12, n = data.length, mx = Math.max(1, ...data.map((d) => d.v));
+    const step = Math.pow(10, Math.floor(Math.log10(mx))), nice = [1, 2, 2.5, 5, 10].map((k) => k * step).find((k) => mx / k <= 4) || step * 10, top = Math.ceil(mx / nice) * nice;
+    const bw = Math.min(24, ((W - L - 8) / n) * 0.62), gx = (W - L - 8) / n, x = (i) => L + 4 + i * gx + (gx - bw) / 2, y = (v) => T + (H - T - B) * (1 - v / top);
+    const grid = Array.from({ length: Math.round(top / nice) + 1 }, (_, k) => k * nice).map((v) => `<line x1="${L}" x2="${W}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/><text x="${L - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${esc(tick(v))}</text>`).join('');
+    const bar = (d, i) => { const h = Math.max(0, y(0) - y(d.v)), r = Math.min(4, h, bw / 2), X = x(i), Y = y(d.v); return h <= 0 ? '' : `<path d="M${X.toFixed(1)} ${y(0).toFixed(1)}V${(Y + r).toFixed(1)}Q${X.toFixed(1)} ${Y.toFixed(1)} ${(X + r).toFixed(1)} ${Y.toFixed(1)}H${(X + bw - r).toFixed(1)}Q${(X + bw).toFixed(1)} ${Y.toFixed(1)} ${(X + bw).toFixed(1)} ${(Y + r).toFixed(1)}V${y(0).toFixed(1)}Z"${i === n - 1 ? ' class="is-now"' : ''}/>`; };
+    const xl = data.map((d, i) => (d.x && (i % (xlab || 6) === 0 || i === n - 1) ? `<text x="${(x(i) + bw / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle">${esc(d.x)}</text>` : '')).join('');
+    const hits = data.map((d, i) => `<rect class="vz-hit" x="${(L + 4 + i * gx).toFixed(1)}" y="${T}" width="${gx.toFixed(1)}" height="${H - T - B}" data-i="${i}" data-y="${y(d.v).toFixed(1)}" data-h="${H}" tabindex="${i === n - 1 ? 0 : -1}" aria-label="${esc(d.x || '')}: ${esc(fmt(d.v))}"/>`).join('');
+    return `<div class="vz-wrap" id="${id}"><svg class="vz-cols" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}"><g class="vz-grid">${grid}</g><g class="vz-bars">${data.map(bar).join('')}</g><g class="vz-x">${xl}</g><g class="vz-hits">${hits}</g></svg><div class="vz-tip" hidden></div></div>`;
+  },
+  // the readout: the hovered (or focused) column lifts; the value leads, the time follows
+  wire(id, data, fmt = money) {
+    const w = $(`#${id}`); if (!w) return;
+    const tip = $('.vz-tip', w), svg = $('svg', w), bars = () => $$('.vz-bars path', w);
+    const show = (i, el) => {
+      const d = data[i]; if (!d) return;
+      $$('.vz-bars path', w).forEach((p) => p.classList.remove('is-on'));
+      const p = bars()[data.slice(0, i + 1).filter((q) => q.v > 0).length - 1]; if (p && d.v > 0) p.classList.add('is-on');
+      tip.hidden = false; tip.innerHTML = `<b>${esc(fmt(d.v))}</b><span>${esc(d.tip || d.x || '')}</span>`;
+      const r = el.getBoundingClientRect(), R = w.getBoundingClientRect();
+      const sr = svg.getBoundingClientRect(), top = sr.top - R.top + (+el.dataset.y / +el.dataset.h) * sr.height;
+      tip.style.left = `${clamp(r.left - R.left + r.width / 2, 60, R.width - 60)}px`; tip.style.top = `${Math.max(44, top - 10)}px`;
+    };
+    const hide = () => { tip.hidden = true; $$('.vz-bars path', w).forEach((p) => p.classList.remove('is-on')); };
+    $$('.vz-hit', w).forEach((h) => {
+      h.addEventListener('pointerenter', () => show(+h.dataset.i, h)); h.addEventListener('focus', () => show(+h.dataset.i, h));
+      h.addEventListener('keydown', (ev) => { const k = { ArrowLeft: -1, ArrowRight: 1 }[ev.key]; if (!k) return; ev.preventDefault(); const nx = $(`.vz-hit[data-i="${+h.dataset.i + k}"]`, w); if (nx) { h.tabIndex = -1; nx.tabIndex = 0; nx.focus(); } });
+    });
+    svg.addEventListener('pointerleave', hide); w.addEventListener('focusout', (ev) => { if (!w.contains(ev.relatedTarget)) hide(); });
+  },
+  // the numbers under a chart
+  table(head, rows) { return `<details class="vz-table"><summary>${ico('grid')}جدول عددها</summary><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr>${head.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details>`; },
+  // ranked bars, one hue, largest first; the value at the tip, the name before the bar
+  ranked(rows, fmt = short) {
+    const mx = Math.max(1, ...rows.map((r) => r.v));
+    return `<ol class="vz-rank">${rows.map((r) => `<li><span>${esc(r.t)}</span><i style="--p:${(r.v / mx).toFixed(4)}" tabindex="0" aria-label="${esc(r.t)}: ${esc(fmt(r.v))}"></i><b>${esc(fmt(r.v))}</b></li>`).join('')}</ol>`;
+  },
+  // one whole in parts: a tall segmented bar, a part's share printed inside it when it fits; the legend names them
+  parts(parts, total) {
+    return `<div class="vz-seg" role="img" aria-label="${esc(parts.map((p) => `${p.t}: ${pct(p.v / total)}`).join('، '))}">${parts.map((p, i) => `<span style="--w:${(p.v / total).toFixed(4)};--c:var(--viz-${i + 1})" title="${esc(p.t)}: ${esc(money(p.v))} تومان">${p.v / total > 0.09 ? pct(p.v / total) : ''}</span>`).join('')}</div>
+      <ul class="vz-leg">${parts.map((p, i) => `<li><i style="--c:var(--viz-${i + 1})"></i>${esc(p.t)}<b>${money(p.v)}</b></li>`).join('')}</ul>`;
+  },
+};
+
+/* ───── the shell ───── */
+const desk = {
+  timers: [],
+  parse(h) {
+    const m = /^#\/(org|admin)(?:\/([a-z]+))?(?:\/([^/?#]+))?$/.exec(h);
+    return m ? { kind: m[1], tab: m[2] || 'home', arg: m[3] ? decodeURIComponent(m[3]) : null } : null;
+  },
+  stop() { this.timers.forEach((t) => { clearInterval(t); clearTimeout(t); }); this.timers = []; },
+  every(ms, f) { const t = setInterval(f, ms); this.timers.push(t); return t; },
+  render(v) {
+    this.stop();
+    const D = v.kind === 'org' ? org : admin, tabs = D.tabs(), tab = tabs.find((t) => t.id === v.tab) || tabs[0];
+    document.title = `${tab.t} · ${D.title} · بلیت`;
+    page.el.innerHTML = `<div class="evp-in dk dk-${v.kind}">
+      <aside class="dk-nav panel evp-rise" aria-label="${esc(D.title)}">
+        <div class="dk-who"><span class="dk-av" aria-hidden="true">${esc(D.av)}</span><span><b>${esc(D.who)}</b><small>${esc(D.role)}</small></span></div>
+        <nav class="dk-tabs">${tabs.map((t) => `<a href="#/${v.kind}${t.id === 'home' ? '' : `/${t.id}`}"${t.id === tab.id ? ' aria-current="page"' : ''}>${ico(t.icon)}<span>${esc(t.t)}</span>${t.n ? `<small>${esc(t.n)}</small>` : ''}</a>`).join('')}</nav>
+        <div class="dk-foot">${D.foot || ''}<a href="#" data-home>${ico('arrow-r')}برگشت به سایت</a></div>
+      </aside>
+      <div class="dk-main" id="dkMain"></div></div>`;
+    tab.render.call(D, $('#dkMain', page.el), v);
+    const inner = page.leave; page.leave = () => { this.stop(); if (inner) inner(); };
+  },
+  head(t, lead, extra = '') { return `<header class="dk-head evp-rise"><div><h1>${esc(t)}</h1>${lead ? `<p>${lead}</p>` : ''}</div>${extra}</header>`; },
+  tile(label, value, delta, vals, good = true) {
+    const up = delta >= 0, tone = up === good ? 'good' : 'bad';
+    return `<div class="panel dk-tile evp-rise"><span>${esc(label)}</span><b>${value}</b>${delta == null ? '<em></em>' : `<em data-tone="${tone}">${up ? '▲' : '▼'} ${pct(Math.abs(delta))}<small>نسبت به دوره‌ی قبل</small></em>`}${vals ? viz.spark(vals) : ''}</div>`;
+  },
+  modal(cls, html, label) {
+    const box = document.createElement('div'); box.className = 'evp-modal'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', label);
+    box.innerHTML = `<div class="evp-dlg panel ${cls}"><button type="button" class="au-x" data-x aria-label="بستن">${ico('x')}</button>${html}</div>`;
+    $('#app').appendChild(box);
+    const prev = document.activeElement;
+    const shut = () => { document.removeEventListener('keydown', key, true); box.remove(); if (prev && prev.focus) prev.focus(); };
+    const key = (ev) => { if (ev.key === 'Escape') { ev.preventDefault(); shut(); } };
+    document.addEventListener('keydown', key, true);
+    box.addEventListener('click', (ev) => { if (ev.target === box || ev.target.closest('[data-x]')) shut(); });
+    if (MOTK()) gsap.fromTo($('.evp-dlg', box), { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'expo.out' });
+    return { box, shut };
+  },
+  status(d) { return { draft: ['پیش‌نویس', 'mute'], review: ['در انتظار تأیید مدیر', 'warn'], live: ['منتشر شده', 'good'], rejected: ['رد شد', 'bad'] }[d] || ['منتشر شده', 'good']; },
+};
+
+/* ───── the organiser ───── */
+const org = {
+  title: 'پنل برگزارکننده', av: 'آن', who: ORG.name, role: `برگزارکننده · ${ORG.since}`,
+  foot: `<a href="#/gate">${ico('shield-ok')}کنترل ورود</a>`,
+  tabs() {
+    const rev = drafts.all().filter((d) => d.status === 'review').length;
+    return [
+      { id: 'home', t: 'پیشخوان', icon: 'grid', render: this.home },
+      { id: 'shows', t: 'برنامه‌ها', icon: 'ticket', n: rev ? `${fa(rev)} در انتظار` : '', render: this.shows },
+      { id: 'new', t: 'برنامه‌ی جدید', icon: 'plus', render: (el, v) => wizard.render(el, v) },
+      { id: 'settle', t: 'فروش و تسویه', icon: 'bag', render: this.settle },
+      { id: 'codes', t: 'کدهای تخفیف', icon: 'tag', render: (el) => codes.render(el) },
+      { id: 'staff', t: 'کنترل‌چی‌ها', icon: 'users', render: this.staff },
+    ];
+  },
+
+  // the desk's first page: four numbers, the sales of the last two hours (live), what sells, the sessions ahead, the last sales
+  home(el) {
+    const shows = orgShows(), days = salesDays(), slots = salesSlots(), up = [];
+    for (const e of shows) for (const s of sessionsOf(e)) up.push({ e, s, ...sesStats(e, s) });
+    up.sort((a, b) => a.s.t - b.s.t);
+    const sum30 = days.reduce((a, d) => a + d.sum, 0), today = days[days.length - 1], y0 = days[days.length - 2], yest = { sum: Math.round(y0.sum * days.part / 1e4) * 1e4, n: Math.max(1, Math.round(y0.n * days.part)) };
+    const occ = up.length ? up.reduce((a, x) => a + x.sold / Math.max(1, x.cap), 0) / up.length : 0;
+    const feed = [];
+    const st = { today: today.sum, tn: today.n };
+    const rank = shows.map((e) => ({ t: e.title, v: showStats(e).gross })).filter((r) => r.v > 0).sort((a, b) => b.v - a.v).slice(0, 6);
+    el.innerHTML = `${desk.head(`سلام، ${ORG.who}`, `فروش برنامه‌های «${esc(ORG.name)}» همین لحظه. <span class="dk-live"><i></i>زنده</span>`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
+      <section class="dk-tiles" aria-label="عددهای اصلی">
+        <div class="panel dk-tile dk-hero evp-rise"><span>فروش امروز (تومان)</span><b id="dkToday">${money(st.today)}</b><em data-tone="${st.today >= yest.sum ? 'good' : 'bad'}">${st.today >= yest.sum ? '▲' : '▼'} ${pct(Math.abs(st.today - yest.sum) / Math.max(1, yest.sum))}<small>دیروز تا همین ساعت ${short(yest.sum)} تومان</small></em>${viz.spark(days.slice(-12).map((d) => d.sum))}</div>
+        ${desk.tile('بلیت فروخته‌شده‌ی امروز', `<span id="dkTn">${money(st.tn)}</span>`, (today.n - yest.n) / Math.max(1, yest.n), days.slice(-12).map((d) => d.n))}
+        ${desk.tile('فروش ۳۰ روز (تومان)', short(sum30), 0.124, days.filter((_, i) => i % 2).map((d) => d.sum))}
+        ${desk.tile('پرشدگی سانس‌های پیش رو', pct(occ), 0.06, up.slice(0, 12).map((x) => x.sold / Math.max(1, x.cap)))}
+      </section>
+      <div class="dk-cols">
+        <section class="panel dk-box evp-rise" aria-labelledby="dkSlotsH"><h2 id="dkSlotsH">${ico('clock')}فروش دو ساعت گذشته<small>هر ستون ۵ دقیقه · تومان</small></h2><div id="dkSlots"></div></section>
+        <section class="panel dk-box evp-rise" aria-labelledby="dkFeedH"><h2 id="dkFeedH">${ico('bell')}آخرین خریدها<small class="dk-live"><i></i>زنده</small></h2><ol class="dk-feed" id="dkFeed"><li class="dk-empty">منتظر خرید بعدی…</li></ol></section>
+      </div>
+      <div class="dk-cols">
+        <section class="panel dk-box evp-rise" aria-labelledby="dkUpH"><h2 id="dkUpH">${ico('calendar')}سانس‌های پیش رو<small>${fa(up.length)} سانس</small></h2>
+          <div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>برنامه</th><th>سانس</th><th>فروش</th><th>مبلغ (تومان)</th></tr></thead><tbody>${up.slice(0, 8).map((x) => { const w = whenOf(x.s), p = x.sold / Math.max(1, x.cap); return `<tr><td><a href="#/e/${esc(encodeURIComponent(x.e.id))}">${esc(x.e.title)}</a></td><td>${esc(w.wd)} ${esc(w.dm)} · ${esc(w.tm)}</td><td><span class="dk-meter" style="--p:${p.toFixed(3)}" data-tone="${p > 0.92 ? 'warn' : ''}"><i></i></span><small>${money(x.sold)} از ${money(x.cap)}</small></td><td>${money(x.gross)}</td></tr>`; }).join('')}</tbody></table></div></section>
+        <section class="panel dk-box evp-rise" aria-labelledby="dkRankH"><h2 id="dkRankH">${ico('award')}پرفروش‌ترین‌ها<small>سانس‌های پیش رو · تومان</small></h2>${viz.ranked(rank)}</section>
+      </div>`;
+    const draw = () => {
+      const data = slots.map((d) => ({ v: d.sum, x: F.time.format(new Date(d.t)), tip: `${F.time.format(new Date(d.t))} تا ${F.time.format(new Date(d.t + 3e5))}` }));
+      $('#dkSlots', el).innerHTML = viz.columns('dkSlotsC', data, { label: 'فروش هر ۵ دقیقه در دو ساعت گذشته' }) + viz.table(['از ساعت', 'فروش (تومان)'], data.map((d) => [d.x, money(d.v)]));
+      viz.wire('dkSlotsC', data);
+    };
+    draw();
+    // the live sales: someone buys one to four seats of a session ahead every few seconds
+    const sale = () => {
+      if (!el.isConnected) return;
+      const x = up[Math.floor(Math.random() * Math.min(up.length, 10))]; if (!x) return;
+      const tiers = tiersOf(x.e), t = tiers[Math.floor(Math.random() * tiers.length)], n = 1 + Math.floor(Math.random() * Math.random() * 4), amt = n * t.price;
+      st.today += amt; st.tn += n; slots[slots.length - 1].sum += amt;
+      feed.unshift({ at: Date.now(), e: x.e, s: x.s, n, amt, z: runName(t) });
+      const now = $('#dkToday', el); if (now) { now.textContent = money(st.today); now.classList.remove('is-tick'); void now.offsetWidth; now.classList.add('is-tick'); }
+      const tn = $('#dkTn', el); if (tn) tn.textContent = money(st.tn);
+      paintFeed(); draw();
+      desk.timers.push(setTimeout(sale, 2200 + Math.random() * 4800));
+    };
+    const paintFeed = () => {
+      const ol = $('#dkFeed', el); if (!ol) return;
+      ol.innerHTML = feed.slice(0, 7).map((f) => { const w = whenOf(f.s); return `<li><span class="dk-feed-n">${fa(f.n)}</span><span><b>${esc(f.e.title)}</b><small>${esc(f.z)} · ${esc(w.wd)} ${esc(w.tm)}</small></span><span class="dk-feed-v"><b>${money(f.amt)}</b><small data-at="${f.at}">${esc(ago(f.at))}</small></span></li>`; }).join('') || '<li class="dk-empty">منتظر خرید بعدی…</li>';
+      if (MOTK() && ol.firstElementChild) gsap.from(ol.firstElementChild, { y: -14, opacity: 0, duration: 0.5, ease: 'expo.out', clearProps: 'transform,opacity' });
+    };
+    desk.timers.push(setTimeout(sale, 900));
+    desk.every(5000, () => $$('#dkFeed [data-at]', el).forEach((s) => { s.textContent = ago(+s.dataset.at); }));
+  },
+
+  // the shows: what is on the site, what waits for the admin, the drafts; each with its sessions, sales and money
+  shows(el) {
+    const own = drafts.all(), live = orgShows().filter((e) => !e.draft);
+    const card = (o) => `<article class="panel dk-show evp-rise"><figure class="bk-poster"><img src="${esc(o.src)}" alt="" loading="lazy"></figure>
+      <div class="dk-show-t"><b>${esc(o.title)}</b><small>${esc(o.line)}</small><span class="dk-show-st"><em class="st" data-tone="${o.st[1]}">${esc(o.st[0])}</em>${o.note ? `<small>${esc(o.note)}</small>` : ''}</span></div>
+      <div class="dk-show-n">${o.cap ? `<span class="dk-meter" style="--p:${(o.sold / o.cap).toFixed(3)}"><i></i></span><small>${money(o.sold)} از ${money(o.cap)} بلیت · ${fa(o.n)} سانس</small><b>${short(o.gross)} تومان</b>` : `<small>${esc(o.hint || '')}</small>`}</div>
+      <div class="dk-show-a">${o.acts}</div></article>`;
+    const rows = own.map((d) => ({ title: d.title || 'برنامه‌ی بی‌نام', src: d.poster || '', line: `${d.city || '—'} · ${d.venue || 'سالن انتخاب نشده'} · ${fa((d.days || []).length * (d.times || []).length)} سانس`, st: desk.status(d.status), note: d.status === 'rejected' && d.note ? `دلیل: ${d.note}` : d.status === 'review' ? `فرستاده شد ${ago(d.sent || d.at)}` : '', hint: d.status === 'draft' ? 'هنوز فرستاده نشده؛ تا تأیید مدیر روی سایت نمی‌آد.' : '', acts: d.status === 'live' ? `<a class="chip" href="#/e/${esc(encodeURIComponent(d.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a>` : `<a class="chip" href="#/org/new/${esc(encodeURIComponent(d.id))}">${ico('sliders')}${d.status === 'review' ? 'دیدن' : 'ادامه‌ی ساختن'}</a>` }));
+    const lives = live.map((e) => { const x = showStats(e), h = hallOf(e), { src } = artOf(e); return { title: e.title, src, line: `${e.city} · ${h.name}`, st: ['منتشر شده', 'good'], ...x, acts: `<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a><a class="chip" href="#/org/codes" data-code="${esc(e.id)}">${ico('tag')}کد تخفیف</a>` }; });
+    el.innerHTML = `${desk.head('برنامه‌ها', `${fa(lives.length)} برنامه روی سایت${own.length ? ` · ${fa(own.length)} برنامه‌ی ساخته‌شده تو پنل` : ''}. هر برنامه‌ی تازه یا هر تغییر تا تأیید مدیر روی سایت نمی‌آد.`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
+      ${rows.length ? `<h2 class="dk-sub evp-rise">ساخته‌شده تو پنل</h2><div class="dk-shows">${rows.map(card).join('')}</div>` : ''}
+      <h2 class="dk-sub evp-rise">روی سایت</h2><div class="dk-shows">${lives.map(card).join('')}</div>`;
+    $$('img', el).forEach((im) => { im.onerror = () => { im.onerror = null; im.closest('figure').classList.add('is-none'); }; if (!im.getAttribute('src')) im.closest('figure').classList.add('is-none'); });
+    $$('[data-code]', el).forEach((a) => a.addEventListener('click', () => store.sset('blit.codeFor', a.dataset.code)));
+  },
+
+  // the money: per show, what the buyers paid, the VAT, the fee, the discounts, the organiser's share; the payouts; a CSV
+  settle(el) {
+    const shows = orgShows().filter((e) => !e.draft), R = rngOf(seedOf('org-settle'));
+    const rows = shows.map((e) => { const x = showStats(e), sold = Math.round(x.sold * (1.6 + R())), gross = Math.round(x.gross * (1.6 + R()) / 1e4) * 1e4, off = Math.round(gross * (0.02 + R() * 0.05) / 1e4) * 1e4, net = gross - off, vat = Math.round(net * 0.1), fee = Math.round(net * FEE), mine = net - fee; return { e, sold, gross, off, vat, fee, mine, paid: net + vat }; }).filter((r) => r.sold > 0);
+    const T = rows.reduce((a, r) => { for (const k of ['sold', 'gross', 'off', 'vat', 'fee', 'mine', 'paid']) a[k] += r[k]; return a; }, { sold: 0, gross: 0, off: 0, vat: 0, fee: 0, mine: 0, paid: 0 });
+    const paidOut = Math.round(T.mine * 0.62 / 1e4) * 1e4, due = T.mine - paidOut;
+    const payouts = [0.45, 0.33, 0.22].map((k, i) => ({ t: Date.now() - (i * 7 + 3) * DAY, v: Math.round(paidOut * k / 1e4) * 1e4, ref: `${fa(4100 + i * 37)}${fa(2290 - i * 11)}` }));
+    el.innerHTML = `${desk.head('فروش و تسویه', 'همه‌ی مبلغ‌ها به تومان. مالیات بر ارزش افزوده (۱۰٪) جدا حساب و پرداخت می‌شه؛ کارمزد بلیت ۸٪ از فروش بعد از تخفیفه.', `<button type="button" class="chip" id="dkCsv">${ico('arrow-ul')}دریافت فایل اکسل (CSV)</button>`)}
+      <section class="dk-tiles"><div class="panel dk-tile dk-hero evp-rise"><span>قابل تسویه</span><b>${money(due)}</b><em>واریز بعدی: ${esc(dayOf(Date.now() + 2 * DAY))} به ${esc(ORG.iban)}</em></div>
+        ${desk.tile('سهم شما تا امروز', short(T.mine), null)}${desk.tile('بلیت فروخته‌شده', money(T.sold), null)}${desk.tile('تخفیف‌ها', short(T.off), null)}</section>
+      <div class="dk-cols">
+        <section class="panel dk-box evp-rise" aria-labelledby="dkSplitH"><h2 id="dkSplitH">${ico('bag')}پولی که خریدارها دادن<small>${short(T.paid)} تومان</small></h2>${viz.parts([{ t: 'سهم برگزارکننده', v: T.mine }, { t: 'کارمزد بلیت (۸٪)', v: T.fee }, { t: 'مالیات بر ارزش افزوده', v: T.vat }], T.paid)}</section>
+        <section class="panel dk-box evp-rise" aria-labelledby="dkPayH"><h2 id="dkPayH">${ico('check')}واریزهای قبلی</h2><ol class="dk-pay">${payouts.map((p) => `<li><span><b>${money(p.v)} تومان</b><small>${esc(dayOf(p.t))} · پیگیری ${esc(p.ref)}</small></span><em class="st" data-tone="good">واریز شد</em></li>`).join('')}</ol></section>
+      </div>
+      <section class="panel dk-box evp-rise" aria-labelledby="dkByH"><h2 id="dkByH">${ico('ticket')}به تفکیک برنامه</h2>
+        <div class="dk-tbl-w"><table class="dk-tbl dk-num"><thead><tr><th>برنامه</th><th>بلیت</th><th>فروش</th><th>تخفیف</th><th>کارمزد</th><th>مالیات</th><th>سهم شما</th></tr></thead>
+        <tbody>${rows.map((r) => `<tr><td>${esc(r.e.title)}</td><td>${money(r.sold)}</td><td>${money(r.gross)}</td><td>${money(r.off)}</td><td>${money(r.fee)}</td><td>${money(r.vat)}</td><td><b>${money(r.mine)}</b></td></tr>`).join('')}</tbody>
+        <tfoot><tr><td>جمع</td><td>${money(T.sold)}</td><td>${money(T.gross)}</td><td>${money(T.off)}</td><td>${money(T.fee)}</td><td>${money(T.vat)}</td><td><b>${money(T.mine)}</b></td></tr></tfoot></table></div></section>`;
+    $('#dkCsv', el).addEventListener('click', () => { csvDownload('blit-settlement.csv', [['برنامه', 'بلیت', 'فروش', 'تخفیف', 'کارمزد', 'مالیات', 'سهم برگزارکننده']].concat(rows.map((r) => [r.e.title, r.sold, r.gross, r.off, r.fee, r.vat, r.mine])).concat([['جمع', T.sold, T.gross, T.off, T.fee, T.vat, T.mine]])); toast('فایل گزارش دانلود شد.'); });
+  },
+
+  // the controllers: who scans at which door; each one's code for the entry control's start
+  staffList() {
+    let l = store.get('blit.staff', null);
+    if (!l) { l = [{ id: 'k1', name: 'رضا کریمی', phone: '09123334455', pin: '4826', doors: ['g1'], at: Date.now() - 3 * DAY, seen: Date.now() - 50 * 6e4 }, { id: 'k2', name: 'مریم احمدی', phone: '09351119988', pin: '7315', doors: ['g2', 'g3'], at: Date.now() - 9 * DAY, seen: Date.now() - 2 * DAY }]; store.set('blit.staff', l); }
+    return l;
+  },
+  staff(el) {
+    const paint = () => {
+      const l = this.staffList();
+      el.innerHTML = `${desk.head('کنترل‌چی‌ها', 'کسایی که دم در بلیت اسکن می‌کنن. هر کدوم یه کد چهاررقمی داره که با پیامک براش فرستاده می‌شه و فقط درهایی رو که بهش دادی باز می‌کنه.', `<a class="chip" href="#/gate">${ico('shield-ok')}باز کردن کنترل ورود</a>`)}
+        <div class="dk-cols dk-cols-r">
+          <section class="panel dk-box evp-rise" aria-labelledby="dkStH"><h2 id="dkStH">${ico('users')}فهرست<small>${fa(l.length)} نفر</small></h2>
+            <ul class="dk-staff">${l.map((k) => `<li><span class="dk-av" aria-hidden="true">${esc(k.name.slice(0, 1))}</span><span class="dk-staff-t"><b>${esc(k.name)}</b><small>${esc(maskPhone(k.phone))} · آخرین ورود ${esc(ago(k.seen || k.at))}</small><span>${k.doors.map((g) => `<em class="chip">${esc(gateName(g))}</em>`).join('')}</span></span>
+              <span class="dk-pin"><code data-pin="${esc(k.pin)}">••••</code><button type="button" class="chip gt-ic" data-show="${esc(k.id)}" aria-label="نمایش کد ${esc(k.name)}">${ico('search')}</button></span><button type="button" class="chip gt-ic" data-del="${esc(k.id)}" aria-label="حذف ${esc(k.name)}">${ico('x')}</button></li>`).join('')}</ul></section>
+          <section class="panel dk-box evp-rise" aria-labelledby="dkNewK"><h2 id="dkNewK">${ico('plus')}کنترل‌چی تازه</h2>
+            <form id="dkStaff" class="dk-form"><label class="bk-fld"><span>نام</span><input name="n" required autocomplete="off"></label><label class="bk-fld"><span>موبایل</span><input name="p" required inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۰۰۰ ۰۰۰۰"></label>
+              <fieldset class="dk-checks"><legend>درها</legend>${GATES.map((g, i) => `<label><input type="checkbox" name="g" value="${g.id}"${i === 0 ? ' checked' : ''}><span>${esc(g.t)}<small>${esc(g.s)}</small></span></label>`).join('')}</fieldset>
+              <button type="submit" class="buy">${ico('check')}ساختن و فرستادن پیامک</button><p class="bk-otp-st" id="dkStaffSt"></p></form></section>
+        </div>`;
+      $$('[data-show]', el).forEach((b) => b.addEventListener('click', () => { const c = $('code', b.parentNode); c.textContent = c.textContent === '••••' ? fa(c.dataset.pin) : '••••'; }));
+      $$('[data-del]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.staff', this.staffList().filter((k) => k.id !== b.dataset.del)); toast('کنترل‌چی حذف شد؛ کدش دیگه کار نمی‌کنه.'); paint(); }));
+      const f = $('#dkStaff', el), ph = f.elements.p;
+      ph.addEventListener('input', () => { ph.value = fa(enDigits(ph.value).replace(/\D/g, '').slice(0, 11)); });
+      f.addEventListener('submit', (ev) => {
+        ev.preventDefault(); const p = enDigits(ph.value), doors = $$('input[name="g"]:checked', f).map((x) => x.value), out = $('#dkStaffSt', el);
+        if (!/^09\d{9}$/.test(p)) { out.className = 'bk-otp-st bad'; out.textContent = 'شماره‌ی موبایل ۱۱ رقمه و با ۰۹ شروع می‌شه.'; return; }
+        if (!doors.length) { out.className = 'bk-otp-st bad'; out.textContent = 'دست‌کم یه در انتخاب کن.'; return; }
+        const pin = String(1000 + Math.floor(Math.random() * 8999)), l = this.staffList(); l.push({ id: `k${Date.now().toString(36)}`, name: f.elements.n.value.trim(), phone: p, pin, doors, at: Date.now() }); store.set('blit.staff', l);
+        toast(`کد ${fa(pin)} برای ${maskPhone(p)} پیامک شد.`); paint();
+      });
+    };
+    paint();
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   a new show, in six steps (the organiser's panel, #/org/new[/<draft>]): what it is, its poster, its hall (from the halls'
+   library, each with its plan), its sessions (a Persian calendar, the hours, when the sale starts), its prices (per tier of
+   the hall's plan, the weekend dearer if wanted), and a last look before it goes to the admin. A card beside the steps shows
+   how it will look in the list. Kept as a draft at every step («blit.drafts»); after the admin's yes it is on the site.
+   ════════════════════════════════════════════════════════════════ */
+const WZ_STEPS = ['مشخصات', 'پوستر', 'سالن', 'سانس‌ها', 'قیمت‌ها', 'بررسی و ارسال'];
+const WZ_TIMES = ['16:00', '17:30', '19:00', '20:00', '20:30', '21:30'];
+const KIND_BASE = { concert: 900000, theatre: 450000, comedy: 350000 };
+const jDay = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/Tehran', day: 'numeric' });
+const jMonth = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/Tehran', month: 'long', year: 'numeric' });
+const jWeek = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/Tehran', weekday: 'short' });
+const isoDay = (t) => TEHRAN_DAY.format(new Date(t));
+const atOf = (day, hm) => Date.parse(`${day}T${hm}:00+03:30`);
+const tiersUsed = (key) => [...new Set((PLANS[key] || PLANS['fan-m']).secs.flatMap((z) => z.runs.map((r) => r[2])))].sort();
+const tierZones = (key, t) => (PLANS[key] || PLANS['fan-m']).secs.flatMap((z) => z.runs.filter((r) => r[2] === t).map(([a, b]) => (z.k === 'stand' ? z.t : `${z.t} ${RUN_WORD[z.k]} ${fa(a)}${b > a ? ` تا ${fa(b)}` : ''}`)));
+// a hall's plan, small: every seat a dot in its tier's colour, the standing area a block, the stage on top
+function miniPlan(key, prices) {
+  const L = hallLayout(PLANS[key] || PLANS['fan-m']), by = {};
+  for (const z of L.secs) {
+    const tierAt = (row) => { const r = z.sec.runs.find(([a, b]) => z.sec.k === 'stand' || (row >= a && row <= b)); return r ? r[2] : 'D'; };
+    for (const p of z.seats) { const t = tierAt(p.row); (by[t] = by[t] || []).push(`M${(p.x - 7).toFixed(0)} ${p.y.toFixed(0)}a7 7 0 1 0 14 0a7 7 0 1 0 -14 0`); }
+  }
+  const stand = L.secs.filter((z) => z.sec.k === 'stand').map((z) => { const p = z.shapes[0], t = z.sec.runs[0][2]; return `<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="20" fill="${TIER[t].c}" opacity=".55"/>`; }).join('');
+  const cx = L.cx, cy = L.cy, st = L.stage === 'arc' ? `<path d="M ${cx - 230} ${cy - 96} H ${cx + 230} V ${cy - 20} Q ${cx} ${cy + 70} ${cx - 230} ${cy - 20} Z" class="hpm-st"/>` : `<rect x="${cx - 250}" y="${cy - 96}" width="500" height="96" rx="14" class="hpm-st"/>`;
+  return `<svg class="hpm" viewBox="0 0 ${L.W} ${L.H}" aria-hidden="true">${st}${stand}${Object.entries(by).map(([t, d]) => `<path d="${d.join('')}" fill="${TIER[t].c}"${prices && !prices[t] ? ' opacity=".25"' : ''}/>`).join('')}</svg>`;
+}
+// a draft as a show of the list (for the card beside the steps, and on the site once the admin has said yes)
+function draftEvent(d) {
+  const ts = (d.days || []).flatMap((day) => (d.times || []).map((hm) => atOf(day, hm))).sort((a, b) => a - b);
+  const low = Math.min(...Object.values(d.prices || {}).filter((x) => x > 0), Infinity);
+  const e = { id: d.id, draft: true, filler: true, layout: 'bar', kind: d.kind, city: d.city, type: d.type || KIND_T[d.kind], name: d.title || 'برنامه‌ی بی‌نام', desc: d.desc || '', venue: `${d.city}، ${d.venue || '…'}`,
+    startsAt: new Date(ts[0] || Date.now() + 7 * DAY).toISOString(), endsAt: ts.length > 1 ? new Date(ts[ts.length - 1]).toISOString() : undefined, price: priceText(low < Infinity ? low : KIND_BASE[d.kind] || 500000),
+    prices: d.prices, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
+    poster: { src: d.poster || 'assets/posters/none-yet.webp', w: 2, h: 3 }, ver: 0 };
+  e.title = `${e.type} ${e.name}`;
+  setPal(e, d.pal || 'violet'); e.w = when(e);
+  return e;
+}
+// the shows the admin said yes to are on the site (the list is drawn after this)
+drafts.all().filter((d) => d.status === 'live').forEach((d) => MORE.push(draftEvent(d)));
+
+const wizard = {
+  d: null, step: 0,
+  blank() { return { id: `d-${Date.now().toString(36)}`, title: '', kind: 'concert', type: 'کنسرت', city: 'تهران', venue: '', desc: '', dur: 120, age: 'همه', pal: 'violet', poster: '', days: [], times: ['20:30'], sale: 'now', saleAt: '', prices: {}, weekend: false, status: 'draft', at: Date.now() }; },
+  render(el, v) {
+    this.el = el;
+    if (!this.d || (v.arg && this.d.id !== v.arg) || (!v.arg && this.d.status !== 'draft') || (!v.arg && drafts.get(this.d.id) && drafts.get(this.d.id).status !== 'draft')) { this.d = (v.arg && drafts.get(v.arg)) || this.blank(); this.step = this.d.status === 'draft' || this.d.status === 'rejected' ? (this.d.step || 0) : 5; }
+    this.paint();
+  },
+  get lock() { return this.d.status === 'review' || this.d.status === 'live'; },
+  save(quiet) { this.d.at = Date.now(); this.d.step = this.step; drafts.put(this.d); if (!quiet) toast('پیش‌نویس ذخیره شد؛ از «برنامه‌ها» هر وقت خواستی ادامه بده.'); },
+  paint() {
+    const d = this.d, el = this.el, i = this.step;
+    el.innerHTML = `${desk.head(d.title ? `«${d.title}»` : 'برنامه‌ی جدید', 'شش قدم؛ هر جا خواستی ذخیره کن و بعداً ادامه بده. بعد از فرستادن، مدیر بررسی می‌کنه و بعد روی سایت می‌آد.', this.lock ? '' : `<button type="button" class="chip" id="wzSave">${ico('check')}ذخیره‌ی پیش‌نویس</button>`)}
+      <ol class="wz-steps panel evp-rise" style="--cur:${i}">${WZ_STEPS.map((n, k) => `<li${k === i ? ' aria-current="step"' : ''}${k < i ? ' class="is-done"' : ''}><button type="button" data-step="${k}"${this.lock && k < 5 ? ' disabled' : ''}><span class="n">${k < i ? ico('check') : fa(k + 1)}</span>${esc(n)}</button></li>`).join('')}<i class="bar" aria-hidden="true"></i></ol>
+      <div class="dk-cols dk-cols-r wz-cols"><section class="panel dk-box wz-body evp-rise" id="wzBody" aria-label="${esc(WZ_STEPS[i])}"></section>
+        <aside class="wz-side"><section class="panel dk-box wz-prev evp-rise"><h2>${ico('ticket')}تو لیست این‌طوری دیده می‌شه</h2><div class="wz-card" id="wzCard"></div><ul class="wz-check" id="wzCheck"></ul></section></aside></div>
+      ${this.lock ? '' : `<div class="wz-nav evp-rise">${i > 0 ? `<button type="button" class="chip" id="wzBack">${ico('arrow-r')}قبلی</button>` : '<span></span>'}${i < 5 ? `<button type="button" class="buy" id="wzNext">بعدی: ${esc(WZ_STEPS[i + 1])}${ico('arrow-l')}</button>` : ''}</div>`}`;
+    this[`s${i}`]($('#wzBody', el));
+    this.preview(true);
+    $$('[data-step]', el).forEach((b) => b.addEventListener('click', () => this.go(+b.dataset.step)));
+    const on = (id, f) => { const b = $(id, el); if (b) b.addEventListener('click', f); };
+    on('#wzSave', () => this.save()); on('#wzBack', () => this.go(i - 1)); on('#wzNext', () => this.go(i + 1));
+  },
+  go(k) { if (k < 0 || k > 5) return; this.step = k; this.save(true); this.paint(); const top = this.el.getBoundingClientRect().top + scrollY - 90; if (scrollY > top) scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' }); },
+  // the card and what is still missing
+  missing() {
+    const d = this.d, m = [];
+    if (!d.title.trim()) m.push([0, 'اسم برنامه']);
+    if (!d.venue) m.push([2, 'سالن']);
+    if (!d.days.length || !d.times.length) m.push([3, 'دست‌کم یه سانس']);
+    if (d.venue && tiersUsed(venueInfo(d.city, d.venue).plan).some((t) => !(d.prices[t] > 0))) m.push([4, 'قیمت همه‌ی ردیف‌ها']);
+    return m;
+  },
+  preview(now) {
+    clearTimeout(this.pt);
+    const run = () => {
+      const c = $('#wzCard', this.el); if (!c) return;
+      c.textContent = ''; c.appendChild(s2.card(draftEvent(this.d), false)); const t = $('.tkt', c); if (t) t.classList.add('is-in');
+      const m = this.missing(), ok = WZ_STEPS.slice(0, 5).map((n, k) => !m.some((x) => x[0] === k));
+      $('#wzCheck', this.el).innerHTML = WZ_STEPS.slice(0, 5).map((n, k) => `<li class="${ok[k] ? 'is-ok' : ''}">${ico(ok[k] ? 'check' : 'info')}${esc(n)}</li>`).join('');
+    };
+    if (now) run(); else this.pt = setTimeout(run, 260);
+  },
+
+  /* 1. what it is */
+  s0(b) {
+    const d = this.d;
+    b.innerHTML = `<h2>${ico('info')}مشخصات برنامه</h2>
+      <div class="dk-form wz-grid">
+        <div class="bk-fld full"><span>نوع</span><div class="bk-seg" role="radiogroup" aria-label="نوع">${Object.entries(KIND_T).map(([k, t]) => `<button type="button" role="radio" data-k="${k}" aria-checked="${d.kind === k}">${esc(k === 'comedy' ? 'جُنگ و کمدی' : k === 'theatre' ? 'تئاتر' : t)}</button>`).join('')}</div></div>
+        <label class="bk-fld"><span>کلمه‌ی پیش از اسم <small>(کنسرت، نمایش موزیکال، استندآپ…)</small></span><input id="wzType" value="${esc(d.type)}" maxlength="24"></label>
+        <label class="bk-fld"><span>اسم برنامه</span><input id="wzTitle" value="${esc(d.title)}" maxlength="60" placeholder="مثلاً: شب‌های بتهوون" required></label>
+        <label class="bk-fld"><span>شهر</span><select id="wzCity">${CITIES.map((c) => `<option${c === d.city ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select></label>
+        <label class="bk-fld"><span>مدت (دقیقه)</span><input id="wzDur" type="number" min="20" max="300" step="5" value="${d.dur}" dir="ltr"></label>
+        <label class="bk-fld"><span>رده‌ی سنی</span><select id="wzAge">${['همه', '+۷', '+۱۲', '+۱۵', '+۱۸'].map((a) => `<option${a === d.age ? ' selected' : ''}>${a}</option>`).join('')}</select></label>
+        <label class="bk-fld full"><span>درباره‌ی برنامه <small>(تو صفحه‌ی برنامه می‌آد)</small></span><textarea id="wzDesc" rows="4" maxlength="900" placeholder="کی‌ها اجرا می‌کنن، چی اجرا می‌شه، چه چیزی خاصشه…">${esc(d.desc)}</textarea></label>
+      </div>`;
+    const set = (k, v) => { d[k] = v; this.preview(); };
+    $$('[data-k]', b).forEach((x) => x.addEventListener('click', () => { const was = KIND_T[d.kind]; d.kind = x.dataset.k; if (!d.type || d.type === was || d.type === 'کنسرت' || d.type === 'نمایش' || d.type === 'جُنگ') { d.type = KIND_T[d.kind]; $('#wzType', b).value = d.type; } $$('[data-k]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); this.preview(); }));
+    $('#wzTitle', b).addEventListener('input', (ev) => set('title', ev.target.value));
+    $('#wzType', b).addEventListener('input', (ev) => set('type', ev.target.value.trim()));
+    $('#wzCity', b).addEventListener('change', (ev) => { set('city', ev.target.value); if (d.venue && !VENUES.some(([c, n]) => c === d.city && n === d.venue)) d.venue = ''; });
+    $('#wzDur', b).addEventListener('input', (ev) => { d.dur = +ev.target.value || 0; });
+    $('#wzAge', b).addEventListener('change', (ev) => { d.age = ev.target.value; });
+    $('#wzDesc', b).addEventListener('input', (ev) => { d.desc = ev.target.value; });
+    $('#wzTitle', b).focus({ preventScroll: true });
+  },
+
+  /* 2. the poster */
+  s1(b) {
+    const d = this.d;
+    b.innerHTML = `<h2>${ico('upload')}پوستر</h2><p class="bk-lead">پوستر عمودی، به نسبت ۲ به ۳ (مثلاً ۱۰۰۰ × ۱۵۰۰ پیکسل). هر نسبت دیگه‌ای هم کامل دیده می‌شه و دورش با نسخه‌ی محوِ خودش پر می‌شه. بدون پوستر، یه پوستر موقت از اسم و رنگ ساخته می‌شه.</p>
+      <div class="wz-poster"><label class="wz-drop" id="wzDrop"><input type="file" accept="image/*" id="wzFile"><span class="sec-ic" aria-hidden="true">${ico('upload')}</span><b>پوستر رو اینجا بنداز</b><small>یا بزن تا انتخاب کنی · JPG، PNG یا WebP</small></label>
+        ${d.poster ? `<figure class="wz-pic"><img src="${esc(d.poster)}" alt="پوستر"><button type="button" class="chip" id="wzRm">${ico('x')}برداشتن</button></figure>` : ''}</div>
+      <h3 class="wz-h3">رنگ برنامه <small>(برای پوستر موقت و دکمه‌ها)</small></h3>
+      <div class="wz-pal" role="radiogroup" aria-label="رنگ">${Object.entries(PALETTE).slice(0, 14).map(([k, p]) => `<button type="button" role="radio" data-pal="${k}" aria-checked="${d.pal === k}" style="--c:${p.accent}" aria-label="${esc(p.label)}"></button>`).join('')}</div>`;
+    const take = (f) => {
+      if (!f || !/^image\//.test(f.type)) { toast('یه فایل تصویری انتخاب کن.'); return; }
+      const im = new Image(), u = URL.createObjectURL(f);
+      im.onload = () => { const k = Math.min(1, 640 / im.naturalWidth, 1100 / im.naturalHeight), c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); d.poster = c.toDataURL('image/jpeg', 0.84); URL.revokeObjectURL(u); this.save(true); this.s1(b); this.preview(true); toast(`پوستر گذاشته شد (${fa(im.naturalWidth)} × ${fa(im.naturalHeight)}).`); };
+      im.onerror = () => toast('این تصویر خونده نشد.'); im.src = u;
+    };
+    $('#wzFile', b).addEventListener('change', (ev) => take(ev.target.files[0]));
+    const z = $('#wzDrop', b);
+    z.addEventListener('dragover', (ev) => { ev.preventDefault(); z.classList.add('is-over'); });
+    z.addEventListener('dragleave', () => z.classList.remove('is-over'));
+    z.addEventListener('drop', (ev) => { ev.preventDefault(); z.classList.remove('is-over'); take(ev.dataTransfer.files[0]); });
+    const rm = $('#wzRm', b); if (rm) rm.addEventListener('click', () => { d.poster = ''; this.save(true); this.s1(b); this.preview(true); });
+    $$('[data-pal]', b).forEach((x) => x.addEventListener('click', () => { d.pal = x.dataset.pal; $$('[data-pal]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); this.preview(true); }));
+  },
+
+  /* 3. the hall, from the library */
+  s2(b) {
+    const d = this.d, all = this.allCities;
+    const list = VENUES.filter(([c]) => all || c === d.city).map(([c, n]) => venueInfo(c, n));
+    b.innerHTML = `<h2>${ico('pin')}سالن<small>از کتابخانه‌ی سالن‌ها</small></h2>
+      <div class="wz-hall-top"><p class="bk-lead">سالن‌های ${esc(all ? 'همه‌ی شهرها' : d.city)}؛ هر کدوم با پلان خودش (لژ، بالکن، میز، جای ایستاده). قیمت‌ها رو قدم پنجم روی همین پلان می‌ذاری.</p><label class="wz-sw"><input type="checkbox" id="wzAll"${all ? ' checked' : ''}><span>همه‌ی شهرها</span></label></div>
+      <div class="wz-halls" role="radiogroup" aria-label="سالن">${list.length ? list.map((h) => `<button type="button" class="wz-hall" role="radio" aria-checked="${d.venue === h.name && d.city === h.city}" data-city="${esc(h.city)}" data-name="${esc(h.name)}">${miniPlan(h.plan)}<span><b>${esc(h.name)}</b><small>${esc(h.addr)}</small><small>${esc(PLAN_T[h.plan] || '')} · ${money(h.cap)} صندلی</small></span></button>`).join('') : `<p class="bk-lead">برای ${esc(d.city)} هنوز سالنی تو کتابخانه نیست.</p>`}</div>
+      <p class="bk-note">${ico('info')}سالنت تو فهرست نیست؟ <a href="#" id="wzAsk">درخواست افزودن سالن</a>؛ مدیر پلانش رو با طراح سالن می‌سازه.</p>`;
+    $('#wzAll', b).addEventListener('change', (ev) => { this.allCities = ev.target.checked; this.s2(b); });
+    $$('.wz-hall', b).forEach((x) => x.addEventListener('click', () => { d.venue = x.dataset.name; d.city = x.dataset.city; const P = tiersUsed(venueInfo(d.city, d.venue).plan); d.prices = Object.fromEntries(P.map((t) => [t, d.prices[t] || 0])); $$('.wz-hall', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); this.preview(); }));
+    $('#wzAsk', b).addEventListener('click', (ev) => { ev.preventDefault(); toast('درخواست افزودن سالن برای مدیر فرستاده شد.'); });
+  },
+
+  /* 4. the sessions: the days on a Persian calendar, the hours, when the sale starts */
+  s3(b) {
+    const d = this.d, start = Date.now(), days = Array.from({ length: 63 }, (_, k) => start + (k + 1) * DAY), months = [];
+    for (const t of days) { const m = jMonth.format(new Date(t)); let g = months[months.length - 1]; if (!g || g.m !== m) months.push(g = { m, days: [] }); g.days.push(t); }
+    const wd = (t) => (new Date(new Date(t).toLocaleString('en-US', { timeZone: 'Asia/Tehran' })).getDay() + 1) % 7;   // Saturday first
+    const head = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+    b.innerHTML = `<h2>${ico('calendar')}سانس‌ها<small id="wzSum"></small></h2>
+      <div class="wz-cal">${months.map((g) => `<div class="wz-month"><b>${esc(g.m)}</b><div class="wz-days">${head.map((h) => `<i>${h}</i>`).join('')}${'<span></span>'.repeat(wd(g.days[0]))}${g.days.map((t) => { const k = isoDay(t), fri = wd(t) === 6; return `<button type="button" data-day="${k}" aria-pressed="${d.days.includes(k)}"${fri ? ' class="is-fri"' : ''} aria-label="${esc(jWeek.format(new Date(t)))} ${esc(dayOf(t))}">${esc(jDay.format(new Date(t)))}</button>`; }).join('')}</div></div>`).join('')}</div>
+      <h3 class="wz-h3">ساعت‌ها <small>(برای همه‌ی روزهای انتخاب‌شده)</small></h3>
+      <div class="sec-chips wz-times">${[...new Set(WZ_TIMES.concat(d.times))].sort().map((hm) => `<button type="button" class="chip" data-hm="${hm}" aria-pressed="${d.times.includes(hm)}">${fa(hm)}</button>`).join('')}<label class="wz-time"><input type="time" id="wzTime" step="900" aria-label="ساعت دیگه"><button type="button" class="chip" id="wzAddT">${ico('plus')}افزودن</button></label></div>
+      <h3 class="wz-h3">شروع فروش</h3>
+      <div class="bk-seg" role="radiogroup" aria-label="شروع فروش"><button type="button" role="radio" data-sale="now" aria-checked="${d.sale === 'now'}">همین که مدیر تأیید کرد</button><button type="button" role="radio" data-sale="at" aria-checked="${d.sale === 'at'}">زمان مشخص (با شمارش معکوس)</button></div>
+      <label class="bk-fld wz-saleat" ${d.sale === 'at' ? '' : 'hidden'}><span>شروع فروش</span><input type="datetime-local" id="wzSaleAt" value="${esc(d.saleLocal || '')}" dir="ltr"></label>`;
+    const sum = () => { const n = d.days.length * d.times.length; $('#wzSum', b).textContent = n ? `${fa(n)} سانس · ${fa(d.days.length)} روز × ${fa(d.times.length)} ساعت` : 'هنوز سانسی نیست'; this.preview(); };
+    $$('[data-day]', b).forEach((x) => x.addEventListener('click', () => { const k = x.dataset.day, i = d.days.indexOf(k); if (i >= 0) d.days.splice(i, 1); else { d.days.push(k); d.days.sort(); } x.setAttribute('aria-pressed', String(i < 0)); sum(); }));
+    const wireT = () => $$('[data-hm]', b).forEach((x) => { x.onclick = () => { const k = x.dataset.hm, i = d.times.indexOf(k); if (i >= 0) d.times.splice(i, 1); else { d.times.push(k); d.times.sort(); } x.setAttribute('aria-pressed', String(i < 0)); sum(); }; });
+    wireT();
+    $('#wzAddT', b).addEventListener('click', () => { const v = $('#wzTime', b).value; if (!/^\d\d:\d\d$/.test(v)) { toast('یه ساعت انتخاب کن.'); return; } if (!d.times.includes(v)) { d.times.push(v); d.times.sort(); } this.s3(b); });
+    $$('[data-sale]', b).forEach((x) => x.addEventListener('click', () => { d.sale = x.dataset.sale; $$('[data-sale]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); $('.wz-saleat', b).hidden = d.sale !== 'at'; if (d.sale === 'now') d.saleAt = ''; this.preview(); }));
+    $('#wzSaleAt', b).addEventListener('change', (ev) => { d.saleLocal = ev.target.value; const t = Date.parse(`${ev.target.value}:00+03:30`); d.saleAt = Number.isFinite(t) ? new Date(t).toISOString() : ''; this.preview(); });
+    sum();
+  },
+
+  /* 5. the prices, per tier of the hall's plan */
+  s4(b) {
+    const d = this.d;
+    if (!d.venue) { b.innerHTML = `<h2>${ico('tag')}قیمت‌ها</h2><p class="bk-lead">اول سالن رو انتخاب کن؛ قیمت‌ها روی پلان همون سالن گذاشته می‌شن.</p><button type="button" class="chip" data-step="2">${ico('pin')}انتخاب سالن</button>`; $('[data-step]', b).addEventListener('click', () => this.go(2)); return; }
+    const h = venueInfo(d.city, d.venue), used = tiersUsed(h.plan), base = KIND_BASE[d.kind] || 500000, low = TIER[used[used.length - 1]].k;
+    used.forEach((t) => { if (!(d.prices[t] > 0)) d.prices[t] = Math.round(base * TIER[t].k / low / 1e4) * 1e4; });
+    b.innerHTML = `<h2>${ico('tag')}قیمت‌ها<small>${esc(h.name)}</small></h2>
+      <div class="wz-price"><div class="wz-plan">${miniPlan(h.plan, d.prices)}</div>
+        <div class="wz-tiers">${used.map((t) => `<label class="wz-tier" style="--c:${TIER[t].c}"><i aria-hidden="true"></i><span><b>${esc(tierZones(h.plan, t).join('، '))}</b></span><span class="wz-in"><input data-t="${t}" inputmode="numeric" dir="ltr" value="${fa(Number(d.prices[t]).toLocaleString('en-US')).replace(/,/g, '٬')}" aria-label="قیمت ${esc(tierZones(h.plan, t).join('، '))}"><small>تومان</small></span></label>`).join('')}</div></div>
+      <label class="wz-sw"><input type="checkbox" id="wzWk"${d.weekend ? ' checked' : ''}><span>سانس‌های پنجشنبه و جمعه ۱۰٪ گرون‌تر <small>(قیمت جدا برای هر سانس)</small></span></label>
+      <p class="bk-note">${ico('info')}مالیات بر ارزش افزوده (۱۰٪) جدا به خریدار اضافه می‌شه. کارمزد بلیت ${pct(FEE)} از فروشه.</p>
+      <div class="wz-est" id="wzEst"></div>`;
+    const est = () => {
+      const L = hallLayout(PLANS[h.plan]); let one = 0;
+      for (const z of L.secs) { if (z.sec.k === 'stand') { one += z.sec.cap * (d.prices[z.sec.runs[0][2]] || 0); continue; } for (const p of z.seats) { const r = z.sec.runs.find(([a, bb]) => p.row >= a && p.row <= bb); one += d.prices[r ? r[2] : 'D'] || 0; } }
+      const n = Math.max(1, d.days.length * d.times.length), all = one * n * (d.weekend ? 1.04 : 1);
+      $('#wzEst', b).innerHTML = `<span>اگه همه‌ی ${fa(n)} سانس پر بشه</span><b>${short(all)} تومان</b><small>سهم شما بعد از کارمزد: ${short(all * (1 - FEE))} تومان</small>`;
+    };
+    $$('[data-t]', b).forEach((x) => x.addEventListener('input', () => { const v = +enDigits(x.value).replace(/\D/g, '') || 0; d.prices[x.dataset.t] = v; x.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; const svg = miniPlan(h.plan, d.prices); $('.wz-plan', b).innerHTML = svg; est(); this.preview(); }));
+    $('#wzWk', b).addEventListener('change', (ev) => { d.weekend = ev.target.checked; est(); });
+    est();
+  },
+
+  /* 6. a last look, and to the admin */
+  s5(b) {
+    const d = this.d, m = this.missing(), h = d.venue ? venueInfo(d.city, d.venue) : null, n = d.days.length * d.times.length;
+    const row = (k, t, v) => `<div><dt>${esc(t)}</dt><dd>${v}</dd>${this.lock ? '' : `<button type="button" class="chip" data-step="${k}">ویرایش</button>`}</div>`;
+    const st = desk.status(d.status);
+    b.innerHTML = `<h2>${ico('check')}بررسی و ارسال<small><em class="st" data-tone="${st[1]}">${esc(st[0])}</em></small></h2>
+      ${d.status === 'rejected' ? `<p class="wz-msg is-bad">${ico('info')}مدیر این برنامه رو برگردوند: «${esc(d.note || 'بدون توضیح')}». درستش کن و دوباره بفرست.</p>` : d.status === 'review' ? `<p class="wz-msg">${ico('clock')}فرستاده شد ${esc(ago(d.sent || d.at))}؛ مدیر بررسیش می‌کنه. تا اون موقع روی سایت نیست.</p>` : d.status === 'live' ? `<p class="wz-msg is-ok">${ico('check')}مدیر تأیید کرد؛ برنامه روی سایته. <a href="#/e/${esc(encodeURIComponent(d.id))}">صفحه‌ی برنامه</a></p>` : ''}
+      <dl class="wz-sum">
+        ${row(0, 'برنامه', `${esc(d.type)} «${esc(d.title || '—')}» · ${esc(d.kind === 'comedy' ? 'جُنگ و کمدی' : KIND_T[d.kind])} · ${esc(d.city)} · ${fa(d.dur)} دقیقه · ${esc(d.age)}`)}
+        ${row(1, 'پوستر', d.poster ? 'گذاشته شد' : 'پوستر موقت (از اسم و رنگ)')}
+        ${row(2, 'سالن', h ? `${esc(h.name)} · ${esc(PLAN_T[h.plan])} · ${money(h.cap)} صندلی` : '<b class="neg">انتخاب نشده</b>')}
+        ${row(3, 'سانس‌ها', n ? `${fa(n)} سانس، از ${esc(dayOf(atOf(d.days[0], d.times[0])))} تا ${esc(dayOf(atOf(d.days[d.days.length - 1], d.times[0])))} · ساعت ${d.times.map(fa).join('، ')}${d.sale === 'at' && d.saleAt ? ` · شروع فروش ${esc(dayOf(Date.parse(d.saleAt)))} ${esc(F.time.format(new Date(d.saleAt)))}` : ' · فروش بلافاصله بعد از تأیید'}` : '<b class="neg">هنوز سانسی نیست</b>')}
+        ${row(4, 'قیمت‌ها', h ? tiersUsed(h.plan).map((t) => `<span class="wz-pt" style="--c:${TIER[t].c}"><i></i>${d.prices[t] ? money(d.prices[t]) : '—'}</span>`).join('') + (d.weekend ? ' · آخر هفته ۱۰٪ بیشتر' : '') : '—')}
+      </dl>
+      ${m.length ? `<p class="wz-msg is-bad">${ico('info')}مونده: ${m.map(([k, t]) => `<a href="#" data-step="${k}">${esc(t)}</a>`).join('، ')}</p>` : ''}
+      <div class="wz-end">${d.status === 'review' ? `<button type="button" class="chip" id="wzPull">${ico('undo')}پس گرفتن و ویرایش</button>` : d.status === 'live' ? '' : `<button type="button" class="buy" id="wzSend"${m.length ? ' disabled' : ''}>${ico('check')}فرستادن برای تأیید مدیر</button>`}</div>`;
+    $$('[data-step]', b).forEach((x) => x.addEventListener('click', (ev) => { ev.preventDefault(); this.go(+x.dataset.step); }));
+    const send = $('#wzSend', b); if (send) send.addEventListener('click', () => { d.status = 'review'; d.sent = Date.now(); d.note = ''; this.save(true); auditLog(`برنامه‌ی «${d.title}» برای تأیید فرستاده شد`, ORG.name); toast('برنامه برای تأیید مدیر فرستاده شد. نتیجه همین‌جا و با پیامک خبر داده می‌شه.'); this.d = null; page.go('#/org/shows'); });
+    const pull = $('#wzPull', b); if (pull) pull.addEventListener('click', () => { d.status = 'draft'; this.save(true); this.step = 0; this.paint(); });
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   discount codes (brief §2.4): for one show or all, a percentage or an amount, a number of uses and a last day. Two outputs:
+   a promotional message to share (a square picture made on a canvas, and its text for SMS or a channel) and printed cards
+   the size of a bank card (85.6 × 54 mm) with strong music or theatre graphics, ten to an A4 sheet with crop marks. The
+   codes work at checkout (step 3) at once.
+   ════════════════════════════════════════════════════════════════ */
+const codeList = () => {
+  let l = store.get('blit.codes', null);
+  if (!l) {
+    const s = orgShows().filter((e) => !e.draft);
+    l = [{ code: 'AVA20', eid: s[0] && s[0].id, type: 'pct', v: 20, limit: 200, used: 137, until: Date.now() + 6 * DAY, at: Date.now() - 9 * DAY },
+      { code: 'SHABE50', eid: null, type: 'amt', v: 50000, limit: 500, used: 41, until: Date.now() + 20 * DAY, at: Date.now() - 4 * DAY },
+      { code: 'NOWRUZ15', eid: s[2] && s[2].id, type: 'pct', v: 15, limit: 300, used: 300, until: Date.now() + 12 * DAY, at: Date.now() - 15 * DAY }];
+    store.set('blit.codes', l);
+  }
+  return l;
+};
+const codeLabel = (c) => (c.type === 'pct' ? `${fa(c.v)}٪ تخفیف` : `${short(c.v)} تومان تخفیف`);
+const codeState = (c) => (c.off ? ['غیرفعال', 'mute'] : c.until < Date.now() ? ['تموم شده', 'mute'] : c.used >= c.limit ? ['ظرفیتش پر شد', 'warn'] : ['فعال', 'good']);
+// the checkout reads the codes from here too (buy.js CODES): a code for one show works only for it
+const syncCodes = () => { for (const c of codeList()) { if (codeState(c)[1] !== 'good') { if (CODES[c.code] && CODES[c.code].org) delete CODES[c.code]; continue; } CODES[c.code] = { org: true, eid: c.eid, label: codeLabel(c), of: c.type === 'pct' ? (sum) => Math.round(sum * c.v / 100 / 1000) * 1000 : (sum) => Math.min(sum, c.v) }; } };
+syncCodes();
+const codeUsed = (code) => { const l = codeList(), c = l.find((x) => x.code === code); if (c) { c.used++; store.set('blit.codes', l); syncCodes(); } };
+
+const codes = {
+  render(el) {
+    const shows = orgShows().filter((e) => !e.draft), pre = store.sget('blit.codeFor', null); store.sset('blit.codeFor', null);
+    const l = codeList();
+    el.innerHTML = `${desk.head('کدهای تخفیف', 'برای یه برنامه یا همه، درصدی یا مبلغی، با تعداد استفاده و مهلت. هر کد یه پیام تبلیغاتی آماده و کارت‌های چاپی هم داره.')}
+      <div class="dk-cols dk-cols-r">
+        <section class="panel dk-box evp-rise" aria-labelledby="cdListH"><h2 id="cdListH">${ico('tag')}کدها<small>${fa(l.length)} کد</small></h2>
+          <div class="dk-tbl-w"><table class="dk-tbl cd-tbl"><thead><tr><th>کد</th><th>برای</th><th>تخفیف</th><th>استفاده</th><th>تا</th><th></th></tr></thead><tbody>${l.map((c) => { const e = c.eid && showById(c.eid), s = codeState(c); return `<tr><td><code class="cd-code">${esc(c.code)}</code><em class="st" data-tone="${s[1]}">${esc(s[0])}</em></td><td>${esc(e ? e.title : 'همه‌ی برنامه‌ها')}</td><td>${esc(codeLabel(c))}</td><td><span class="dk-meter" style="--p:${Math.min(1, c.used / c.limit).toFixed(3)}"><i></i></span><small>${money(c.used)} از ${money(c.limit)}</small></td><td>${esc(dayOf(c.until))}</td><td class="cd-acts"><button type="button" class="chip" data-promo="${esc(c.code)}">${ico('share')}پیام تبلیغاتی</button><button type="button" class="chip" data-cards="${esc(c.code)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip gt-ic" data-off="${esc(c.code)}" aria-label="${c.off ? 'فعال کردن' : 'غیرفعال کردن'} ${esc(c.code)}" aria-pressed="${!c.off}">${ico(c.off ? 'play' : 'pause')}</button></td></tr>`; }).join('')}</tbody></table></div></section>
+        <section class="panel dk-box evp-rise" aria-labelledby="cdNewH"><h2 id="cdNewH">${ico('plus')}کد تازه</h2>
+          <form id="cdNew" class="dk-form"><div class="rc-row"><label class="bk-fld"><span>کد</span><input name="code" dir="ltr" maxlength="14" required autocomplete="off" spellcheck="false"></label><button type="button" class="chip" id="cdGen">${ico('spark')}ساخت خودکار</button></div>
+            <label class="bk-fld"><span>برای</span><select name="eid"><option value="">همه‌ی برنامه‌ها</option>${shows.map((e) => `<option value="${esc(e.id)}"${e.id === pre ? ' selected' : ''}>${esc(e.title)}</option>`).join('')}</select></label>
+            <div class="bk-fld"><span>نوع</span><div class="bk-seg" role="radiogroup" aria-label="نوع تخفیف"><button type="button" role="radio" data-type="pct" aria-checked="true">درصدی</button><button type="button" role="radio" data-type="amt" aria-checked="false">مبلغی</button></div></div>
+            <div class="wz-grid"><label class="bk-fld"><span id="cdVl">چند درصد</span><input name="v" inputmode="numeric" dir="ltr" required value="۱۵"></label><label class="bk-fld"><span>تعداد استفاده</span><input name="limit" inputmode="numeric" dir="ltr" required value="۱۰۰"></label></div>
+            <label class="bk-fld"><span>مهلت</span><select name="days">${[[3, 'سه روز'], [7, 'یک هفته'], [14, 'دو هفته'], [30, 'یک ماه'], [60, 'دو ماه']].map(([n, t]) => `<option value="${n}"${n === 14 ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
+            <button type="submit" class="buy">${ico('check')}ساختن کد</button><p class="bk-otp-st" id="cdSt"></p></form></section>
+      </div>`;
+    const f = $('#cdNew', el); let type = 'pct';
+    const gen = () => { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ', e = showById(f.elements.eid.value); const w = e ? (e.name || e.title).replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, 5) : ''; f.elements.code.value = (w || 'BLIT') + (type === 'pct' ? enDigits(f.elements.v.value) : '') + A[Math.floor(Math.random() * A.length)] + A[Math.floor(Math.random() * A.length)]; };
+    $('#cdGen', el).addEventListener('click', gen);
+    $$('[data-type]', f).forEach((b) => b.addEventListener('click', () => { type = b.dataset.type; $$('[data-type]', f).forEach((x) => x.setAttribute('aria-checked', String(x === b))); $('#cdVl', el).textContent = type === 'pct' ? 'چند درصد' : 'چند تومان'; f.elements.v.value = type === 'pct' ? '۱۵' : '۵۰٬۰۰۰'; }));
+    for (const n of ['v', 'limit']) f.elements[n].addEventListener('input', (ev) => { const v = +enDigits(ev.target.value).replace(/\D/g, '') || 0; ev.target.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; });
+    f.elements.code.addEventListener('input', (ev) => { ev.target.value = enDigits(ev.target.value).toUpperCase().replace(/[^A-Z0-9]/g, ''); });
+    f.addEventListener('submit', (ev) => {
+      ev.preventDefault(); const out = $('#cdSt', el), code = f.elements.code.value.trim(), v = +enDigits(f.elements.v.value).replace(/\D/g, ''), lim = +enDigits(f.elements.limit.value).replace(/\D/g, '');
+      const bad = (t) => { out.className = 'bk-otp-st bad'; out.textContent = t; };
+      if (code.length < 4) return bad('کد دست‌کم ۴ حرف یا عدد لاتینه.');
+      if (codeList().some((c) => c.code === code) || CODES[code]) return bad('این کد قبلاً ساخته شده.');
+      if (type === 'pct' && !(v >= 1 && v <= 90)) return bad('درصد بین ۱ تا ۹۰.');
+      if (type === 'amt' && !(v >= 10000)) return bad('دست‌کم ۱۰ هزار تومان.');
+      if (!(lim >= 1)) return bad('تعداد استفاده رو بنویس.');
+      const l = codeList(); l.unshift({ code, eid: f.elements.eid.value || null, type, v, limit: lim, used: 0, until: Date.now() + (+f.elements.days.value) * DAY, at: Date.now() }); store.set('blit.codes', l); syncCodes();
+      auditLog(`کد تخفیف ${code} ساخته شد`, ORG.name); toast(`کد ${code} ساخته شد و از همین حالا تو خرید کار می‌کنه.`); this.render(el);
+    });
+    $$('[data-promo]', el).forEach((b) => b.addEventListener('click', () => this.promo(codeList().find((c) => c.code === b.dataset.promo))));
+    $$('[data-cards]', el).forEach((b) => b.addEventListener('click', () => this.cards(codeList().find((c) => c.code === b.dataset.cards))));
+    $$('[data-off]', el).forEach((b) => b.addEventListener('click', () => { const l2 = codeList(), c = l2.find((x) => x.code === b.dataset.off); c.off = !c.off; store.set('blit.codes', l2); syncCodes(); this.render(el); }));
+    if (pre) f.elements.code.focus();
+  },
+  text(c) {
+    const e = c.eid && showById(c.eid), w = e && whenOf({ t: Date.parse(e.startsAt) });
+    return `🎟 ${codeLabel(c)} ${e ? `برای «${e.title}»${w ? `، ${w.wd} ${w.dm}` : ''}` : 'برای همه‌ی برنامه‌های بلیت'}!\nکد: ${c.code}\nتا ${dayOf(c.until)} · فقط ${fa(c.limit - c.used)} بار دیگه\nخرید: blit.example${e ? `/e/${e.id}` : ''}`;
+  },
+  // the promotional message: a square picture (1080 × 1080) drawn on a canvas, and its words
+  async promo(c) {
+    const e = c.eid && showById(c.eid);
+    const m = desk.modal('cd-promo', `<h2>${ico('share')}پیام تبلیغاتی · <span dir="ltr">${esc(c.code)}</span></h2><div class="cd-promo-g"><canvas width="1080" height="1080" id="cdCv" aria-label="تصویر تبلیغ"></canvas><div class="cd-promo-t"><label class="bk-fld"><span>متن برای پیامک، تلگرام یا اینستاگرام</span><textarea rows="7" id="cdTx" dir="rtl">${esc(this.text(c))}</textarea></label><div class="evp-dlg-end"><button type="button" class="buy" id="cdPng">${ico('arrow-ul')}دانلود تصویر</button><button type="button" class="chip" id="cdCopy">${ico('copy')}کپی متن</button></div></div></div>`, 'پیام تبلیغاتی');
+    const cv = $('#cdCv', m.box);
+    await this.drawPromo(cv, c, e);
+    $('#cdCopy', m.box).addEventListener('click', async () => { try { await navigator.clipboard.writeText($('#cdTx', m.box).value); toast('متن کپی شد.'); } catch (err) { $('#cdTx', m.box).select(); toast('متن انتخاب شد؛ کپیش کن.'); } });
+    $('#cdPng', m.box).addEventListener('click', () => { const a = document.createElement('a'); a.download = `blit-${c.code}.png`; a.href = cv.toDataURL('image/png'); a.click(); });
+  },
+  async drawPromo(cv, c, e) {
+    const x = cv.getContext('2d'), W = 1080, H = 1080, acc = (e && e.accent) || '#8b5cf6';
+    try { await Promise.all(['900 120px Vazirmatn', '700 40px Vazirmatn', '500 34px Vazirmatn'].map((f) => document.fonts.load(f))); } catch (err) { /* the system's font then */ }
+    const img = await new Promise((ok) => { if (!e) { ok(null); return; } const { a } = artOf(e), im = new Image(); im.onload = () => ok(im); im.onerror = () => { const u = a.fake || fakeArt(e, { w: 2, h: 3 }); const j = new Image(); j.onload = () => ok(j); j.onerror = () => ok(null); j.src = u; }; im.src = a.fake || a.src || ''; });
+    const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#0b0a12'); g.addColorStop(1, '#1c1430'); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    if (img) { x.save(); x.filter = 'blur(38px) brightness(.55) saturate(1.3)'; const k = Math.max(W / img.width, H / img.height) * 1.15; x.drawImage(img, (W - img.width * k) / 2, (H - img.height * k) / 2, img.width * k, img.height * k); x.restore(); }
+    // a glow and a ring of light in the show's colour
+    const rg = x.createRadialGradient(W * 0.7, H * 0.3, 40, W * 0.7, H * 0.3, 640); rg.addColorStop(0, acc + 'aa'); rg.addColorStop(1, 'transparent'); x.fillStyle = rg; x.fillRect(0, 0, W, H);
+    if (img) { const ph = 600, pw = ph * img.width / img.height; x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 60; x.shadowOffsetY = 24; x.translate(W - 120 - pw / 2, 110 + ph / 2); x.rotate(-0.05); const r = 26; x.beginPath(); x.roundRect(-pw / 2, -ph / 2, pw, ph, r); x.clip(); x.drawImage(img, -pw / 2, -ph / 2, pw, ph); x.restore(); }
+    x.direction = 'rtl'; x.textAlign = 'right'; x.fillStyle = '#fff';
+    x.font = '900 150px Vazirmatn, Tahoma, sans-serif'; x.fillText(c.type === 'pct' ? `${fa(c.v)}٪` : short(c.v), W - 80, 860);
+    x.font = '800 54px Vazirmatn, Tahoma, sans-serif'; x.fillText(c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف', W - 80, 940);
+    x.textAlign = 'left'; x.font = '700 34px Vazirmatn, Tahoma, sans-serif'; x.fillStyle = 'rgba(255,255,255,.8)';
+    const t = e ? e.title : 'همه‌ی برنامه‌های بلیت'; x.direction = 'rtl'; x.textAlign = 'left'; x.fillText(t.length > 26 ? `${t.slice(0, 25)}…` : t, 80, 150);
+    x.fillText(`تا ${dayOf(c.until)}`, 80, 205);
+    // the code, in a ticket-shaped box
+    // (the notches are left out of the white by a clip, so the picture stays opaque)
+    x.save(); x.direction = 'ltr'; const bw = 470, bh = 132, bx = 80, by = 800; x.beginPath(); x.rect(0, 0, W, H); x.arc(bx, by + bh / 2, 20, 0, Math.PI * 2); x.arc(bx + bw, by + bh / 2, 20, 0, Math.PI * 2); x.clip('evenodd'); x.fillStyle = '#fff'; x.beginPath(); x.roundRect(bx, by, bw, bh, 22); x.fill(); x.restore();
+    x.save(); x.direction = 'ltr'; x.textAlign = 'center'; x.fillStyle = '#0b0a12'; x.font = '900 64px ui-monospace, Menlo, monospace'; x.fillText(c.code, bx + bw / 2, by + 88); x.restore();
+    x.save(); x.direction = 'rtl'; x.textAlign = 'left'; x.fillStyle = '#fff'; x.font = '700 30px Vazirmatn, Tahoma, sans-serif'; x.fillText('کد تخفیف', bx + 10, by - 22); x.restore();
+    // the logo's bars and the address
+    const bars = [0.38, 0.72, 1, 0.6, 0.34]; bars.forEach((s, i) => { x.fillStyle = i === 2 ? acc : 'rgba(255,255,255,.9)'; const h = 56 * s; x.beginPath(); x.roundRect(80 + i * 16, 1010 - h, 9, h, 4); x.fill(); });
+    x.save(); x.direction = 'rtl'; x.textAlign = 'left'; x.fillStyle = '#fff'; x.font = '900 46px Vazirmatn, Tahoma, sans-serif'; x.fillText('بلیت', 170, 1010); x.fillStyle = 'rgba(255,255,255,.6)'; x.font = '500 28px Vazirmatn, Tahoma, sans-serif'; x.direction = 'ltr'; x.textAlign = 'right'; x.fillText('blit.example', W - 80, 1010); x.restore();
+  },
+  // the printed cards: bank-card size, ten to an A4 sheet, crop marks round the block; one code each, or the same one
+  cards(c) {
+    const e = c.eid && showById(c.eid), kind = e ? e.kind : 'concert';
+    const m = desk.modal('cd-print', `<h2>${ico('ticket')}${c.gift ? `کارت‌های هدیه · ${esc(c.gift.org)}` : `کارت‌های چاپی · <span dir="ltr">${esc(c.code)}</span>`}</h2>
+      <div class="cd-opts"><label class="bk-fld"><span>تعداد کارت</span><select id="cdN">${[10, 20, 50].map((n) => `<option value="${n}">${fa(n)} کارت (${fa(n / 10)} برگه‌ی A4)</option>`).join('')}</select></label>
+        <div class="bk-fld"><span>کد روی کارت‌ها</span><div class="bk-seg" role="radiogroup" aria-label="کد"><button type="button" role="radio" data-u="1" aria-checked="true">یه کد یکتا برای هر کارت</button><button type="button" role="radio" data-u="0" aria-checked="false">همه یه کد</button></div></div>
+        <div class="bk-fld"><span>گرافیک</span><div class="bk-seg" role="radiogroup" aria-label="گرافیک"><button type="button" role="radio" data-g="concert" aria-checked="${kind !== 'theatre'}">موسیقی</button><button type="button" role="radio" data-g="theatre" aria-checked="${kind === 'theatre'}">تئاتر</button></div></div></div>
+      <p class="bk-lead">۸۵٫۶ × ۵۴ میلی‌متر، اندازه‌ی کارت بانکی؛ ده کارت روی هر برگه با علامت برش. روی کاغذ گلاسه‌ی ۳۰۰ گرم و بدون حاشیه‌ی چاپگر («Scale: 100%») چاپ کن.</p>
+      <div class="cd-sheets" id="cdSheets"></div><div class="evp-dlg-end"><button type="button" class="buy" id="cdPrint">${ico('ticket')}چاپ یا ذخیره‌ی PDF</button></div>`, 'کارت‌های چاپی');
+    let uniq = true, g = kind === 'theatre' ? 'theatre' : 'concert';
+    const subs = (n) => { if (c.subs) return Array.from({ length: n }, (_, i) => c.subs[i % c.subs.length]); const R = rngOf(seedOf(`${c.code}:cards`)), A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({ length: n }, () => `${c.code}-${Array.from({ length: 4 }, () => A[Math.floor(R() * A.length)]).join('')}`); };
+    const art = (kind2) => (kind2 === 'theatre'
+      ? '<svg class="cc-art" viewBox="0 0 120 80" aria-hidden="true"><path d="M18 14c14-6 30-6 44 0v22c0 16-10 28-22 28S18 52 18 36z" fill="rgba(255,255,255,.92)"/><path d="M28 32q5-5 10 0M44 32q5-5 10 0M30 48q10 8 20 0" stroke="#1a1026" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M58 24c14-6 30-6 44 0v22c0 16-10 28-22 28S58 62 58 46z" fill="var(--cc-acc)" opacity=".95"/><path d="M68 42q5 5 10 0M84 42q5 5 10 0M70 62q10-8 20 0" stroke="#1a1026" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg>'
+      : `<svg class="cc-art" viewBox="0 0 120 80" aria-hidden="true">${Array.from({ length: 22 }, (_, i) => { const h = 10 + Math.abs(Math.sin(i * 0.9) * 46) + (i % 3) * 5; return `<rect x="${4 + i * 5.2}" y="${40 - h / 2}" width="3" height="${h}" rx="1.5" fill="${i % 5 === 2 ? 'var(--cc-acc)' : 'rgba(255,255,255,.9)'}"/>`; }).join('')}</svg>`);
+    const draw = () => {
+      const n = +$('#cdN', m.box).value, list = uniq ? subs(n) : Array(n).fill(c.code), acc = (e && e.accent) || '#8b5cf6', pages = [];
+      for (let p = 0; p < n / 10; p++) pages.push(list.slice(p * 10, p * 10 + 10));
+      $('#cdSheets', m.box).innerHTML = pages.map((pg) => `<div class="cc-sheet"><div class="cc-grid">${pg.map((k) => `<div class="cc-card" data-g="${g}" style="--cc-acc:${acc}"><div class="cc-top"><span class="cc-logo"><i></i><i></i><i></i><i></i><i></i></span><b>بلیت</b><em>${esc(g === 'theatre' ? 'تئاتر' : 'موسیقی')}</em></div>${art(g)}<div class="cc-off"><b>${c.type === 'pct' ? `${fa(c.v)}٪` : esc(short(c.v))}</b><span>${c.gift ? 'تومان اعتبار هدیه' : c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف'}</span></div><div class="cc-for">${esc(c.gift ? c.gift.org : e ? e.title : 'همه‌ی برنامه‌ها')}</div><div class="cc-code"><code>${esc(k)}</code><small>تا ${esc(dayOf(c.until))} · blit.example</small></div></div>`).join('')}</div><i class="cc-marks" aria-hidden="true"></i></div>`).join('');
+    };
+    $('#cdN', m.box).addEventListener('change', draw);
+    $$('[data-u]', m.box).forEach((b) => b.addEventListener('click', () => { uniq = b.dataset.u === '1'; $$('[data-u]', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); draw(); }));
+    $$('[data-g]', m.box).forEach((b) => { if (b.closest('.bk-seg')) b.addEventListener('click', () => { g = b.dataset.g; $$('.bk-seg [data-g]', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); draw(); }); });
+    $('#cdPrint', m.box).addEventListener('click', () => { root.classList.add('is-printing-cards'); const done = () => { root.classList.remove('is-printing-cards'); removeEventListener('afterprint', done); }; addEventListener('afterprint', done); window.print(); setTimeout(done, 1500); });
+    draw();
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the admin's desk (#/admin/<tab>, brief §2.4: full control with a history of changes; roles; reports with filters and a
+   file): the shows waiting for a yes (from the organisers' wizard), the shows on the site (cancel one: every buyer gets the
+   money back), the orders (search, filter, refund to the wallet or the card), the team and its roles, the categories and
+   which cities the buyers see, the halls' library and its designer, the reports, the history, and the gift and charge codes.
+   Also the buyer's wallet (#/wallet): charged by the gateway or a gift code, spent at checkout, never paid out.
+   ════════════════════════════════════════════════════════════════ */
+const auditLog = (what, who = 'مدیر سایت') => { const l = store.get('blit.audit', []); l.unshift({ at: Date.now(), what, who }); store.set('blit.audit', l.slice(0, 300)); };
+const ROLES = { all: 'مدیر کل', money: 'مالی', op: 'اپراتور' };
+const PERMS = [['shows', 'برنامه‌ها و تأیید'], ['orders', 'سفارش‌ها'], ['refund', 'برگشت پول'], ['users', 'کاربرها و نقش‌ها'], ['site', 'محتوای سایت، دسته‌ها و شهرها'], ['reports', 'گزارش‌ها و خروجی'], ['halls', 'سالن‌ها']];
+const ROLE_PERMS = { all: PERMS.map((p) => p[0]), money: ['orders', 'refund', 'reports'], op: ['shows', 'orders', 'site', 'halls'] };
+// the wallet: charged (the gateway, a gift code, a refund), spent at checkout; there is no paying out
+const wallet = {
+  get() { return store.get('blit.wallet', { bal: 0, log: [] }); },
+  bal() { return this.get().bal; },
+  add(v, why) { const w = this.get(); w.bal = Math.max(0, w.bal + v); w.log.unshift({ at: Date.now(), v, why }); w.log = w.log.slice(0, 60); store.set('blit.wallet', w); return w.bal; },
+};
+// a show cancelled by the admin stays cancelled (its label on the site), and its buyers have their money back
+const cancelled = () => store.get('blit.cancelled', []);
+cancelled().forEach((id) => { const e = LIST().find((x) => x.id === id) || EVENTS.find((x) => x.id === id); if (e) e.status = 'cancelled'; });
+// the cities the buyers see in the menus (the admin's choice)
+store.get('blit.hideCities', []).forEach((c) => { const i = CITIES.indexOf(c); if (i >= 0) CITIES.splice(i, 1); });
+// the halls made with the designer: a plan from a few numbers
+function buildPlan(p) {
+  const fan = p.shape === 'fan', secs = [], B = clamp(p.blocks | 0, 1, 3), stand = p.stand > 0, tables = p.tables > 0;
+  const split = (n) => (B === 1 ? [n] : B === 2 ? [Math.ceil(n / 2), Math.floor(n / 2)] : [Math.round(n * 0.3), n - 2 * Math.round(n * 0.3), Math.round(n * 0.3)]);
+  const thirds = (n) => { const a = Math.max(1, Math.round(n / 3)), b = Math.max(a + 1, Math.round((2 * n) / 3)); return [[1, a, 'A'], [a + 1, Math.min(b, n), 'B'], [b + 1, n, 'C']].filter(([x, y]) => y >= x); };
+  let y = stand ? 520 : 150;
+  if (stand) secs.push({ id: 'ga', t: 'ایستاده (جلوی صحنه)', k: 'stand', cap: p.stand | 0, box: [-310, 110, 620, 330], runs: [[0, 0, 'B']] });
+  if (tables) { const cols = clamp(Math.round(Math.sqrt(p.tables * 1.7)), 2, 7), rows = Math.ceil(p.tables / cols); secs.push({ id: 'tb', t: 'میزها', k: 'tables', cols, rows, per: 6, y0: y + 50, dx: 128, dy: 116, runs: [[1, cols, 'A'], [cols + 1, Math.max(cols + 1, cols * rows), 'B']].filter(([a, b]) => b >= a && a <= cols * rows) }); y += 50 + rows * 116 + 30; }
+  const R0 = fan ? Math.max(220, y - 20) : 0, grow = p.grow ? 1 : 0;
+  if (fan) secs.push({ id: 'f', t: p.balcony ? 'همکف' : 'سالن', k: 'fan', rows: p.rows | 0, R0, seats: (r) => split((p.seats | 0) + (grow ? r >> 1 : 0)), runs: thirds(p.rows | 0) });
+  else secs.push({ id: 'f', t: p.balcony ? 'همکف' : 'سالن', k: 'rect', rows: p.rows | 0, y0: y, seats: () => split(p.seats | 0), runs: thirds(p.rows | 0) });
+  const lastR = fan ? R0 + ((p.rows | 0) - 1) * HP.gap : 0;
+  const half = fan ? (() => { const n = (p.seats | 0) + (grow ? ((p.rows | 0) - 1) >> 1 : 0), slots = n + (B - 1) * HP.aisle, span = ((slots - 1) * HP.pitch) / lastR; return lastR * Math.sin(span / 2); })() : (((p.seats | 0) + (B - 1) * HP.aisle) * HP.pitch) / 2;
+  if (p.boxes > 0) for (const side of [1, -1]) secs.push({ id: side > 0 ? 'lr' : 'll', t: side > 0 ? 'لژهای راست' : 'لژهای چپ', k: 'boxes', side, n: p.boxes | 0, per: 4, x: Math.max(300, half + 120), y0: stand ? 170 : 170, dy: 82, runs: [[1, p.boxes | 0, 'A']] });
+  if (p.balcony > 0) {
+    if (fan) secs.push({ id: 'b', t: 'بالکن', k: 'fan', rows: p.balcony | 0, R0: lastR + 110, seats: (r) => split((p.seats | 0) + 6 + r + (grow ? (p.rows | 0) >> 1 : 0)), runs: [[1, p.balcony | 0, 'D']] });
+    else secs.push({ id: 'b', t: 'بالکن', k: 'rect', rows: p.balcony | 0, y0: y + (p.rows | 0) * HP.gap + 80, seats: () => split((p.seats | 0) + 4), runs: [[1, p.balcony | 0, 'D']] });
+  }
+  return { stage: fan ? 'arc' : stand ? 'wide' : 'rect', secs };
+}
+const customHalls = () => store.get('blit.halls', []);
+customHalls().forEach((h) => { PLANS[h.key] = buildPlan(h.p); PLAN_T[h.key] = 'پلان ساخته‌شده با طراح سالن'; HALLS.unshift([new RegExp(h.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), h.addr, h.key, null, null]); VENUES.push([h.city, h.name]); });
+
+// the sample orders of the whole site (the last 30 days), the ones bought in this browser first
+function siteOrders() {
+  if (siteOrders.cache) return siteOrders.cache;
+  const R = rngOf(seedOf('site-orders')), shows = LIST().filter((e) => !['soon'].includes(statusOf(e).key)), out = [], A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  for (let i = 0; i < 120; i++) {
+    const e = shows[Math.floor(R() * shows.length)], n = 1 + Math.floor(R() * R() * 5), t = tiersOf(e)[Math.floor(R() * 3)] || tiersOf(e)[0], sum = n * (t ? t.price : 500000), at = Date.now() - Math.floor(R() * R() * 30 * DAY);
+    const r = R(), st = r < 0.05 ? 'refunded' : r < 0.08 ? 'failed' : 'paid';
+    out.push({ code: `BL-${Array.from({ length: 4 }, () => A[Math.floor(R() * A.length)]).join('')}-${Array.from({ length: 4 }, () => A[Math.floor(R() * A.length)]).join('')}`, eid: e.id, title: e.title, city: e.city, kind: e.kind, n, total: Math.round(sum * 1.1), at, phone: `09${String(10 + Math.floor(R() * 80))}${String(Math.floor(R() * 1e7)).padStart(7, '0')}`, st, way: R() < 0.12 ? 'wallet' : 'gate' });
+  }
+  return (siteOrders.cache = out);
+}
+const allOrders = () => {
+  const mine = store.get('blit.orders', []).map((o) => { const e = showById(o.eid); return { code: o.code, eid: o.eid, title: e ? e.title : o.eid, city: e ? e.city : '', kind: e ? e.kind : '', n: o.seats.length, total: o.total, at: o.at, phone: o.phone, st: o.st || 'paid', way: o.way || 'gate', own: true }; });
+  const fix = store.get('blit.orderSt', {});
+  return mine.concat(siteOrders()).map((o) => (fix[o.code] ? { ...o, st: fix[o.code] } : o)).sort((a, b) => b.at - a.at);
+};
+const ORDER_ST = { paid: ['پرداخت شد', 'good'], refunded: ['پول برگشت', 'info'], failed: ['ناموفق', 'bad'] };
+const refund = (codesToRefund, to, why) => {
+  const fix = store.get('blit.orderSt', {}), all = allOrders();
+  let sum = 0;
+  for (const c of codesToRefund) { const o = all.find((x) => x.code === c); if (!o || o.st !== 'paid') continue; fix[c] = 'refunded'; sum += o.total; if (o.own && to === 'wallet') wallet.add(o.total, `برگشت پول: ${o.title}`); const mine = store.get('blit.orders', []); const m = mine.find((x) => x.code === c); if (m) { m.st = 'refunded'; m.refund = to; store.set('blit.orders', mine); } }
+  store.set('blit.orderSt', fix); auditLog(`${fa(codesToRefund.length)} سفارش برگشت خورد (${to === 'wallet' ? 'به کیف پول' : 'به کارت'})${why ? `: ${why}` : ''}`);
+  return sum;
+};
+
+const admin = {
+  title: 'پنل مدیر', av: 'م', who: 'مدیر سایت', role: 'مدیر کل · همه‌ی دسترسی‌ها',
+  tabs() {
+    const q = drafts.all().filter((d) => d.status === 'review').length + this.others().length;
+    return [
+      { id: 'home', t: 'پیشخوان', icon: 'grid', render: this.home },
+      { id: 'shows', t: 'برنامه‌ها و تأیید', icon: 'ticket', n: q ? fa(q) : '', render: this.shows },
+      { id: 'orders', t: 'سفارش‌ها', icon: 'bag', render: this.orders },
+      { id: 'team', t: 'کاربرها و نقش‌ها', icon: 'users', render: this.team },
+      { id: 'site', t: 'دسته‌ها و شهرها', icon: 'pin', render: this.site },
+      { id: 'halls', t: 'سالن‌ها', icon: 'ruler', render: this.halls },
+      { id: 'reports', t: 'گزارش‌ها', icon: 'award', render: this.reports },
+      { id: 'gifts', t: 'کیف پول و کد هدیه', icon: 'tag', render: this.gifts },
+      { id: 'log', t: 'تاریخچه‌ی تغییرات', icon: 'clock', render: this.log },
+    ];
+  },
+  // two waiting requests from other organisers, so the queue is never empty in the demo
+  others() { const done = store.get('blit.reviewed', []); return [{ id: 'x-1', title: 'کنسرت «نغمه‌های کویر»', org: 'مؤسسه‌ی فرهنگی سرو', city: 'یزد', venue: 'سالن آمفی‌تئاتر فرهنگسرای یزد', n: 3, low: 450000, pal: 'gold', sent: Date.now() - 3 * HOUR }, { id: 'x-2', title: 'نمایش «پنجره‌ی رو به باغ»', org: 'گروه تئاتر آینه', city: 'تهران', venue: 'تئاترشهر - سالن اصلی', n: 12, low: 380000, pal: 'teal', sent: Date.now() - 26 * HOUR }].filter((x) => !done.includes(x.id)); },
+
+  home(el) {
+    const o = allOrders(), paid = o.filter((x) => x.st === 'paid'), byDay = Array.from({ length: 30 }, (_, k) => { const t0 = Date.now() - (29 - k) * DAY, d = TEHRAN_DAY.format(new Date(t0)); const l = paid.filter((x) => TEHRAN_DAY.format(new Date(x.at)) === d); return { v: l.reduce((a, x) => a + x.total, 0), x: dayOf(t0), tip: `${dayOf(t0)} · ${fa(l.length)} سفارش` }; });
+    const today = byDay[29].v, yest = byDay[28].v, q = drafts.all().filter((d) => d.status === 'review').length + this.others().length, log = store.get('blit.audit', []);
+    el.innerHTML = `${desk.head('پیشخوان مدیر', 'کل سایت، همین لحظه.', `<a class="buy" href="#/admin/shows">${ico('ticket')}صف تأیید${q ? ` (${fa(q)})` : ''}</a>`)}
+      <section class="dk-tiles"><div class="panel dk-tile dk-hero evp-rise"><span>فروش امروز (تومان)</span><b>${money(today)}</b><em data-tone="${today >= yest ? 'good' : 'bad'}">دیروز ${short(yest)}</em>${viz.spark(byDay.slice(-12).map((d) => d.v))}</div>
+        ${desk.tile('سفارش‌های ۳۰ روز', money(paid.length), 0.09, null)}${desk.tile('برگشت پول', money(o.filter((x) => x.st === 'refunded').length), null, null)}${desk.tile('برنامه‌های روی سایت', money(LIST().filter((e) => !['held', 'cancelled'].includes(statusOf(e).key)).length), null, null)}</section>
+      <section class="panel dk-box evp-rise" aria-labelledby="adDayH"><h2 id="adDayH">${ico('award')}فروش ۳۰ روز گذشته<small>تومان، با مالیات</small></h2><div id="adDays"></div></section>
+      <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}در انتظار تأیید<small>${fa(q)}</small></h2>${q ? `<p class="bk-lead">${fa(q)} برنامه منتظر بررسیه.</p><a class="chip" href="#/admin/shows">${ico('arrow-l')}دیدن صف</a>` : '<p class="bk-lead">صف خالیه.</p>'}</section>
+        <section class="panel dk-box evp-rise"><h2>${ico('clock')}آخرین تغییرها</h2><ol class="ad-log">${(log.length ? log : [{ at: Date.now() - 4 * HOUR, what: 'قیمت سانس‌های «شب جاز تهران» تأیید شد', who: 'نگار رضایی (اپراتور)' }]).slice(0, 5).map((x) => `<li><b>${esc(x.what)}</b><small>${esc(x.who)} · ${esc(ago(x.at))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/log">همه‌ی تاریخچه</a></section></div>`;
+    $('#adDays', el).innerHTML = viz.columns('adDaysC', byDay, { label: 'فروش هر روز در ۳۰ روز گذشته', xlab: 7 }) + viz.table(['روز', 'فروش (تومان)'], byDay.map((d) => [d.x, money(d.v)]));
+    viz.wire('adDaysC', byDay);
+  },
+
+  // the queue (yes, or back with a reason) and the shows on the site (cancel: everyone's money back)
+  shows(el) {
+    const mine = drafts.all().filter((d) => d.status === 'review'), others = this.others();
+    const item = (x) => `<article class="panel dk-show ad-q evp-rise" data-id="${esc(x.id)}"><figure class="bk-poster${x.poster ? '' : ' is-none'}" style="--c:${(PALETTE[x.pal] || PALETTE.violet).accent}">${x.poster ? `<img src="${esc(x.poster)}" alt="">` : ''}</figure>
+      <div class="dk-show-t"><b>${esc(x.title)}</b><small>${esc(x.org)} · ${esc(x.city)} · ${esc(x.venue)}</small><small>${fa(x.n)} سانس · از ${money(x.low)} تومان · فرستاده‌شده ${esc(ago(x.sent))}</small></div>
+      <div class="dk-show-a"><button type="button" class="buy" data-yes="${esc(x.id)}">${ico('check')}تأیید و انتشار</button><button type="button" class="chip" data-no="${esc(x.id)}">${ico('undo')}برگردوندن</button></div></article>`;
+    const q = mine.map((d) => { const n = d.days.length * d.times.length, low = Math.min(...Object.values(d.prices).filter((v) => v > 0)); return { id: d.id, title: `${d.type} «${d.title}»`, org: ORG.name, city: d.city, venue: d.venue, n, low: Number.isFinite(low) ? low : 0, pal: d.pal, poster: d.poster, sent: d.sent || d.at }; }).concat(others);
+    const live = LIST().filter((e) => !['held'].includes(statusOf(e).key)).slice(0, 40);
+    el.innerHTML = `${desk.head('برنامه‌ها و تأیید', 'هیچ برنامه‌ای (و هیچ تغییری) بدون تأیید روی سایت نمی‌آد. با لغو یه برنامه، پول همه‌ی خریدارهاش برمی‌گرده.')}
+      <h2 class="dk-sub evp-rise">در انتظار تأیید <small>${fa(q.length)}</small></h2>${q.length ? `<div class="dk-shows">${q.map(item).join('')}</div>` : '<p class="bk-lead evp-rise">صف خالیه.</p>'}
+      <h2 class="dk-sub evp-rise">روی سایت <small>${fa(live.length)}</small></h2>
+      <div class="panel dk-box evp-rise"><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>برنامه</th><th>شهر</th><th>وضعیت</th><th></th></tr></thead><tbody>${live.map((e) => { const s = statusOf(e); return `<tr><td><a href="#/e/${esc(encodeURIComponent(e.id))}">${esc(e.title)}</a></td><td>${esc(e.city)}</td><td><em class="st" data-tone="${esc(s.label ? s.tone : 'good')}">${esc(s.label || 'در حال فروش')}</em></td><td>${s.key === 'cancelled' ? '' : `<button type="button" class="chip" data-cancel="${esc(e.id)}">${ico('x')}لغو برنامه</button>`}</td></tr>`; }).join('')}</tbody></table></div></div>`;
+    $$('[data-yes]', el).forEach((b) => b.addEventListener('click', () => {
+      const id = b.dataset.yes, d = drafts.get(id);
+      if (d) { d.status = 'live'; d.ok = Date.now(); drafts.put(d); MORE.push(draftEvent(d)); auditLog(`برنامه‌ی «${d.title}» تأیید و منتشر شد`); }
+      else { store.set('blit.reviewed', store.get('blit.reviewed', []).concat(id)); auditLog(`برنامه‌ی «${(others.find((x) => x.id === id) || {}).title}» تأیید و منتشر شد`); }
+      toast('تأیید شد؛ برنامه روی سایته و برگزارکننده پیامک گرفت.'); this.shows(el);
+    }));
+    $$('[data-no]', el).forEach((b) => b.addEventListener('click', () => {
+      const m = desk.modal('ad-no', `<h2>${ico('undo')}برگردوندن به برگزارکننده</h2><p class="bk-lead">دلیلش رو بنویس؛ برگزارکننده همین رو می‌بینه و درستش می‌کنه.</p><label class="bk-fld"><span>دلیل</span><textarea rows="3" id="adWhy">پوستر کیفیت کافی نداره؛ لطفاً نسخه‌ی بزرگ‌تر بفرستید.</textarea></label><div class="evp-dlg-end"><button type="button" class="buy" id="adNoGo">${ico('undo')}برگردوندن</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'برگردوندن');
+      $('#adNoGo', m.box).addEventListener('click', () => { const why = $('#adWhy', m.box).value.trim() || 'بدون توضیح', d = drafts.get(b.dataset.no); if (d) { d.status = 'rejected'; d.note = why; drafts.put(d); } else store.set('blit.reviewed', store.get('blit.reviewed', []).concat(b.dataset.no)); auditLog(`برنامه برگردونده شد: ${why}`); m.shut(); toast('برگردونده شد؛ دلیلش برای برگزارکننده رفت.'); this.shows(el); });
+    }));
+    $$('[data-cancel]', el).forEach((b) => b.addEventListener('click', () => {
+      const e = showById(b.dataset.cancel), os = allOrders().filter((o) => o.eid === e.id && o.st === 'paid');
+      const m = desk.modal('ad-no', `<h2>${ico('x')}لغو «${esc(e.title)}»</h2><p class="bk-lead">${fa(os.length)} سفارش پرداخت‌شده داره (${money(os.reduce((a, o) => a + o.total, 0))} تومان). پول همه‌شون برمی‌گرده و به همه پیامک می‌شه.</p>
+        <div class="bk-seg" role="radiogroup" aria-label="برگشت پول"><button type="button" role="radio" data-to="wallet" aria-checked="true">به کیف پول (فوری)</button><button type="button" role="radio" data-to="card" aria-checked="false">به کارت (۳ تا ۷ روز کاری)</button></div>
+        <div class="evp-dlg-end"><button type="button" class="buy ad-danger" id="adCan">${ico('x')}لغو برنامه و برگشت پول</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'لغو برنامه');
+      let to = 'wallet'; $$('[data-to]', m.box).forEach((x) => x.addEventListener('click', () => { to = x.dataset.to; $$('[data-to]', m.box).forEach((y) => y.setAttribute('aria-checked', String(y === x))); }));
+      $('#adCan', m.box).addEventListener('click', () => { store.set('blit.cancelled', cancelled().concat(e.id)); e.status = 'cancelled'; const sum = refund(os.map((o) => o.code), to, `لغو «${e.title}»`); auditLog(`برنامه‌ی «${e.title}» لغو شد`); m.shut(); toast(`لغو شد؛ ${money(sum)} تومان به ${fa(os.length)} خریدار برگشت.`); this.shows(el); });
+    }));
+  },
+
+  // the orders: a search, the period and the state as filters, refunds, a file
+  orders(el) {
+    const f = this.of || (this.of = { q: '', days: 30, st: '' });
+    const paint = () => {
+      const all = allOrders(), t0 = Date.now() - f.days * DAY, q = enDigits(f.q).trim().toUpperCase();
+      const l = all.filter((o) => o.at >= t0 && (!f.st || o.st === f.st) && (!q || o.code.includes(q) || o.phone.includes(q) || o.title.includes(f.q.trim())));
+      const sum = l.filter((o) => o.st === 'paid').reduce((a, o) => a + o.total, 0);
+      $('#adOrd', el).innerHTML = `<p class="ad-sum">${fa(l.length)} سفارش · پرداخت‌شده‌ها ${money(sum)} تومان</p><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>کد پیگیری</th><th>برنامه</th><th>بلیت</th><th>مبلغ</th><th>موبایل</th><th>زمان</th><th>وضعیت</th><th></th></tr></thead><tbody>${l.slice(0, 60).map((o) => { const s = ORDER_ST[o.st]; return `<tr><td><code class="cd-code">${esc(o.code)}</code></td><td>${esc(o.title)}</td><td>${fa(o.n)}</td><td>${money(o.total)}</td><td>${esc(maskPhone(o.phone))}</td><td>${esc(ago(o.at))}</td><td><em class="st" data-tone="${s[1]}">${esc(s[0])}</em>${o.way === 'wallet' ? '<small> · کیف پول</small>' : ''}</td><td>${o.own ? `<a class="chip" href="#/ticket/${esc(encodeURIComponent(o.code))}">بلیت</a>` : ''}${o.st === 'paid' ? `<button type="button" class="chip" data-ref="${esc(o.code)}">${ico('undo')}برگشت پول</button>` : ''}</td></tr>`; }).join('')}</tbody></table></div>${l.length > 60 ? `<p class="bk-lead">${fa(60)} تای اول؛ بقیه تو فایل.</p>` : ''}`;
+      $$('[data-ref]', el).forEach((b) => b.addEventListener('click', () => {
+        const o = all.find((x) => x.code === b.dataset.ref);
+        const m = desk.modal('ad-no', `<h2>${ico('undo')}برگشت پول <span dir="ltr">${esc(o.code)}</span></h2><p class="bk-lead">${money(o.total)} تومان، ${esc(o.title)}.</p><div class="bk-seg" role="radiogroup" aria-label="به کجا"><button type="button" role="radio" data-to="wallet" aria-checked="true">به کیف پول (فوری)</button><button type="button" role="radio" data-to="card" aria-checked="false">به کارت (۳ تا ۷ روز کاری)</button></div><div class="evp-dlg-end"><button type="button" class="buy" id="adRefGo">${ico('check')}برگشت پول</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'برگشت پول');
+        let to = 'wallet'; $$('[data-to]', m.box).forEach((x) => x.addEventListener('click', () => { to = x.dataset.to; $$('[data-to]', m.box).forEach((y) => y.setAttribute('aria-checked', String(y === x))); }));
+        $('#adRefGo', m.box).addEventListener('click', () => { refund([o.code], to); m.shut(); toast(`${money(o.total)} تومان ${to === 'wallet' ? 'به کیف پول خریدار برگشت' : 'به کارت خریدار برمی‌گرده'}.`); paint(); });
+      }));
+    };
+    el.innerHTML = `${desk.head('سفارش‌ها', 'همه‌ی خریدهای سایت؛ با کد پیگیری، موبایل یا اسم برنامه پیدا کن.', `<button type="button" class="chip" id="adCsv">${ico('arrow-ul')}فایل اکسل (CSV)</button>`)}
+      <div class="dk-filters evp-rise"><label class="bk-fld"><span>جستجو</span><input id="adQ" value="${esc(f.q)}" placeholder="BL-… یا ۰۹۱۲… یا اسم برنامه"></label>
+        <div class="bk-seg" role="radiogroup" aria-label="بازه">${[[1, 'امروز'], [7, '۷ روز'], [30, '۳۰ روز']].map(([n, t]) => `<button type="button" role="radio" data-days="${n}" aria-checked="${f.days === n}">${t}</button>`).join('')}</div>
+        <div class="bk-seg" role="radiogroup" aria-label="وضعیت">${[['', 'همه'], ['paid', 'پرداخت شد'], ['refunded', 'پول برگشت'], ['failed', 'ناموفق']].map(([k, t]) => `<button type="button" role="radio" data-st="${k}" aria-checked="${f.st === k}">${t}</button>`).join('')}</div></div>
+      <section class="panel dk-box evp-rise" id="adOrd"></section>`;
+    $('#adQ', el).addEventListener('input', (ev) => { f.q = ev.target.value; paint(); });
+    $$('[data-days]', el).forEach((b) => b.addEventListener('click', () => { f.days = +b.dataset.days; $$('[data-days]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $$('[data-st]', el).forEach((b) => b.addEventListener('click', () => { f.st = b.dataset.st; $$('[data-st]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $('#adCsv', el).addEventListener('click', () => { csvDownload('blit-orders.csv', [['کد پیگیری', 'برنامه', 'شهر', 'بلیت', 'مبلغ (تومان)', 'موبایل', 'زمان', 'وضعیت', 'روش']].concat(allOrders().map((o) => [o.code, o.title, o.city, o.n, o.total, o.phone, new Date(o.at).toISOString(), ORDER_ST[o.st][0], o.way === 'wallet' ? 'کیف پول' : 'درگاه']))); auditLog('خروجی سفارش‌ها گرفته شد'); toast('فایل سفارش‌ها دانلود شد.'); });
+    paint();
+  },
+
+  // the team: who has which role; what each role may do
+  team(el) {
+    const l = store.get('blit.team', null) || [{ id: 'u1', name: 'مدیر سایت', phone: '09120000001', role: 'all', at: Date.now() - 200 * DAY }, { id: 'u2', name: 'حمید صادقی', phone: '09121230000', role: 'money', at: Date.now() - 60 * DAY }, { id: 'u3', name: 'نگار رضایی', phone: '09351230000', role: 'op', at: Date.now() - 21 * DAY }];
+    const perms = store.get('blit.perms', ROLE_PERMS);
+    el.innerHTML = `${desk.head('کاربرها و نقش‌ها', 'هر کس فقط کاری رو می‌کنه که نقشش اجازه می‌ده؛ هر تغییری با اسم خودش تو تاریخچه می‌مونه.')}
+      <div class="dk-cols dk-cols-r"><section class="panel dk-box evp-rise"><h2>${ico('users')}تیم سایت<small>${fa(l.length)} نفر</small></h2>
+        <ul class="dk-staff">${l.map((u) => `<li><span class="dk-av" aria-hidden="true">${esc(u.name.slice(0, 1))}</span><span class="dk-staff-t"><b>${esc(u.name)}</b><small>${esc(maskPhone(u.phone))} · از ${esc(ago(u.at))}</small></span><label class="ad-role"><span class="sr">نقش ${esc(u.name)}</span><select data-u="${esc(u.id)}"${u.id === 'u1' ? ' disabled' : ''}>${Object.entries(ROLES).map(([k, t]) => `<option value="${k}"${u.role === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label></li>`).join('')}</ul>
+        <form class="dk-form ad-add" id="adAdd"><div class="wz-grid"><label class="bk-fld"><span>نام</span><input name="n" required></label><label class="bk-fld"><span>موبایل</span><input name="p" required inputmode="numeric" dir="ltr" maxlength="11"></label></div><label class="bk-fld"><span>نقش</span><select name="r">${Object.entries(ROLES).map(([k, t]) => `<option value="${k}"${k === 'op' ? ' selected' : ''}>${t}</option>`).join('')}</select></label><button type="submit" class="buy">${ico('plus')}افزودن به تیم</button></form></section>
+      <section class="panel dk-box evp-rise"><h2>${ico('shield')}دسترسی هر نقش</h2><div class="dk-tbl-w"><table class="dk-tbl ad-perm"><thead><tr><th>کار</th>${Object.values(ROLES).map((t) => `<th>${t}</th>`).join('')}</tr></thead><tbody>${PERMS.map(([k, t]) => `<tr><td>${esc(t)}</td>${Object.keys(ROLES).map((r) => `<td><input type="checkbox" data-r="${r}" data-p="${k}" aria-label="${esc(ROLES[r])}: ${esc(t)}"${perms[r].includes(k) ? ' checked' : ''}${r === 'all' ? ' disabled' : ''}></td>`).join('')}</tr>`).join('')}</tbody></table></div></section></div>`;
+    const save = (nl) => store.set('blit.team', nl);
+    $$('[data-u]', el).forEach((s) => s.addEventListener('change', () => { const u = l.find((x) => x.id === s.dataset.u); u.role = s.value; save(l); auditLog(`نقش ${u.name} شد «${ROLES[u.role]}»`); toast('نقش عوض شد.'); }));
+    $$('[data-r]', el).forEach((c) => c.addEventListener('change', () => { const p = store.get('blit.perms', ROLE_PERMS), r = c.dataset.r; p[r] = c.checked ? [...new Set(p[r].concat(c.dataset.p))] : p[r].filter((x) => x !== c.dataset.p); store.set('blit.perms', p); auditLog(`دسترسی «${PERMS.find((x) => x[0] === c.dataset.p)[1]}» برای ${ROLES[r]} ${c.checked ? 'داده' : 'گرفته'} شد`); }));
+    const f = $('#adAdd', el); f.elements.p.addEventListener('input', (ev) => { ev.target.value = fa(enDigits(ev.target.value).replace(/\D/g, '').slice(0, 11)); });
+    f.addEventListener('submit', (ev) => { ev.preventDefault(); const p = enDigits(f.elements.p.value); if (!/^09\d{9}$/.test(p)) { toast('شماره‌ی موبایل درست نیست.'); return; } l.push({ id: `u${Date.now().toString(36)}`, name: f.elements.n.value.trim(), phone: p, role: f.elements.r.value, at: Date.now() }); save(l); auditLog(`${f.elements.n.value.trim()} با نقش «${ROLES[f.elements.r.value]}» به تیم اضافه شد`); this.team(el); });
+  },
+
+  // the categories (and a new one) and which cities the buyers see
+  site(el) {
+    const hidden = new Set(store.get('blit.hideCities', [])), all = [...new Set(CITIES.concat([...hidden]))].sort((a, b) => a.localeCompare(b, 'fa')), extra = store.get('blit.cats', []);
+    el.innerHTML = `${desk.head('دسته‌ها و شهرها', 'شش دسته‌ی اصلی خودکار از نوع و شهر برنامه ساخته می‌شن؛ دسته‌ی تازه هم می‌شه اضافه کرد.')}
+      <div class="dk-cols dk-cols-r"><section class="panel dk-box evp-rise"><h2>${ico('grid')}دسته‌ها</h2><ul class="ad-cats">${SEC_ORDER.map((k) => `<li><span class="sec-ic" style="--sc:${secColor(k)[0]}" aria-hidden="true">${ico(iconOfCat(k))}</span><b>${esc(catName(k))}</b><small>${fa(catCount(k))} برنامه · خودکار</small></li>`).join('')}${extra.map((c) => `<li><span class="sec-ic" aria-hidden="true">${ico('tag')}</span><b>${esc(c.t)}</b><small>با برچسب «${esc(c.tag)}» · دستی</small></li>`).join('')}</ul>
+        <form class="rc-row" id="adCat"><label class="bk-fld"><span>دسته‌ی تازه</span><input name="t" placeholder="مثلاً: ویژه‌ی کودکان" required></label><button type="submit" class="chip">${ico('plus')}افزودن</button></form></section>
+      <section class="panel dk-box evp-rise"><h2>${ico('pin')}شهرهایی که خریدار می‌بینه<small>${fa(all.length - hidden.size)} از ${fa(all.length)}</small></h2><p class="bk-lead">تو منوی شهر هدر و فیلتر لیست. شهری که برنامه نداره رو می‌شه پنهان کرد.</p><div class="ad-cities">${all.map((c) => `<label><input type="checkbox" data-city="${esc(c)}"${hidden.has(c) ? '' : ' checked'}><span>${esc(c)}<small>${fa(LIST().filter((e) => e.city === c).length)}</small></span></label>`).join('')}</div></section></div>`;
+    $$('[data-city]', el).forEach((c) => c.addEventListener('change', () => { const h = new Set(store.get('blit.hideCities', [])), name = c.dataset.city; if (c.checked) { h.delete(name); if (!CITIES.includes(name)) { CITIES.push(name); CITIES.sort((a, b) => a.localeCompare(b, 'fa')); } } else { h.add(name); const i = CITIES.indexOf(name); if (i >= 0) CITIES.splice(i, 1); } store.set('blit.hideCities', [...h]); auditLog(`شهر ${name} ${c.checked ? 'نمایش داده' : 'پنهان'} شد`); }));
+    $('#adCat', el).addEventListener('submit', (ev) => { ev.preventDefault(); const t = ev.target.elements.t.value.trim(); if (!t) return; store.set('blit.cats', extra.concat({ t, tag: t })); auditLog(`دسته‌ی «${t}» ساخته شد`); toast('دسته ساخته شد؛ برنامه‌ها با برچسبش توش می‌آن.'); this.site(el); });
+  },
+
+  // the halls' library and the designer (a plan from a few numbers, drawn as you change them)
+  halls(el) {
+    const p = this.hp || (this.hp = { shape: 'fan', rows: 12, seats: 18, blocks: 3, grow: true, balcony: 4, boxes: 0, tables: 0, stand: 0 });
+    const list = VENUES.map(([c, n]) => venueInfo(c, n));
+    const num = (k, t, a, b, s = 1) => `<label class="ad-num"><span>${t}<output id="adO-${k}">${fa(p[k])}</output></span><input type="range" min="${a}" max="${b}" step="${s}" value="${p[k]}" data-k="${k}"></label>`;
+    el.innerHTML = `${desk.head('سالن‌ها', `کتابخانه‌ی ${fa(list.length)} سالن؛ برگزارکننده‌ها از همین‌ها انتخاب می‌کنن. سالن تازه رو با طراح سالن بساز.`)}
+      <section class="panel dk-box evp-rise ad-design" aria-labelledby="adDesH"><h2 id="adDesH">${ico('ruler')}طراح سالن<small id="adCap"></small></h2>
+        <div class="ad-des"><div class="ad-des-c">
+          <div class="bk-seg" role="radiogroup" aria-label="شکل سالن"><button type="button" role="radio" data-shape="fan" aria-checked="${p.shape === 'fan'}">نیم‌دایره</button><button type="button" role="radio" data-shape="rect" aria-checked="${p.shape === 'rect'}">مستطیل</button></div>
+          ${num('rows', 'ردیف‌های همکف', 3, 30)}${num('seats', 'صندلی هر ردیف', 6, 40)}${num('blocks', 'بلوک‌ها (راهروها + ۱)', 1, 3)}${num('balcony', 'ردیف‌های بالکن', 0, 10)}${num('boxes', 'لژ در هر طرف', 0, 8)}${num('tables', 'میز (شش‌نفره)', 0, 24)}${num('stand', 'جای ایستاده (نفر)', 0, 3000, 100)}
+          <label class="wz-sw"><input type="checkbox" id="adGrow"${p.grow ? ' checked' : ''}><span>ردیف‌های عقب بلندتر</span></label>
+          <div class="wz-grid"><label class="bk-fld"><span>اسم سالن</span><input id="adHn" placeholder="مثلاً: تالار شهر"></label><label class="bk-fld"><span>شهر</span><select id="adHc">${CITIES.map((c) => `<option${c === 'تهران' ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select></label></div>
+          <label class="bk-fld"><span>نشانی</span><input id="adHa" placeholder="خیابان، کوچه، پلاک"></label>
+          <button type="button" class="buy" id="adHsave">${ico('check')}افزودن به کتابخانه</button></div>
+          <div class="ad-des-v" id="adPrev"></div></div></section>
+      <section class="panel dk-box evp-rise"><h2>${ico('pin')}کتابخانه</h2><div class="wz-halls ad-lib">${list.map((h) => `<div class="wz-hall">${miniPlan(h.plan)}<span><b>${esc(h.name)}</b><small>${esc(h.city)} · ${esc(h.addr)}</small><small>${esc(PLAN_T[h.plan] || '')} · ${money(h.cap)} صندلی</small></span></div>`).join('')}</div></section>`;
+    const draw = () => { const P = buildPlan(p), L = hallLayout(P), cap = L.secs.reduce((n, z) => n + (z.sec.k === 'stand' ? z.sec.cap : z.seats.length), 0); $('#adPrev', el).innerHTML = miniPlan(P); $('#adCap', el).textContent = `${money(cap)} جا · ${fa(L.secs.length)} بخش`; };
+    $$('[data-k]', el).forEach((r) => r.addEventListener('input', () => { p[r.dataset.k] = +r.value; $(`#adO-${r.dataset.k}`, el).textContent = fa(r.value); draw(); }));
+    $$('[data-shape]', el).forEach((b) => b.addEventListener('click', () => { p.shape = b.dataset.shape; $$('[data-shape]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); draw(); }));
+    $('#adGrow', el).addEventListener('change', (ev) => { p.grow = ev.target.checked; draw(); });
+    $('#adHsave', el).addEventListener('click', () => {
+      const name = $('#adHn', el).value.trim(), city = $('#adHc', el).value, addr = $('#adHa', el).value.trim() || `${city}`;
+      if (name.length < 3) { toast('اسم سالن رو بنویس.'); $('#adHn', el).focus(); return; }
+      if (VENUES.some(([c, n]) => c === city && n === name)) { toast('این سالن تو کتابخانه هست.'); return; }
+      const key = `c-${Date.now().toString(36)}`, h = { key, name, city, addr: `${city}، ${addr}`, p: { ...p } };
+      store.set('blit.halls', customHalls().concat(h)); PLANS[key] = buildPlan(h.p); PLAN_T[key] = 'پلان ساخته‌شده با طراح سالن'; HALLS.unshift([new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), h.addr, key, null, null]); VENUES.push([city, name]); capCache.delete(key);
+      auditLog(`سالن «${name}» (${city}) به کتابخانه اضافه شد`); toast('سالن اضافه شد؛ برگزارکننده‌ها حالا می‌تونن انتخابش کنن.'); this.halls(el);
+    });
+    draw();
+  },
+
+  // the reports: a period, a city and a kind as filters; the money by day, by kind and by city; a file
+  reports(el) {
+    const f = this.rf || (this.rf = { days: 30, city: '', kind: '' });
+    const paint = () => {
+      const t0 = Date.now() - f.days * DAY, l = allOrders().filter((o) => o.st === 'paid' && o.at >= t0 && (!f.city || o.city === f.city) && (!f.kind || o.kind === f.kind));
+      const sum = l.reduce((a, o) => a + o.total, 0), net = Math.round(sum / 1.1), vat = sum - net, fee = Math.round(net * FEE);
+      const by = (k) => Object.entries(l.reduce((a, o) => { a[o[k]] = (a[o[k]] || 0) + o.total; return a; }, {})).map(([t, v]) => ({ t: k === 'kind' ? (KIND_T[t] || t) : t, v })).sort((a, b) => b.v - a.v);
+      const nD = Math.min(f.days, 30), days = Array.from({ length: nD }, (_, k) => { const t = Date.now() - (nD - 1 - k) * DAY, d = TEHRAN_DAY.format(new Date(t)), s = l.filter((o) => TEHRAN_DAY.format(new Date(o.at)) === d); return { v: s.reduce((a, o) => a + o.total, 0), x: dayOf(t), tip: `${dayOf(t)} · ${fa(s.length)} سفارش` }; });
+      $('#adRep', el).innerHTML = `<section class="dk-tiles">${desk.tile('فروش (با مالیات)', short(sum), null)}${desk.tile('سفارش', money(l.length), null)}${desk.tile('مالیات بر ارزش افزوده', short(vat), null)}${desk.tile('کارمزد سایت', short(fee), null)}</section>
+        <section class="panel dk-box"><h2>${ico('award')}فروش هر روز<small>تومان</small></h2>${viz.columns('adRepC', days, { label: 'فروش هر روز', xlab: Math.max(1, Math.round(nD / 5)) })}${viz.table(['روز', 'فروش (تومان)'], days.map((d) => [d.x, money(d.v)]))}</section>
+        <div class="dk-cols"><section class="panel dk-box"><h2>${ico('grid')}به تفکیک نوع</h2>${viz.ranked(by('kind'))}</section><section class="panel dk-box"><h2>${ico('pin')}به تفکیک شهر</h2>${viz.ranked(by('city').slice(0, 8))}</section></div>`;
+      viz.wire('adRepC', days);
+      this.rows = l;
+    };
+    const cities = [...new Set(allOrders().map((o) => o.city).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'fa'));
+    el.innerHTML = `${desk.head('گزارش‌ها', 'هر فیلتری بزنی، همه‌ی عددها و نمودارهای پایین با همون بازه حساب می‌شن.', `<button type="button" class="chip" id="adRcsv">${ico('arrow-ul')}فایل اکسل (CSV)</button>`)}
+      <div class="dk-filters evp-rise"><div class="bk-seg" role="radiogroup" aria-label="بازه">${[[1, 'امروز'], [7, '۷ روز'], [30, '۳۰ روز']].map(([n, t]) => `<button type="button" role="radio" data-days="${n}" aria-checked="${f.days === n}">${t}</button>`).join('')}</div>
+        <label class="bk-fld"><span>شهر</span><select id="adRc"><option value="">همه</option>${cities.map((c) => `<option${c === f.city ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select></label>
+        <label class="bk-fld"><span>نوع</span><select id="adRk"><option value="">همه</option>${Object.entries(KIND_T).map(([k, t]) => `<option value="${k}"${k === f.kind ? ' selected' : ''}>${t}</option>`).join('')}</select></label></div>
+      <div id="adRep" class="dk-stack evp-rise"></div>`;
+    $$('[data-days]', el).forEach((b) => b.addEventListener('click', () => { f.days = +b.dataset.days; $$('[data-days]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $('#adRc', el).addEventListener('change', (ev) => { f.city = ev.target.value; paint(); });
+    $('#adRk', el).addEventListener('change', (ev) => { f.kind = ev.target.value; paint(); });
+    $('#adRcsv', el).addEventListener('click', () => { csvDownload('blit-report.csv', [['کد پیگیری', 'برنامه', 'شهر', 'نوع', 'بلیت', 'مبلغ (تومان)', 'زمان']].concat((this.rows || []).map((o) => [o.code, o.title, o.city, KIND_T[o.kind] || o.kind, o.n, o.total, new Date(o.at).toISOString()]))); auditLog('خروجی گزارش گرفته شد'); toast('فایل گزارش دانلود شد.'); });
+    paint();
+  },
+
+  // the gift and charge codes of organisations (digital, or printed as cards), and what the buyers keep in their wallets
+  gifts(el) {
+    const l = store.get('blit.gifts', null) || [{ batch: 'G1', org: 'بانک نمونه (هدیه‌ی کارکنان)', v: 500000, n: 200, used: 64, until: Date.now() + 80 * DAY, at: Date.now() - 12 * DAY }];
+    el.innerHTML = `${desk.head('کیف پول و کد هدیه', 'کد شارژ و هدیه‌ی سازمانی: دیجیتال (فایل یا پیامک) یا چاپی. با هر کد، مبلغش به کیف پول خریدار می‌ره؛ کیف پول شارژ می‌شه، برداشت نداره.')}
+      <div class="dk-cols dk-cols-r"><section class="panel dk-box evp-rise"><h2>${ico('tag')}دسته‌کدها</h2><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>سازمان</th><th>مبلغ هر کد</th><th>استفاده</th><th>تا</th><th></th></tr></thead><tbody>${l.map((g) => `<tr><td>${esc(g.org)}</td><td>${money(g.v)}</td><td><span class="dk-meter" style="--p:${(g.used / g.n).toFixed(3)}"><i></i></span><small>${money(g.used)} از ${money(g.n)}</small></td><td>${esc(dayOf(g.until))}</td><td><button type="button" class="chip" data-gcsv="${esc(g.batch)}">${ico('arrow-ul')}فایل کدها</button><button type="button" class="chip" data-gprint="${esc(g.batch)}">${ico('ticket')}کارت چاپی</button></td></tr>`).join('')}</tbody></table></div>
+        <p class="bk-note">${ico('info')}برای آزمایش: کد <code dir="ltr">${esc(this.giftCodes(l[0])[0])}</code> رو تو «کیف پول من» بزن.</p></section>
+      <section class="panel dk-box evp-rise"><h2>${ico('plus')}دسته‌کد تازه</h2><form class="dk-form" id="adGift"><label class="bk-fld"><span>سازمان</span><input name="org" required placeholder="مثلاً: شرکت نمونه"></label><div class="wz-grid"><label class="bk-fld"><span>مبلغ هر کد (تومان)</span><input name="v" inputmode="numeric" dir="ltr" value="۳۰۰٬۰۰۰"></label><label class="bk-fld"><span>تعداد</span><input name="n" inputmode="numeric" dir="ltr" value="۱۰۰"></label></div><button type="submit" class="buy">${ico('check')}ساختن کدها</button></form></section></div>`;
+    for (const n of ['v', 'n']) $('#adGift', el).elements[n].addEventListener('input', (ev) => { const v = +enDigits(ev.target.value).replace(/\D/g, '') || 0; ev.target.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; });
+    $('#adGift', el).addEventListener('submit', (ev) => { ev.preventDefault(); const f = ev.target, v = +enDigits(f.elements.v.value).replace(/\D/g, ''), n = +enDigits(f.elements.n.value).replace(/\D/g, ''); if (!(v >= 10000 && n >= 1 && n <= 5000)) { toast('مبلغ دست‌کم ۱۰ هزار تومان و تعداد ۱ تا ۵۰۰۰.'); return; } l.unshift({ batch: `G${Date.now().toString(36)}`, org: f.elements.org.value.trim(), v, n, used: 0, until: Date.now() + 180 * DAY, at: Date.now() }); store.set('blit.gifts', l); auditLog(`${fa(n)} کد هدیه‌ی ${money(v)} تومانی برای ${f.elements.org.value.trim()} ساخته شد`); toast(`${fa(n)} کد ساخته شد.`); this.gifts(el); });
+    $$('[data-gcsv]', el).forEach((b) => b.addEventListener('click', () => { const g = l.find((x) => x.batch === b.dataset.gcsv); csvDownload(`blit-gift-${g.batch}.csv`, [['کد', 'مبلغ (تومان)', 'سازمان', 'مهلت']].concat(this.giftCodes(g).map((c) => [c, g.v, g.org, new Date(g.until).toISOString().slice(0, 10)]))); toast('فایل کدها دانلود شد.'); }));
+    $$('[data-gprint]', el).forEach((b) => b.addEventListener('click', () => { const g = l.find((x) => x.batch === b.dataset.gprint); codes.cards({ code: 'GIFT', gift: g, type: 'amt', v: g.v, limit: g.n, used: g.used, until: g.until, eid: null, subs: this.giftCodes(g) }); }));
+    if (!store.get('blit.gifts', null)) store.set('blit.gifts', l);
+  },
+  giftCodes(g) { const R = rngOf(seedOf(`gift:${g.batch}`)), A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({ length: Math.min(g.n, 500) }, () => `GF-${Array.from({ length: 4 }, () => A[Math.floor(R() * A.length)]).join('')}-${Array.from({ length: 4 }, () => A[Math.floor(R() * A.length)]).join('')}`); },
+
+  // who changed what, when
+  log(el) {
+    const seed = [{ at: Date.now() - 2 * HOUR, what: 'قیمت سانس‌های «شب جاز تهران» تأیید شد', who: 'نگار رضایی (اپراتور)' }, { at: Date.now() - 27 * HOUR, what: 'تسویه‌ی هفتگی برگزارکننده‌ها انجام شد', who: 'حمید صادقی (مالی)' }, { at: Date.now() - 3 * DAY, what: 'بنر هیروی صفحه‌ی اصلی عوض شد', who: 'مدیر سایت' }];
+    const l = store.get('blit.audit', []).concat(seed);
+    el.innerHTML = `${desk.head('تاریخچه‌ی تغییرات', 'هر تغییری تو پنل‌ها، با اسم کسی که انجامش داده و زمانش.')}<section class="panel dk-box evp-rise"><ol class="ad-log ad-log-l">${l.map((x) => `<li><time>${esc(dayOf(x.at))} · ${esc(F.time.format(new Date(x.at)))}</time><b>${esc(x.what)}</b><small>${esc(x.who)}</small></li>`).join('')}</ol></section>`;
+  },
+};
+
+/* ───── the buyer's wallet (#/wallet): the balance, a charge by the gateway, a gift code, what came in and went out ───── */
+const walletPage = {
+  parse(h) { return h === '#/wallet' ? { kind: 'wallet' } : null; },
+  render() {
+    document.title = 'کیف پول · بلیت';
+    const w = wallet.get(), u = userOf();
+    const box = pages.wrap('pg-wl', `${pages.head('کیف پول من', 'tag', 'شارژ کن و موقع خرید با یه دکمه بپرداز. پول برنامه‌ی لغوشده هم همین‌جا برمی‌گرده. برداشت از کیف پول ممکن نیست.')}
+      <div class="evp-cols"><div class="evp-main">
+        <section class="panel pg-box wl-bal evp-rise"><span>موجودی</span><b id="wlBal">${money(w.bal)}</b><small>تومان${u ? ` · ${esc(maskPhone(u.phone))}` : ''}</small></section>
+        <section class="panel pg-box evp-rise"><h2>${ico('plus')}شارژ کیف پول</h2><div class="sec-chips wl-amts">${[100000, 300000, 500000, 1000000].map((v, i) => `<button type="button" class="chip" data-v="${v}" aria-pressed="${i === 1}">${short(v)}</button>`).join('')}</div><button type="button" class="buy" id="wlCharge">${ico('shield-ok')}شارژ ${short(300000)} تومان از درگاه</button></section>
+        <section class="panel pg-box evp-rise"><h2>${ico('tag')}کد هدیه یا شارژ</h2><form class="rc-row" id="wlGift"><label class="bk-fld"><span>کد</span><input id="wlCode" dir="ltr" placeholder="GF-XXXX-XXXX" autocomplete="off"></label><button type="submit" class="chip">${ico('check')}ثبت کد</button></form><p class="bk-code-st" id="wlSt"></p></section>
+      </div><aside class="evp-side"><section class="panel pg-box evp-rise"><h2>${ico('clock')}گردش حساب</h2><ol class="wl-log">${w.log.length ? w.log.map((x) => `<li><span><b>${esc(x.why)}</b><small>${esc(ago(x.at))}</small></span><em class="${x.v < 0 ? 'neg' : 'pos'}">${x.v < 0 ? '−' : '+'}${money(Math.abs(x.v))}</em></li>`).join('') : '<li class="dk-empty">هنوز گردشی نیست.</li>'}</ol></section></aside></div>`);
+    let amt = 300000;
+    $$('[data-v]', box).forEach((b) => b.addEventListener('click', () => { amt = +b.dataset.v; $$('[data-v]', box).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); $('#wlCharge', box).innerHTML = `${ico('shield-ok')}شارژ ${short(amt)} تومان از درگاه`; }));
+    $('#wlCharge', box).addEventListener('click', () => { wallet.add(amt, 'شارژ از درگاه'); toast(`${short(amt)} تومان به کیف پولت اضافه شد.`); this.render(); });
+    $('#wlGift', box).addEventListener('submit', (ev) => {
+      ev.preventDefault(); const c = enDigits($('#wlCode', box).value).trim().toUpperCase(), st = $('#wlSt', box), used = store.get('blit.giftUsed', []);
+      const gifts = store.get('blit.gifts', null) || [{ batch: 'G1', org: 'بانک نمونه (هدیه‌ی کارکنان)', v: 500000, n: 200, used: 64, until: Date.now() + 80 * DAY }];
+      const g = gifts.find((x) => admin.giftCodes(x).includes(c));
+      if (!g) { st.className = 'bk-code-st bad'; st.textContent = 'این کد معتبر نیست.'; return; }
+      if (used.includes(c)) { st.className = 'bk-code-st bad'; st.textContent = 'این کد قبلاً استفاده شده.'; return; }
+      store.set('blit.giftUsed', used.concat(c)); g.used++; store.set('blit.gifts', gifts); wallet.add(g.v, `کد هدیه‌ی ${g.org}`); toast(`${money(g.v)} تومان هدیه به کیف پولت اضافه شد.`); this.render();
+    });
   },
 };
 
@@ -5864,7 +7180,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
