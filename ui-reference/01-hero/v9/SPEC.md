@@ -301,7 +301,7 @@ price; a chip dims the other prices), the map and «صندلی‌های تو».
   the **overview** (a small drawing of the whole hall on a `<canvas>`: the stage, every seat as a dot in its tier's colour,
   the standing areas; the section on show is framed and bright, the others dim) beside **«بهترین صندلی‌ها»** (how many
   side by side, − +, «پیدا کن»). Under them the tabs (one per section, each with its free seats) and **one section, big**:
-  its rows straightened (the plan's own arcs only order them), each seat a button of 28–34 px (34 px on a touch screen, the
+  its rows in the hall's own shape (a fan's rows curve round the stage, the ends a little nearer it; straight rows stay straight), each seat a button of 28–34 px (34 px on a touch screen, the
   size a finger needs) with its number, the aisles as gaps where the plan has them, the row's number at both ends (it stays
   in view when a wide section scrolls sideways), «صحنه» above. Boxes and tables are cards (a box's four seats, a table's six
   chairs round it), a standing area is a card with − +. A press on the overview (or a tab) changes the section; the overview's
@@ -672,6 +672,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - No `backdrop-filter`, no blend modes, no WebGL, **no audio** (no `AudioContext`, no analyser, no beat). The mirrored edge (off by default) is the only `filter` on a big element: blurred once inside the layer that zooms.
 - Scenes are built once and reused; after the intro the other shows' scenes are built one at a time. At most `shows + 1` free scenes are kept.
 - The first banner is preloaded (`<link rel="preload" … imagesrcset imagesizes>`). When the tab is hidden, the hero is covered or the search is open, the timer and the zoom pause.
+- **Layout shift on every page (round J):** 0 on the first load and after opening each of 17 pages, on a desktop and a phone; the seat map's opening counts 0.003–0.007, all of it the page change's own crossfade (`::view-transition-*`).
 - **Round J (the whole site, CPU ×4):** the scroll is read once a frame, before anything is written (the header's step, the
   pill of the section in view and the ring of «back to the top» follow it in the same step), so the browser no longer
   redoes the styles several times a frame: the styles and layout forced by scripts while the list scrolls fell from 1.5 s

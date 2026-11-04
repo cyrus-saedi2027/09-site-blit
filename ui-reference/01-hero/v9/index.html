@@ -1350,6 +1350,10 @@ a.buy, a.chip { text-decoration: none; }
 .sm-rl { pointer-events: none; }
 .sm-view { scroll-padding-inline: 34px; }
 
+/* a fan's rows curve round the stage (the ends a little higher), as the hall does; room above the first row for its rise */
+.sm-k-fan .sm-s { transform: translateY(var(--cy, 0px)); }
+.sm-k-fan .sm-row:first-of-type, .sm-k-fan .sm-stagebar + .sm-row { margin-top: 14px; }
+
 /* ── the other pages (pages.js): their head, boxes, the purchase tracking, the questions, the sign-in window, the phone's menu ── */
 .pg-head { display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6); border-radius: calc(var(--r) * 1.15); }
 .pg-head .sec-ic { color: var(--sc, var(--ring)); background: color-mix(in oklab, var(--sc, var(--ring)) 15%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc, var(--ring)) 34%, transparent); }
@@ -5711,9 +5715,9 @@ Object.assign(buy, {
     this.renderSection(this.zone, false);   // (the overview is drawn in the next frame)
   },
   focusZone(i) { if (this.plan && this.plan.secs[i]) this.renderSection(i, true); },
-  seatBtn(p) {
+  seatBtn(p, cy) {
     const mine = this.cart.has(p.key), st = mine ? 'mine' : p.st, dim = !mine && this.tiers.size && !this.tiers.has(p.t);
-    return `<button type="button" class="sm-s${dim ? ' is-dim' : ''}" data-k="${p.key}" data-st="${st}" style="--c:${p.c}" tabindex="-1" aria-pressed="${mine}"${st === 'free' || st === 'mine' ? '' : ' aria-disabled="true"'} aria-label="${esc(seatName(p))}، ${esc(money(p.price))} تومان">${fa(p.n)}</button>`;
+    return `<button type="button" class="sm-s${dim ? ' is-dim' : ''}" data-k="${p.key}" data-st="${st}" style="--c:${p.c}${cy ? `;--cy:${cy.toFixed(1)}px` : ''}" tabindex="-1" aria-pressed="${mine}"${st === 'free' || st === 'mine' ? '' : ' aria-disabled="true"'} aria-label="${esc(seatName(p))}، ${esc(money(p.price))} تومان">${fa(p.n)}</button>`;
   },
   // one section, big
   renderSection(i, anim) {
@@ -5735,10 +5739,14 @@ Object.assign(buy, {
       const rows = new Map(); z.seats.forEach((p) => { if (!rows.has(p.row)) rows.set(p.row, []); rows.get(p.row).push(p); });
       html = [...rows.keys()].sort((a, b) => a - b).map((r) => {
         const ps = rows.get(r).sort((a, b) => a.n - b.n), blocks = typeof z.sec.seats === 'function' ? z.sec.seats(r - 1) : [ps.length];
-        let out = '', k = 0;
-        blocks.forEach((bn, bi) => { if (bi) out += '<i class="sm-aisle" aria-hidden="true"></i>'; for (let j = 0; j < bn && k < ps.length; j++, k++) out += this.seatBtn(ps[k]); });
-        while (k < ps.length) out += this.seatBtn(ps[k++]);
-        return `<div class="sm-row" data-r="${r}"><span class="sm-rl" aria-hidden="true">${fa(r)}</span><div class="sm-seats" role="group" aria-label="${esc(z.sec.t)}، ردیف ${fa(r)}">${out}</div><span class="sm-rl" aria-hidden="true">${fa(r)}</span></div>`;
+        // a fan's row curves: each place (a seat, or an aisle) rises with the square of its distance from the row's middle
+        const fan = z.sec.k === 'fan', slots = ps.length + Math.max(0, blocks.length - 1), deep = fan ? Math.min(18, 0.45 * slots) : 0;
+        const rise = (q) => (deep && slots > 1 ? -deep * ((q - (slots - 1) / 2) / ((slots - 1) / 2)) ** 2 : 0);
+        let out = '', k = 0, q = 0;
+        blocks.forEach((bn, bi) => { if (bi) { out += `<i class="sm-aisle" aria-hidden="true"></i>`; q++; } for (let j = 0; j < bn && k < ps.length; j++, k++, q++) out += this.seatBtn(ps[k], rise(q)); });
+        while (k < ps.length) out += this.seatBtn(ps[k++], rise(q++));
+        const lab = '';
+        return `<div class="sm-row" data-r="${r}"><span class="sm-rl" aria-hidden="true"${lab}>${fa(r)}</span><div class="sm-seats" role="group" aria-label="${esc(z.sec.t)}، ردیف ${fa(r)}">${out}</div><span class="sm-rl" aria-hidden="true"${lab}>${fa(r)}</span></div>`;
       }).join('');
     }
     box.className = `sm-in sm-k-${z.ga ? 'ga' : z.sec.k}`; this.pos = null;
