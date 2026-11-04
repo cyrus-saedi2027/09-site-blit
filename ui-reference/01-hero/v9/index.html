@@ -1004,11 +1004,11 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .bk-cols { grid-template-columns: minmax(0, 1fr) clamp(340px, calc(var(--u) * 24), 480px); }
 .bk-map { position: relative; display: grid; grid-template-rows: auto 1fr auto auto; padding: calc(var(--u) * .7); border-radius: calc(var(--r) * 1.15); overflow: hidden; }
 .bk-mhead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6em 1em; padding: 0 calc(var(--u) * .3) calc(var(--u) * .6); }
-.seg { display: inline-flex; gap: 3px; padding: 3px; border-radius: 999px; background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
-.seg button { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: baseline; gap: .5em; padding: .5em 1.1em; border-radius: 999px; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .72); transition: background-color .3s, color .3s; white-space: nowrap; }
-.seg button small { font-size: .82em; opacity: .7; font-variant-numeric: tabular-nums; }
-.seg button[aria-selected="true"] { background: rgb(var(--fg)); color: var(--capsule); }
-.seg button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.bk-seg { display: inline-flex; gap: 3px; padding: 3px; border-radius: 999px; background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+.bk-seg button { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: baseline; gap: .5em; padding: .5em 1.1em; border-radius: 999px; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .72); transition: background-color .3s, color .3s; white-space: nowrap; }
+.bk-seg button small { font-size: .82em; opacity: .7; font-variant-numeric: tabular-nums; }
+.bk-seg button[aria-selected="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.bk-seg button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
 .bk-live { display: inline-flex; align-items: center; gap: .5em; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); }
 .bk-live > i { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34, 197, 94, .6); animation: live 1.8s ease-out infinite; }
 .bk-live b { color: #22c55e; font-weight: var(--fwb); }
@@ -1109,14 +1109,14 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .bk-ring svg.i { width: 42%; height: 42%; }
 .bk-who, .bk-way { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5); }
 .bk-lead { margin: 0 0 calc(var(--u) * .9); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 2; color: rgba(var(--fg), .72); }
-.fld { display: grid; gap: .4em; margin-bottom: calc(var(--u) * .8); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
-.fld > span { font-weight: var(--fwm); color: rgba(var(--fg), .8); }
-.fld small { font-weight: 400; color: rgba(var(--fg), .55); }
-.fld input { box-sizing: border-box; width: 100%; height: max(46px, calc(var(--u) * 2.9)); padding: 0 1em; border-radius: calc(var(--r) * .55); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 calc(max(14px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)) var(--font); outline: none; transition: border-color .3s, box-shadow .3s; }
-.fld input[dir="ltr"] { text-align: left; letter-spacing: .04em; }
-.fld input::placeholder { color: rgba(var(--fg), .35); }
-.fld input:focus { border-color: var(--sc); box-shadow: 0 0 0 3px color-mix(in oklab, var(--sc) 25%, transparent); }
-.fld.is-bad input { border-color: #f43f5e; box-shadow: 0 0 0 3px rgba(244, 63, 94, .2); }
+.bk-fld { display: grid; gap: .4em; margin-bottom: calc(var(--u) * .8); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.bk-fld > span { font-weight: var(--fwm); color: rgba(var(--fg), .8); }
+.bk-fld small { font-weight: 400; color: rgba(var(--fg), .55); }
+.bk-fld input { box-sizing: border-box; width: 100%; height: max(46px, calc(var(--u) * 2.9)); padding: 0 1em; border-radius: calc(var(--r) * .55); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 calc(max(14px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)) var(--font); outline: none; transition: border-color .3s, box-shadow .3s; }
+.bk-fld input[dir="ltr"] { text-align: left; letter-spacing: .04em; }
+.bk-fld input::placeholder { color: rgba(var(--fg), .35); }
+.bk-fld input:focus { border-color: var(--sc); box-shadow: 0 0 0 3px color-mix(in oklab, var(--sc) 25%, transparent); }
+.bk-fld.is-bad input { border-color: #f43f5e; box-shadow: 0 0 0 3px rgba(244, 63, 94, .2); }
 .bk-otp { margin-top: calc(var(--u) * .4); padding: .9em 1em; border-radius: calc(var(--r) * .6); background: color-mix(in oklab, var(--sc) 8%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 30%, transparent); }
 .bk-otp.is-shake { animation: shake .55s cubic-bezier(.36, .07, .19, .97); }
 .bk-otp p { display: flex; gap: .5em; margin: 0 0 .7em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); line-height: 1.9; }
@@ -1256,7 +1256,7 @@ a.buy, a.chip { text-decoration: none; }
 .pg-box h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), .6); }
 .pg-box a:not(.chip):not(.buy):not(.rc-card) { color: var(--sc, var(--ring)); }
 .rc-row { display: flex; align-items: flex-end; gap: .7em; }
-.rc-row .fld { flex: 1; margin: 0; }
+.rc-row .bk-fld { flex: 1; margin: 0; }
 .rc-row .buy, .rc-row .chip { flex: none; height: max(46px, calc(var(--u) * 2.9)); }
 .rc-row .buy { gap: .45em; min-width: 0; padding-inline: 1.4em; }
 .pg .otp { margin: .9em 0 .2em; }
@@ -1332,6 +1332,176 @@ a.buy, a.chip { text-decoration: none; }
   .rc-row .buy, .rc-row .chip { width: 100%; justify-content: center; }
   .pg-head { padding: 16px; }
 }
+
+/* ── the entry control (gate.js): the start (session, door, code) and the scanning (camera, the answer, the numbers, the log) ── */
+.gt { --ok: #22c55e; --bad: #f43f5e; --warn: #f59e0b; }
+.gt-sess { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: calc(var(--u) * .5); }
+.gt-ses { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; gap: .85em; padding: .6em .7em; border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); transition: background-color .3s, box-shadow .3s, transform .4s var(--ease); }
+.gt-ses:hover { background: rgba(var(--fg), .07); transform: translateY(-2px); }
+.gt-ses[aria-checked="true"] { background: color-mix(in oklab, var(--ring) 12%, transparent); box-shadow: inset 0 0 0 2px var(--ring); }
+.gt-ses:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.gt-ses .bk-poster { width: max(50px, calc(var(--u) * 3.3)); }
+.gt-ses > span { display: grid; gap: .15em; min-width: 0; line-height: 1.7; }
+.gt-ses b { font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gt-ses small { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .62); }
+.gt-ses .st { justify-self: start; font-size: calc(max(10.5px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); }
+.gt-doors { display: flex; flex-wrap: wrap; border-radius: calc(var(--r) * .8); }
+.gt-doors button { flex: 1 1 10em; display: grid; justify-items: center; gap: .1em; padding: .75em 1em; border-radius: calc(var(--r) * .65); font-weight: var(--fwb); }
+.gt-doors button small { font-weight: 400; }
+.gt-doors button[aria-checked="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.gt-pin { margin: .4em 0 .2em; }
+.gt-go { width: 100%; gap: .5em; margin-top: calc(var(--u) * .7); background: var(--ok); color: #052e16; box-shadow: none; }
+.gt-go:disabled { opacity: .4; cursor: not-allowed; filter: grayscale(.4); }
+.gt-dl { display: grid; gap: .45em; margin: .9em 0 .2em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .75); }
+.gt-dl i { position: relative; height: 6px; border-radius: 3px; overflow: hidden; background: rgba(var(--fg), .1); }
+.gt-dl i::after { content: ""; position: absolute; inset: 0; transform-origin: right; transform: scaleX(var(--p)); background: linear-gradient(90deg, #86efac, var(--ok)); }
+.gt-set .pg-tips { margin-top: calc(var(--u) * 1); }
+
+/* the scanning */
+.gt-bar { display: flex; align-items: center; gap: .8em; padding: .65em .8em; border-radius: calc(var(--r) * 1.1); }
+.gt-bar .bk-poster { width: max(40px, calc(var(--u) * 2.6)); }
+.gt-bar-t { flex: 1; min-width: 0; display: grid; line-height: 1.7; }
+.gt-bar-t b { font-size: calc(max(14.5px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gt-bar-t small { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .62); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gt-door span { font-weight: 800; }
+.gt-ic { position: relative; padding-inline: 0; width: max(32px, calc(var(--u) * 2)); justify-content: center; }
+.gt-ic[aria-pressed="false"] { opacity: .5; }
+.gt-ic[aria-pressed="false"]::after { content: ""; position: absolute; left: 50%; top: 50%; width: 1.5em; height: 2px; border-radius: 2px; background: currentColor; translate: -50% -50%; rotate: -45deg; }
+.gt-net { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .5em; height: max(32px, calc(var(--u) * 2)); padding-inline: .9em; border-radius: 999px; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); color: var(--ok); background: color-mix(in oklab, var(--ok) 14%, transparent); transition: color .3s, background-color .3s; white-space: nowrap; }
+.gt-net i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: gtPing 2s ease-out infinite; }
+.gt-net[data-s="off"] { color: var(--warn); background: color-mix(in oklab, var(--warn) 16%, transparent); }
+.gt-net[data-s="off"] i { animation: none; }
+.gt-net[data-s="sync"] { color: #38bdf8; background: color-mix(in oklab, #38bdf8 14%, transparent); }
+.gt-net[data-s="sync"] i { width: 10px; height: 10px; background: none; border: 2px solid currentColor; border-top-color: transparent; animation: gtSpin .8s linear infinite; }
+.gt-net:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+@keyframes gtPing { 0% { box-shadow: 0 0 0 0 currentColor; } 70%, 100% { box-shadow: 0 0 0 7px transparent; } }
+@keyframes gtSpin { to { transform: rotate(360deg); } }
+.gt-cols { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.gt-side { display: grid; gap: var(--gap); min-width: 0; }
+.gt-scan { display: grid; gap: calc(var(--u) * .8); padding: calc(var(--u) * 1); border-radius: calc(var(--r) * 1.15); }
+.gt-view { position: relative; aspect-ratio: 4 / 3; max-height: 64svh; border-radius: calc(var(--r) * .9); overflow: hidden; isolation: isolate; background: radial-gradient(90% 70% at 50% 40%, #1b1830, #07060c); color: #fff; }
+.gt-view video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .5s; }
+.gt-view.is-cam video { opacity: 1; }
+.gt-corner { --k: rgba(255, 255, 255, .92); --l: 13%; position: absolute; left: 50%; top: 50%; width: min(60cqw, 74cqh); aspect-ratio: 1; translate: -50% -50%; border-radius: 18px; pointer-events: none; z-index: 1;
+  background: linear-gradient(var(--k), var(--k)) top left / var(--l) 3px, linear-gradient(var(--k), var(--k)) top left / 3px var(--l), linear-gradient(var(--k), var(--k)) top right / var(--l) 3px, linear-gradient(var(--k), var(--k)) top right / 3px var(--l), linear-gradient(var(--k), var(--k)) bottom left / var(--l) 3px, linear-gradient(var(--k), var(--k)) bottom left / 3px var(--l), linear-gradient(var(--k), var(--k)) bottom right / var(--l) 3px, linear-gradient(var(--k), var(--k)) bottom right / 3px var(--l); background-repeat: no-repeat; opacity: .35; transition: opacity .4s, box-shadow .5s; }
+.gt-view.is-cam .gt-corner { opacity: 1; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .38); }
+.gt-line { position: absolute; left: 50%; top: 50%; width: min(54cqw, 68cqh); height: 2px; translate: -50% 0; z-index: 2; border-radius: 2px; background: linear-gradient(90deg, transparent, #4ade80, transparent); box-shadow: 0 0 18px 3px rgba(74, 222, 128, .55); opacity: 0; pointer-events: none; }
+.gt-view.is-cam .gt-line { opacity: 1; animation: gtScan 2.2s ease-in-out infinite alternate; }
+@keyframes gtScan { from { transform: translateY(calc(min(26cqw, 32cqh) * -1)); } to { transform: translateY(min(26cqw, 32cqh)); } }
+.gt-view { container-type: size; }
+.gt-idle { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: .7em; padding: 1.2em; text-align: center; }
+.gt-idle .sec-ic { color: #fff; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
+.gt-idle b { font-size: calc(max(16px, calc(var(--u) * 1.05)) * var(--tx) * var(--tx-main)); font-weight: 800; }
+.gt-idle .buy { gap: .5em; background: #fff; color: #0b0a10; }
+.gt-idle .buy:disabled { opacity: .6; }
+.gt-idle small { max-width: 30em; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(255, 255, 255, .7); }
+.gt-view.is-cam .gt-idle { display: none; }
+.gt-camtools { position: absolute; z-index: 3; bottom: 12px; left: 12px; display: none; gap: 8px; }
+.gt-view.is-cam .gt-camtools { display: flex; }
+.gt-camtools .chip { color: #fff; background: rgba(10, 9, 16, .55); backdrop-filter: blur(8px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
+.gt-res { position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; gap: .35em; padding: 1.4em 1.2em 1.8em; text-align: center; color: #fff; cursor: pointer; background: var(--bg); }
+.gt-res[data-tone="ok"] { --bg: radial-gradient(120% 95% at 50% 25%, #22c55e, #065f2c 70%, #03250f); }
+.gt-res[data-tone="okw"] { --bg: radial-gradient(120% 95% at 50% 25%, #22c55e, #065f2c 70%, #03250f); }
+.gt-res[data-tone="warn"] { --bg: radial-gradient(120% 95% at 50% 25%, #f59e0b, #92400e 70%, #3b1703); }
+.gt-res[data-tone="bad"] { --bg: radial-gradient(120% 95% at 50% 25%, #f43f5e, #9f1239 70%, #3f0613); }
+.gt-res-ic { display: grid; place-items: center; width: clamp(64px, 14cqmin, 104px); aspect-ratio: 1; margin-bottom: .3em; border-radius: 50%; background: rgba(255, 255, 255, .2); box-shadow: 0 0 0 10px rgba(255, 255, 255, .08), 0 0 0 22px rgba(255, 255, 255, .04); }
+.gt-res-ic svg.i { width: 52%; height: 52%; stroke-width: 2.6; }
+.gt-res b { font-size: clamp(24px, 7cqmin, 46px); font-weight: 900; line-height: 1.35; }
+.gt-res strong { font-size: clamp(16px, 4.2cqmin, 26px); font-weight: 800; line-height: 1.5; }
+.gt-res span { max-width: 32em; font-size: clamp(13px, 2.6cqmin, 16px); line-height: 1.9; opacity: .92; }
+.gt-res[data-tone="okw"] span { padding: .2em .8em; border-radius: 999px; background: rgba(245, 158, 11, .9); color: #1c0d02; font-weight: 700; opacity: 1; }
+.gt-res small { font: 600 13px var(--font); letter-spacing: .08em; opacity: .75; }
+.gt-res-bar { position: absolute; left: 0; bottom: 0; width: 100%; height: 4px; background: rgba(255, 255, 255, .75); transform-origin: right; animation: gtBar var(--d, 2.2s) linear forwards; }
+@keyframes gtBar { to { transform: scaleX(0); } }
+.gt-run[data-flash]:not([data-flash=""])::after { content: ""; position: fixed; inset: 0; z-index: 70; pointer-events: none; animation: gtFlash 1.1s ease-out forwards; box-shadow: inset 0 0 0 6px var(--fl), inset 0 0 140px color-mix(in oklab, var(--fl) 45%, transparent); }
+.gt-run[data-flash="ok"] { --fl: var(--ok); }
+.gt-run[data-flash="warn"] { --fl: var(--warn); }
+.gt-run[data-flash="bad"] { --fl: var(--bad); }
+@keyframes gtFlash { from { opacity: 1; } to { opacity: 0; } }
+.gt-man { margin: 0; }
+.gt-man .bk-fld { margin: 0; }
+.gt-man input { font-family: ui-monospace, "SF Mono", Menlo, monospace; text-transform: uppercase; }
+.gt-demo { display: flex; flex-wrap: wrap; align-items: center; gap: .45em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.gt-demo span { margin-inline-end: .2em; }
+
+.gt-stats, .gt-log { padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); }
+.gt-stats h2, .gt-log h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.gt-stats h2 svg.i, .gt-log h2 svg.i { width: 1.2em; height: 1.2em; color: var(--ok); }
+.gt-live { margin-inline-start: auto; display: inline-flex; align-items: center; gap: .45em; font-size: .72em; font-weight: var(--fwm); color: var(--ok); }
+.gt-live i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: gtPing 2s ease-out infinite; }
+.gt-top { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: calc(var(--u) * 1.3); }
+.gt-ringw { position: relative; width: clamp(118px, calc(var(--u) * 9), 168px); aspect-ratio: 1; }
+.gt-ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.gt-ring circle { fill: none; stroke-width: 11; }
+.gt-ring .bg { stroke: rgba(var(--fg), .09); }
+.gt-ring .fg { stroke: var(--ok); stroke-linecap: round; transition: stroke-dasharray .9s var(--ease); filter: drop-shadow(0 0 6px color-mix(in oklab, var(--ok) 55%, transparent)); }
+.gt-ring-t { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; line-height: 1.3; }
+.gt-ring-t b { font-size: calc(max(26px, calc(var(--u) * 1.9)) * var(--tx) * var(--tx-main)); font-weight: 900; font-variant-numeric: tabular-nums; }
+.gt-ring-t small { font-size: calc(max(11px, calc(var(--u) * .7)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.gt-top.is-pulse .gt-ringw { animation: gtPulse .7s var(--ease); }
+@keyframes gtPulse { 40% { transform: scale(1.04); } }
+.gt-nums { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * .8) calc(var(--u) * 1.2); margin: 0; }
+.gt-nums div { display: grid; gap: .1em; }
+.gt-nums dt { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.gt-nums dd { margin: 0; font-size: calc(max(20px, calc(var(--u) * 1.4)) * var(--tx) * var(--tx-main)); font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1.35; }
+.gt-doorsum { display: grid; gap: .55em; margin-top: calc(var(--u) * 1.2); }
+.gt-d { display: grid; grid-template-columns: 6.5em minmax(0, 1fr) 4.5em; align-items: center; gap: .8em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.gt-d span { display: inline-flex; align-items: center; gap: .4em; font-weight: var(--fwm); }
+.gt-d em { font-style: normal; font-size: .82em; padding: 0 .5em; border-radius: 999px; color: #052e16; background: var(--ok); }
+.gt-d i { position: relative; height: 8px; border-radius: 4px; overflow: hidden; background: rgba(var(--fg), .08); }
+.gt-d i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; transform-origin: right; transform: scaleX(var(--p)); background: linear-gradient(270deg, rgba(var(--fg), .5), rgba(var(--fg), .3)); transition: transform .8s var(--ease); }
+.gt-d.is-me i::after { background: linear-gradient(270deg, var(--ok), #86efac); }
+.gt-d b { text-align: end; font-variant-numeric: tabular-nums; }
+.gt-spark { display: grid; gap: .45em; margin-top: calc(var(--u) * 1.3); }
+.gt-spark > span { display: flex; justify-content: space-between; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .78); }
+.gt-spark > span small { font-weight: 400; color: rgba(var(--fg), .5); }
+#gtSpark { direction: ltr; display: flex; align-items: flex-end; gap: 5px; height: 60px; }
+#gtSpark i { flex: 1; height: calc(4px + var(--p) * 56px); border-radius: 4px 4px 2px 2px; background: color-mix(in oklab, var(--ok) 45%, rgba(var(--fg), .12)); transition: height .8s var(--ease); }
+#gtSpark i.is-now { background: var(--ok); }
+.gt-axis { direction: ltr; display: flex; justify-content: space-between; margin: 0; font-size: calc(max(10.5px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .45); }
+.gt-probs { display: flex; flex-wrap: wrap; gap: .45em; margin-top: calc(var(--u) * 1.1); }
+.gt-probs span { display: inline-flex; align-items: center; gap: .45em; padding: .35em .85em; border-radius: 999px; background: rgba(var(--fg), .06); font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.gt-probs b { font-variant-numeric: tabular-nums; }
+.gt-probs [data-r="dup"] b, .gt-probs [data-r="bad"] b { color: var(--bad); }
+.gt-probs [data-r="wrong"] b, .gt-probs [data-r="q"] b { color: var(--warn); }
+.gt-log ol { list-style: none; margin: calc(var(--u) * .8) 0 0; padding: 0; display: grid; gap: 2px; max-height: min(460px, 52svh); overflow: auto; overscroll-behavior: contain; }
+.gt-log li { display: grid; grid-template-columns: 3.4em 9px minmax(0, 1fr) auto; align-items: center; gap: .7em; padding: .5em .65em; border-radius: 10px; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.gt-log li:nth-child(odd) { background: rgba(var(--fg), .035); }
+.gt-log li time { font-variant-numeric: tabular-nums; color: rgba(var(--fg), .55); }
+.gt-log li > i { width: 9px; height: 9px; border-radius: 50%; background: var(--c, var(--ok)); }
+.gt-log li[data-tone="bad"] { --c: var(--bad); }
+.gt-log li[data-tone="warn"] { --c: var(--warn); }
+.gt-log li span { display: grid; min-width: 0; line-height: 1.6; }
+.gt-log li span b { font-weight: 700; }
+.gt-log li span small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgba(var(--fg), .6); }
+.gt-log li em { font-style: normal; font-size: .9em; white-space: nowrap; color: rgba(var(--fg), .55); }
+.gt-log li.gt-empty { display: block; color: rgba(var(--fg), .55); }
+.gt-pick-l { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.gt-pick-l li { display: flex; align-items: center; gap: .7em; padding: .55em .75em; border-radius: 10px; background: rgba(var(--fg), .04); font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); }
+.gt-pick-l li > i { width: 10px; height: 10px; flex: none; border-radius: 50%; background: var(--c); }
+.gt-pick-l li span { flex: 1; }
+.gt-pick h2 small { margin-inline-start: auto; font-size: .7em; font-weight: var(--fwm); color: rgba(var(--fg), .6); }
+.gt-pick .buy, .gt-endbox .buy { background: var(--ok); color: #052e16; }
+.gt-endbox .gt-nums { grid-template-columns: repeat(3, 1fr); margin: .4em 0 .6em; }
+.gt-endbox .buy:disabled { opacity: .45; cursor: not-allowed; }
+
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .gt-cols { grid-template-columns: minmax(0, 1fr); }
+  .gt-view { aspect-ratio: 1; max-height: none; }
+  .gt-corner { width: min(70cqw, 70cqh); }
+  .gt-line { width: min(62cqw, 62cqh); }
+  .gt-bar { flex-wrap: wrap; gap: .55em; }
+  .gt-bar-t { flex: 1 1 calc(100% - 60px); }
+  .gt-bar .chip, .gt-net { height: 34px; }
+  .gt-bar #gtEnd { margin-inline-start: auto; }
+  .gt-scan { padding: 10px; }
+  .gt-top { gap: 16px; }
+  .gt-d { grid-template-columns: 5.6em minmax(0, 1fr) 3.6em; }
+}
+
+/* the footer's line for the partners: the organisers', the admin's and the doors' desks */
+.ft-work { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .3em 1em; }
+.ft-work span { color: rgba(var(--fg), .5); }
 
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -1693,7 +1863,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
             <div class="ft-trust" aria-label="جای نمادهای اعتماد"><span><svg class="i" aria-hidden="true"><use href="#i-shield-ok"/></svg>نماد اعتماد<br>الکترونیکی</span><span><svg class="i" aria-hidden="true"><use href="#i-award"/></svg>نشان<br>ساماندهی</span></div>
           </div>
         </div>
-        <div class="ft-end"><span>همه‌ی حقوق برای بلیت محفوظ است · خرید آنلاین بلیت کنسرت، تئاتر و جُنگ</span><a href="#hero" data-go="top"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg>برگشت به بالای صفحه</a></div>
+        <div class="ft-end"><span>همه‌ی حقوق برای بلیت محفوظ است · خرید آنلاین بلیت کنسرت، تئاتر و جُنگ</span><nav class="ft-work" aria-label="ورود همکاران"><span>همکاران:</span><a href="#/org">برگزارکننده‌ها</a><a href="#/admin">مدیر سایت</a><a href="#/gate">کنترل ورود</a></nav><a href="#hero" data-go="top"><svg class="i" aria-hidden="true"><use href="#i-up"/></svg>برگشت به بالای صفحه</a></div>
       </footer>
     </div>
   </section>
@@ -4243,7 +4413,8 @@ const buy = {
     if (v.kind === 'seats') this.seats(v); else if (v.kind === 'pay') this.pay(v); else if (v.kind === 'ticket') this.ticket(v); else pages.render(v);
     // one clock for the hold's timers
     this.tick = setInterval(() => this.clock(), 1000); this.clock();
-    page.leave = () => { clearInterval(this.tick); clearTimeout(this.live); this.tick = 0; this.live = 0; };
+    const inner = page.leave;   // a page's own (the gate's camera, a desk's timers)
+    page.leave = () => { clearInterval(this.tick); clearTimeout(this.live); this.tick = 0; this.live = 0; if (inner) inner(); };
   },
   holdFor(e, s) { const h = store.sget('blit.hold', null); return h && h.eid === e.id && h.sid === s.id && h.until > Date.now() ? h : null; },
   clock() {
@@ -4287,7 +4458,7 @@ const buy = {
       <div class="evp-cols bk-cols">
         <section class="panel bk-map evp-rise" aria-label="نقشه‌ی سالن">
           <div class="bk-mhead">
-            <div class="seg" role="tablist" aria-label="بخش‌های سالن"><button type="button" role="tab" data-z="-1" aria-selected="${this.zone < 0}">کل سالن</button>${this.plan.secs.map((z, i) => `<button type="button" role="tab" data-z="${i}" aria-selected="${i === this.zone}">${esc(z.sec.t)}<small>${this.freeOf(z)}</small></button>`).join('')}</div>
+            <div class="bk-seg" role="tablist" aria-label="بخش‌های سالن"><button type="button" role="tab" data-z="-1" aria-selected="${this.zone < 0}">کل سالن</button>${this.plan.secs.map((z, i) => `<button type="button" role="tab" data-z="${i}" aria-selected="${i === this.zone}">${esc(z.sec.t)}<small>${this.freeOf(z)}</small></button>`).join('')}</div>
             <span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span>
           </div>
           <div class="st-view" tabindex="-1"><div class="st-canvas"></div></div>
@@ -4317,7 +4488,7 @@ const buy = {
   freeOf(z) { if (z.ga) return `${fa(z.ga.left - [...this.cart.values()].filter((x) => x.ga && x.zid === z.sec.id).length)} جا`; return `${fa(z.seats.filter((x) => x.st === 'free').length)} آزاد`; },
   wireSeats(e, s, ses) {
     const el = page.el;
-    $$('.seg [data-z]', el).forEach((b) => b.addEventListener('click', () => this.focusZone(+b.dataset.z)));
+    $$('.bk-seg [data-z]', el).forEach((b) => b.addEventListener('click', () => this.focusZone(+b.dataset.z)));
     $$('.bk-chips .chip', el).forEach((b) => b.addEventListener('click', () => {
       const t = b.dataset.t;
       if (!t) this.tiers.clear(); else if (this.tiers.has(t)) this.tiers.delete(t); else this.tiers.add(t);
@@ -4363,7 +4534,7 @@ const buy = {
   // a tab or a section's label: the map goes into that section (or back to the whole hall)
   focusZone(i, instant) {
     this.zone = i;
-    $$('.seg [data-z]', page.el).forEach((x) => x.setAttribute('aria-selected', String(+x.dataset.z === i)));
+    $$('.bk-seg [data-z]', page.el).forEach((x) => x.setAttribute('aria-selected', String(+x.dataset.z === i)));
     $$('.st-sec', page.el).forEach((x) => x.classList.toggle('is-on', +x.dataset.z === i));
     const z = this.plan.secs[i];
     if (i < 0 || !z || !z.b) { this.fit(instant); return; }
@@ -4381,7 +4552,7 @@ const buy = {
       this.cart.set(`ga:${zid}:${n}`, { key: `ga:${zid}:${n}`, zid, zone: z.ga.zone, word: '', row: 0, n, t: z.ga.t, c: z.ga.c, price: z.ga.price, ga: true });
     } else if (have.length) this.cart.delete(have[have.length - 1].key);
     const b = $(`.st-stand[data-ga="${zid}"]`, page.el); if (b) { $('.ga-left', b).textContent = this.freeOf(z); if (d > 0 && MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
-    const tab = $(`.seg [data-z="${this.plan.secs.indexOf(z)}"] small`, page.el); if (tab) tab.textContent = this.freeOf(z);
+    const tab = $(`.bk-seg [data-z="${this.plan.secs.indexOf(z)}"] small`, page.el); if (tab) tab.textContent = this.freeOf(z);
     this.cartPaint(e, s);
   },
   paintSeats() {
@@ -4489,7 +4660,7 @@ const buy = {
       const flip = (x, to) => { x.st = to; const b = $(`.seat[data-k="${x.key}"]`, page.el); if (b) { b.dataset.st = to; b.setAttribute('aria-disabled', 'true'); if (to === 'free') b.removeAttribute('aria-disabled'); b.classList.remove('is-live'); void b.offsetWidth; b.classList.add('is-live'); } };
       if (free.length && R() < 0.75) flip(free[Math.floor(R() * free.length)], 'held');
       if (held.length && R() < 0.4) flip(held[Math.floor(R() * held.length)], R() < 0.7 ? 'sold' : 'free');
-      this.plan.secs.forEach((z, i) => { const tab = $(`.seg [data-z="${i}"] small`, page.el); if (tab && !z.ga) tab.textContent = this.freeOf(z); });
+      this.plan.secs.forEach((z, i) => { const tab = $(`.bk-seg [data-z="${i}"] small`, page.el); if (tab && !z.ga) tab.textContent = this.freeOf(z); });
       n = clamp(n + Math.round((R() - 0.5) * 4), 2, 40); if (watchers) watchers.textContent = `${fa(n)} نفر همین الان دارن صندلی انتخاب می‌کنن`;
       this.live = setTimeout(step, 2600 + R() * 2600);
     };
@@ -4515,8 +4686,8 @@ const buy = {
           <section class="panel bk-who evp-rise" aria-labelledby="bkWhoH">
             <h2 id="bkWhoH">${ico('users')}خریدار<small>بدون ثبت‌نام</small></h2>
             <p class="bk-lead">فقط شماره‌ی موبایلت لازمه: بلیت همین‌جا نشونت داده می‌شه و پیامک هم می‌شه؛ بعداً با همین شماره و کد پیامکی همه‌ی بلیت‌هات پیدا می‌شن.</p>
-            <label class="fld"><span>شماره‌ی موبایل</span><input id="bkPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" maxlength="13" value="${esc(this.payState.phone ? fa(this.payState.phone) : '')}" dir="ltr"></label>
-            <label class="fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی"></label>
+            <label class="bk-fld"><span>شماره‌ی موبایل</span><input id="bkPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" maxlength="13" value="${esc(this.payState.phone ? fa(this.payState.phone) : '')}" dir="ltr"></label>
+            <label class="bk-fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی"></label>
             ${busy ? `<div class="bk-otp" id="bkOtp"><p>${ico('shield-ok')}این اجرا پرطرفداره؛ برای اینکه ربات‌ها بلیت نخرن، شماره با یه کد پیامکی تأیید می‌شه.</p><div class="bk-otp-row"><button type="button" class="chip" id="bkSend">فرستادن کد</button><div class="otp" id="bkCode" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><span class="bk-otp-st" id="bkOtpSt"></span></div></div>` : ''}
           </section>
           <section class="panel bk-way evp-rise" aria-labelledby="bkWayH">
@@ -4553,7 +4724,7 @@ const buy = {
     const el = page.el, st = this.payState;
     $$('[data-act="rules"]', el).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); page.rules(); }));
     const ph = $('#bkPhone', el);
-    ph.addEventListener('input', () => { const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); st.phone = d; ph.closest('.fld').classList.remove('is-bad'); });
+    ph.addEventListener('input', () => { const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); st.phone = d; ph.closest('.bk-fld').classList.remove('is-bad'); });
     $('#bkDiscGo', el).addEventListener('click', () => {
       const c = enDigits($('#bkDisc', el).value).trim().toUpperCase(), out = $('#bkDiscSt', el);
       if (!c) { st.code = ''; out.textContent = ''; this.invoice(); return; }
@@ -4568,7 +4739,7 @@ const buy = {
       let wait = 0, t = 0;
       const tick = () => { if (wait <= 0) { send.disabled = false; send.textContent = 'فرستادن دوباره‌ی کد'; return; } send.textContent = `فرستادن دوباره تا ${mmss(wait * 1000)}`; wait--; t = setTimeout(tick, 1000); };
       send.addEventListener('click', () => {
-        if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.fld').classList.add('is-bad'); toast('اول شماره‌ی موبایل درست رو بنویس (۱۱ رقم، با ۰۹).'); ph.focus(); return; }
+        if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.bk-fld').classList.add('is-bad'); toast('اول شماره‌ی موبایل درست رو بنویس (۱۱ رقم، با ۰۹).'); ph.focus(); return; }
         $('#bkCode', el).hidden = false; boxes[0].focus(); send.disabled = true; wait = 90; clearTimeout(t); tick();
         stl.textContent = `کد به ${maskPhone(st.phone)} پیامک شد (برای آزمایش: ۱۲۳۴۵).`;
       });
@@ -4581,7 +4752,7 @@ const buy = {
       const prev = page.leave; page.leave = () => { clearTimeout(t); if (prev) prev(); };
     }
     $('#bkPay', el).addEventListener('click', () => {
-      if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.fld').classList.add('is-bad'); toast('شماره‌ی موبایل رو درست بنویس؛ بلیت به همین شماره پیامک می‌شه.'); ph.focus(); return; }
+      if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.bk-fld').classList.add('is-bad'); toast('شماره‌ی موبایل رو درست بنویس؛ بلیت به همین شماره پیامک می‌شه.'); ph.focus(); return; }
       if (!st.otp) { const o = $('#bkOtp', el); o.classList.remove('is-shake'); void o.offsetWidth; o.classList.add('is-shake'); toast('اول شماره رو با کد پیامکی تأیید کن.'); return; }
       store.set('blit.phone', st.phone); st.name = $('#bkName', el).value.trim();
       this.gateway();
@@ -4593,9 +4764,9 @@ const buy = {
     box.className = 'evp-modal gw'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'درگاه پرداخت');
     box.innerHTML = `<div class="evp-dlg panel gw-box">
       <div class="gw-head">${ico('shield-ok')}<div><b>درگاه پرداخت اینترنتی (نمونه‌ی آزمایشی)</b><span>پذیرنده: بلیت · مبلغ: <b>${money(st.total)} تومان</b></span></div></div>
-      <label class="fld"><span>شماره‌ی کارت</span><input id="gwCard" inputmode="numeric" maxlength="19" dir="ltr" placeholder="6037 •••• •••• ••••" autocomplete="cc-number"></label>
-      <div class="gw-row"><label class="fld"><span>CVV2</span><input id="gwCvv" inputmode="numeric" maxlength="4" dir="ltr" autocomplete="cc-csc"></label><label class="fld"><span>ماه / سال انقضا</span><input id="gwExp" inputmode="numeric" maxlength="5" dir="ltr" placeholder="12/08" autocomplete="cc-exp"></label></div>
-      <div class="gw-row"><label class="fld"><span>رمز دوم (پویا)</span><input id="gwPin" inputmode="numeric" maxlength="8" dir="ltr" autocomplete="one-time-code"></label><button type="button" class="chip" id="gwOtp">درخواست رمز پویا</button></div>
+      <label class="bk-fld"><span>شماره‌ی کارت</span><input id="gwCard" inputmode="numeric" maxlength="19" dir="ltr" placeholder="6037 •••• •••• ••••" autocomplete="cc-number"></label>
+      <div class="gw-row"><label class="bk-fld"><span>CVV2</span><input id="gwCvv" inputmode="numeric" maxlength="4" dir="ltr" autocomplete="cc-csc"></label><label class="bk-fld"><span>ماه / سال انقضا</span><input id="gwExp" inputmode="numeric" maxlength="5" dir="ltr" placeholder="12/08" autocomplete="cc-exp"></label></div>
+      <div class="gw-row"><label class="bk-fld"><span>رمز دوم (پویا)</span><input id="gwPin" inputmode="numeric" maxlength="8" dir="ltr" autocomplete="one-time-code"></label><button type="button" class="chip" id="gwOtp">درخواست رمز پویا</button></div>
       <p class="bk-note">${ico('info')}این یه درگاه آزمایشیه؛ برای امتحان هر عددی بنویس. درگاه و پنل پیامک واقعی بعد از گرفتن اینماد وصل می‌شن.</p>
       <div class="evp-dlg-end"><button type="button" class="buy" data-ok>${ico('shield-ok')}پرداخت</button><button type="button" class="chip" data-x>انصراف</button></div>
       <div class="gw-wait" hidden><i class="spin" aria-hidden="true"></i><b>در حال پرداخت…</b><span>این صفحه رو نبند.</span></div>
@@ -4663,7 +4834,7 @@ const buy = {
           <p class="tk-addr">${ico('pin')}${esc(h.addr)}</p>
         </div>
         <span class="tk-perf" aria-hidden="true"></span>
-        <div class="tk-qr">${qrSVG(`BLIT|${o.code}|${x.key}`)}<small dir="ltr">${esc(o.code)}-${fa(i + 1)}</small><span>${money(x.price)} تومان</span></div>
+        <div class="tk-qr">${qrSVG(qrText(o.code, o.sid, x.key))}<small dir="ltr">${esc(o.code)}-${fa(i + 1)}</small><span>${money(x.price)} تومان</span></div>
       </article>`).join('')}</div>
       <section class="panel tk-help evp-rise"><h2>${ico('info')}روز اجرا</h2><ul><li>یک ساعت پیش از شروع در سالن باش؛ پس از شروع، ورود ممکن نیست.</li><li>کد QR هر بلیت رو دم در نشون بده (روی گوشی یا چاپی)؛ هر کد فقط یک بار باز می‌شه.</li><li>بلیت شخصیه؛ برای همراهانت هر کدوم یه بلیت جدا داره.</li></ul></section>
     </div>`;
@@ -4725,11 +4896,12 @@ const pages = {
     if ((m = /^#\/search\/(.*)$/.exec(h))) return { kind: 'search', q: decodeURIComponent(m[1]) };
     if ((m = /^#\/c\/(soon|(?:concert|theatre|comedy)-(?:tehran|other))$/.exec(h))) return { kind: 'cat', key: m[1].replace('-', ':') };
     if ((m = /^#\/city\/([^/?#]+)$/.exec(h))) return { kind: 'city', city: decodeURIComponent(m[1]) };
-    return null;
+    return gate.parse(h) || (typeof desk !== 'undefined' ? desk.parse(h) : null);
   },
   render(v) {
     const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city }[v.kind];
-    if (fn) fn.call(this, v);
+    if (!fn) { if (v.kind === 'gate') gate.render(v); else desk.render(v); return; }
+    fn.call(this, v);
     const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', page.el).appendChild(c); page.wireFooter(c); }
     $$('.evp-in .tkt', page.el).forEach((c) => c.classList.add('is-in'));
   },
@@ -4749,10 +4921,10 @@ const pages = {
       <div class="evp-cols">
         <div class="evp-main">
           <section class="panel pg-box evp-rise" aria-labelledby="rcCodeH"><h2 id="rcCodeH">${ico('ticket')}با کد پیگیری</h2>
-            <form class="rc-row" id="rcCode"><label class="fld"><span>کد پیگیری</span><input id="rcCodeIn" dir="ltr" placeholder="BL-XXXX-XXXX" autocomplete="off"></label><button type="submit" class="buy">${ico('search')}پیدا کن</button></form>
+            <form class="rc-row" id="rcCode"><label class="bk-fld"><span>کد پیگیری</span><input id="rcCodeIn" dir="ltr" placeholder="BL-XXXX-XXXX" autocomplete="off"></label><button type="submit" class="buy">${ico('search')}پیدا کن</button></form>
             <p class="bk-code-st" id="rcCodeSt"></p></section>
           <section class="panel pg-box evp-rise" aria-labelledby="rcPhH"><h2 id="rcPhH">${ico('users')}با شماره‌ی موبایل</h2>
-            ${u ? `<p class="bk-lead">وارد شدی با ${esc(maskPhone(u.phone))}؛ همه‌ی خریدهات پایین هست. <a href="#" data-act="out">خروج</a></p>` : `<div class="rc-row"><label class="fld"><span>شماره‌ی موبایل</span><input id="rcPhone" type="tel" inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹"></label><button type="button" class="chip" id="rcSend">فرستادن کد</button></div>
+            ${u ? `<p class="bk-lead">وارد شدی با ${esc(maskPhone(u.phone))}؛ همه‌ی خریدهات پایین هست. <a href="#" data-act="out">خروج</a></p>` : `<div class="rc-row"><label class="bk-fld"><span>شماره‌ی موبایل</span><input id="rcPhone" type="tel" inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹"></label><button type="button" class="chip" id="rcSend">فرستادن کد</button></div>
             <div class="otp" id="rcOtp" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><p class="bk-otp-st" id="rcSt"></p>`}
           </section>
         </div>
@@ -4791,7 +4963,7 @@ const pages = {
         <h2>${ico('spark')}چی فرق داره</h2><ul class="pg-tips"><li>پلان واقعی هر سالن با بالکن، لژ، میز و جای ایستاده</li><li>شمارش معکوس شروع فروش و سایتی که زیر فشار همون لحظه هم سریع می‌مونه</li><li>تم تیره و روشن، روی گوشی و کامپیوتر</li></ul></section>`;
     } else {
       body = `<div class="evp-cols"><div class="evp-main"><section class="panel pg-box evp-rise"><h2>${ico('info')}پرسش‌های پرتکرار</h2><div class="faq">${FAQ.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(q)}${ico('down')}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
-        <section class="panel pg-box evp-rise"><h2>${ico('headset')}برامون بنویس</h2><form id="pgForm" class="pg-form"><label class="fld"><span>نام</span><input required autocomplete="name"></label><label class="fld"><span>شماره‌ی موبایل</span><input required type="tel" inputmode="numeric" dir="ltr" maxlength="11"></label><label class="fld full"><span>موضوع</span><select><option>پیگیری خرید</option><option>مشکل پرداخت</option><option>پیشنهاد</option><option>همکاری (برگزارکننده‌ها)</option></select></label><label class="fld full"><span>پیام</span><textarea rows="4" required></textarea></label><button type="submit" class="buy">${ico('check')}فرستادن</button></form></section></div>
+        <section class="panel pg-box evp-rise"><h2>${ico('headset')}برامون بنویس</h2><form id="pgForm" class="pg-form"><label class="bk-fld"><span>نام</span><input required autocomplete="name"></label><label class="bk-fld"><span>شماره‌ی موبایل</span><input required type="tel" inputmode="numeric" dir="ltr" maxlength="11"></label><label class="bk-fld full"><span>موضوع</span><select><option>پیگیری خرید</option><option>مشکل پرداخت</option><option>پیشنهاد</option><option>همکاری (برگزارکننده‌ها)</option></select></label><label class="bk-fld full"><span>پیام</span><textarea rows="4" required></textarea></label><button type="submit" class="buy">${ico('check')}فرستادن</button></form></section></div>
         <aside class="evp-side"><section class="panel pg-box evp-rise"><h2>${ico('headset')}پشتیبانی</h2><ul class="pg-tips"><li>هر روز از ۹ صبح تا ۱۲ شب</li><li>تلفن: <span dir="ltr">۰۲۱ ۰۰۰۰ ۰۰۰۰</span> (نمونه)</li><li>ایمیل: <span dir="ltr">support@blit.example</span></li><li>پیگیری خرید بدون تماس: <a href="#/receipts">اینجا</a></li></ul></section></aside></div>`;
     }
     const box = this.wrap(`pg-st pg-${v.name}`, this.head(d.t, d.icon, d.lead) + body);
@@ -4838,10 +5010,10 @@ const auth = {
   wireOtp(root, phSel, sendSel, otpSel, stSel, done) {
     const ph = $(phSel, root), send = $(sendSel, root), otp = $(otpSel, root), st = $(stSel, root), boxes = $$('input', otp);
     let phone = '', wait = 0, t = 0;
-    ph.addEventListener('input', () => { const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); phone = d; ph.closest('.fld').classList.remove('is-bad'); });
+    ph.addEventListener('input', () => { const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); phone = d; ph.closest('.bk-fld').classList.remove('is-bad'); });
     const tick = () => { if (wait <= 0) { send.disabled = false; send.textContent = 'فرستادن دوباره‌ی کد'; return; } send.textContent = `فرستادن دوباره تا ${mmss(wait * 1000)}`; wait--; t = setTimeout(tick, 1000); };
     send.addEventListener('click', () => {
-      if (!/^09\d{9}$/.test(phone)) { ph.closest('.fld').classList.add('is-bad'); st.className = 'bk-otp-st bad'; st.textContent = 'شماره‌ی موبایل ۱۱ رقمه و با ۰۹ شروع می‌شه.'; ph.focus(); return; }
+      if (!/^09\d{9}$/.test(phone)) { ph.closest('.bk-fld').classList.add('is-bad'); st.className = 'bk-otp-st bad'; st.textContent = 'شماره‌ی موبایل ۱۱ رقمه و با ۰۹ شروع می‌شه.'; ph.focus(); return; }
       otp.hidden = false; boxes.forEach((b) => { b.value = ''; b.disabled = false; }); boxes[0].focus(); send.disabled = true; wait = 90; clearTimeout(t); tick();
       st.className = 'bk-otp-st'; st.textContent = `کد ۵ رقمی به ${maskPhone(phone)} پیامک شد (برای آزمایش: ۱۲۳۴۵).`;
     });
@@ -4857,7 +5029,7 @@ const auth = {
     const box = document.createElement('div'); box.className = 'evp-modal'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'ورود یا ثبت‌نام');
     box.innerHTML = `<div class="evp-dlg panel au-box"><button type="button" class="au-x" data-x aria-label="بستن">${ico('x')}</button>
       <span class="sec-ic au-ic" aria-hidden="true">${ico('users')}</span><h2>ورود یا ثبت‌نام</h2><p class="bk-lead">با شماره‌ی موبایل و یه کد پیامکی؛ رمز عبور لازم نیست. اگه حساب نداشته باشی همین‌جا ساخته می‌شه.</p>
-      <div class="rc-row"><label class="fld"><span>شماره‌ی موبایل</span><input id="auPhone" type="tel" inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" autocomplete="tel"></label><button type="button" class="chip" id="auSend">فرستادن کد</button></div>
+      <div class="rc-row"><label class="bk-fld"><span>شماره‌ی موبایل</span><input id="auPhone" type="tel" inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" autocomplete="tel"></label><button type="button" class="chip" id="auSend">فرستادن کد</button></div>
       <div class="otp" id="auOtp" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr" autocomplete="${i === 0 ? 'one-time-code' : 'off'}">`).join('')}</div>
       <p class="bk-otp-st" id="auSt"></p><p class="bk-note">${ico('shield')}با ورود، <a href="#/p/rules" data-x>قوانین بلیت</a> رو می‌پذیری.</p></div>`;
     $('#app').appendChild(box);
@@ -4907,6 +5079,411 @@ const drawer = {
     gsap.fromTo($('.dr-sheet', box), { x: '100%' }, { x: 0, duration: 0.55, ease: 'expo.out' });
   },
   init() { const b = $('#menuBtn'); if (b) b.addEventListener('click', () => this.open()); },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the entry control at the hall's doors (brief §2.4: scan the QR, tell a ticket used twice, the doors, live numbers, offline):
+   #/gate            choose the session, the door and type the controller's code (the organiser gives it; demo ۱۲۳۴)
+   #/gate/<session>  the scanning: the camera reads a ticket's QR (BarcodeDetector where the browser has it, jsQR otherwise),
+                     a hand scanner (USB or Bluetooth: it types the code and Enter) or the code typed in. A ticket is let in
+                     once; a second scan says when and at which door it came in. The session's list of tickets is downloaded
+                     at the start, so the door works without the internet: the scans made offline wait in a queue and are
+                     sent when it is back (and a ticket let in at two doors meanwhile is reported). Every ticket's QR carries
+                     the session and a signature (here a demo one), so a door can tell a forged ticket without the server.
+   The other doors are simulated: people come in through them while you look.
+   ════════════════════════════════════════════════════════════════ */
+const GATES = [{ id: 'g1', t: 'درِ ۱', s: 'ورودی اصلی' }, { id: 'g2', t: 'درِ ۲', s: 'بالکن و سکوها' }, { id: 'g3', t: 'درِ ۳', s: 'لژ، میزها و مهمان‌ها' }];
+const GATE_PIN = '1234';
+const gateName = (g) => (GATES.find((y) => y.id === g) || { t: g }).t;
+const qrSig = (code, sid, key) => (seedOf(`${code}|${sid}|${key}|blit-demo`) >>> 0).toString(36).toUpperCase().padStart(5, '0').slice(-5);
+const qrText = (code, sid, key) => `BLIT2|${code}|${sid}|${key}|${qrSig(code, sid, key)}`;
+const sesById = (sid) => { const i = String(sid).lastIndexOf('-'); const e = i > 0 && showById(sid.slice(0, i)); const s = e && sessionsOf(e).find((x) => x.id === sid); return e && s ? { e, s } : null; };
+const doorOfSec = (sec) => (sec.k === 'boxes' || sec.k === 'tables' ? 'g3' : /^(b\d?|s[blr])$/.test(sec.id) ? 'g2' : 'g1');
+const hhmm = (t) => F.time.format(new Date(t));
+const RES = {
+  ok: { t: 'ورود مجاز', icon: 'check', tone: 'ok' },
+  dup: { t: 'قبلاً وارد شده', icon: 'x', tone: 'bad' },
+  wrong: { t: 'مال این سانس نیست', icon: 'info', tone: 'warn' },
+  bad: { t: 'بلیت نامعتبر', icon: 'x', tone: 'bad' },
+};
+
+// the session's tickets: the ones bought in this browser, then a ticket for every seat the seat map shows sold (the same draw),
+// in orders of one to four seats side by side, each order with its tracking code; a standing area's places are numbered
+function gateTickets(e, s) {
+  const L = seatPlan(e, s), R = rngOf(seedOf(s.id + ':gate')), mine = new Set(store.get('blit.taken', {})[s.id] || []);
+  const T = new Map(), byCode = new Map();
+  const add = (code, x, door, own) => { const t = { k: `${code}|${x.key}`, code, key: x.key, name: seatName(x), zone: x.zone, c: x.c, door, own }; T.set(t.k, t); if (!byCode.has(code)) byCode.set(code, []); byCode.get(code).push(t); };
+  const doorOfKey = (key) => { const z = L.secs.find((q) => key.startsWith(`${q.sec.id}-`) || key.startsWith(`ga:${q.sec.id}:`)); return z ? doorOfSec(z.sec) : 'g1'; };
+  for (const o of store.get('blit.orders', [])) if (o.sid === s.id) o.seats.forEach((x) => add(o.code, x, doorOfKey(x.key), true));
+  const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', code = () => { let c = ''; for (let i = 0; i < 8; i++) c += A[Math.floor(R() * A.length)]; return `BL-${c.slice(0, 4)}-${c.slice(4)}`; };
+  for (const z of L.secs) {
+    const door = doorOfSec(z.sec);
+    if (z.ga) {
+      const n = Math.max(0, Math.round(z.sec.cap * 0.8) - z.ga.left - [...mine].filter((k) => k.startsWith(`ga:${z.sec.id}:`)).length);
+      for (let i = 1; i <= n;) { const c = code(), m = 1 + Math.floor(R() * R() * 4); for (let j = 0; j < m && i <= n; j++, i++) add(c, { ga: true, key: `ga:${z.sec.id}:x${i}`, zone: z.ga.zone, n: i, c: z.ga.c }, door, false); }
+      continue;
+    }
+    const sold = z.seats.filter((p) => p.st === 'sold' && !mine.has(p.key));
+    for (let i = 0; i < sold.length;) { const c = code(), m = 1 + Math.floor(R() * R() * 4); sold.slice(i, i + m).forEach((p) => add(c, p, door, false)); i += m; }
+  }
+  return { T, byCode };
+}
+
+const gate = {
+  v: null, e: null, s: null, g: 'g1', T: null, byCode: null, st: null, sound: true, off: false, q: [], missed: 0,
+  stream: null, det: null, cam: 0, sim: 0, res: 0, last: '', lastAt: 0, buf: '', bufAt: 0, facing: 'environment', mineN: 0,
+  parse(h) {
+    if (h === '#/gate') return { kind: 'gate' };
+    const m = /^#\/gate\/([^/?#]+)$/.exec(h);
+    if (m) return { kind: 'gate', sid: decodeURIComponent(m[1]) };
+    return null;
+  },
+  render(v) {
+    this.stop();
+    const sel = store.sget('blit.gateSel', null);
+    if (v.sid && store.sget('blit.gateOk', null) === v.sid && sesById(v.sid)) this.scan(v.sid, (sel && sel.g) || 'g1');
+    else this.setup(v.sid || (sel && sel.sid) || null);
+    page.leave = () => this.stop();
+  },
+  stop() {
+    this.camOff(); clearTimeout(this.sim); clearTimeout(this.res); this.sim = 0;
+    if (this.keyFn) { document.removeEventListener('keydown', this.keyFn, true); this.keyFn = null; }
+    if (this.netFn) { removeEventListener('online', this.netFn); removeEventListener('offline', this.netFn); this.netFn = null; }
+    this.on = false;
+  },
+
+  /* ───── the start: which session, which door, the controller's code ───── */
+  sessions() {
+    const own = new Set(store.get('blit.orders', []).map((o) => o.sid)), out = [];
+    for (const e of LIST()) { if (['held', 'cancelled', 'soon'].includes(statusOf(e).key)) continue; for (const s of sessionsOf(e)) out.push({ e, s, own: own.has(s.id) }); }
+    out.sort((a, b) => (b.own - a.own) || (a.s.t - b.s.t));
+    return out.slice(0, 9);
+  },
+  setup(pre) {
+    document.title = 'کنترل ورود · بلیت';
+    const list = this.sessions(), sel = store.sget('blit.gateSel', null) || {}, cur = list.find((x) => x.s.id === pre) ? pre : list[0] && list[0].s.id, g0 = sel.g || 'g1';
+    const box = pages.wrap('gt gt-set', `${pages.head('کنترل ورود', 'shield-ok', 'اسکن بلیت‌ها دم در سالن، با گوشی یا تبلت. فهرست بلیت‌های سانس دانلود می‌شه تا بی‌اینترنت هم کار کنه.')}
+      <div class="evp-cols"><div class="evp-main">
+        <section class="panel pg-box evp-rise"><h2>${ico('calendar')}۱. اجرا و سانس<small>امروز و روزهای بعد</small></h2>
+          <div class="gt-sess" role="radiogroup" aria-label="سانس">${list.map(({ e, s, own }) => { const w = whenOf(s), { src } = artOf(e), h = hallOf(e); return `<button type="button" class="gt-ses" role="radio" aria-checked="${s.id === cur}" data-sid="${esc(s.id)}"><figure class="bk-poster"><img src="${esc(src)}" alt="" loading="lazy"></figure><span><b>${esc(e.title)}</b><small>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)}</small><small>${esc(h.name)}</small>${own ? '<em class="st" data-tone="good">بلیت خودت هم هست</em>' : ''}</span></button>`; }).join('')}</div></section>
+        <section class="panel pg-box evp-rise"><h2>${ico('route')}۲. درِ ورود</h2>
+          <div class="bk-seg gt-doors" role="radiogroup" aria-label="در">${GATES.map((g) => `<button type="button" role="radio" data-g="${g.id}" aria-checked="${g.id === g0}">${esc(g.t)}<small>${esc(g.s)}</small></button>`).join('')}</div></section>
+      </div><aside class="evp-side">
+        <section class="panel pg-box evp-rise"><h2>${ico('users')}۳. کد کنترل‌چی</h2><p class="bk-lead">کد چهاررقمی که برگزارکننده بهت داده (برای آزمایش: ۱۲۳۴).</p>
+          <div class="otp gt-pin" id="gtPin">${Array.from({ length: 4 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><p class="bk-otp-st" id="gtPinSt"></p>
+          <button type="button" class="buy gt-go" id="gtGo" disabled>${ico('shield-ok')}شروع کنترل</button>
+          <div class="gt-dl" id="gtDl" hidden><i style="--p:0"></i><span></span></div>
+          <ul class="pg-tips"><li>دوربین گوشی، اسکنر دستی (USB یا بلوتوث) یا نوشتن کد؛ هر سه کار می‌کنن.</li><li>هر بلیت فقط یه بار وارد می‌شه؛ بار دوم می‌گه کی و از کدوم در اومده.</li><li>اینترنت که قطع بشه، اسکن‌ها تو صف می‌مونن و بعد فرستاده می‌شن.</li></ul></section>
+      </aside></div>`);
+    let sid = cur, g = g0, pin = '';
+    const go = $('#gtGo', box), pst = $('#gtPinSt', box), boxes = $$('#gtPin input', box);
+    const ready = () => { go.disabled = !(sid && pin.length === 4); };
+    $$('.gt-ses', box).forEach((b) => b.addEventListener('click', () => { sid = b.dataset.sid; $$('.gt-ses', box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); ready(); }));
+    $$('.gt-doors button', box).forEach((b) => b.addEventListener('click', () => { g = b.dataset.g; $$('.gt-doors button', box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); }));
+    boxes.forEach((b, i) => {
+      b.addEventListener('input', () => { b.value = fa(enDigits(b.value).replace(/\D/g, '').slice(-1)); if (b.value && boxes[i + 1]) boxes[i + 1].focus(); pin = enDigits(boxes.map((x) => x.value).join('')); pst.textContent = ''; ready(); if (pin.length === 4 && sid) go.focus(); });
+      b.addEventListener('keydown', (ev) => { if (ev.key === 'Backspace' && !b.value && boxes[i - 1]) boxes[i - 1].focus(); if (ev.key === 'Enter' && !go.disabled) go.click(); });
+    });
+    go.addEventListener('click', () => {
+      if (pin !== GATE_PIN) { pst.className = 'bk-otp-st bad'; pst.textContent = 'کد درست نیست؛ از برگزارکننده بپرس.'; boxes.forEach((x) => { x.value = ''; }); pin = ''; boxes[0].focus(); ready(); return; }
+      const x = sesById(sid); if (!x) return;
+      go.disabled = true; const dl = $('#gtDl', box), bar = $('i', dl), tx = $('span', dl); dl.hidden = false;
+      const n = gateTickets(x.e, x.s).T.size, t0 = performance.now(), D = reduceMotion ? 200 : 1300;
+      const step = () => { const p = clamp((performance.now() - t0) / D, 0, 1), k = 1 - (1 - p) ** 3; bar.style.setProperty('--p', k.toFixed(3)); tx.textContent = p < 1 ? `دانلود فهرست بلیت‌ها… ${fa(Math.round(n * k).toLocaleString('en-US')).replace(/,/g, '٬')} از ${money(n)}` : `فهرست ${money(n)} بلیت دانلود شد؛ بی‌اینترنت هم کار می‌کنه.`; if (p < 1) requestAnimationFrame(step); else setTimeout(() => { store.sset('blit.gateSel', { sid, g }); store.sset('blit.gateOk', sid); page.go(`#/gate/${encodeURIComponent(sid)}`); }, 450); };
+      step();
+    });
+    (boxes[0] || go).focus({ preventScroll: true });
+  },
+
+  /* ───── the scanning ───── */
+  load(sid) { const all = store.get('blit.gate', {}); return all[sid] || null; },
+  save() { const all = store.get('blit.gate', {}); all[this.s.id] = { in: this.st.in, log: this.st.log.slice(0, 160), mine: this.st.mine, from: this.st.from }; store.set('blit.gate', all); },
+  scan(sid, g) {
+    const { e, s } = sesById(sid); this.e = e; this.s = s; this.g = g; this.on = true; this.off = !navigator.onLine; this.q = []; this.missed = 0;
+    ({ T: this.T, byCode: this.byCode } = gateTickets(e, s));
+    this.st = this.load(sid) || this.seed();
+    document.title = `کنترل ورود · ${e.title}`;
+    const w = whenOf(s), h = hallOf(e), { src } = artOf(e), own = [...this.T.values()].filter((t) => t.own);
+    const box = pages.wrap('gt gt-run', `<nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#/gate">${ico('arrow-r')}کنترل ورود</a><span aria-hidden="true">/</span><b>${esc(e.title)}</b></nav>
+      <section class="panel gt-bar evp-rise"><figure class="bk-poster"><img src="${esc(src)}" alt=""></figure>
+        <div class="gt-bar-t"><b>${esc(e.title)}</b><small>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)} · ${esc(h.name)}</small></div>
+        <button type="button" class="chip gt-door" id="gtDoor" aria-haspopup="menu">${ico('route')}<span>${esc(gateName(g))}</span></button>
+        <button type="button" class="gt-net" id="gtNet" aria-pressed="false"><i></i><span></span></button>
+        <button type="button" class="chip gt-ic" id="gtSnd" aria-pressed="true" aria-label="صدای اسکن">${ico('bell')}</button>
+        <button type="button" class="chip" id="gtEnd">${ico('return')}پایان شیفت</button></section>
+      <div class="gt-cols">
+        <section class="panel gt-scan evp-rise" aria-labelledby="gtScanH"><h2 class="sr" id="gtScanH">اسکن بلیت</h2>
+          <div class="gt-view" id="gtView"><video playsinline muted aria-label="تصویر دوربین"></video><i class="gt-corner" aria-hidden="true"></i><i class="gt-line" aria-hidden="true"></i>
+            <div class="gt-idle"><span class="sec-ic" aria-hidden="true">${ico('search')}</span><b>QR بلیت رو جلوی دوربین بگیر</b><button type="button" class="buy" id="gtCam">${ico('play')}روشن کردن دوربین</button><small id="gtCamSt">اسکنر دستی هم وصله؛ هر وقت بزنی خونده می‌شه.</small></div>
+            <div class="gt-res" id="gtRes" hidden aria-live="assertive"></div>
+            <div class="gt-camtools"><button type="button" class="chip gt-ic" id="gtTorch" hidden aria-pressed="false" aria-label="چراغ">${ico('spark')}</button><button type="button" class="chip gt-ic" id="gtFlip" aria-label="دوربین دیگه">${ico('swap')}</button><button type="button" class="chip gt-ic" id="gtCamOff" aria-label="خاموش کردن دوربین">${ico('x')}</button></div></div>
+          <form class="rc-row gt-man" id="gtMan"><label class="bk-fld"><span>کد پیگیری یا متن QR</span><input id="gtCode" dir="ltr" placeholder="BL-XXXX-XXXX" autocomplete="off" spellcheck="false"></label><button type="submit" class="buy">${ico('check')}بررسی</button></form>
+          <div class="gt-demo"><span>اسکن آزمایشی:</span><button type="button" class="chip" data-demo="ok">بلیت درست</button><button type="button" class="chip" data-demo="dup">تکراری</button><button type="button" class="chip" data-demo="wrong">سانس دیگه</button><button type="button" class="chip" data-demo="bad">جعلی</button>${own.length ? `<button type="button" class="chip" data-demo="own">بلیت خودت (${fa(own.length)})</button>` : ''}</div>
+        </section>
+        <div class="gt-side">
+          <section class="panel gt-stats evp-rise" aria-labelledby="gtStH"><h2 id="gtStH">${ico('users')}ورودی‌ها<small class="gt-live"><i></i>زنده</small></h2>
+            <div class="gt-top"><div class="gt-ringw"><svg class="gt-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="bg"/><circle cx="60" cy="60" r="52" class="fg" id="gtRing"/></svg><div class="gt-ring-t"><b id="gtPct"></b><small>وارد شدن</small></div></div>
+              <dl class="gt-nums"><div><dt>وارد شدن</dt><dd id="gtIn"></dd></div><div><dt>مونده</dt><dd id="gtLeft"></dd></div><div><dt>کل بلیت‌ها</dt><dd id="gtAll"></dd></div><div><dt>تو این شیفت</dt><dd id="gtMine"></dd></div></dl></div>
+            <div class="gt-doorsum" id="gtDoors"></div>
+            <div class="gt-spark"><span>ورود در یک ساعت گذشته<small>هر ستون ۵ دقیقه</small></span><div id="gtSpark"></div><p class="gt-axis" aria-hidden="true"><span>یک ساعت پیش</span><span>الان</span></p></div>
+            <div class="gt-probs" id="gtProbs"></div></section>
+          <section class="panel gt-log evp-rise" aria-labelledby="gtLogH"><h2 id="gtLogH">${ico('clock')}آخرین اسکن‌ها</h2>
+            <div class="bk-seg" role="tablist" aria-label="کدوم اسکن‌ها"><button type="button" role="tab" data-f="all" aria-selected="true">همه</button><button type="button" role="tab" data-f="bad" aria-selected="false">مشکل‌دار</button><button type="button" role="tab" data-f="me" aria-selected="false">این در</button></div>
+            <ol id="gtLog"></ol></section>
+        </div>
+      </div>`);
+    this.box = box; this.filter = 'all';
+    this.paint(); this.net();
+    const on = (id, f) => $(id, box).addEventListener('click', f);
+    on('#gtCam', () => this.camOn());
+    on('#gtCamOff', () => this.camOff());
+    on('#gtFlip', () => { this.facing = this.facing === 'environment' ? 'user' : 'environment'; this.camOff(); this.camOn(); });
+    on('#gtTorch', () => this.torch());
+    on('#gtSnd', (ev) => { this.sound = !this.sound; ev.currentTarget.setAttribute('aria-pressed', String(this.sound)); toast(this.sound ? 'صدای اسکن روشن شد.' : 'صدای اسکن خاموش شد.'); });
+    on('#gtNet', () => { this.setOff(!this.off); });
+    on('#gtEnd', () => this.end());
+    on('#gtDoor', (ev) => { const b = ev.currentTarget; menuPop(b, GATES.map((x) => ({ t: `${x.t} · ${x.s}`, v: x.id })), this.g, (v) => { this.g = v; store.sset('blit.gateSel', { sid: this.s.id, g: v }); $('span', b).textContent = gateName(v); this.paint(); toast(`حالا ${gateName(v)} هستی.`); }, { label: 'درِ ورود' }); });
+    $('#gtMan', box).addEventListener('submit', (ev) => { ev.preventDefault(); const i = $('#gtCode', box), t = i.value.trim(); if (!t) { i.focus(); return; } i.value = ''; this.onScan(t, 'hand'); });
+    $$('[data-demo]', box).forEach((b) => b.addEventListener('click', () => this.demo(b.dataset.demo)));
+    $$('.gt-log [data-f]', box).forEach((b) => b.addEventListener('click', () => { this.filter = b.dataset.f; $$('.gt-log [data-f]', box).forEach((x) => x.setAttribute('aria-selected', String(x === b))); this.paintLog(); }));
+    $('#gtRes', box).addEventListener('click', () => this.hideRes());
+    // a hand scanner types fast and ends with Enter; anything typed outside the fields is read as one
+    this.keyFn = (ev) => {
+      if (ev.target.closest && ev.target.closest('input, textarea, select, [contenteditable]')) return;
+      if (ev.key === 'Enter') { if (this.buf.length >= 8) { ev.preventDefault(); this.onScan(this.buf, 'hid'); } this.buf = ''; return; }
+      if (ev.key.length !== 1 || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+      const now = performance.now(); if (now - this.bufAt > 120) this.buf = ''; this.bufAt = now; this.buf += ev.key;
+    };
+    document.addEventListener('keydown', this.keyFn, true);
+    this.netFn = () => this.setOff(!navigator.onLine);
+    addEventListener('online', this.netFn); addEventListener('offline', this.netFn);
+    this.live();
+  },
+  // the first visit of a session: the doors have been open for a while (a third of the people are in, not the tickets of this browser)
+  seed() {
+    const R = rngOf(seedOf(this.s.id + ':in')), now = Date.now(), st = { in: {}, log: [], mine: 0, from: now };
+    const list = [...this.T.values()].filter((t) => !t.own), n = Math.round(list.length * (0.28 + R() * 0.14));
+    for (let i = 0; i < n; i++) { const j = i + Math.floor(R() * (list.length - i)); [list[i], list[j]] = [list[j], list[i]]; const t = list[i], at = now - Math.round(45 * 6e4 * (1 - Math.sqrt(R()))); st.in[t.k] = [at, t.door]; }
+    Object.entries(st.in).sort((a, b) => b[1][0] - a[1][0]).slice(0, 14).forEach(([k, [at, g]]) => st.log.push([at, k, g, 'ok', 'o']));
+    return st;
+  },
+  // the other doors: someone comes in every one to four seconds, now and then a ticket shown twice
+  live() {
+    clearTimeout(this.sim);
+    if (!this.on) return;
+    this.sim = setTimeout(() => {
+      if (!this.on) return;
+      if (this.off) this.missed++;
+      else this.other();
+      this.live();
+    }, 900 + Math.random() * 3100);
+  },
+  other(quiet) {
+    const free = [...this.T.values()].filter((t) => !t.own && !this.st.in[t.k]);
+    if (!free.length) return;
+    const now = Date.now();
+    if (Math.random() < 0.05) { const ins = Object.keys(this.st.in); const k = ins[Math.floor(Math.random() * ins.length)]; if (k) { const g = GATES[Math.floor(Math.random() * 3)].id; this.st.log.unshift([now, k, g, 'dup', 'o']); } }
+    else {
+      const t = free[Math.floor(Math.random() * free.length)], g = t.door === this.g ? GATES.find((x) => x.id !== this.g).id : t.door;
+      this.st.in[t.k] = [now, g]; this.st.log.unshift([now, t.k, g, 'ok', 'o']);
+    }
+    if (!quiet) { this.save(); this.paint(true); }
+  },
+  setOff(v) {
+    if (v === this.off) return;
+    this.off = v; this.net();
+    if (!v) this.sync();
+    else toast('آفلاین شدی؛ اسکن‌ها با فهرست دانلودشده بررسی می‌شن و تو صف می‌مونن.');
+  },
+  net() {
+    const b = $('#gtNet', this.box); if (!b) return;
+    b.dataset.s = this.syncing ? 'sync' : this.off ? 'off' : 'on'; b.setAttribute('aria-pressed', String(this.off));
+    $('span', b).textContent = this.syncing ? 'همگام‌سازی…' : this.off ? `آفلاین${this.q.length ? ` · ${fa(this.q.length)} اسکن در صف` : ''}` : 'آنلاین';
+    b.title = this.off ? 'برگشتن به آنلاین (آزمایشی)' : 'آفلاین کردن (آزمایشی)';
+  },
+  // back online: the queue goes out; what the other doors did meanwhile comes in; a ticket let in here and at another door is reported
+  sync() {
+    this.syncing = true; this.net();
+    setTimeout(() => {
+      if (!this.on) return;
+      const n = this.q.length, add = Math.min(this.missed, 40);
+      for (let i = 0; i < add; i++) this.other(true);
+      let clash = null;
+      if (n >= 2 && Math.random() < 0.5) { const k = this.q[Math.floor(Math.random() * n)], g = GATES.find((x) => x.id !== this.g).id; clash = { k, g }; this.st.log.unshift([Date.now(), k, g, 'dup', 'o']); }
+      this.q = []; this.missed = 0; this.syncing = false; this.save(); this.net(); this.paint(true);
+      toast(n ? `همگام شد: ${fa(n)} اسکن فرستاده شد${clash ? `؛ یکی از بلیت‌ها (${this.T.get(clash.k) ? this.T.get(clash.k).name : ''}) هم‌زمان از ${gateName(clash.g)} هم اسکن شده بود.` : '.'}` : 'آنلاین شدی؛ چیزی تو صف نبود.');
+    }, reduceMotion ? 300 : 1400);
+  },
+
+  /* a scan, from the camera, a hand scanner or the field */
+  onScan(raw, from) {
+    const text = String(raw).trim(), now = Date.now();
+    // the camera: a QR still in front of it is read once (it must be gone for a moment to be read again); another one waits for the answer to go
+    if (from === 'cam') { if (text === this.last && now - this.lastAt < 1500) { this.lastAt = now; return; } if (!$('#gtRes', this.box).hidden) return; }
+    this.last = text; this.lastAt = now;
+    const p = text.split('|');
+    if (p[0] === 'BLIT2' && p.length === 5) {
+      const [, code, sid, key, sig] = p;
+      if (qrSig(code, sid, key) !== sig) return this.result({ r: 'bad', sub: 'امضای QR درست نیست: بلیت جعلی یا دست‌کاری‌شده‌ست.' });
+      if (sid !== this.s.id) return this.wrongOf(sid, code);
+      let t = this.T.get(`${code}|${key}`);
+      if (!t) { const x = { key, zone: '', row: 0, n: 0 }; const m = /^([a-z]+\d?)-(\d+)-(\d+)$/.exec(key); const sec = m && hallLayout(planOf(this.e)).secs.find((z) => z.sec.id === m[1]); t = { k: `${code}|${key}`, code, key, name: sec ? seatName({ zone: sec.sec.t, word: RUN_WORD[sec.sec.k], row: +m[2], n: +m[3] }) : key, door: sec ? doorOfSec(sec.sec) : 'g1', own: true }; this.T.set(t.k, t); if (!this.byCode.has(code)) this.byCode.set(code, []); this.byCode.get(code).push(t); void x; }
+      return this.admit([t]);
+    }
+    if (p[0] === 'BLIT' && p.length === 3) { const ts = (this.byCode.get(p[1]) || []).filter((t) => t.key === p[2]); if (ts.length) return this.admit(ts); return this.byOrder(p[1]); }
+    const code = enDigits(text).toUpperCase().replace(/\s+/g, '').replace(/^BL-?(\w{4})-?(\w{4})$/, 'BL-$1-$2');
+    const ts = this.byCode.get(code);
+    if (ts) return ts.length === 1 ? this.admit(ts) : this.pick(code, ts);
+    return this.byOrder(code);
+  },
+  byOrder(code) { const o = store.get('blit.orders', []).find((x) => x.code === code); if (o && o.sid !== this.s.id) return this.wrongOf(o.sid, code); return this.result({ r: 'bad', sub: `کد «${code}» برای این سانس پیدا نشد.` }); },
+  wrongOf(sid, code) { const x = sesById(sid); if (!x) return this.result({ r: 'bad', sub: 'این بلیت مال سانسی‌ه که دیگه وجود نداره.' }); const w = whenOf(x.s); return this.result({ r: 'wrong', sub: `این بلیت برای «${x.e.title}» · ${w.wd} ${w.dm} · ساعت ${w.tm}ـه.`, code }); },
+  // let one ticket in (or say it is in already); several tickets of one order: one by one, or all at once from the list
+  admit(ts) {
+    const now = Date.now(), t = ts[0], was = this.st.in[t.k];
+    if (was) { this.st.log.unshift([now, t.k, this.g, 'dup', 'm']); this.save(); this.paint(true); return this.result({ r: 'dup', t, sub: `${hhmm(was[0])} از ${gateName(was[1])} وارد شده (${this.ago(was[0])}).` }); }
+    this.st.in[t.k] = [now, this.g]; this.st.mine++; this.st.log.unshift([now, t.k, this.g, 'ok', 'm']);
+    if (this.off) this.q.push(t.k);
+    this.save(); this.paint(true); this.net();
+    const all = this.byCode.get(t.code) || [t], inN = all.filter((x) => this.st.in[x.k]).length;
+    const notes = [];
+    if (all.length > 1) notes.push(`${fa(inN)} از ${fa(all.length)} بلیت این خرید وارد شدن`);
+    if (t.door !== this.g) notes.push(`جاش از ${gateName(t.door)} نزدیک‌تره (${GATES.find((x) => x.id === t.door).s})`);
+    if (this.off) notes.push('آفلاین: تو صف همگام‌سازی');
+    return this.result({ r: 'ok', t, sub: notes.join(' · '), warn: t.door !== this.g });
+  },
+  // a tracking code with several tickets: the list, each one's state, and «all of them in»
+  pick(code, ts) {
+    const boxEl = document.createElement('div'); boxEl.className = 'evp-modal'; boxEl.setAttribute('role', 'dialog'); boxEl.setAttribute('aria-modal', 'true'); boxEl.setAttribute('aria-label', `بلیت‌های ${code}`);
+    const rows = () => ts.map((t) => { const w = this.st.in[t.k]; return `<li><i style="--c:${t.c || 'var(--ring)'}"></i><span>${esc(t.name)}</span>${w ? `<em class="st" data-tone="mute">وارد شده ${esc(hhmm(w[0]))}</em>` : `<button type="button" class="chip" data-k="${esc(t.k)}">ورود</button>`}</li>`; }).join('');
+    const left = () => ts.filter((t) => !this.st.in[t.k]);
+    boxEl.innerHTML = `<div class="evp-dlg panel gt-pick"><h2>${ico('ticket')}<span dir="ltr">${esc(code)}</span><small>${fa(ts.length)} بلیت</small></h2><ol class="gt-pick-l">${rows()}</ol><div class="evp-dlg-end"><button type="button" class="buy" data-all>${ico('users')}ورود همه (${fa(left().length)} نفر)</button><button type="button" class="chip" data-x>بستن</button></div></div>`;
+    $('#app').appendChild(boxEl);
+    const shut = () => { document.removeEventListener('keydown', key, true); boxEl.remove(); };
+    const key = (ev) => { if (ev.key === 'Escape') { ev.preventDefault(); shut(); } };
+    document.addEventListener('keydown', key, true);
+    boxEl.addEventListener('click', (ev) => {
+      if (ev.target === boxEl || ev.target.closest('[data-x]')) { shut(); return; }
+      const b = ev.target.closest('[data-k]');
+      if (b) { this.admit([this.T.get(b.dataset.k)]); $('.gt-pick-l', boxEl).innerHTML = rows(); $('[data-all]', boxEl).innerHTML = `${ico('users')}ورود همه (${fa(left().length)} نفر)`; if (!left().length) setTimeout(shut, 500); return; }
+      if (ev.target.closest('[data-all]')) { const l = left(); if (!l.length) { shut(); return; } l.forEach((t) => { this.st.in[t.k] = [Date.now(), this.g]; this.st.mine++; this.st.log.unshift([Date.now(), t.k, this.g, 'ok', 'm']); if (this.off) this.q.push(t.k); }); this.save(); this.paint(true); this.net(); shut(); this.result({ r: 'ok', t: l[0], sub: `${fa(l.length)} نفر با هم وارد شدن`, many: l }); }
+    });
+    gsap.fromTo($('.gt-pick', boxEl), { y: 20 * MOTK(), opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: 'expo.out' });
+    const f = $('[data-all]', boxEl); f.focus();
+  },
+  ago(t) { const m = Math.round((Date.now() - t) / 6e4); return m < 1 ? 'همین الان' : m < 60 ? `${fa(m)} دقیقه پیش` : `${fa(Math.floor(m / 60))} ساعت و ${fa(m % 60)} دقیقه پیش`; },
+  // the answer, big, over the camera: green, red or amber, with a sound and a buzz; it goes after a moment or with a press
+  result(x) {
+    const d = RES[x.r], el = $('#gtRes', this.box); if (!el) return;
+    const tone = x.r === 'ok' && x.warn ? 'okw' : d.tone;
+    el.dataset.tone = tone; el.hidden = false;
+    el.innerHTML = `<span class="gt-res-ic">${ico(d.icon)}</span><b>${esc(x.r === 'ok' && x.many ? `${fa(x.many.length)} نفر · ورود مجاز` : d.t)}</b>${x.t ? `<strong>${esc(x.many ? x.many.map((t) => t.name).join('، ') : x.t.name)}</strong>` : ''}${x.sub ? `<span>${esc(x.sub)}</span>` : ''}${x.t ? `<small dir="ltr">${esc(x.t.code)}</small>` : x.code ? `<small dir="ltr">${esc(x.code)}</small>` : ''}<i class="gt-res-bar"></i>`;
+    this.box.dataset.flash = ''; void this.box.offsetWidth; this.box.dataset.flash = d.tone;
+    this.beep(d.tone);
+    if (MOTK()) gsap.fromTo(el, { scale: 0.94, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: 'back.out(1.6)' });
+    clearTimeout(this.res); this.res = setTimeout(() => this.hideRes(), x.r === 'ok' ? 2200 : 4200);
+    el.style.setProperty('--d', `${x.r === 'ok' ? 2.2 : 4.2}s`);
+  },
+  hideRes() { clearTimeout(this.res); const el = $('#gtRes', this.box); if (!el || el.hidden) return; if (MOTK()) gsap.to(el, { opacity: 0, duration: 0.2, onComplete: () => { el.hidden = true; el.style.opacity = ''; } }); else el.hidden = true; },
+  beep(tone) {
+    if (navigator.vibrate) try { navigator.vibrate(tone === 'ok' ? 40 : [90, 60, 90]); } catch (err) { /* nothing */ }
+    if (!this.sound) return;
+    try {
+      const ac = this.ac || (this.ac = new (window.AudioContext || window.webkitAudioContext)()), t0 = ac.currentTime + 0.01;
+      const seq = tone === 'ok' ? [[988, 0, 0.08], [1480, 0.09, 0.12]] : tone === 'okw' || tone === 'warn' ? [[660, 0, 0.12], [660, 0.18, 0.12]] : [[180, 0, 0.36]];
+      for (const [f, at, d] of seq) { const o = ac.createOscillator(), g = ac.createGain(); o.type = tone === 'bad' ? 'square' : 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t0 + at); g.gain.exponentialRampToValueAtTime(tone === 'bad' ? 0.08 : 0.18, t0 + at + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + at + d); o.connect(g); g.connect(ac.destination); o.start(t0 + at); o.stop(t0 + at + d + 0.03); }
+    } catch (err) { /* no sound here */ }
+  },
+  // the demo's buttons: a real QR's text for each kind of answer
+  demo(kind) {
+    const all = [...this.T.values()], pickOf = (l) => l[Math.floor(Math.random() * l.length)];
+    if (kind === 'ok') { const free = all.filter((x) => !x.own && !this.st.in[x.k]), here = free.filter((x) => x.door === this.g), t = pickOf(here.length && Math.random() < 0.75 ? here : free); if (t) this.onScan(qrText(t.code, this.s.id, t.key), 'demo'); else toast('همه وارد شدن!'); }
+    if (kind === 'dup') { const t = pickOf(all.filter((x) => this.st.in[x.k])); if (t) this.onScan(qrText(t.code, this.s.id, t.key), 'demo'); else this.demo('ok'); }
+    if (kind === 'own') { const t = all.filter((x) => x.own).find((x) => !this.st.in[x.k]) || all.find((x) => x.own); if (t) this.onScan(qrText(t.code, this.s.id, t.key), 'demo'); }
+    if (kind === 'wrong') { const o = this.sessions().map((x) => x.s.id).find((x) => x !== this.s.id) || `${this.e.id}-9`; this.onScan(qrText('BL-7Q2M-K4XR', o, 'p-3-8'), 'demo'); }
+    if (kind === 'bad') { const t = pickOf(all); this.onScan(`BLIT2|${t.code}|${this.s.id}|${t.key}|ZZZZZ`, 'demo'); }
+  },
+
+  /* the numbers: who is in, through which door, in the last hour, the problems, the last scans */
+  paint(pulse) {
+    if (!this.box || !this.st) return;
+    const all = this.T.size, ins = Object.values(this.st.in), n = ins.length, p = all ? n / all : 0, now = Date.now();
+    const ring = $('#gtRing', this.box), C = 2 * Math.PI * 52;
+    ring.style.strokeDasharray = `${(C * p).toFixed(1)} ${C.toFixed(1)}`;
+    $('#gtPct', this.box).textContent = `${fa(Math.round(p * 100))}٪`;
+    $('#gtIn', this.box).textContent = money(n); $('#gtLeft', this.box).textContent = money(all - n); $('#gtAll', this.box).textContent = money(all); $('#gtMine', this.box).textContent = money(this.st.mine);
+    const by = Object.fromEntries(GATES.map((g) => [g.id, 0])); ins.forEach(([, g]) => { by[g] = (by[g] || 0) + 1; });
+    const mx = Math.max(1, ...Object.values(by));
+    $('#gtDoors', this.box).innerHTML = GATES.map((g) => `<div class="gt-d${g.id === this.g ? ' is-me' : ''}"><span>${esc(g.t)}${g.id === this.g ? '<em>تو</em>' : ''}</span><i style="--p:${(by[g.id] / mx).toFixed(3)}"></i><b>${money(by[g.id])}</b></div>`).join('');
+    const B = Array(12).fill(0); ins.forEach(([t]) => { const k = Math.floor((now - t) / 3e5); if (k >= 0 && k < 12) B[11 - k]++; });
+    const bm = Math.max(1, ...B);
+    $('#gtSpark', this.box).innerHTML = B.map((v, i) => `<i style="--p:${(v / bm).toFixed(3)}" title="${fa(v)} نفر"${i === 11 ? ' class="is-now"' : ''}></i>`).join('');
+    const cnt = (r) => this.st.log.filter((l) => l[3] === r).length;
+    $('#gtProbs', this.box).innerHTML = [['dup', 'تکراری'], ['wrong', 'سانس دیگه'], ['bad', 'نامعتبر']].map(([r, l]) => `<span data-r="${r}"><b>${fa(cnt(r))}</b>${l}</span>`).join('') + (this.q.length ? `<span data-r="q"><b>${fa(this.q.length)}</b>در صف</span>` : '');
+    this.paintLog(pulse);
+    if (pulse && MOTK()) { const r = $('.gt-top', this.box); r.classList.remove('is-pulse'); void r.offsetWidth; r.classList.add('is-pulse'); }
+  },
+  paintLog(pulse) {
+    const ol = $('#gtLog', this.box); if (!ol) return;
+    const f = this.filter, rows = this.st.log.filter((l) => (f === 'bad' ? l[3] !== 'ok' : f === 'me' ? l[2] === this.g : true)).slice(0, 40);
+    const first = ol.firstElementChild && ol.firstElementChild.dataset.at;
+    ol.innerHTML = rows.length ? rows.map(([at, k, g, r, by]) => { const t = this.T.get(k), d = RES[r] || RES.bad; return `<li data-at="${at}" data-tone="${d.tone}"><time>${esc(hhmm(at))}</time><i aria-hidden="true"></i><span><b>${esc(d.t)}</b><small>${esc(t ? t.name : k)}</small></span><em>${esc(gateName(g))}${by === 'm' ? ' · تو' : ''}</em></li>`; }).join('') : '<li class="gt-empty">هنوز اسکنی نیست.</li>';
+    if (pulse && MOTK() && ol.firstElementChild && ol.firstElementChild.dataset.at !== first) gsap.from(ol.firstElementChild, { x: 24, opacity: 0, duration: 0.5, ease: 'expo.out', clearProps: 'transform,opacity' });
+  },
+
+  /* the camera */
+  async camOn() {
+    const view = $('#gtView', this.box), v = $('video', view), st = $('#gtCamSt', this.box), b = $('#gtCam', this.box);
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { st.textContent = 'این مرورگر به دوربین دسترسی نمی‌ده؛ کد رو بنویس یا با اسکنر دستی بزن.'; return; }
+    b.disabled = true; st.textContent = 'دوربین داره روشن می‌شه…';
+    try { this.stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: { ideal: this.facing }, width: { ideal: 1280 }, height: { ideal: 720 } } }); }
+    catch (err) { b.disabled = false; st.textContent = err && err.name === 'NotAllowedError' ? 'اجازه‌ی دوربین داده نشد؛ از تنظیمات مرورگر اجازه بده و دوباره بزن.' : 'دوربینی پیدا نشد؛ کد رو بنویس یا با اسکنر دستی بزن.'; return; }
+    if (!this.on || !v.isConnected) { this.camOff(); return; }
+    v.srcObject = this.stream; try { await v.play(); } catch (err) { /* it plays when it can */ }
+    view.classList.add('is-cam'); b.disabled = false;
+    const tr = this.stream.getVideoTracks()[0], caps = tr && tr.getCapabilities ? tr.getCapabilities() : {};
+    $('#gtTorch', this.box).hidden = !caps.torch;
+    try { this.det = this.det || await this.detector(); } catch (err) { this.det = null; }
+    if (!this.det) { st.textContent = 'خوندن QR تو این مرورگر نشد؛ کد رو بنویس.'; return; }
+    this.loop(v);
+  },
+  async detector() {
+    if ('BarcodeDetector' in window) { try { const f = await window.BarcodeDetector.getSupportedFormats(); if (f.includes('qr_code')) { const d = new window.BarcodeDetector({ formats: ['qr_code'] }); return async (src) => { const r = await d.detect(src); return r[0] && r[0].rawValue; }; } } catch (err) { /* jsQR then */ } }
+    if (typeof jsQR !== 'function') await new Promise((ok, no) => { const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+    const c = document.createElement('canvas'), x = c.getContext('2d', { willReadFrequently: true });
+    return (v) => { const w = v.videoWidth, h = v.videoHeight; if (!w) return null; const k = Math.min(1, 720 / Math.max(w, h)); c.width = Math.round(w * k); c.height = Math.round(h * k); x.drawImage(v, 0, 0, c.width, c.height); const d = x.getImageData(0, 0, c.width, c.height), r = window.jsQR(d.data, c.width, c.height, { inversionAttempts: 'attemptBoth' }); return r && r.data; };
+  },
+  loop(v) {
+    const go = async () => {
+      if (!this.stream || !this.on) return;
+      if (!this.busy && v.readyState >= 2) {
+        this.busy = true;
+        try { const t = await this.det(v); if (t) this.onScan(t, 'cam'); } catch (err) { /* the next frame */ }
+        this.busy = false;
+      }
+      this.cam = setTimeout(go, 140);
+    };
+    go();
+  },
+  camOff() {
+    clearTimeout(this.cam); this.cam = 0;
+    if (this.stream) { this.stream.getTracks().forEach((t) => t.stop()); this.stream = null; }
+    const view = this.box && $('#gtView', this.box); if (view && view.isConnected) { view.classList.remove('is-cam'); const v = $('video', view); v.srcObject = null; const st = $('#gtCamSt', this.box); if (st) st.textContent = 'اسکنر دستی هم وصله؛ هر وقت بزنی خونده می‌شه.'; }
+  },
+  async torch() { const tr = this.stream && this.stream.getVideoTracks()[0], b = $('#gtTorch', this.box); if (!tr) return; const on = b.getAttribute('aria-pressed') !== 'true'; try { await tr.applyConstraints({ advanced: [{ torch: on }] }); b.setAttribute('aria-pressed', String(on)); } catch (err) { toast('چراغ این دوربین روشن نمی‌شه.'); } },
+
+  // the end of a shift: what this door did, then back to the start
+  end() {
+    const mine = this.st.log.filter((l) => l[4] === 'm'), ok = mine.filter((l) => l[3] === 'ok').length, bad = mine.length - ok;
+    const boxEl = document.createElement('div'); boxEl.className = 'evp-modal'; boxEl.setAttribute('role', 'dialog'); boxEl.setAttribute('aria-modal', 'true'); boxEl.setAttribute('aria-label', 'پایان شیفت');
+    boxEl.innerHTML = `<div class="evp-dlg panel gt-endbox"><h2>${ico('return')}پایان شیفت · ${esc(gateName(this.g))}</h2><dl class="gt-nums"><div><dt>ورود از این در</dt><dd>${money(ok)}</dd></div><div><dt>اسکن مشکل‌دار</dt><dd>${money(bad)}</dd></div><div><dt>کل سالن</dt><dd>${fa(Math.round(Object.keys(this.st.in).length / Math.max(1, this.T.size) * 100))}٪</dd></div></dl>${this.q.length ? `<p class="bk-note">${ico('info')}${fa(this.q.length)} اسکن هنوز تو صف آفلاینه؛ اول آنلاین شو تا فرستاده بشن.</p>` : ''}<div class="evp-dlg-end"><button type="button" class="buy" data-out ${this.q.length ? 'disabled' : ''}>${ico('check')}ثبت و خروج</button><button type="button" class="chip" data-x>ادامه‌ی کنترل</button></div></div>`;
+    $('#app').appendChild(boxEl);
+    const shut = () => { document.removeEventListener('keydown', key, true); boxEl.remove(); };
+    const key = (ev) => { if (ev.key === 'Escape') { ev.preventDefault(); shut(); } };
+    document.addEventListener('keydown', key, true);
+    boxEl.addEventListener('click', (ev) => { if (ev.target === boxEl || ev.target.closest('[data-x]')) shut(); else if (ev.target.closest('[data-out]')) { shut(); store.sset('blit.gateOk', null); toast('شیفت ثبت شد. خسته نباشی!'); page.go('#/gate'); } });
+    $('[data-x]', boxEl).focus();
+  },
 };
 
 /* ════════════════════════════════════════════════════════════════
@@ -5287,7 +5864,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
