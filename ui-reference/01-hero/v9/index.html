@@ -2186,6 +2186,16 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 :root[data-mode="light"] .ad-txt-st { color: #15803d; }
 :root[data-mode="light"] .ad-txt-st.is-bad { color: #b91c1c; }
 
+/* every text field shows where the focus is: its border and a soft ring in the page's colour (the desks' blue where a page
+   has none); before, a field on a page without a colour of its own showed nothing but the caret */
+:is(.bk-fld, .pg-form, .dk-form, .wz-body, .ad-des, .rc-row, .otp, .bk-code) :is(input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]), select, textarea):focus-visible {
+  outline: none;
+  border-color: color-mix(in oklab, var(--sc, var(--viz-1, #3b82f6)) 85%, rgb(var(--fg)));
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--sc, var(--viz-1, #3b82f6)) 32%, transparent);
+}
+/* a chart's point reached by the keys: its column is framed */
+.vz-hit:focus-visible { outline: none; stroke: rgb(var(--fg)); stroke-width: 1.5; stroke-dasharray: 3 3; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
