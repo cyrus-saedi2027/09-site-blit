@@ -1932,6 +1932,17 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .q-tips { position: relative; }
 @media (max-width: 760px) { .q-nums { grid-template-columns: 1fr; } .q-box { padding: 18px; } }
 
+/* the wizard's seat-by-seat prices */
+.wz-brush { display: flex; flex-wrap: wrap; align-items: center; gap: .6em 1em; margin-bottom: .6em; }
+.wz-brush .bk-seg button { display: inline-flex; align-items: center; gap: .45em; }
+.wz-brush .bk-seg i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.wz-brush #wzPaintN { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
+.wz-brush .chip { margin-inline-start: auto; gap: .4em; }
+.wz-paint .hpm { height: auto; aspect-ratio: 4 / 3; max-height: 520px; touch-action: none; cursor: crosshair; }
+.wz-paint circle { transition: fill .15s; }
+.wz-paint circle:hover { stroke: rgb(var(--fg)); stroke-width: 3; }
+.wz-vip { margin-top: .6em; max-width: 520px; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -4456,7 +4467,7 @@ const HALLS = [
   [/اداره فرهنگ و ارشاد/, 'تهران، سالن اصلی اداره‌ی فرهنگ و ارشاد اسلامی', 'fan-m', null, null],
 ];
 const hallOf = (e) => { const v = e.venue; const h = HALLS.find(([re]) => re.test(v)); const name = v.replace(new RegExp(`^${e.city}[،,]\\s*`), ''); return { name, addr: h ? h[1] : `${e.city}، ${name}`, plan: h ? h[2] : 'fan-m', lat: h ? h[3] : null, lng: h ? h[4] : null }; };
-const TIER = { A: { k: 2.2, c: '#8b5cf6' }, B: { k: 1.6, c: '#ec4899' }, C: { k: 1.25, c: '#f97316' }, D: { k: 1, c: '#0ea5e9' } };
+const TIER = { A: { k: 2.2, c: '#8b5cf6' }, B: { k: 1.6, c: '#ec4899' }, C: { k: 1.25, c: '#f97316' }, D: { k: 1, c: '#0ea5e9' }, V: { k: 3.2, c: '#eab308' } };
 const DUR = { concert: 120, theatre: 90, comedy: 100 };
 const priceNum = (e) => { const d = String(e.price).replace(/[۰-۹]/g, (x) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(x)).replace(/[^\d]/g, ''); return (+d || 0) * (/هزار/.test(e.price) ? 1000 : 1); };
 const money = (n) => fa(Math.round(n).toLocaleString('en-US')).replace(/,/g, '٬');
@@ -4464,7 +4475,10 @@ function tiersOf(e) {
   const low = priceNum(e), P = planOf(e), used = [...new Set(P.secs.flatMap((zn) => zn.runs.map((x) => x[2])))].sort().reverse();
   // the cheapest tier in this hall is the show's lowest price; the others are steps above it (rounded to 10,000 toman)
   const base = TIER[used[0]].k, p = (t) => Math.round((low * TIER[t].k / base) / 1e4) * 1e4;
-  return P.secs.flatMap((zn) => zn.runs.map(([a, b, t]) => ({ zone: zn.t, zid: zn.id, kind: zn.k, word: RUN_WORD[zn.k], a, b, t, c: TIER[t].c, price: e.prices && e.prices[t] > 0 ? e.prices[t] : p(t) })));
+  const out = P.secs.flatMap((zn) => zn.runs.map(([a, b, t]) => ({ zone: zn.t, zid: zn.id, kind: zn.k, word: RUN_WORD[zn.k], a, b, t, c: TIER[t].c, price: e.prices && e.prices[t] > 0 ? e.prices[t] : p(t) })));
+  // the seats the organiser marked one by one as special (wizard.js): a tier of their own
+  if (e.seatTier && Object.values(e.seatTier).includes('V')) out.unshift({ zone: 'صندلی‌های ویژه', zid: '__v', kind: 'stand', word: '', a: 0, b: 0, t: 'V', c: TIER.V.c, price: e.prices && e.prices.V > 0 ? e.prices.V : Math.round(p('A') * 1.5 / 1e4) * 1e4 });
+  return out;
 }
 const runName = (t) => (t.kind === 'stand' ? t.zone : `${t.zone}، ${t.word} ${fa(t.a)}${t.b > t.a ? ` تا ${fa(t.b)}` : ''}`);
 // a small number that is always the same for the same show (so its seats and its map don't change on a reload)
@@ -4813,6 +4827,8 @@ function seatPlan(e, s) {
       const t = tierAt(p.row), r = R(), front = 1 - (p.y - y0) / Math.max(1, y1 - y0), prob = sold * (0.7 + 0.6 * front);
       Object.assign(p, { key: `${z.sec.id}-${p.row}-${p.n}`, zid: z.sec.id, zone: z.sec.t, word: RUN_WORD[z.sec.k], t: t.t, c: t.c, price: t.price });
       p.st = mine.has(p.key) || s.seats === 0 || r < prob ? 'sold' : r < prob + 0.025 ? 'held' : r < prob + 0.033 ? 'off' : 'free';
+      const ov = e.seatTier && e.seatTier[p.key];   // one seat's own price or «not for sale», from the organiser
+      if (ov === 'X') p.st = 'off'; else if (ov === 'V') { const v = tiers.find((x) => x.t === 'V'); if (v) Object.assign(p, { t: 'V', c: v.c, price: v.price }); }
       L.by.set(p.key, p);
     });
     if (z.sec.k === 'stand') {
@@ -6253,7 +6269,7 @@ function draftEvent(d) {
   const low = Math.min(...Object.values(d.prices || {}).filter((x) => x > 0), Infinity);
   const e = { id: d.id, draft: true, filler: true, layout: 'bar', kind: d.kind, city: d.city, type: d.type || KIND_T[d.kind], name: d.title || 'برنامه‌ی بی‌نام', desc: d.desc || '', venue: `${d.city}، ${d.venue || '…'}`,
     startsAt: new Date(ts[0] || Date.now() + 7 * DAY).toISOString(), endsAt: ts.length > 1 ? new Date(ts[ts.length - 1]).toISOString() : undefined, price: priceText(low < Infinity ? low : KIND_BASE[d.kind] || 500000),
-    prices: d.prices, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
+    prices: d.prices, seatTier: d.seatTier, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
     poster: { src: d.poster || '', w: 2, h: 3 }, ver: 0 };
   e.title = `${e.type} ${e.name}`;
   setPal(e, d.pal || 'violet'); e.w = when(e);
@@ -6401,6 +6417,10 @@ const wizard = {
         <div class="wz-tiers">${used.map((t) => `<label class="wz-tier" style="--c:${TIER[t].c}"><i aria-hidden="true"></i><span><b>${esc(tierZones(h.plan, t).join('، '))}</b></span><span class="wz-in"><input data-t="${t}" inputmode="numeric" dir="ltr" value="${fa(Number(d.prices[t]).toLocaleString('en-US')).replace(/,/g, '٬')}" aria-label="قیمت ${esc(tierZones(h.plan, t).join('، '))}"><small>تومان</small></span></label>`).join('')}</div></div>
       <label class="wz-sw"><input type="checkbox" id="wzWk"${d.weekend ? ' checked' : ''}><span>سانس‌های پنجشنبه و جمعه ۱۰٪ گرون‌تر <small>(قیمت جدا برای هر سانس)</small></span></label>
       <p class="bk-note">${ico('info')}مالیات بر ارزش افزوده (۱۰٪) جدا به خریدار اضافه می‌شه. کارمزد بلیت ${pct(FEE)} از فروشه.</p>
+      <h3 class="wz-h3">قیمت تک‌صندلی‌ها <small>(اختیاری: صندلی‌های ویژه، یا سهمیه‌ی مهمان‌ها که فروشی نیست)</small></h3>
+      <div class="wz-brush"><div class="bk-seg" role="radiogroup" aria-label="قلم"><button type="button" role="radio" data-b="V" aria-checked="true"><i style="--c:${TIER.V.c}"></i>ویژه</button><button type="button" role="radio" data-b="X" aria-checked="false"><i style="--c:#6b7280"></i>فروشی نیست</button><button type="button" role="radio" data-b="" aria-checked="false">برگردوندن به قیمت ردیف</button></div><span id="wzPaintN"></span><button type="button" class="chip" id="wzPaintClr">${ico('undo')}پاک کردن همه</button></div>
+      <div class="wz-paint" id="wzPaint"></div><p class="bk-note">${ico('info')}روی صندلی‌ها بزن یا بکش. صندلی ویژه قیمت خودش رو داره؛ «فروشی نیست» تو نقشه‌ی خریدار خاکستریه.</p>
+      <label class="wz-tier wz-vip" style="--c:${TIER.V.c}" ${Object.values(d.seatTier || {}).includes('V') ? '' : 'hidden'}><i aria-hidden="true"></i><span><b>صندلی‌های ویژه</b></span><span class="wz-in"><input data-t="V" inputmode="numeric" dir="ltr" value="${d.prices.V ? fa(Number(d.prices.V).toLocaleString('en-US')).replace(/,/g, '٬') : ''}" aria-label="قیمت صندلی‌های ویژه"><small>تومان</small></span></label>
       <div class="wz-est" id="wzEst"></div>`;
     const est = () => {
       const L = hallLayout(PLANS[h.plan]); let one = 0;
@@ -6408,9 +6428,29 @@ const wizard = {
       const n = Math.max(1, d.days.length * d.times.length), all = one * n * (d.weekend ? 1.04 : 1);
       $('#wzEst', b).innerHTML = `<span>اگه همه‌ی ${fa(n)} سانس پر بشه</span><b>${short(all)} تومان</b><small>سهم شما بعد از کارمزد: ${short(all * (1 - FEE))} تومان</small>`;
     };
-    $$('[data-t]', b).forEach((x) => x.addEventListener('input', () => { const v = +enDigits(x.value).replace(/\D/g, '') || 0; d.prices[x.dataset.t] = v; x.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; const svg = miniPlan(h.plan, d.prices); $('.wz-plan', b).innerHTML = svg; est(); this.preview(); }));
+    $$('.wz-tiers [data-t]', b).forEach((x) => x.addEventListener('input', () => { const v = +enDigits(x.value).replace(/\D/g, '') || 0; d.prices[x.dataset.t] = v; x.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; const svg = miniPlan(h.plan, d.prices); $('.wz-plan', b).innerHTML = svg; est(); this.preview(); }));
     $('#wzWk', b).addEventListener('change', (ev) => { d.weekend = ev.target.checked; est(); });
     est();
+    this.paint4(b, h);
+  },
+  // the seats one by one: a brush (special, not for sale, back to the row's price), a press or a drag paints
+  paint4(b, h) {
+    const d = this.d; d.seatTier = d.seatTier || {};
+    const L = hallLayout(PLANS[h.plan] || PLANS['fan-m']), col = (z, p) => { const k = `${z.sec.id}-${p.row}-${p.n}`, o = d.seatTier[k]; if (o === 'V') return TIER.V.c; if (o === 'X') return '#6b7280'; const r = z.sec.runs.find(([a, bb]) => p.row >= a && p.row <= bb); return TIER[r ? r[2] : 'D'].c; };
+    const dots = L.secs.filter((z) => z.sec.k !== 'stand').flatMap((z) => z.seats.map((p) => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="9" data-k="${z.sec.id}-${p.row}-${p.n}" fill="${col(z, p)}"/>`)).join('');
+    const box = $('#wzPaint', b); const cx = L.cx, cy = L.cy, stage = L.stage === 'arc' ? `<path d="M ${cx - 230} ${cy - 96} H ${cx + 230} V ${cy - 20} Q ${cx} ${cy + 70} ${cx - 230} ${cy - 20} Z" class="hpm-st"/>` : `<rect x="${cx - 250}" y="${cy - 96}" width="500" height="96" rx="14" class="hpm-st"/>`;
+    box.innerHTML = `<svg viewBox="0 0 ${L.W} ${L.H}" class="hpm wz-paint-s" role="img" aria-label="پلان برای قیمت تک‌صندلی">${stage}<text x="${cx}" y="${cy - 40}" text-anchor="middle" class="hpm-w">صحنه</text>${dots}</svg>`;
+    const svg = $('svg', box); let brush = 'V', on = false;
+    const count = () => { const v = Object.values(d.seatTier), nV = v.filter((x) => x === 'V').length, nX = v.filter((x) => x === 'X').length; $('#wzPaintN', b).textContent = nV || nX ? `${fa(nV)} ویژه · ${fa(nX)} فروشی نیست` : ''; $('.wz-vip', b).hidden = !nV; if (nV && !(d.prices.V > 0)) { d.prices.V = Math.round((d.prices.A || 0) * 1.5 / 1e4) * 1e4; $('.wz-vip input', b).value = fa(d.prices.V.toLocaleString('en-US')).replace(/,/g, '٬'); } };
+    const paint = (c) => { if (!c || !c.dataset || !c.dataset.k) return; const k = c.dataset.k; if (brush) d.seatTier[k] = brush; else delete d.seatTier[k]; const [sid, row, n] = [k.slice(0, k.indexOf('-')), ...k.slice(k.indexOf('-') + 1).split('-').map(Number)]; const z = L.secs.find((q) => q.sec.id === sid); c.setAttribute('fill', col(z, { row, n })); };
+    svg.addEventListener('pointerdown', (ev) => { on = true; svg.setPointerCapture(ev.pointerId); paint(ev.target.closest('circle')); });
+    svg.addEventListener('pointermove', (ev) => { if (!on) return; paint(document.elementFromPoint(ev.clientX, ev.clientY)); });
+    const end = () => { if (!on) return; on = false; count(); this.preview(); };
+    svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+    $$('[data-b]', b).forEach((x) => x.addEventListener('click', () => { brush = x.dataset.b; $$('[data-b]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); }));
+    $('#wzPaintClr', b).addEventListener('click', () => { d.seatTier = {}; delete d.prices.V; this.paint4(b, h); });
+    const vi = $('.wz-vip input', b); vi.addEventListener('input', () => { const v = +enDigits(vi.value).replace(/\D/g, '') || 0; d.prices.V = v; vi.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; });
+    count();
   },
 
   /* 6. a last look, and to the admin */
@@ -6425,7 +6465,7 @@ const wizard = {
         ${row(1, 'پوستر', d.poster ? 'گذاشته شد' : 'پوستر موقت (از اسم و رنگ)')}
         ${row(2, 'سالن', h ? `${esc(h.name)} · ${esc(PLAN_T[h.plan])} · ${money(h.cap)} صندلی` : '<b class="neg">انتخاب نشده</b>')}
         ${row(3, 'سانس‌ها', n ? `${fa(n)} سانس، از ${esc(dayOf(atOf(d.days[0], d.times[0])))} تا ${esc(dayOf(atOf(d.days[d.days.length - 1], d.times[0])))} · ساعت ${d.times.map(fa).join('، ')}${d.sale === 'at' && d.saleAt ? ` · شروع فروش ${esc(dayOf(Date.parse(d.saleAt)))} ${esc(F.time.format(new Date(d.saleAt)))}` : ' · فروش بلافاصله بعد از تأیید'}` : '<b class="neg">هنوز سانسی نیست</b>')}
-        ${row(4, 'قیمت‌ها', h ? tiersUsed(h.plan).map((t) => `<span class="wz-pt" style="--c:${TIER[t].c}"><i></i>${d.prices[t] ? money(d.prices[t]) : '—'}</span>`).join('') + (d.weekend ? ' · آخر هفته ۱۰٪ بیشتر' : '') : '—')}
+        ${row(4, 'قیمت‌ها', h ? tiersUsed(h.plan).map((t) => `<span class="wz-pt" style="--c:${TIER[t].c}"><i></i>${d.prices[t] ? money(d.prices[t]) : '—'}</span>`).join('') + (d.weekend ? ' · آخر هفته ۱۰٪ بیشتر' : '') + (() => { const v = Object.values(d.seatTier || {}), nV = v.filter((x) => x === 'V').length, nX = v.filter((x) => x === 'X').length; return nV || nX ? ` · ${fa(nV)} صندلی ویژه${d.prices.V ? ` (${money(d.prices.V)})` : ''}، ${fa(nX)} فروشی نیست` : ''; })() : '—')}
       </dl>
       ${m.length ? `<p class="wz-msg is-bad">${ico('info')}مونده: ${m.map(([k, t]) => `<a href="#" data-step="${k}">${esc(t)}</a>`).join('، ')}</p>` : ''}
       <div class="wz-end">${d.status === 'review' ? `<button type="button" class="chip" id="wzPull">${ico('undo')}پس گرفتن و ویرایش</button>` : d.status === 'live' ? '' : `<button type="button" class="buy" id="wzSend"${m.length ? ' disabled' : ''}>${ico('check')}فرستادن برای تأیید مدیر</button>`}</div>`;
@@ -6920,7 +6960,7 @@ const hallsPage = {
    ten minutes to choose. The seats' address can't skip it (it comes back here without a pass). The admin turns it on for the
    busy shows (the default), for all, or off. Here the line is simulated and moves faster than a real one.
    ════════════════════════════════════════════════════════════════ */
-const hotShow = (e) => !!(e.badge || saleMs(e)) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);
+const hotShow = (e) => !!((e.badge && !e.draft) || saleMs(e)) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);   // a new show's «تازه» is not demand
 const queue = {
   need(e) { const m = store.get('blit.queueMode', 'hot'); return m === 'always' || (m === 'hot' && hotShow(e)); },
   ok(sid) { const p = store.sget('blit.qpass', null); return !!(p && p.sid === sid && p.until > Date.now()); },

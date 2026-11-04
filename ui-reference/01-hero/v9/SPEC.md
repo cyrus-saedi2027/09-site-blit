@@ -377,7 +377,8 @@ shift.
   poster (a file, scaled in the browser; or a stand-in from the name and a colour); the hall from the **library**, each
   with its plan drawn small; the sessions on a **Persian calendar** (days × hours) and the sale's start (at once, or a time
   with the countdown); the prices **per tier of the hall's plan** (the plan coloured by tier, the weekend 10 % dearer, what
-  a full house brings); a last look and «فرستادن برای تأیید مدیر».
+  a full house brings) and **seat by seat** (a brush on the plan, a press or a drag: «ویژه» with a price of its own, which
+  becomes a price chip «صندلی‌های ویژه» on the buyer's seat map, or «فروشی نیست» for the guests' quota, grey for the buyer); a last look and «فرستادن برای تأیید مدیر».
 - فروش و تسویه: what the buyers paid in three parts (the organiser's share, the 8 % fee, the VAT), the payouts, per show,
   a CSV file.
 - کدهای تخفیف: for a show or all, a percentage or an amount, uses and a last day; they work at checkout at once (a show's
