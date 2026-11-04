@@ -347,6 +347,23 @@ cut by the window or by its box, no text spilling out, no broken picture, no lab
 smaller than 24 px on the phone, and every link inside the site opens a page (`tools/qa-crawl.js`, `qa-flow.js`). A strip
 that scrolls sideways (the desks' tabs, the wizard's steps, the categories on a phone) fades at the edge with more to show.
 
+**A plan as a table of rows** (`planFromText`, and back `planToText`, in `admin.js`): the way a real hall's chart is typed in,
+by the admin or by us when the owner sends the plans. One line per row, the rows nearest the stage first:
+
+```
+صحنه: قوسی                     the stage: قوسی, صاف or پهن (if not written: قوسی)
+پارتر: نیم‌دایره                a section: its name, «:», its shape (نیم‌دایره or مستطیل); «فاصله ۱۱۰» = its distance from the
+۸ ۱۴ ۸ A                       section before (a row is ۲۸); then its rows: the seats of each block, an aisle between two
+۹ ۱۵ ۹                         numbers; a letter at the end (A, B, C, D, V) is the price of that row and of the rows after it
+لژ راست: ۶ × ۴                 boxes on a wall (how many × seats; «راست» or «چپ»)
+میزها: ۱۲ × ۶                  round tables (how many × chairs)
+ایستاده: ۸۰۰                   a standing area (how many people)
+```
+
+Digits Persian or Latin; «#» starts a note; a mistake is named by its line («خط ۳: …»). Where no price is written, the first
+seated section is cut in three (A, B, C from the stage) and the others are D. Every plan of the library written this way and
+read back keeps its seats (`tools/plantxt-test.js`). The seat map reads the result like any other plan.
+
 ## 10.3 The other pages: tracking, sign-in, the phone's menu, the fixed pages, archive, search, a category, a city
 
 All in `pages.js` (inside `index.html`), all pages of the same router (§10.1) and the same look (a head with the page's
@@ -418,8 +435,9 @@ puts a show on the site at once, «برگردوندن» with a reason; a show on
 شد» and every buyer's money goes back, to the wallet at once or to the card); سفارش‌ها (search by code, mobile or show;
 today / 7 / 30 days; the state; a refund; CSV); کاربرها و نقش‌ها (مدیر کل، مالی، اپراتور and what each may do);
 دسته‌ها و شهرها (a new category; which cities the buyers see in the header's and the list's city menus); سالن‌ها (the
-library, and **the hall designer**: the shape, rows, seats per row, blocks, a balcony, boxes, tables, a standing area, drawn
-as they change; a new hall is at once in the organisers' wizard); گزارش‌ها (a period, a city, a kind: every number and chart
+library, and **the hall designer** in two ways: «با چند عدد» — the shape, rows, seats per row, blocks, a balcony, boxes, tables,
+a standing area, drawn as they change — or «از روی جدول ردیف‌ها», for a real hall's seating chart typed in row by row (and
+started, if wanted, from a hall of the library); a new hall is at once in the organisers' wizard); گزارش‌ها (a period, a city, a kind: every number and chart
 below follows; CSV); کیف پول و کد هدیه (batches of gift codes of an organisation: a file or printed cards);
 تاریخچه‌ی تغییرات (who changed what, when).
 

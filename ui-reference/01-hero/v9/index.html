@@ -2168,6 +2168,19 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 }
 @keyframes sfade { from { --sfade-s: 0px; --sfade-e: 34px; } 6% { --sfade-s: 34px; --sfade-e: 34px; } 94% { --sfade-s: 34px; --sfade-e: 34px; } to { --sfade-s: 34px; --sfade-e: 0px; } }
 
+/* the hall designer from a table of rows */
+.ad-hm { justify-self: start; }
+.ad-txt { display: grid; gap: .55em; }
+.ad-txt[hidden], .ad-numc[hidden] { display: none; }
+.ad-numc { display: grid; gap: .6em; }
+.ad-txt textarea { box-sizing: border-box; width: 100%; min-height: 300px; padding: .7em 1em; border-radius: calc(var(--r) * .55); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 600 14.5px/1.95 var(--font); font-variant-numeric: tabular-nums; resize: vertical; tab-size: 4; }
+.ad-txt textarea:focus { outline: none; border-color: var(--viz-1, #60a5fa); }
+.ad-txt-help { margin: 0; font-size: 12.5px; line-height: 1.9; color: rgba(var(--fg), .62); }
+.ad-txt-st { margin: 0; font-size: 13px; font-weight: 700; color: #22c55e; }
+.ad-txt-st.is-bad { color: #f87171; }
+:root[data-mode="light"] .ad-txt-st { color: #15803d; }
+:root[data-mode="light"] .ad-txt-st.is-bad { color: #b91c1c; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -6912,7 +6925,7 @@ const tiersUsed = (key) => [...new Set((PLANS[key] || PLANS['fan-m']).secs.flatM
 const tierZones = (key, t) => (PLANS[key] || PLANS['fan-m']).secs.flatMap((z) => z.runs.filter((r) => r[2] === t).map(([a, b]) => (z.k === 'stand' ? z.t : `${z.t} ${RUN_WORD[z.k]} ${fa(a)}${b > a ? ` تا ${fa(b)}` : ''}`)));
 // a hall's plan, small: every seat a dot in its tier's colour, the standing area a block, the stage on top
 function miniPlan(key, prices) {
-  const L = hallLayout(PLANS[key] || PLANS['fan-m']), by = {};
+  const L = hallLayout(key && typeof key === 'object' ? key : PLANS[key] || PLANS['fan-m']), by = {};
   for (const z of L.secs) {
     const tierAt = (row) => { const r = z.sec.runs.find(([a, b]) => z.sec.k === 'stand' || (row >= a && row <= b)); return r ? r[2] : 'D'; };
     for (const p of z.seats) { const t = tierAt(p.row); (by[t] = by[t] || []).push(`M${(p.x - 7).toFixed(0)} ${p.y.toFixed(0)}a7 7 0 1 0 14 0a7 7 0 1 0 -14 0`); }
@@ -7303,8 +7316,91 @@ function buildPlan(p) {
   }
   return { stage: fan ? 'arc' : stand ? 'wide' : 'rect', secs };
 }
+// a hall's plan from a few lines of text: a real hall's seating chart typed in, row by row (the rows nearest the stage first).
+//   صحنه: قوسی | صاف | پهن          the stage (if not written: قوسی)
+//   پارتر: نیم‌دایره                  a section: its name, «:», its shape (نیم‌دایره or مستطیل), and if wanted «فاصله ۸۰» (from the
+//                                    section before it; a row is ۲۸) and a price letter for all of it
+//   ۸ ۱۴ ۸                           a row: the seats of each block, an aisle between two numbers
+//   ۹ ۱۵ ۹ B                         a letter at the end (A, B, C, D or V): the price of this row and of the rows after it
+//   لژ راست: ۶ × ۴                   boxes on a wall (how many × seats in each; «چپ» or «راست»)
+//   میزها: ۱۲ × ۶                    round tables (how many × chairs)        ایستاده: ۸۰۰    a standing area (how many people)
+// The digits may be Persian or Latin; «#» starts a note. Where no price is written, the first seated section is cut in three
+// (A nearest the stage, then B and C) and the others are D.
+function planFromText(txt) {   // (enDigits: buy.js)
+  const errs = [], items = []; let stage = 'arc', cur = null;
+  enDigits(txt || '').split(/\r?\n/).forEach((raw, i) => {
+    const line = raw.replace(/#.*$/, '').trim(), at = `خط ${fa(i + 1)}`; if (!line) return;
+    const m = line.match(/^([^:：\d][^:：]*)[:：](.*)$/);
+    if (m) {
+      const name = m[1].trim(), opt = m[2].trim(), all = `${name} ${opt}`, nums = (opt.replace(/فاصله\s*\d+/, '').match(/\d+/g) || []).map(Number);
+      if (/^صحنه/.test(name)) { stage = /صاف|مستطیل/.test(opt) ? 'rect' : /پهن/.test(opt) ? 'wide' : 'arc'; return; }
+      const g = opt.match(/فاصله\s*(\d+)/), t = opt.match(/(?:^|[^A-Za-z])([A-DV])(?![A-Za-z])/i);
+      const it = { name, line: i + 1, gap: g ? +g[1] : null, tier: t ? t[1].toUpperCase() : null };
+      // a shape written (نیم‌دایره, مستطیل) makes it a seated section, whatever its name (e.g. «ردیف‌های پشت میزها: مستطیل»)
+      const shaped = /نیم ?دایره|مستطیل|صاف/.test(opt.replace(/[\u200c\u200e\u200f]/g, ''));
+      if (!shaped && /ایستاده/.test(all)) { it.k = 'stand'; it.cap = nums[0] || 0; if (!(it.cap >= 1 && it.cap <= 30000)) errs.push(`${at}: جای ایستاده چند نفره؟ (مثلاً «ایستاده: ۸۰۰»)`); }
+      else if (!shaped && /میز/.test(all)) { it.k = 'tables'; it.count = nums[0] || 0; it.per = nums[1] || 6; if (!(it.count >= 1 && it.count <= 80) || !(it.per >= 2 && it.per <= 12)) errs.push(`${at}: میزها رو این‌طوری بنویس: «میزها: ۱۲ × ۶» (۱ تا ۸۰ میز، ۲ تا ۱۲ صندلی)`); }
+      else if (!shaped && /لژ/.test(all)) { it.k = 'boxes'; it.count = nums[0] || 0; it.per = nums[1] || 4; it.side = /چپ/.test(all) ? -1 : /راست/.test(all) ? 1 : 0; if (!(it.count >= 1 && it.count <= 24) || !(it.per >= 1 && it.per <= 10)) errs.push(`${at}: لژها رو این‌طوری بنویس: «لژ راست: ۶ × ۴» (۱ تا ۲۴ لژ، ۱ تا ۱۰ صندلی)`); }
+      else { it.k = /مستطیل|صاف/.test(opt) ? 'rect' : 'fan'; it.rows = []; cur = it; }
+      items.push(it); return;
+    }
+    const parts = line.split(/[\s,،|\-–—]+/).filter(Boolean); let tier = null;
+    if (parts.length && /^[A-DV]$/i.test(parts[parts.length - 1])) tier = parts.pop().toUpperCase();
+    const blocks = parts.map(Number);
+    if (!blocks.length || blocks.some((b) => !Number.isInteger(b) || b < 1 || b > 80) || blocks.length > 6) { errs.push(`${at}: یه ردیف یعنی صندلی‌های هر بلوک، عددهای ۱ تا ۸۰ (مثلاً «۸ ۱۴ ۸»)`); return; }
+    if (!cur) { cur = { name: 'سالن', k: 'fan', rows: [], gap: null, tier: null, line: i + 1 }; items.push(cur); }
+    cur.rows.push({ blocks, tier });
+  });
+  // where it all goes: the standing area in front of the stage, then the tables and the seated sections one behind the
+  // other (their distance from the stage), the boxes on the walls beside the widest rows
+  const out = [], stands = items.filter((x) => x.k === 'stand'); let cursor = stands.length ? 520 : 150, idn = 0, first = true, seatedBefore = false;
+  stands.forEach((s, k) => { out.push({ id: `ga${idn++}`, t: s.name, k: 'stand', cap: s.cap, box: [-310, 110 + k * 350, 620, 330], runs: [[0, 0, s.tier || 'B']] }); cursor = 520 + k * 350; });
+  for (const s of items) {
+    if (s.k === 'tables') {
+      const cols = clamp(Math.round(Math.sqrt(s.count * 1.7)), 2, 7), rows = Math.ceil(s.count / cols), y0 = cursor + (s.gap != null ? s.gap : 50);
+      out.push({ id: `t${idn++}`, t: s.name, k: 'tables', cols, rows, per: s.per, y0, dx: 128, dy: 116, runs: s.tier ? [[1, cols * rows, s.tier]] : [[1, cols, 'A'], [cols + 1, cols * rows, 'B']].filter(([a, b]) => b >= a) });
+      cursor = y0 + rows * 116; seatedBefore = true;
+    } else if (s.rows) {
+      const R = s.rows.length; if (!R) { errs.push(`خط ${fa(s.line)}: «${s.name}» هنوز ردیفی نداره`); continue; }
+      const firstT = (s.rows.find((r) => r.tier) || {}).tier || s.tier; let t = firstT;
+      const tiers = s.rows.map((r) => (t = r.tier || t));
+      const tierOf = (r) => tiers[r] || (first ? (r < R / 3 ? 'A' : r < (2 * R) / 3 ? 'B' : 'C') : 'D');
+      const runs = []; for (let r = 0; r < R; r++) { const x = tierOf(r), last = runs[runs.length - 1]; if (last && last[2] === x && last[1] === r) last[1] = r + 1; else runs.push([r + 1, r + 1, x]); }
+      const blocks = s.rows.map((r) => r.blocks), seats = (r) => blocks[Math.min(r, blocks.length - 1)];
+      const gap = s.gap != null ? s.gap : seatedBefore ? 80 : 0;
+      if (s.k === 'fan') { const R0 = Math.max(220, cursor - 20 + gap); out.push({ id: `s${idn++}`, t: s.name, k: 'fan', rows: R, R0, seats, runs }); cursor = R0 + (R - 1) * HP.gap + 20; }
+      else { const y0 = cursor + gap; out.push({ id: `s${idn++}`, t: s.name, k: 'rect', rows: R, y0, seats, runs }); cursor = y0 + (R - 1) * HP.gap; }
+      first = false; seatedBefore = true;
+    }
+  }
+  const boxes = items.filter((x) => x.k === 'boxes');
+  if (boxes.length) {
+    const L0 = hallLayout({ stage, secs: out.length ? out : [{ id: 'x', t: '', k: 'rect', rows: 1, y0: 150, seats: () => [10], runs: [[1, 1, 'A']] }] });
+    const maxX = L0.secs.reduce((m, z) => z.seats.reduce((q, p) => Math.max(q, Math.abs(p.x)), m), 260), y = { 1: 170, '-1': 170 }; let next = 1;
+    boxes.forEach((s) => { const side = s.side || next; next = -side; out.push({ id: `l${idn++}`, t: s.name, k: 'boxes', side, n: s.count, per: s.per, x: Math.max(300, maxX + 90), y0: y[side], dy: 82, runs: [[1, s.count, s.tier || 'A']] }); y[side] += s.count * 82 + 40; });
+  }
+  if (!out.length && !errs.length) errs.push('هنوز هیچ بخشی نیست: مثلاً بنویس «پارتر: نیم‌دایره» و زیرش ردیف‌ها رو');
+  const plan = { stage, secs: out }, L = out.length ? hallLayout(plan) : null;
+  return { plan, errs, cap: L ? L.secs.reduce((n, z) => n + (z.sec.k === 'stand' ? z.sec.cap : z.seats.length), 0) : 0, secs: out.length };
+}
+// and back: a plan of the library as those lines (to start from it); a section that can't be written so (a sports hall's
+// side stands) is left as a note
+function planToText(P) {
+  const L = [`صحنه: ${P.stage === 'rect' ? 'صاف' : P.stage === 'wide' ? 'پهن' : 'قوسی'}`];
+  const tierAt = (sec, r) => { const x = (sec.runs || []).find(([a, b]) => r >= a && r <= b); return x ? x[2] : ''; };
+  for (const s of P.secs) {
+    if (s.k === 'stand') L.push(`${s.t}: ایستاده ${fa(s.cap)}${tierAt(s, 0) && tierAt(s, 0) !== 'B' ? ` ${tierAt(s, 0)}` : ''}`);
+    else if (s.k === 'tables') L.push(`${s.t}: میز ${fa(s.cols * s.rows)} × ${fa(s.per)}`);
+    else if (s.k === 'boxes') L.push(`${/لژ/.test(s.t) ? s.t : `لژ ${s.t}`}: ${s.side < 0 && !/چپ/.test(s.t) ? 'چپ ' : s.side > 0 && !/راست/.test(s.t) ? 'راست ' : ''}${fa(s.n)} × ${fa(s.per)}${tierAt(s, 1) && tierAt(s, 1) !== 'A' ? ` ${tierAt(s, 1)}` : ''}`);
+    else if ((s.k === 'fan' || s.k === 'rect') && !s.rot) {
+      L.push(`${s.t}: ${s.k === 'rect' ? 'مستطیل' : 'نیم‌دایره'}`); let t = '';
+      for (let r = 0; r < s.rows; r++) { const x = tierAt(s, r + 1); L.push(`${s.seats(r).map((n) => fa(n)).join(' ')}${x !== t ? ` ${x}` : ''}`); t = x; }
+    } else L.push(`# «${s.t}» (${s.rot ? 'سکوی کنار سالن' : s.k}) با جدول ساخته نمی‌شه`);
+  }
+  return L.join('\n');
+}
 const customHalls = () => store.get('blit.halls', []);
-customHalls().forEach((h) => { PLANS[h.key] = buildPlan(h.p); PLAN_T[h.key] = 'پلان ساخته‌شده با طراح سالن'; HALLS.unshift([new RegExp(h.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), h.addr, h.key, null, null]); VENUES.push([h.city, h.name]); });
+customHalls().forEach((h) => { PLANS[h.key] = h.txt ? planFromText(h.txt).plan : buildPlan(h.p); PLAN_T[h.key] = 'پلان ساخته‌شده با طراح سالن'; HALLS.unshift([new RegExp(h.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), h.addr, h.key, null, null]); VENUES.push([h.city, h.name]); });
 
 // the sample orders of the whole site (the last 30 days), the ones bought in this browser first
 function siteOrders() {
@@ -7474,15 +7570,39 @@ const admin = {
     el.innerHTML = `${desk.head('سالن‌ها', `کتابخانه‌ی ${fa(list.length)} سالن؛ برگزارکننده‌ها از همین‌ها انتخاب می‌کنن. سالن تازه رو با طراح سالن بساز.`)}
       <section class="panel dk-box evp-rise ad-design" aria-labelledby="adDesH"><h2 id="adDesH">${ico('ruler')}طراح سالن<small id="adCap"></small></h2>
         <div class="ad-des"><div class="ad-des-c">
+          <div class="bk-seg ad-hm" role="radiogroup" aria-label="روش ساخت"><button type="button" role="radio" data-hm="num" aria-checked="${this.hm !== 'txt'}">با چند عدد</button><button type="button" role="radio" data-hm="txt" aria-checked="${this.hm === 'txt'}">از روی جدول ردیف‌ها</button></div>
+          <div class="ad-txt" id="adTxt"${this.hm === 'txt' ? '' : ' hidden'}>
+            <label class="bk-fld"><span>شروع از</span><select id="adTpl"><option value="">یه نمونه‌ی ساده</option>${Object.keys(PLANS).filter((k) => PLANS[k].secs.every((s) => !s.rot)).map((k) => `<option value="${esc(k)}">${esc((customHalls().find((h) => h.key === k) || {}).name || PLAN_T[k] || k)}</option>`).join('')}</select></label>
+            <label class="bk-fld"><span>ردیف‌ها (نزدیک صحنه اول)</span><textarea id="adT" rows="13" spellcheck="false" dir="rtl"></textarea></label>
+            <p class="ad-txt-help">هر بخش با اسمش و «:» شروع می‌شه (مثلاً «پارتر: نیم‌دایره» یا «بالکن: مستطیل، فاصله ۱۱۰»)؛ زیرش هر خط یه ردیفه: صندلی‌های هر بلوک، با فاصله (راهرو بینشون). یه حرف آخر ردیف (A تا D یا V) قیمت اون ردیف و بعدی‌هاشه. لژ: «لژ راست: ۶ × ۴»، میز: «میزها: ۱۲ × ۶»، ایستاده: «ایستاده: ۸۰۰».</p>
+            <p class="ad-txt-st" id="adTst" aria-live="polite"></p>
+          </div>
+          <div class="ad-numc" id="adNumc"${this.hm === 'txt' ? ' hidden' : ''}>
           <div class="bk-seg" role="radiogroup" aria-label="شکل سالن"><button type="button" role="radio" data-shape="fan" aria-checked="${p.shape === 'fan'}">نیم‌دایره</button><button type="button" role="radio" data-shape="rect" aria-checked="${p.shape === 'rect'}">مستطیل</button></div>
           ${num('rows', 'ردیف‌های همکف', 3, 30)}${num('seats', 'صندلی هر ردیف', 6, 40)}${num('blocks', 'بلوک‌ها (راهروها + ۱)', 1, 3)}${num('balcony', 'ردیف‌های بالکن', 0, 10)}${num('boxes', 'لژ در هر طرف', 0, 8)}${num('tables', 'میز (شش‌نفره)', 0, 24)}${num('stand', 'جای ایستاده (نفر)', 0, 3000, 100)}
           <label class="wz-sw"><input type="checkbox" id="adGrow"${p.grow ? ' checked' : ''}><span>ردیف‌های عقب بلندتر</span></label>
+          </div>
           <div class="wz-grid"><label class="bk-fld"><span>اسم سالن</span><input id="adHn" placeholder="مثلاً: تالار شهر"></label><label class="bk-fld"><span>شهر</span><select id="adHc">${CITIES.map((c) => `<option${c === 'تهران' ? ' selected' : ''}>${esc(c)}</option>`).join('')}</select></label></div>
           <label class="bk-fld"><span>نشانی</span><input id="adHa" placeholder="خیابان، کوچه، پلاک"></label>
           <button type="button" class="buy" id="adHsave">${ico('check')}افزودن به کتابخانه</button></div>
           <div class="ad-des-v" id="adPrev"></div></div></section>
       <section class="panel dk-box evp-rise"><h2>${ico('pin')}کتابخانه</h2><div class="wz-halls ad-lib">${list.map((h) => `<div class="wz-hall">${miniPlan(h.plan)}<span><b>${esc(h.name)}</b><small>${esc(h.city)} · ${esc(h.addr)}</small><small>${esc(PLAN_T[h.plan] || '')} · ${money(h.cap)} صندلی</small></span></div>`).join('')}</div></section>`;
-    const draw = () => { const P = buildPlan(p), L = hallLayout(P), cap = L.secs.reduce((n, z) => n + (z.sec.k === 'stand' ? z.sec.cap : z.seats.length), 0); $('#adPrev', el).innerHTML = miniPlan(P); $('#adCap', el).textContent = `${money(cap)} جا · ${fa(L.secs.length)} بخش`; };
+    const SAMPLE = 'صحنه: قوسی\nپارتر: نیم‌دایره\n۶ ۱۲ ۶ A\n۶ ۱۳ ۶\n۷ ۱۳ ۷\n۷ ۱۴ ۷ B\n۸ ۱۴ ۸\n۸ ۱۵ ۸\n۹ ۱۵ ۹ C\n۹ ۱۶ ۹\nلژ راست: ۵ × ۴\nلژ چپ: ۵ × ۴\nبالکن: نیم‌دایره، فاصله ۱۱۰\n۱۰ ۱۸ ۱۰ D\n۱۱ ۱۸ ۱۱\n۱۱ ۱۹ ۱۱';
+    if (this.ht == null) this.ht = SAMPLE;
+    const ta = $('#adT', el); ta.value = this.ht;
+    const draw = () => {
+      if (this.hm === 'txt') {
+        const r = planFromText(this.ht), st = $('#adTst', el);
+        st.classList.toggle('is-bad', r.errs.length > 0); st.textContent = r.errs.length ? `${r.errs[0]}${r.errs.length > 1 ? ` (و ${fa(r.errs.length - 1)} ایراد دیگه)` : ''}` : `درسته: ${money(r.cap)} جا در ${fa(r.secs)} بخش`;
+        if (r.secs) $('#adPrev', el).innerHTML = miniPlan(r.plan);
+        $('#adCap', el).textContent = r.secs ? `${money(r.cap)} جا · ${fa(r.secs)} بخش` : '';
+        return;
+      }
+      const P = buildPlan(p), L = hallLayout(P), cap = L.secs.reduce((n, z) => n + (z.sec.k === 'stand' ? z.sec.cap : z.seats.length), 0); $('#adPrev', el).innerHTML = miniPlan(P); $('#adCap', el).textContent = `${money(cap)} جا · ${fa(L.secs.length)} بخش`;
+    };
+    let tt = 0; ta.addEventListener('input', () => { this.ht = ta.value; clearTimeout(tt); tt = setTimeout(draw, 160); });
+    $('#adTpl', el).addEventListener('change', (ev) => { const k = ev.target.value; this.ht = k && PLANS[k] ? planToText(PLANS[k]) : SAMPLE; ta.value = this.ht; draw(); });
+    $$('[data-hm]', el).forEach((b) => b.addEventListener('click', () => { this.hm = b.dataset.hm; $$('[data-hm]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); $('#adTxt', el).hidden = this.hm !== 'txt'; $('#adNumc', el).hidden = this.hm === 'txt'; draw(); }));
     $$('[data-k]', el).forEach((r) => r.addEventListener('input', () => { p[r.dataset.k] = +r.value; $(`#adO-${r.dataset.k}`, el).textContent = fa(r.value); draw(); }));
     $$('[data-shape]', el).forEach((b) => b.addEventListener('click', () => { p.shape = b.dataset.shape; $$('[data-shape]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); draw(); }));
     $('#adGrow', el).addEventListener('change', (ev) => { p.grow = ev.target.checked; draw(); });
@@ -7490,8 +7610,9 @@ const admin = {
       const name = $('#adHn', el).value.trim(), city = $('#adHc', el).value, addr = $('#adHa', el).value.trim() || `${city}`;
       if (name.length < 3) { toast('اسم سالن رو بنویس.'); $('#adHn', el).focus(); return; }
       if (VENUES.some(([c, n]) => c === city && n === name)) { toast('این سالن تو کتابخانه هست.'); return; }
-      const key = `c-${Date.now().toString(36)}`, h = { key, name, city, addr: `${city}، ${addr}`, p: { ...p } };
-      store.set('blit.halls', customHalls().concat(h)); PLANS[key] = buildPlan(h.p); PLAN_T[key] = 'پلان ساخته‌شده با طراح سالن'; HALLS.unshift([new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), h.addr, key, null, null]); VENUES.push([city, name]); capCache.delete(key);
+      let made = null; if (this.hm === 'txt') { made = planFromText(this.ht); if (made.errs.length || !made.secs) { toast(made.errs[0] || 'پلان هنوز بخشی نداره.'); ta.focus(); return; } }
+      const key = `c-${Date.now().toString(36)}`, h = made ? { key, name, city, addr: `${city}، ${addr}`, txt: this.ht } : { key, name, city, addr: `${city}، ${addr}`, p: { ...p } };
+      store.set('blit.halls', customHalls().concat(h)); PLANS[key] = made ? made.plan : buildPlan(h.p); PLAN_T[key] = 'پلان ساخته‌شده با طراح سالن'; HALLS.unshift([new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), h.addr, key, null, null]); VENUES.push([city, name]); capCache.delete(key);
       auditLog(`سالن «${name}» (${city}) به کتابخانه اضافه شد`); toast('سالن اضافه شد؛ برگزارکننده‌ها حالا می‌تونن انتخابش کنن.'); this.halls(el);
     });
     draw();
@@ -8229,7 +8350,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
