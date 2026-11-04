@@ -589,6 +589,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 /* the poster's frame (--pr: width ÷ height). The poster is shown whole: it fills the frame when its shape is the frame's, else the frame is filled by a soft copy of it */
 .tkt-pic { position: relative; display: block; aspect-ratio: var(--pr, .667); overflow: hidden; background: #14121d; cursor: pointer; }
 .tkt-pic::before, .ptk-pic::before { content: ""; position: absolute; inset: -14%; background: var(--art) center / cover no-repeat; filter: blur(16px) brightness(.72) saturate(1.2); }
+.tkt.has-soft .tkt-pic::before, .ptk.has-soft .ptk-pic::before { background-image: var(--art-p); filter: none; }   /* the small, already-blurred copy: no live filter */
 .tkt-pic.is-fill::before, .ptk-pic.is-fill::before { display: none; }
 .tkt-pic img, .ptk-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
 .tkt-pic.is-fill img, .ptk-pic.is-fill img { object-fit: fill; }
@@ -612,6 +613,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .tkt-info { position: relative; isolation: isolate; display: grid; grid-template-rows: auto auto auto 1fr; align-content: start; padding: calc(var(--u) * 1.05) calc(var(--u) * 1.15) calc(var(--u) * .95); color: #fff; --fg: 255, 255, 255; overflow: hidden; }
 .tkt-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #14121d; }
 .tkt-bg::before { content: ""; position: absolute; inset: -30px -24px; background: var(--art) center bottom / cover no-repeat; filter: blur(15px) saturate(1.3); transform: scale(1.12); }
+.tkt.has-soft .tkt-bg::before { background-image: var(--art-b); filter: none; }
 .tkt-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8, 8, 12, .5), rgba(8, 8, 12, .78)); }
 .tkt[data-st="soldout"] .tkt-bg::before { filter: grayscale(.85) brightness(.7) blur(15px); }
 .tkt[data-st="held"] .tkt-bg::before, .tkt[data-st="cancelled"] .tkt-bg::before { filter: grayscale(1) blur(15px); }
@@ -746,6 +748,10 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   .ptk-foot .tkt-price { display: grid; }
 }
 @media (prefers-reduced-motion: reduce) { .tkt, .ptk, .tkt-pic img, .ptk-pic img, .cat, .cat-ind, .catnav, .tkt-perf, .ptk-perf, .totop, .more-btn svg.i { transition: none; } .tkt-glare { display: none; } .cd-b b.fl, .ptk-rem svg.i { animation: none !important; } }
+
+/* the rise on arrival (section2.js watch): waiting low and clear, then the same motion as before, by the stylesheet */
+.rv-wait { transform: translateY(var(--rvy, 34px)) !important; opacity: 0 !important; transition: none !important; }
+.rv-go { transition: transform 1.05s cubic-bezier(.16, 1, .3, 1) var(--rvd, 0ms), opacity 1.05s cubic-bezier(.16, 1, .3, 1) var(--rvd, 0ms) !important; }
 
 /* ── the show's page (#/e/<show>): the home page steps aside (the hero and the list are kept, hidden, and come back where they
    were); the page is made of the same panels, gaps, margins and colours ── */
@@ -1244,6 +1250,104 @@ a.buy, a.chip { text-decoration: none; }
   .tk-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
 }
 @media (prefers-reduced-motion: reduce) { .seat, .bk-list li, .bk-live > i, .seat.is-pop, .seat.is-live, .tk-check.is-in circle, .tk-check.is-in path, .spin { animation: none !important; transition: none !important; } }
+
+/* ── the seat map (seatmap.js): the overview, the best seats, one section big; light on the browser (no per-seat transforms
+   that change, no custom properties animated, one composited container) ── */
+.bk-map { grid-template-rows: none; gap: calc(var(--u) * .6); }
+.sm-tabs { flex-wrap: wrap; border-radius: 18px; }
+.sm-top { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(250px, 1fr); gap: calc(var(--u) * .6); }
+.sm-mini { position: relative; height: clamp(170px, 23svh, 260px); border-radius: calc(var(--r) * .8); overflow: hidden; cursor: default; background: radial-gradient(110% 70% at 50% 0%, color-mix(in oklab, var(--sc) 10%, transparent), transparent 65%), rgba(var(--fg), .03); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
+.sm-mini.is-on { cursor: pointer; }
+.sm-mini canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sm-mini-tip { position: absolute; top: 8px; right: 10px; padding: 3px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; background: var(--capsule); box-shadow: 0 6px 16px -8px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(var(--fg), .14); opacity: 0; transition: opacity .2s; pointer-events: none; }
+.sm-mini-tip:not(:empty) { opacity: 1; }
+.sm-mini-hint { position: absolute; bottom: 8px; left: 10px; display: inline-flex; align-items: center; gap: .35em; font-size: 11px; color: rgba(var(--fg), .5); pointer-events: none; }
+.sm-mini-hint svg.i { width: 1.2em; height: 1.2em; }
+.sm-best { display: grid; align-content: center; gap: .55em; padding: calc(var(--u) * .8) calc(var(--u) * .9); border-radius: calc(var(--r) * .8); background: color-mix(in oklab, var(--sc) 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 26%, transparent); }
+.sm-best > b { display: flex; align-items: center; gap: .45em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.5; }
+.sm-best > b svg.i { width: 1.25em; height: 1.25em; color: var(--sc); }
+.sm-best p { margin: 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), .65); }
+.sm-bn { justify-self: start; display: inline-flex; align-items: center; gap: .35em; padding: 3px; border-radius: 999px; background: rgba(var(--fg), .07); }
+.sm-bn button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; color: rgb(var(--fg)); transition: background-color .2s; }
+.sm-bn button:hover { background: rgba(var(--fg), .1); }
+.sm-bn button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 1px; }
+.sm-bn button svg.i { width: 15px; height: 15px; }
+.sm-bn output { min-width: 1.5em; text-align: center; font-size: 18px; font-weight: 900; }
+.sm-bn span { font-size: 12px; color: rgba(var(--fg), .65); margin-inline-end: .2em; }
+.sm-best .buy { justify-self: stretch; gap: .45em; height: 44px; min-width: 0; }
+.sm-head { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: 0 calc(var(--u) * .3); }
+.sm-head > div { display: grid; line-height: 1.6; }
+.sm-head b { font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: 800; }
+.sm-head small { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .62); }
+.sm-stage { flex: none; display: inline-flex; align-items: center; gap: .35em; padding: .3em .9em; border-radius: 999px; font-size: 12px; font-weight: 600; color: rgba(var(--fg), .75); background: linear-gradient(90deg, rgba(139, 92, 246, .2), rgba(236, 72, 153, .2), rgba(249, 115, 22, .2)); }
+.sm-stage svg.i { width: 1.1em; height: 1.1em; }
+.sm-view { --smz: clamp(28px, 1.8vw, 34px); position: relative; max-height: min(64svh, 760px); overflow: auto; overscroll-behavior: contain; direction: ltr; padding: 16px 12px 20px; border-radius: calc(var(--r) * .8); background: radial-gradient(120% 50% at 50% 0%, color-mix(in oklab, var(--sc) 9%, transparent), transparent 60%), rgba(var(--fg), .025); scrollbar-width: thin; }
+@media (pointer: coarse) { .sm-view { --smz: 34px; } }
+.sm-in { width: max-content; min-width: 100%; display: grid; justify-items: center; align-content: start; gap: 7px; direction: rtl; }
+.sm-row { display: flex; align-items: center; gap: 10px; }
+.sm-rl { flex: none; z-index: 1; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 700; color: rgba(var(--fg), .6); background: var(--capsule); box-shadow: 0 0 0 3px var(--capsule); font-variant-numeric: tabular-nums; }
+/* the row's number stays in sight at both edges when a wide section is scrolled sideways */
+.sm-row > .sm-rl:first-child { position: sticky; right: 4px; }
+.sm-row > .sm-rl:last-child { position: sticky; left: 4px; }
+.sm-seats { display: flex; gap: 4px; }
+.sm-aisle { flex: none; width: calc(var(--smz) * .6); }
+.sm-s { all: unset; box-sizing: border-box; flex: none; width: var(--smz); height: calc(var(--smz) * .9); display: grid; place-items: center; border-radius: 9px 9px 6px 6px; font: 700 calc(var(--smz) * .36)/1 var(--font); color: rgb(var(--fg)); cursor: pointer; touch-action: manipulation; transition: translate .16s var(--ease), background-color .2s, box-shadow .2s, opacity .2s; }
+.sm-s[data-st="free"] { background: color-mix(in oklab, var(--c) 24%, transparent); box-shadow: inset 0 0 0 1.5px var(--c); }
+@media (hover: hover) { .sm-s[data-st="free"]:hover { background: var(--c); color: #fff; translate: 0 -2px; } }
+.sm-s[data-st="mine"] { background: rgb(var(--fg)); color: var(--capsule); box-shadow: 0 0 0 2px var(--c), 0 6px 14px -6px var(--c); }
+.sm-s[data-st="held"] { background: repeating-linear-gradient(45deg, rgba(245, 158, 11, .9) 0 3px, rgba(180, 83, 9, .9) 3px 6px); color: transparent; cursor: not-allowed; }
+.sm-s[data-st="sold"] { background: rgba(var(--fg), .1); color: rgba(var(--fg), .22); cursor: not-allowed; }
+.sm-s[data-st="off"] { background: none; box-shadow: inset 0 0 0 1px rgba(var(--fg), .22); color: transparent; cursor: not-allowed; }
+.sm-s.is-dim { opacity: .22; }
+.sm-s:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.sm-s.is-pop { animation: smPop .32s var(--ease); }
+@keyframes smPop { 45% { scale: 1.2; } }
+.sm-s.is-live { animation: smLive 1.1s ease-out; }
+@keyframes smLive { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, .85); } 100% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); } }
+.sm-s.is-best { animation: smBest 1.8s var(--ease); }
+@keyframes smBest { 0%, 55% { box-shadow: 0 0 0 3px var(--c), 0 0 22px 4px var(--c); scale: 1.08; } 100% { box-shadow: 0 0 0 2px var(--c); scale: 1; } }
+/* the boxes and the tables: cards of their seats */
+.sm-in.sm-k-boxes, .sm-in.sm-k-tables { width: 100%; }
+.sm-groups { width: min(100%, 980px); display: grid; grid-template-columns: repeat(auto-fill, minmax(calc(var(--smz) * 3.7), 1fr)); gap: 10px; }
+.sm-g { display: grid; justify-items: center; align-content: start; gap: 6px; padding: 10px 8px; border-radius: 14px; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+.sm-g b { font-size: 12.5px; font-weight: 700; }
+.sm-g small { font-size: 11px; color: rgba(var(--fg), .58); }
+.sm-boxes .sm-gs { display: grid; grid-template-columns: repeat(2, var(--smz)); gap: 4px; }
+.sm-tables .sm-gs { position: relative; width: calc(var(--smz) * 3.3); height: calc(var(--smz) * 3.3); border-radius: 50%; background: radial-gradient(circle, rgba(var(--fg), .09) 0 31%, transparent 32%); }
+.sm-tables .sm-gs .sm-s { position: absolute; left: 50%; top: 50%; margin: calc(var(--smz) * -.45) 0 0 calc(var(--smz) * -.5); transform: rotate(calc(var(--i) * 360deg / var(--n))) translateY(calc(var(--smz) * -1.18)) rotate(calc(var(--i) * -360deg / var(--n))); }
+/* a standing area: a card with − and + */
+.sm-ga { display: grid; justify-items: center; gap: .7em; width: min(540px, 100%); padding: 30px 20px; border-radius: 22px; text-align: center; background: repeating-linear-gradient(45deg, color-mix(in oklab, var(--c) 14%, transparent) 0 12px, color-mix(in oklab, var(--c) 7%, transparent) 12px 24px); box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--c) 50%, transparent); }
+.sm-ga > b { font-size: 22px; font-weight: 900; }
+.sm-ga > span { font-size: 14px; color: rgba(var(--fg), .75); }
+.sm-ga > small { font-size: 12px; color: rgba(var(--fg), .55); }
+.sm-qty { display: inline-flex; align-items: center; gap: 14px; padding: 5px; border-radius: 999px; background: var(--capsule); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); }
+.sm-qty button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: rgba(var(--fg), .08); color: rgb(var(--fg)); }
+.sm-qty button:hover { background: var(--c); color: #fff; }
+.sm-qty button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.sm-qty output { min-width: 2ch; text-align: center; font-size: 24px; font-weight: 900; }
+.sm-ga.is-pop { animation: smPop2 .35s var(--ease); }
+@keyframes smPop2 { 50% { scale: 1.025; } }
+/* a seat's name and price under the mouse */
+.sm-tip { position: absolute; z-index: 5; translate: -50% -100%; padding: .38em .8em; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap; pointer-events: none; background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 10px 26px -10px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(var(--fg), .14); }
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .sm-top { grid-template-columns: minmax(0, 1fr); }
+  .sm-mini { height: 160px; }
+  .sm-view { max-height: none; padding: 12px 8px 16px; }
+  .sm-best { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  .sm-best > b, .sm-best p { grid-column: 1 / -1; }
+}
+@media (prefers-reduced-motion: reduce) { .sm-s, .sm-ga { animation: none !important; transition: none !important; } }
+
+.sm-stagebar { width: min(78%, 720px); min-width: 220px; height: 30px; margin-bottom: 8px; display: grid; place-items: center; border-radius: 6px 6px 50% 50% / 6px 6px 100% 100%; background: linear-gradient(90deg, rgba(139, 92, 246, .28), rgba(236, 72, 153, .28), rgba(249, 115, 22, .28)); box-shadow: inset 0 -2px 0 rgba(var(--fg), .2); }
+.sm-stagebar span { font-size: 12px; font-weight: 800; letter-spacing: .3em; color: rgba(var(--fg), .8); }
+
+/* the overview as a navigator: the part of the section in view, framed; a sideways drag moves it (up and down still scroll the page) */
+.sm-mini { touch-action: pan-y; }
+.sm-mini-vp { position: absolute; left: 0; top: 0; border-radius: 7px; pointer-events: none; background: rgba(var(--fg), .07); box-shadow: 0 0 0 1.5px rgba(var(--fg), .9), 0 0 0 4px rgba(var(--fg), .12); }
+.sm-mini-vp[hidden] { display: none; }
+
+.sm-rl { pointer-events: none; }
+.sm-view { scroll-padding-inline: 34px; }
 
 /* ── the other pages (pages.js): their head, boxes, the purchase tracking, the questions, the sign-in window, the phone's menu ── */
 .pg-head { display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6); border-radius: calc(var(--r) * 1.15); }
@@ -2005,21 +2109,21 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .pg-ac .bk-fld input:disabled { opacity: .7; }
 
 /* the SMS templates */
-.sm-fields { display: flex; flex-wrap: wrap; align-items: center; gap: .4em .5em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
-.sm-fields code { padding: .15em .55em; border-radius: 8px; background: rgba(var(--fg), .07); color: rgb(var(--fg)); font-family: var(--font); }
-.sm-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 620px), 1fr)); gap: var(--gap); }
-.sm-g { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1em; align-items: start; }
-.sm-g .bk-fld { margin: 0; }
-.sm-g textarea { box-sizing: border-box; width: 100%; padding: .7em .9em; border-radius: 12px; border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 13.5px/1.9 var(--font); resize: vertical; }
-.sm-phone { display: grid; gap: .4em; padding: 14px; border-radius: 22px; background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
-.sm-bub { justify-self: start; max-width: 100%; padding: .7em .9em; border-radius: 16px 16px 16px 4px; background: color-mix(in oklab, var(--viz-1) 22%, var(--capsule)); font-size: 13px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
-.sm-phone small { font-size: 11px; color: rgba(var(--fg), .5); }
-.sm-n[data-tone="good"] { color: #22c55e !important; }
-.sm-n[data-tone="warn"] { color: #f59e0b !important; }
-.sm-n[data-tone="bad"] { color: #f43f5e !important; }
-.sm-acts { display: flex; justify-content: flex-end; margin-top: .6em; }
-.sm-acts .chip { gap: .4em; }
-@media (max-width: 760px) { .sm-g { grid-template-columns: minmax(0, 1fr); } }
+.sms-fields { display: flex; flex-wrap: wrap; align-items: center; gap: .4em .5em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .6); }
+.sms-fields code { padding: .15em .55em; border-radius: 8px; background: rgba(var(--fg), .07); color: rgb(var(--fg)); font-family: var(--font); }
+.sms-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 620px), 1fr)); gap: var(--gap); }
+.sms-g { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 1em; align-items: start; }
+.sms-g .bk-fld { margin: 0; }
+.sms-g textarea { box-sizing: border-box; width: 100%; padding: .7em .9em; border-radius: 12px; border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 13.5px/1.9 var(--font); resize: vertical; }
+.sms-phone { display: grid; gap: .4em; padding: 14px; border-radius: 22px; background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+.sms-bub { justify-self: start; max-width: 100%; padding: .7em .9em; border-radius: 16px 16px 16px 4px; background: color-mix(in oklab, var(--viz-1) 22%, var(--capsule)); font-size: 13px; line-height: 1.9; white-space: pre-wrap; overflow-wrap: anywhere; }
+.sms-phone small { font-size: 11px; color: rgba(var(--fg), .5); }
+.sms-n[data-tone="good"] { color: #22c55e !important; }
+.sms-n[data-tone="warn"] { color: #f59e0b !important; }
+.sms-n[data-tone="bad"] { color: #f43f5e !important; }
+.sms-acts { display: flex; justify-content: flex-end; margin-top: .6em; }
+.sms-acts .chip { gap: .4em; }
+@media (max-width: 760px) { .sms-g { grid-template-columns: minmax(0, 1fr); } }
 
 /* a change asked for (changes.js) */
 .ch-box { width: min(720px, 100%); }
@@ -2045,6 +2149,14 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .tour-a .chip { gap: .35em; }
 .tour-a .chip:disabled { opacity: .4; }
 .tour-a .au-x { position: static; margin-inline-start: auto; }
+
+/* the live dots (the desks, the gate, the seat map): the ring that goes out from a dot is a copy of the dot, grown and faded
+   (work the compositor does alone), not a growing shadow that repaints the dot every frame */
+.dk-live i, .gt-net:not([data-s="sync"]) i, .gt-live i, .bk-live > i { position: relative; animation: none; box-shadow: none; }
+.dk-live i::after, .gt-net:not([data-s="sync"]) i::after, .gt-live i::after, .bk-live > i::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none; animation: dotPing 2s ease-out infinite; }
+.bk-live > i::after { background: #22c55e; animation-duration: 1.8s; }
+@keyframes dotPing { 0% { transform: scale(1); opacity: .6; } 70%, 100% { transform: scale(2.9); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dk-live i::after, .gt-net i::after, .gt-live i::after, .bk-live > i::after { animation: none; } }
 
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -2870,7 +2982,7 @@ const sale = {
       const s = Math.max(0, Math.ceil((saleMs(e) - now) / 1000)), days = !!box.querySelector('b[data-u="d"]');
       const v = { d: Math.floor(s / 86400), h: days ? Math.floor((s % 86400) / 3600) : Math.floor(s / 3600), m: Math.floor((s % 3600) / 60), s: s % 60 };
       // a number that changes turns over (a flip clock), as in the sample
-      $$('b[data-u]', box).forEach((b) => { const t = fa(String(v[b.dataset.u]).padStart(2, '0')); if (b.textContent !== t) { b.textContent = t; if (MOTK() && !document.hidden) { b.classList.remove('fl'); void b.offsetWidth; b.classList.add('fl'); } } });
+      $$('b[data-u]', box).forEach((b) => { const t = fa(String(v[b.dataset.u]).padStart(2, '0')); if (b.textContent !== t) { b.textContent = t; if (MOTK() && !document.hidden && b.animate) b.animate([{ transform: 'rotateX(-88deg)', opacity: 0.25 }, { transform: 'none', opacity: 1 }], { duration: 550, easing: 'cubic-bezier(.22, 1, .36, 1)' }); } });
     });
     LIST().forEach((e) => { if (saleMs(e) && saleMs(e) <= now) sale.open(e); });
   },
@@ -3038,6 +3150,28 @@ async function loadArt(img, a, e, sizes) {
     try { await img.decode(); } catch (err2) { /* nothing more to do */ }
   }
 }
+// work that can wait (the ambient behind the banner, the cards' soft copies when there is no worker): one job per
+// idle moment of the browser (more if the moment is long), so it never holds up a scroll, a tap or the first paint
+function whenIdle(fn, first = false) {
+  const L = whenIdle.s || (whenIdle.s = { q: [], on: false });
+  if (first) L.q.unshift(fn); else L.q.push(fn);
+  if (L.on) return; L.on = true;
+  const sched = (f) => ('requestIdleCallback' in window ? requestIdleCallback(f, { timeout: 2500 }) : setTimeout(f, 60));
+  const tick = (dl) => {
+    do { const f = L.q.shift(); try { f(); } catch (err) { /* nothing */ } } while (L.q.length && dl && dl.timeRemaining && dl.timeRemaining() > 10);
+    if (L.q.length) sched(tick); else L.on = false;
+  };
+  sched(tick);
+}
+// an ambient that is not on screen (any background but «glow») waits; the moment the look turns to «glow»,
+// the waiting ones are drawn, in the browser's spare time, the first one first
+function ambLater(fn) {
+  const A = ambLater.s || (ambLater.s = { q: [], mo: null });
+  A.q.push(fn);
+  if (A.mo || !('MutationObserver' in window)) { if (!A.mo) whenIdle(fn); return; }
+  A.mo = new MutationObserver(() => { if (document.documentElement.dataset.bg === 'glow') A.q.splice(0).forEach((f) => whenIdle(f)); });
+  A.mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-bg'] });
+}
 // the ambient: the picture, 64 px wide and soft, stretched over the screen behind it (only when the look asks
 // for the glow). On the server this is made once on upload and stored as a tiny WebP, about 1 KB.
 function ambientOf(img) {
@@ -3107,13 +3241,15 @@ async function buildScene(e) {
   el.innerHTML = `<div class="amb" aria-hidden="true"></div>${MODES[mode](e)}`;
   const img = $('img.art', el);
   await loadArt(img, pic, e, SIZES);
-  const amb = ambientOf(img);
+  const amb = document.documentElement.dataset.bg === 'glow' ? ambientOf(img) : '';
   if (amb) el.style.setProperty('--amb', `url("${amb}")`);
+  else ambLater(() => { const a = ambientOf(img); if (a) { el.style.setProperty('--amb', `url("${a}")`); if (el.__s) el.__s.amb = a; } });
   const s = {
     e, ver: e.ver, el, mode, img, amb, busy: false, fadeTw: null, zoomTw: null, ro: null,
     frame: $('.frame', el), zoomEl: $('.pic', el),
     parts: $$('[data-part]', el), buy: $('.buy', el), art: $('.stage', el),
   };
+  el.__s = s;
   // the banner's panel takes all the room that is left. It is shown whole, in the middle; when the panel's
   // shape isn't the banner's own, black (or, as an option, the banner's mirrored, blurred edge) fills the rest
   // (is-h: at the sides, is-v: above and below). A shape that agrees to within FILL_TOL lets the banner fill the
@@ -3990,17 +4126,33 @@ const hd = {
    scrolling: the header becomes a small centred pill and follows the page; the hero stays where it is while
    the second section slides over it (the hero shrinks a little, rounds its corners and goes dark)
    ════════════════════════════════════════════════════════════════ */
+// the page's height and the hero's, read when they change (a ResizeObserver: after the layout, so reading them costs nothing),
+// never in the middle of a scroll (reading them there makes the browser lay the whole page out again, every event)
+const pageM = {
+  max: 0, heroH: 0, vh: 0,
+  init() {
+    const upd = () => { this.vh = innerHeight; this.max = document.documentElement.scrollHeight - this.vh; this.heroH = hero.offsetHeight || this.vh; };
+    upd();
+    if ('ResizeObserver' in window) { const ro = new ResizeObserver(upd); ro.observe(document.body); ro.observe(hero); }
+    addEventListener('resize', upd, { passive: true });
+  },
+};
 const scrollFx = {
   cur: 0, p: -1, compact: false,
+  hooks: [],   // the list's own followers of the scroll (the section in view, the ring): called with the scroll, before the writes here
   init() {
     this.cur = window.scrollY;
-    addEventListener('scroll', () => this.apply(), { passive: true });
+    pageM.init();
+    // once a frame (a scroll can fire several events in one): the same values, without redoing them
+    // (while the smooth scroll runs, its own frame does this: once is enough)
+    addEventListener('scroll', () => { if (this.raf || smoothScroll.running) return; this.raf = requestAnimationFrame(() => { this.raf = 0; this.apply(); }); }, { passive: true });
     addEventListener('resize', () => this.apply(true));
     this.apply(true);
   },
   apply(force) {
     const S = (this.cur = window.scrollY);
-    const H = hero.offsetHeight || innerHeight, k = MOTK();
+    for (const f of this.hooks) f(S);
+    const H = pageM.heroH || pageM.vh || innerHeight, k = MOTK();
     // the hero under the sheet
     const p = LOOK.story && !STK.matches ? clamp(S / H, 0, 1) : 0;
     if (force || Math.abs(p - this.p) > 0.0004 || (p === 0) !== (this.p === 0)) {
@@ -4025,8 +4177,9 @@ const scrollFx = {
       nav.classList.toggle('is-compact', want);
       if (force) { void nav.offsetWidth; nav.classList.remove('is-still'); }
     }
-    const max = document.documentElement.scrollHeight - innerHeight;
-    nav.style.setProperty('--pg', (max > 0 ? clamp(S / max, 0, 1) : 0).toFixed(4));
+    // the progress line under the header: on the line itself (on the header, every one of its parts would be redone)
+    const max = pageM.max, pg = (max > 0 ? clamp(S / max, 0, 1) : 0).toFixed(4);
+    if (pg !== this.pg) { this.pg = pg; (this.pgEl || (this.pgEl = $('.nav-prog', nav) || nav)).style.setProperty('--pg', pg); }
     if (dims.active) dims.queue();
   },
 };
@@ -4041,7 +4194,6 @@ const smoothScroll = {
   tgt: 0, y: [0, 0, 0, 0], set: 0, running: false, last: 0,
   init() {
     addEventListener('wheel', (ev) => this.wheel(ev), { passive: false });
-    addEventListener('scroll', () => this.external(), { passive: true });
   },
   on() { return LOOK.scroll === 'smooth' && !reduceMotion; },
   max() { return Math.max(0, document.documentElement.scrollHeight - innerHeight); },
@@ -4061,11 +4213,14 @@ const smoothScroll = {
     if (this.inner(ev.target instanceof Element ? ev.target : null, dy)) return;
     ev.preventDefault();
     if (!this.running) { this.tgt = this.set = window.scrollY; this.y.fill(this.tgt); this.running = true; this.last = performance.now(); gsap.ticker.add(this.tick); }
-    this.tgt = clamp(this.tgt + dy, 0, this.max());
-    scrollFx.apply();   // the header may start now (the page itself starts slowly)
+    this.tgt = clamp(this.tgt + dy, 0, Math.max(0, pageM.max));
+    // the header may start at once (the page itself starts slowly): the frame's own step (tick) does it, before this frame is drawn
   },
   tick() {
-    const s = smoothScroll, now = performance.now(), tau = Math.max(0.02, LOOK.scrollSoft / 1000);
+    const s = smoothScroll;
+    // the page was moved by something else (the scroll bar, a key, a link): let go of the target (asked here, once a frame, before anything is written)
+    if (Math.abs(window.scrollY - s.set) > 2.5) { s.stop(); scrollFx.apply(); return; }
+    const now = performance.now(), tau = Math.max(0.02, LOOK.scrollSoft / 1000);
     let left = Math.min(0.1, (now - s.last) / 1000);
     s.last = now;
     // the frame is cut into small steps, so the move is the same whatever the frame rate (a slow frame doesn't change its shape)
@@ -4095,6 +4250,68 @@ const smoothScroll = {
    sale hasn't started is in its category and also in the presale. The panels, gaps, margins, radii and colours are the hero's
    own, so the look's settings (and the theme) change this too. A poster opens the show's page (page.js).
    ════════════════════════════════════════════════════════════════ */
+// the soft copy of a picture behind a card: drawn once, small (24 × 36), already blurred and tinted, and stretched by the card;
+// the same look as a CSS blur filter on the big picture, for a fraction of the work while the page scrolls
+// the worker's own code (it runs apart from the page): the picture's middle at 2 : 3 (as «cover» shows it), shrunk to
+// 24 × 36 and tinted by the CSS filters' own matrices (saturate(s), then brightness(b)), sent back as two small PNGs
+function softWork() {
+  const tint = (base, s, br) => { const d = new ImageData(new Uint8ClampedArray(base.data), base.width, base.height), a = d.data; for (let i = 0; i < a.length; i += 4) { const r = a[i], g = a[i + 1], b = a[i + 2]; a[i] = ((0.213 + 0.787 * s) * r + (0.715 - 0.715 * s) * g + (0.072 - 0.072 * s) * b) * br; a[i + 1] = ((0.213 - 0.213 * s) * r + (0.715 + 0.285 * s) * g + (0.072 - 0.072 * s) * b) * br; a[i + 2] = ((0.213 - 0.213 * s) * r + (0.715 - 0.715 * s) * g + (0.072 + 0.928 * s) * b) * br; } return d; };
+  self.onmessage = async (ev) => {
+    const { id, u } = ev.data;
+    try {
+      const bm = await createImageBitmap(await (await fetch(u)).blob());
+      const iw = bm.width, ih = bm.height, k = Math.min(iw / 2, ih / 3), sw = 2 * k, sh = 3 * k;
+      const c = new OffscreenCanvas(24, 36), x = c.getContext('2d', { willReadFrequently: true });
+      x.imageSmoothingQuality = 'high'; x.drawImage(bm, (iw - sw) / 2, (ih - sh) / 2, sw, sh, 0, 0, 24, 36); bm.close();
+      const base = x.getImageData(0, 0, 24, 36), out = [];
+      for (const [sat, br] of [[1.2, 0.72], [1.3, 1]]) { x.putImageData(tint(base, sat, br), 0, 0); out.push(await c.convertToBlob({ type: 'image/png' })); }
+      self.postMessage({ id, p: out[0], b: out[1] });
+    } catch (err) { self.postMessage({ id, p: null, b: null }); }
+  };
+}
+// the soft copy of a picture behind a card: drawn once, small (24 × 36), already tinted, and stretched (so blurred) by
+// the card; the same look as a CSS blur filter on the big picture, for a fraction of the work while the page scrolls.
+// It is made in a worker, away from the page; where there is none (an old browser), in the browser's spare time.
+const soft = {
+  cache: new Map(), wait: new Map(), n: 0, w: null, dead: !('Worker' in window && 'OffscreenCanvas' in window),
+  worker() {
+    if (this.w || this.dead) return this.w;
+    try {
+      this.w = new Worker(URL.createObjectURL(new Blob([`(${softWork.toString()})();`], { type: 'text/javascript' })));
+      this.w.onmessage = (ev) => { const { id, p, b } = ev.data, job = this.wait.get(id); if (!job) return; this.wait.delete(id); if (p && b) job.ok({ p: URL.createObjectURL(p), b: URL.createObjectURL(b) }); else this.here(job.u).then(job.ok); };
+      this.w.onerror = () => { this.dead = true; this.w = null; const all = [...this.wait.values()]; this.wait.clear(); all.forEach((job) => this.here(job.u).then(job.ok)); };
+    } catch (err) { this.dead = true; this.w = null; }
+    return this.w;
+  },
+  // the same, on the page (no worker): the picture decoded, then shrunk in two quick steps in an idle moment
+  here(u) {
+    return new Promise((ok) => {
+      const im = new Image(); im.decoding = 'async'; im.onerror = () => ok(null);
+      im.onload = () => (im.decode ? im.decode() : Promise.resolve()).catch(() => {}).then(() => whenIdle(() => {
+        try {
+          const iw = im.naturalWidth, ih = im.naturalHeight; if (!iw || !ih) { ok(null); return; }
+          const k = Math.min(iw / 2, ih / 3), sw = 2 * k, sh = 3 * k;
+          const m = document.createElement('canvas'); m.width = 96; m.height = 144; const mx = m.getContext('2d', { willReadFrequently: true }); mx.imageSmoothingQuality = 'low'; mx.drawImage(im, (iw - sw) / 2, (ih - sh) / 2, sw, sh, 0, 0, 96, 144);
+          const c = document.createElement('canvas'); c.width = 24; c.height = 36; const x = c.getContext('2d', { willReadFrequently: true }); x.imageSmoothingQuality = 'medium'; x.drawImage(m, 0, 0, 24, 36);
+          const base = x.getImageData(0, 0, 24, 36), tint = (sat, br) => { const d = new ImageData(new Uint8ClampedArray(base.data), 24, 36), a = d.data; for (let i = 0; i < a.length; i += 4) { const r = a[i], g = a[i + 1], b = a[i + 2]; a[i] = ((0.213 + 0.787 * sat) * r + (0.715 - 0.715 * sat) * g + (0.072 - 0.072 * sat) * b) * br; a[i + 1] = ((0.213 - 0.213 * sat) * r + (0.715 + 0.285 * sat) * g + (0.072 - 0.072 * sat) * b) * br; a[i + 2] = ((0.213 - 0.213 * sat) * r + (0.715 - 0.715 * sat) * g + (0.072 + 0.928 * sat) * b) * br; } x.putImageData(d, 0, 0); return c.toDataURL('image/png'); };
+          ok({ p: tint(1.2, 0.72), b: tint(1.3, 1) });
+        } catch (err) { ok(null); }
+      }));
+      im.src = u;
+    });
+  },
+  of(u) {
+    if (this.cache.has(u)) return this.cache.get(u);
+    const pr = new Promise((ok) => {
+      const w = this.worker();
+      if (!w) { this.here(u).then(ok); return; }
+      const id = ++this.n; this.wait.set(id, { u, ok });
+      try { w.postMessage({ id, u: new URL(u, location.href).href }); } catch (err) { this.wait.delete(id); this.here(u).then(ok); }
+    });
+    this.cache.set(u, pr); return pr;
+  },
+};
+const softArt = (u) => soft.of(u);
 const SEC_ORDER = ['soon', 'concert:tehran', 'concert:other', 'theatre:tehran', 'theatre:other', 'comedy:tehran', 'comedy:other'];
 const secId = (key) => `sec-${key.replace(':', '-')}`;
 const iconOfCat = (key) => ({ all: 'grid', soon: 'clock', concert: 'music', theatre: 'mask', comedy: 'smile' }[key.split(':')[0]] || 'grid');
@@ -4167,17 +4384,17 @@ const s2 = {
   secs: $('#s2Secs'), track: $('#catTrack'), bar: $('#catnav'), cur: 'all', seen: new Set(), io: null, stuckIo: null, lazy: null, sp: 0, lockUntil: 0,
   city: '', open: new Set(), chip: {}, reminded: new Set(),
   init() {
-    this.build(); this.buildNav(); this.watch(); this.wireFooter(); this.find.init(); this.wireCity(); this.toTop.init();
+    this.build(); this.buildNav(true); this.watch(); this.wireFooter(); this.find.init(); this.wireCity(); this.toTop.init();
     // the bar is "stuck" (floating) when it sits under the header; its shadow tells it
     if ('IntersectionObserver' in window) {
       const arm = () => { if (this.stuckIo) this.stuckIo.disconnect(); this.stuckIo = new IntersectionObserver(([en]) => this.bar.classList.toggle('is-stuck', en.intersectionRatio < 1), { threshold: [1], rootMargin: `${-((parseFloat(getComputedStyle(this.bar).top) || 0) + 1)}px 0px 0px 0px` }); this.stuckIo.observe(this.bar); };
-      arm(); this.arm = arm;
+      this.arm = arm; requestAnimationFrame(arm);
     }
     addEventListener('resize', () => { clearTimeout(this.rz); this.rz = setTimeout(() => { if (this.arm) this.arm(); this.clampAll(); this.moveInd(this.cur, true); }, 150); });
     // the wheel, a touch or a key are the visitor's own: the pill follows the page again
     ['wheel', 'touchstart', 'keydown'].forEach((t) => addEventListener(t, () => { this.lockUntil = 0; }, { passive: true }));
     // the section in view sets the pill: asked once a frame while the page moves
-    addEventListener('scroll', () => { if (this.sp) return; this.sp = requestAnimationFrame(() => { this.sp = 0; this.probe(); }); }, { passive: true });
+    scrollFx.hooks.push(() => this.probe());   // with the header's own step, once a frame, right after the scroll is read
     requestAnimationFrame(() => { this.moveInd('all', true); this.probe(); });
   },
   // the shows of the list in the city that was chosen (or all)
@@ -4217,7 +4434,7 @@ const s2 = {
     c.innerHTML = wide ? presaleHTML(e) : ticketHTML(e);
     const im = $('img', c), { a: art } = artOf(e), pic = $(wide ? '.ptk-pic' : '.tkt-pic', c);
     // the soft copy of the picture behind it (it fills what the picture leaves) and behind the words
-    const bg = (u) => c.style.setProperty('--art', `url("${u}")`);
+    const bg = (u) => { c.style.setProperty('--art', `url("${u}")`); softArt(u).then((s) => { if (!s || c.style.getPropertyValue('--art') !== `url("${u}")`) return; c.style.setProperty('--art-p', `url("${s.p}")`); c.style.setProperty('--art-b', `url("${s.b}")`); c.classList.add('has-soft'); }); };
     const u0 = art.fake || (e.poster ? art.src : art.thumb); if (u0) bg(u0);
     const size = e.poster ? { w: 2, h: 3 } : art;
     // a file that isn't there is drawn by the page; and the picture is shown whole: it fills the frame if its shape is the frame's (to FILL_TOL), else the soft copy fills the rest
@@ -4267,11 +4484,11 @@ const s2 = {
     $('#s2All', n).addEventListener('click', () => this.setCity(''));
   },
   // the bar: «همه‌ی برنامه‌ها» and each category, a pill slides to the one in view (in the colour of its section)
-  buildNav() {
+  buildNav(soon) {
     const keys = ['all', ...SEC_ORDER], shown = this.shows();
     this.track.innerHTML = '<i class="cat-ind" aria-hidden="true"></i>' + keys.map((k) => { const [d, l] = secColor(k); return `<a class="cat" href="#${k === 'all' ? 's2Secs' : secId(k)}" data-cat="${k}" style="--sc-d:${d};--sc-l:${l}"${k !== 'all' && !shown.some((e) => inCat(e, k)) ? ' data-empty' : ''}${k === this.cur ? ' aria-current="true"' : ''}>${ico(iconOfCat(k))}<span>${esc(k === 'all' ? 'همه‌ی برنامه‌ها' : catName(k))}</span></a>`; }).join('');
     $$('.cat', this.track).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); this.go(a.dataset.cat); }));
-    this.moveInd(this.cur, true);
+    if (!soon) this.moveInd(this.cur, true);   // (on the first load: in the first frame, below)
   },
   moveInd(key, instant) {
     const ind = $('.cat-ind', this.track), a = $(`.cat[data-cat="${key}"]`, this.track); if (!ind || !a || !a.offsetWidth) return;
@@ -4286,8 +4503,9 @@ const s2 = {
   // the last section whose top is above the line just under the bar is the one in view
   probe() {
     if (performance.now() < this.lockUntil || page.on) return;   // the page is travelling to the pill that was pressed: it stays on that one
-    const line = this.bar.getBoundingClientRect().bottom + Math.max(60, innerHeight * 0.28); let cur = 'all';   // a section is the one in view once its title is in the upper part of the window
-    $$('.tkt-sec', this.secs).forEach((x) => { if (x.getBoundingClientRect().top <= line) cur = x.dataset.sec; });
+    if (!this.tops) { this.tops = $$('.tkt-sec', this.secs).filter((x) => !x.hidden).map((x) => [x.getBoundingClientRect().top + scrollY, x.dataset.sec]); if (!this.topsRo && 'ResizeObserver' in window) { this.topsRo = new ResizeObserver(() => { this.tops = null; }); this.topsRo.observe(this.secs); addEventListener('resize', () => { this.tops = null; }, { passive: true }); } }
+    const line = this.bar.getBoundingClientRect().bottom + Math.max(60, (pageM.vh || innerHeight) * 0.28) + scrollFx.cur; let cur = 'all';   // a section is the one in view once its title is in the upper part of the window
+    for (const [t, k] of this.tops) if (t <= line) cur = k;
     if (cur !== this.cur) { this.cur = cur; this.moveInd(cur); hd.markCat(); }
     this.toTop.sync();
   },
@@ -4295,10 +4513,10 @@ const s2 = {
   watch() {
     if (!this.io && 'IntersectionObserver' in window && !reduceMotion) {
       this.io = new IntersectionObserver((ens) => {
-        const now = ens.filter((en) => en.isIntersecting); now.forEach((en, k) => { this.io.unobserve(en.target); en.target.classList.add('is-in'); if (en.target.dataset.id) this.seen.add(en.target.dataset.id); gsap.to(en.target, { y: 0, opacity: 1, duration: 1.05, delay: k * 0.07, ease: 'expo.out', clearProps: 'transform,opacity,transition' }); });
+        const now = ens.filter((en) => en.isIntersecting); now.forEach((en, k) => { const el = en.target; this.io.unobserve(el); el.classList.add('is-in'); if (el.dataset.id) this.seen.add(el.dataset.id); el.style.setProperty('--rvd', `${k * 70}ms`); el.classList.add('rv-go'); el.classList.remove('rv-wait'); setTimeout(() => { el.classList.remove('rv-go'); el.style.removeProperty('--rvd'); el.style.removeProperty('--rvy'); }, 1150 + k * 70); });
       }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
     }
-    if (this.io) $$('[data-rv], .tkt, .ptk', this.secs.parentNode).forEach((el) => { if (el.classList.contains('is-in')) return; if (el.dataset.id && this.seen.has(el.dataset.id)) { el.classList.add('is-in'); return; } gsap.set(el, { y: 34 * MOTK(), opacity: 0, transition: 'none' }); this.io.observe(el); });
+    if (this.io) $$('[data-rv], .tkt, .ptk', this.secs.parentNode).forEach((el) => { if (el.classList.contains('is-in')) return; if (el.dataset.id && this.seen.has(el.dataset.id)) { el.classList.add('is-in'); return; } el.style.setProperty('--rvy', `${34 * MOTK()}px`); el.classList.add('rv-wait'); this.io.observe(el); });
     // a stand-in picture is drawn only when its card comes near the screen, one at a time, and not while the page is making its entrance
     const fakes = $$('img[data-fake]', this.secs);
     if (fakes.length) {
@@ -4409,12 +4627,12 @@ const s2 = {
     init() {
       const b = $('#toTop'); if (!b) return; this.el = b;
       b.addEventListener('click', () => scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }));
-      addEventListener('scroll', () => this.sync(), { passive: true }); this.sync();
+      scrollFx.hooks.push(() => this.sync()); this.sync();
     },
     sync() {
       if (!this.el) return;
-      const max = document.documentElement.scrollHeight - innerHeight, p = max > 0 ? clamp(scrollY / max, 0, 1) : 0, on = scrollY > innerHeight * 0.9;
-      this.el.style.setProperty('--p', p.toFixed(4));
+      const y = scrollFx.cur, max = pageM.max, p = (max > 0 ? clamp(y / max, 0, 1) : 0).toFixed(4), on = y > (pageM.vh || innerHeight) * 0.9;
+      if (p !== this.pv) { this.pv = p; this.el.style.setProperty('--p', p); }
       if (on !== this.on) { this.on = on; this.el.classList.toggle('is-on', on); this.el.tabIndex = on ? 0 : -1; }
     },
   },
@@ -5011,14 +5229,7 @@ const buy = {
       </div>
       <div class="evp-cols bk-cols">
         <section class="panel bk-map evp-rise" aria-label="نقشه‌ی سالن">
-          <div class="bk-mhead">
-            <div class="bk-seg" role="tablist" aria-label="بخش‌های سالن"><button type="button" role="tab" data-z="-1" aria-selected="${this.zone < 0}">کل سالن</button>${this.plan.secs.map((z, i) => `<button type="button" role="tab" data-z="${i}" aria-selected="${i === this.zone}">${esc(z.sec.t)}<small>${this.freeOf(z)}</small></button>`).join('')}</div>
-            <span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span>
-          </div>
-          <div class="st-view" tabindex="-1"><div class="st-canvas"></div></div>
-          <div class="st-zoom"><button type="button" data-zm="in" aria-label="بزرگ‌نمایی">${ico('plus')}</button><button type="button" data-zm="out" aria-label="کوچک‌نمایی">${ico('minus')}</button><button type="button" data-zm="fit" aria-label="کل سالن">${ico('grid')}</button></div>
-          <p class="st-hint">${ico('info')}بکش تا جابه‌جا بشه؛ Ctrl + چرخ ماوس یا دو انگشت برای بزرگ‌نمایی.</p>
-          <ul class="st-legend" aria-label="راهنما">${tiers.map((t) => `<li style="--c:${t.c}"><i class="lg free"></i>${money(t.price)}</li>`).join('')}<li><i class="lg mine"></i>انتخاب تو</li><li><i class="lg held"></i>در حال پرداخت دیگران</li><li><i class="lg sold"></i>فروخته شده</li><li><i class="lg off"></i>غیرقابل فروش</li></ul>
+          ${this.mapHTML(tiers)}
         </section>
         <aside class="evp-side">
           <section class="panel bk-cart evp-rise" aria-labelledby="bkCartH">
@@ -5422,6 +5633,293 @@ const buy = {
 };
 // a link «همه‌ی برنامه‌ها» on any of these pages goes home
 document.addEventListener('click', (ev) => { const a = ev.target.closest('#evp [data-home]'); if (a) { ev.preventDefault(); page.close(); } });
+
+/* ════════════════════════════════════════════════════════════════
+   the seat map, rebuilt for speed and for seats you can see and press (the owner: «the seats are tiny; I don't want to zoom
+   in and out to pick one; it lags»). Two parts, no zoom:
+   - the whole hall, small, on a canvas (the overview): every seat a dot in its state, the section on show framed; a press
+     anywhere on a section opens it. Drawn in one go on a canvas, so it costs nothing to redraw when a seat changes.
+   - the section on show, big: its rows straightened (a cinema's way; seat 1 on the right, row 1 nearest the stage, the
+     aisles kept), each seat a ~32 px button with its number; boxes as cards of four, tables as rings of six, a standing area
+     as a card with − and +. Native scrolling when a section is wider than the panel (a phone), never a pinch.
+   - «بهترین صندلی‌ها»: how many seats, and the best ones side by side (nearest the stage, nearest the middle of the row, in
+     the price chosen) are picked and shown.
+   Only one section is in the page at a time (a few hundred buttons, not a thousand), nothing heavy is animated, one listener
+   serves every seat. It reads only the plan (hall.js: PLANS, hallLayout), so a real hall's plan drops in as it is.
+   ════════════════════════════════════════════════════════════════ */
+Object.assign(buy, {
+  bestN: 2,
+  // the map's panel (in place of the zoomable canvas)
+  mapHTML(tiers) {
+    return `<div class="bk-mhead">
+        <div class="bk-seg sm-tabs" role="tablist" aria-label="بخش‌های سالن">${this.plan.secs.map((z, i) => `<button type="button" role="tab" data-z="${i}" aria-selected="false">${esc(z.sec.t)}<small>${this.freeOf(z)}</small></button>`).join('')}</div>
+        <span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span></div>
+      <div class="sm-top">
+        <div class="sm-mini" role="img" aria-label="نقشه‌ی کل سالن؛ روی هر بخش بزن تا صندلی‌هاش بزرگ دیده بشن"><canvas></canvas><i class="sm-mini-vp" hidden></i><span class="sm-mini-tip" aria-hidden="true"></span><small class="sm-mini-hint">${ico('info')}روی هر بخش بزن</small></div>
+        <div class="sm-best" role="group" aria-labelledby="smBestH"><b id="smBestH">${ico('spark')}بهترین صندلی‌ها رو برام پیدا کن</b><p>کنار هم، نزدیک‌ترین به صحنه و وسط ردیف${tiers.length > 1 ? '؛ با قیمتی که بالا انتخاب کردی' : ''}.</p>
+          <div class="sm-bn"><button type="button" data-bn="1" aria-label="یه صندلی بیشتر">${ico('plus')}</button><output id="smBn" aria-live="polite">${fa(this.bestN)}</output><span>صندلی</span><button type="button" data-bn="-1" aria-label="یه صندلی کمتر">${ico('minus')}</button></div>
+          <button type="button" class="buy" id="smBest">${ico('search')}پیدا کن</button></div>
+      </div>
+      <div class="sm-head"><div><b id="smTitle"></b><small id="smSub"></small></div></div>
+      <div class="sm-view" id="smView"><div class="sm-in" id="smIn"></div></div>
+      <div class="sm-tip" id="smTip" hidden></div>
+      <ul class="st-legend" aria-label="راهنما">${tiers.map((t) => `<li style="--c:${t.c}"><i class="lg free"></i>${money(t.price)}</li>`).join('')}<li><i class="lg mine"></i>انتخاب تو</li><li><i class="lg held"></i>در حال پرداخت دیگران</li><li><i class="lg sold"></i>فروخته شده</li><li><i class="lg off"></i>غیرقابل فروش</li></ul>`;
+  },
+  // the first draw: the overview and the section on show (the one you had, or the first with free seats)
+  drawHall(e, s) {
+    const L = this.plan; this.lay = L; this.flat = L.secs.flatMap((z) => z.seats);
+    const ys = this.flat.map((p) => p.y); this.y0 = Math.min(...ys); this.y1 = Math.max(...ys);
+    if (!(this.zone >= 0 && L.secs[this.zone])) { const i = L.secs.findIndex((z) => (z.ga ? z.ga.left > 0 : z.seats.some((p) => p.st === 'free'))); this.zone = Math.max(0, i); }
+    this.renderSection(this.zone, false);   // (the overview is drawn in the next frame)
+  },
+  focusZone(i) { if (this.plan && this.plan.secs[i]) this.renderSection(i, true); },
+  seatBtn(p) {
+    const mine = this.cart.has(p.key), st = mine ? 'mine' : p.st, dim = !mine && this.tiers.size && !this.tiers.has(p.t);
+    return `<button type="button" class="sm-s${dim ? ' is-dim' : ''}" data-k="${p.key}" data-st="${st}" style="--c:${p.c}" tabindex="-1" aria-pressed="${mine}"${st === 'free' || st === 'mine' ? '' : ' aria-disabled="true"'} aria-label="${esc(seatName(p))}، ${esc(money(p.price))} تومان">${fa(p.n)}</button>`;
+  },
+  // one section, big
+  renderSection(i, anim) {
+    const el = page.el, z = this.plan.secs[i], box = $('#smIn', el), view = $('#smView', el); if (!z || !box) return;
+    this.zone = i;
+    $$('.bk-seg [data-z]', el).forEach((x) => x.setAttribute('aria-selected', String(+x.dataset.z === i)));
+    const prices = [...new Set((z.ga ? [z.ga.price] : z.seats.map((p) => p.price)))].sort((a, b) => a - b);
+    $('#smTitle', el).textContent = z.sec.t;
+    $('#smSub', el).textContent = `${this.freeOf(z)} · ${prices.length > 1 ? `${money(prices[0])} تا ${money(prices[prices.length - 1])}` : money(prices[0] || 0)} تومان`;
+    let html = '';
+    if (z.ga) {
+      const n = [...this.cart.values()].filter((x) => x.ga && x.zid === z.sec.id).length;
+      html = `<div class="sm-ga" style="--c:${z.ga.c}"><b>${esc(z.sec.t)}</b><span>${money(z.ga.price)} تومان · <em class="ga-left">${this.freeOf(z)}</em></span><div class="sm-qty"><button type="button" data-ga-add="${z.sec.id}" aria-label="یه بلیت ایستاده‌ی دیگه">${ico('plus')}</button><output aria-live="polite">${fa(n)}</output><button type="button" data-ga-rm="${z.sec.id}" aria-label="یه بلیت کمتر">${ico('minus')}</button></div><small>جای ایستاده شماره نداره؛ فقط تعداد بلیت رو انتخاب کن.</small></div>`;
+    } else if (z.sec.k === 'boxes' || z.sec.k === 'tables') {
+      const g = new Map(); z.seats.forEach((p) => { if (!g.has(p.row)) g.set(p.row, []); g.get(p.row).push(p); });
+      const word = z.sec.k === 'boxes' ? 'لژ' : 'میز';
+      html = `<div class="sm-groups sm-${z.sec.k}">${[...g.keys()].sort((a, b) => a - b).map((r) => { const ps = g.get(r).sort((a, b) => a.n - b.n); return `<div class="sm-g" role="group" aria-label="${word} ${fa(r)}"><b>${word} ${fa(r)}</b><div class="sm-gs" style="--n:${ps.length}">${ps.map((p, k) => this.seatBtn(p).replace('style="', `style="--i:${k};`)).join('')}</div><small>${money(ps[0].price)}</small></div>`; }).join('')}</div>`;
+    } else {
+      const rows = new Map(); z.seats.forEach((p) => { if (!rows.has(p.row)) rows.set(p.row, []); rows.get(p.row).push(p); });
+      html = [...rows.keys()].sort((a, b) => a - b).map((r) => {
+        const ps = rows.get(r).sort((a, b) => a.n - b.n), blocks = typeof z.sec.seats === 'function' ? z.sec.seats(r - 1) : [ps.length];
+        let out = '', k = 0;
+        blocks.forEach((bn, bi) => { if (bi) out += '<i class="sm-aisle" aria-hidden="true"></i>'; for (let j = 0; j < bn && k < ps.length; j++, k++) out += this.seatBtn(ps[k]); });
+        while (k < ps.length) out += this.seatBtn(ps[k++]);
+        return `<div class="sm-row" data-r="${r}"><span class="sm-rl" aria-hidden="true">${fa(r)}</span><div class="sm-seats" role="group" aria-label="${esc(z.sec.t)}، ردیف ${fa(r)}">${out}</div><span class="sm-rl" aria-hidden="true">${fa(r)}</span></div>`;
+      }).join('');
+    }
+    box.className = `sm-in sm-k-${z.ga ? 'ga' : z.sec.k}`; this.pos = null;
+    // the stage, above the rows (the rows nearest it first)
+    box.innerHTML = (z.ga || z.sec.k === 'boxes' || z.sec.k === 'tables' ? '' : '<div class="sm-stagebar" aria-hidden="true"><span>صحنه</span></div>') + html;
+    const first = $('.sm-s[data-st="free"]', box) || $('.sm-s', box); if (first) first.tabIndex = 0;
+    // a section wider than the panel opens at its middle (the best seats); the rows nearest the stage at the top
+    requestAnimationFrame(() => { if (!view.isConnected) return; view.scrollTop = 0; view.scrollLeft = Math.max(0, (view.scrollWidth - view.clientWidth) / 2); this.vpDraw(); });
+    if (anim && MOTK()) box.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.22,1,.36,1)' });
+    this.miniSoon();
+  },
+  // the state of the seats on show (a few hundred at most) and, soon after, the overview
+  paintOne(b) {
+    const x = this.find(b.dataset.k); if (!x) return;
+    const mine = this.cart.has(x.key), st = mine ? 'mine' : x.st, dim = !mine && this.tiers.size && !this.tiers.has(x.t);
+    if (b.dataset.st !== st) b.dataset.st = st;
+    b.classList.toggle('is-dim', !!dim);
+    b.setAttribute('aria-pressed', String(mine));
+    if (st === 'free' || st === 'mine') b.removeAttribute('aria-disabled'); else b.setAttribute('aria-disabled', 'true');
+  },
+  paintSeats(noMini) {
+    const box = $('#smIn', page.el); if (!box) return;
+    for (const b of box.querySelectorAll('.sm-s')) this.paintOne(b);
+    if (!noMini) this.miniSoon();
+  },
+  seatEl(k) { const box = $('#smIn', page.el); return box ? box.querySelector(`.sm-s[data-k="${k}"]`) : null; },
+  pick(e, s, b) {
+    const x = this.find(b.dataset.k); if (!x) return;
+    if (this.cart.has(x.key)) this.cart.delete(x.key);
+    else if (x.st === 'held') { toast('این صندلی در انتظار پرداخت خریدار دیگه‌ایه.'); return; }
+    else if (x.st === 'sold') { toast('این صندلی فروخته شده.'); return; }
+    else if (x.st === 'off') { toast('این صندلی برای فروش نیست.'); return; }
+    else if (this.tiers.size && !this.tiers.has(x.t)) { toast('این صندلی تو قیمتی که انتخاب کردی نیست.'); return; }
+    else if (this.cart.size >= MAX_SEATS) { toast(`هر خرید تا ${fa(MAX_SEATS)} صندلی.`); return; }
+    else { this.cart.set(x.key, x); if (MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
+    this.paintOne(b); this.miniSoon(); this.cartPaint(e, s);
+  },
+  // standing places: as many as you add, of the area's price
+  addGA(e, s, zid, d) {
+    const z = this.plan.secs.find((x) => x.sec.id === zid); if (!z || !z.ga) return;
+    const have = [...this.cart.values()].filter((x) => x.ga && x.zid === zid);
+    if (d > 0) {
+      if (this.cart.size >= MAX_SEATS) { toast(`هر خرید تا ${fa(MAX_SEATS)} بلیت.`); return; }
+      if (have.length >= z.ga.left) { toast('جای ایستاده‌ی خالی نمونده.'); return; }
+      if (this.tiers.size && !this.tiers.has(z.ga.t)) { toast('این بخش تو قیمتی که انتخاب کردی نیست.'); return; }
+      const n = have.length ? Math.max(...have.map((x) => x.n)) + 1 : 1;
+      this.cart.set(`ga:${zid}:${n}`, { key: `ga:${zid}:${n}`, zid, zone: z.ga.zone, word: '', row: 0, n, t: z.ga.t, c: z.ga.c, price: z.ga.price, ga: true });
+    } else if (have.length) this.cart.delete(have[have.length - 1].key);
+    const card = $('.sm-ga', page.el);
+    if (card && this.plan.secs[this.zone] === z) { $('.ga-left', card).textContent = this.freeOf(z); $('output', card).textContent = fa([...this.cart.values()].filter((x) => x.ga && x.zid === zid).length); if (d > 0 && MOTK()) { card.classList.remove('is-pop'); void card.offsetWidth; card.classList.add('is-pop'); } }
+    const tab = $(`.bk-seg [data-z="${this.plan.secs.indexOf(z)}"] small`, page.el); if (tab) tab.textContent = this.freeOf(z);
+    this.cartPaint(e, s);
+  },
+  // the best seats side by side: in a row (an aisle breaks it), a box or a table; nearest the stage, then the middle
+  best(e, s) {
+    const n = this.bestN, L = this.plan, room = MAX_SEATS - this.cart.size;
+    if (n > room) { toast(room ? `فقط ${fa(room)} صندلی دیگه می‌تونی اضافه کنی.` : `هر خرید تا ${fa(MAX_SEATS)} صندلی.`); return; }
+    const ok = (p) => p.st === 'free' && !this.cart.has(p.key) && (!this.tiers.size || this.tiers.has(p.t));
+    const H = Math.max(1, this.y1 - this.y0), W = Math.max(1, L.W / 2);
+    let best = null;
+    const take = (run, zi) => { for (let a = 0; a + n <= run.length; a++) { const w = run.slice(a, a + n), my = w.reduce((t, p) => t + p.y, 0) / n, mx = w.reduce((t, p) => t + p.x, 0) / n, sc = (my - this.y0) / H + 0.55 * Math.abs(mx - L.cx) / W; if (!best || sc < best.sc) best = { sc, w, zi }; } };
+    L.secs.forEach((z, zi) => {
+      if (z.ga) return;
+      const g = new Map(); z.seats.forEach((p) => { if (!g.has(p.row)) g.set(p.row, []); g.get(p.row).push(p); });
+      for (const [r, ps0] of g) {
+        const ps = ps0.slice().sort((a, b) => a.n - b.n);
+        const blocks = z.sec.k === 'boxes' || z.sec.k === 'tables' ? [ps.length] : typeof z.sec.seats === 'function' ? z.sec.seats(r - 1) : [ps.length];
+        let k = 0;
+        for (const bn of blocks) { const blk = ps.slice(k, k + bn); k += bn; let run = []; for (const p of blk) { if (ok(p)) run.push(p); else { if (run.length >= n) take(run, zi); run = []; } } if (run.length >= n) take(run, zi); }
+      }
+    });
+    if (!best) { toast(`${fa(n)} صندلی آزاد کنار هم${this.tiers.size ? ' تو این قیمت' : ''} پیدا نشد؛ تعداد کمتری رو امتحان کن.`); return; }
+    best.w.forEach((p) => this.cart.set(p.key, p));
+    if (this.zone !== best.zi) this.renderSection(best.zi, true); else this.paintSeats();
+    this.cartPaint(e, s); this.miniSoon();
+    const els = best.w.map((p) => this.seatEl(p.key)).filter(Boolean);
+    els.forEach((b) => { this.paintOne(b); b.classList.remove('is-best'); void b.offsetWidth; b.classList.add('is-best'); });
+    if (els[0]) els[Math.floor(els.length / 2)].scrollIntoView({ block: 'nearest', inline: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+    const p0 = best.w[0], z0 = L.secs[best.zi];
+    toast(`${fa(n)} صندلی کنار هم: ${z0.sec.t}، ${RUN_WORD[z0.sec.k] || 'ردیف'} ${fa(p0.row)}، صندلی ${best.w.map((p) => fa(p.n)).join(' و ')}`);
+  },
+  // the overview: the whole hall on a canvas, a dot per seat in its state; the section on show framed, the others quieter
+  miniSoon() { if (this.miniRaf) return; this.miniRaf = requestAnimationFrame(() => { this.miniRaf = 0; this.miniDraw(); }); },
+  miniDraw() {
+    const host = $('.sm-mini', page.el), cv = host && $('canvas', host); if (!cv || !this.plan) return;
+    const L = this.plan, dpr = Math.min(2, devicePixelRatio || 1), cw = host.clientWidth, ch = host.clientHeight; if (!cw || !ch) return;
+    if (cv.width !== Math.round(cw * dpr) || cv.height !== Math.round(ch * dpr)) { cv.width = Math.round(cw * dpr); cv.height = Math.round(ch * dpr); }
+    const x = cv.getContext('2d'), k = Math.min(cw / L.W, ch / L.H) * 0.96, ox = (cw - L.W * k) / 2, oy = (ch - L.H * k) / 2;
+    this.miniT = { k, ox, oy };
+    const fg = getComputedStyle(page.el.querySelector('.bk') || page.el).getPropertyValue('--fg').trim() || '255, 255, 255';
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, cw, ch);
+    x.save(); x.translate(ox, oy); x.scale(k, k);
+    // the stage
+    const cx = L.cx, cy = L.cy; x.fillStyle = `rgba(${fg}, .14)`; x.beginPath();
+    if (L.stage === 'arc') { x.moveTo(cx - 230, cy - 96); x.lineTo(cx + 230, cy - 96); x.lineTo(cx + 230, cy - 20); x.quadraticCurveTo(cx, cy + 70, cx - 230, cy - 20); x.closePath(); } else { const w = L.stage === 'wide' ? 330 : 250; x.roundRect(cx - w, cy - 96, w * 2, L.stage === 'wide' ? 110 : 96, 14); }
+    x.fill();
+    // the standing areas
+    L.secs.forEach((z, i) => { if (!z.ga) return; const p = z.shapes[0]; x.globalAlpha = i === this.zone ? 0.75 : 0.3; x.fillStyle = z.ga.c; x.beginPath(); x.roundRect(p.x, p.y, p.w, p.h, 22); x.fill(); x.globalAlpha = 1; });
+    // the seats: grouped by colour, one path each
+    const groups = new Map(), r = 8.5;
+    L.secs.forEach((z, i) => { const on = i === this.zone; for (const p of z.seats) { const mine = this.cart.has(p.key), dim = this.tiers.size && !this.tiers.has(p.t); const col = mine ? `rgb(${fg})` : p.st === 'free' && !dim ? p.c : `rgba(${fg}, .2)`; const key = `${col}|${on ? 1 : 0}`; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(p); } });
+    for (const [key, ps] of groups) { const [col, on] = key.split('|'); x.globalAlpha = on === '1' ? 1 : 0.34; x.fillStyle = col; x.beginPath(); for (const p of ps) x.rect(p.x - r, p.y - r, r * 2, r * 2); x.fill(); }   // squares: at this size they read as dots, and cost a fraction
+    x.globalAlpha = 1;
+    // the section on show, framed
+    const z = L.secs[this.zone];
+    if (z && z.b) { x.strokeStyle = `rgba(${fg}, .9)`; x.lineWidth = 3 / k * Math.min(1, k * 3); x.setLineDash([]); x.beginPath(); x.roundRect(z.b[0] - 6, z.b[1] - 6, z.b[2] - z.b[0] + 12, z.b[3] - z.b[1] + 12, 18); x.stroke(); }
+    x.restore();
+    this.vpDraw();
+  },
+  // where each seat of the section on show sits in its panel (its centre, in the panel's own scroll space): read once after
+  // the section is drawn, and again when the panel changes size
+  seatPos() {
+    if (this.pos) return this.pos;
+    const view = $('#smView', page.el), m = new Map(); if (!view) return m;
+    const vr = view.getBoundingClientRect(), sl = view.scrollLeft, st = view.scrollTop;
+    $$('.sm-s', view).forEach((b) => { const r = b.getBoundingClientRect(); m.set(b.dataset.k, [r.left - vr.left + sl + r.width / 2, r.top - vr.top + st + r.height / 2]); });
+    this.pos = m; return m;
+  },
+  // the part of the section that is in view, framed on the overview (only when the section is bigger than its panel)
+  vpSoon() { if (this.vpRaf) return; this.vpRaf = requestAnimationFrame(() => { this.vpRaf = 0; this.vpDraw(); }); },
+  vpDraw() {
+    const el = page.el, view = $('#smView', el), f = $('.sm-mini-vp', el), T = this.miniT, z = this.plan && this.plan.secs[this.zone];
+    if (!f) return;
+    if (!view || !T || !z || z.ga || !(view.scrollWidth > view.clientWidth + 2 || view.scrollHeight > view.clientHeight + 2)) { f.hidden = true; return; }
+    const pos = this.seatPos(), sl = view.scrollLeft, st = view.scrollTop, w = view.clientWidth, h = view.clientHeight;
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, n = 0;
+    for (const p of z.seats) { const q = pos.get(p.key); if (!q || q[0] < sl || q[0] > sl + w || q[1] < st || q[1] > st + h) continue; n++; if (p.x < x0) x0 = p.x; if (p.x > x1) x1 = p.x; if (p.y < y0) y0 = p.y; if (p.y > y1) y1 = p.y; }
+    if (!n || n === z.seats.length) { f.hidden = true; return; }
+    const pad = 14, X = T.ox + (x0 - pad) * T.k, Y = T.oy + (y0 - pad) * T.k;
+    f.hidden = false; f.style.transform = `translate(${X.toFixed(1)}px, ${Y.toFixed(1)}px)`;
+    f.style.width = `${Math.max(8, (x1 - x0 + pad * 2) * T.k).toFixed(1)}px`; f.style.height = `${Math.max(8, (y1 - y0 + pad * 2) * T.k).toFixed(1)}px`;
+  },
+  // a point of the overview inside the section on show: its panel goes there (a tap glides, a drag follows the finger)
+  panTo(ev, glide) {
+    const el = page.el, host = $('.sm-mini', el), view = $('#smView', el), T = this.miniT, z = this.plan && this.plan.secs[this.zone];
+    if (!host || !view || !T || !z || z.ga) return null;
+    const r = host.getBoundingClientRect(), hx = (ev.clientX - r.left - T.ox) / T.k, hy = (ev.clientY - r.top - T.oy) / T.k;
+    let best = null, bd = Infinity; for (const p of z.seats) { const d = (p.x - hx) ** 2 + (p.y - hy) ** 2; if (d < bd) { bd = d; best = p; } }
+    const q = best && this.seatPos().get(best.key); if (!q) return null;
+    view.scrollTo({ left: q[0] - view.clientWidth / 2, top: q[1] - view.clientHeight / 2, behavior: glide && !reduceMotion ? 'smooth' : 'auto' });
+    return best;
+  },
+  // the hall's point under a pointer on the overview, and its section (the nearest seat's)
+  miniAt(ev) {
+    const host = $('.sm-mini', page.el), T = this.miniT; if (!host || !T) return -1;
+    const r = host.getBoundingClientRect(), hx = (ev.clientX - r.left - T.ox) / T.k, hy = (ev.clientY - r.top - T.oy) / T.k;
+    let best = -1, bd = Infinity;
+    this.plan.secs.forEach((z, i) => { if (z.ga) { const p = z.shapes[0]; if (hx >= p.x && hx <= p.x + p.w && hy >= p.y && hy <= p.y + p.h) { best = i; bd = 0; } return; } for (const p of z.seats) { const d = (p.x - hx) ** 2 + (p.y - hy) ** 2; if (d < bd) { bd = d; best = i; } } });
+    return bd < 120 * 120 ? best : -1;
+  },
+  // the map's wiring: the tabs (wired in wireSeats), the overview, the seats (one listener), the best seats, the keys
+  wireMap(e, s) {
+    const el = page.el, host = $('.sm-mini', el), tip = $('.sm-mini-tip', el), box = $('#smIn', el), view = $('#smView', el), stip = $('#smTip', el);
+    host.addEventListener('click', (ev) => {
+      if (this.dragged) { this.dragged = false; return; }
+      const i = this.miniAt(ev); if (i < 0) return;
+      if (i !== this.zone) { this.renderSection(i, true); return; }
+      const p = this.panTo(ev, true), b = p && this.seatEl(p.key);
+      if (b && b.animate && MOTK()) b.animate([{ boxShadow: `0 0 0 0 ${p.c}` }, { boxShadow: '0 0 0 10px rgba(0, 0, 0, 0)' }], { duration: 900, easing: 'ease-out' });
+    });
+    host.addEventListener('pointerdown', (ev) => { this.drag = this.miniAt(ev) === this.zone ? { id: ev.pointerId, x: ev.clientX, y: ev.clientY, on: false } : null; });
+    host.addEventListener('pointerup', () => { if (this.drag && this.drag.on) { this.dragged = true; setTimeout(() => { this.dragged = false; }, 0); } this.drag = null; });
+    host.addEventListener('pointercancel', () => { this.drag = null; });
+    view.addEventListener('scroll', () => this.vpSoon(), { passive: true });
+    host.addEventListener('pointermove', (ev) => {
+      const d = this.drag;
+      if (d && d.id === ev.pointerId) {
+        if (!d.on && Math.hypot(ev.clientX - d.x, ev.clientY - d.y) > 6) { d.on = true; try { host.setPointerCapture(ev.pointerId); } catch (err) { /* nothing */ } }
+        if (d.on) { this.panTo(ev, false); return; }
+      }
+      const i = this.miniAt(ev); host.classList.toggle('is-on', i >= 0); if (i < 0) { tip.textContent = ''; return; } const z = this.plan.secs[i]; tip.textContent = `${z.sec.t} · ${this.freeOf(z)}`; });
+    host.addEventListener('pointerleave', () => { tip.textContent = ''; host.classList.remove('is-on'); });
+    box.addEventListener('click', (ev) => {
+      const b = ev.target.closest('.sm-s'); if (b) { this.pick(e, s, b); return; }
+      const a = ev.target.closest('[data-ga-add]'); if (a) { this.addGA(e, s, a.dataset.gaAdd, 1); return; }
+      const m = ev.target.closest('[data-ga-rm]'); if (m) this.addGA(e, s, m.dataset.gaRm, -1);
+    });
+    // a seat's name and price beside it, under a mouse (one tooltip for all)
+    if (matchMedia('(hover: hover)').matches) {
+      box.addEventListener('pointerover', (ev) => { const b = ev.target.closest('.sm-s'); if (!b) return; const x = this.find(b.dataset.k); if (!x) return; const st = this.cart.has(x.key) ? 'انتخاب تو' : { free: `${money(x.price)} تومان`, held: 'در حال پرداخت خریدار دیگه', sold: 'فروخته شده', off: 'برای فروش نیست' }[x.st]; stip.textContent = `${seatName(x)} · ${st}`; const r = b.getBoundingClientRect(), R = el.querySelector('.bk-map').getBoundingClientRect(); stip.style.left = `${r.left - R.left + r.width / 2}px`; stip.style.top = `${r.top - R.top - 8}px`; stip.hidden = false; });
+      box.addEventListener('pointerout', (ev) => { if (!ev.relatedTarget || !ev.relatedTarget.closest || !ev.relatedTarget.closest('.sm-s')) stip.hidden = true; });
+      view.addEventListener('scroll', () => { stip.hidden = true; }, { passive: true });
+    }
+    $$('[data-bn]', el).forEach((b) => b.addEventListener('click', () => { this.bestN = clamp(this.bestN + +b.dataset.bn, 1, MAX_SEATS); $('#smBn', el).textContent = fa(this.bestN); }));
+    $('#smBest', el).addEventListener('click', () => this.best(e, s));
+    // the keys: Left and Right go along the row (seat 1 is on the right), Up and Down to the row before and after
+    view.addEventListener('keydown', (ev) => {
+      if (!/^Arrow/.test(ev.key)) return; const b = ev.target.closest('.sm-s'); if (!b) return; ev.preventDefault();
+      let nx = null;
+      if (ev.key === 'ArrowLeft' || ev.key === 'ArrowRight') { const sib = [...b.closest('.sm-seats, .sm-gs').querySelectorAll('.sm-s')], i = sib.indexOf(b); nx = sib[i + (ev.key === 'ArrowLeft' ? 1 : -1)] || null; }
+      else { const all = [...box.querySelectorAll('.sm-s')], r = b.getBoundingClientRect(), c0 = r.left + r.width / 2, dir = ev.key === 'ArrowDown' ? 1 : -1; let bd = Infinity; for (const q of all) { const qr = q.getBoundingClientRect(), dy = (qr.top - r.top) * dir; if (dy < 4) continue; const d = dy * 3 + Math.abs(qr.left + qr.width / 2 - c0); if (d < bd) { bd = d; nx = q; } } }
+      if (nx) { b.tabIndex = -1; nx.tabIndex = 0; nx.focus({ preventScroll: true }); nx.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }
+    });
+    // the overview follows the panel's size and the theme
+    const ro = new ResizeObserver(() => { this.pos = null; this.miniSoon(); }); ro.observe(host); ro.observe(view);
+    const mo = new MutationObserver(() => this.miniSoon()); mo.observe(root, { attributes: true, attributeFilter: ['data-mode'] });
+    const prev = page.leave; page.leave = () => { ro.disconnect(); mo.disconnect(); cancelAnimationFrame(this.miniRaf); this.miniRaf = 0; cancelAnimationFrame(this.vpRaf); this.vpRaf = 0; this.pos = null; if (prev) prev(); };
+  },
+  fit() {}, fitBox() {}, into() {},
+  // the map is live: someone holds a seat, a held one is bought or let go; the seats you picked are never touched
+  liveStart(e, s) {
+    const watchers = $('.bk-watch', page.el), R = Math.random;
+    let n = 4 + Math.floor(R() * 26);
+    const step = () => {
+      if (!page.on || !page.v || page.v.kind !== 'seats') return;
+      const all = this.flat, free = all.filter((x) => x.st === 'free' && !this.cart.has(x.key)), held = all.filter((x) => x.st === 'held');
+      const flip = (x, to) => { x.st = to; const b = this.seatEl(x.key); if (b) { this.paintOne(b); b.classList.remove('is-live'); void b.offsetWidth; b.classList.add('is-live'); } };
+      if (free.length && R() < 0.75) flip(free[Math.floor(R() * free.length)], 'held');
+      if (held.length && R() < 0.4) flip(held[Math.floor(R() * held.length)], R() < 0.7 ? 'sold' : 'free');
+      this.plan.secs.forEach((z, i) => { const tab = $(`.bk-seg [data-z="${i}"] small`, page.el); if (tab && !z.ga) tab.textContent = this.freeOf(z); });
+      const cur = this.plan.secs[this.zone]; if (cur && !cur.ga) { const sub = $('#smSub', page.el); if (sub) sub.textContent = sub.textContent.replace(/^[^·]+/, `${this.freeOf(cur)} `); }
+      this.miniSoon();
+      n = clamp(n + Math.round((R() - 0.5) * 4), 2, 40); if (watchers) watchers.textContent = `${fa(n)} نفر همین الان دارن صندلی انتخاب می‌کنن`;
+      this.live = setTimeout(step, 2600 + R() * 2600);
+    };
+    if (watchers) watchers.textContent = `${fa(n)} نفر همین الان دارن صندلی انتخاب می‌کنن`;
+    if (!reduceMotion) this.live = setTimeout(step, 2200);
+  },
+});
 
 /* ════════════════════════════════════════════════════════════════
    the rest of the site's pages, on the same panels: «پیگیری خرید» (#/receipts: by the tracking code, or by the mobile and an
@@ -6467,6 +6965,8 @@ const wizard = {
     const run = () => {
       const c = $('#wzCard', this.el); if (!c) return;
       c.textContent = ''; c.appendChild(s2.card(draftEvent(this.d), false)); const t = $('.tkt', c); if (t) t.classList.add('is-in');
+      $$('a[href]', c).forEach((a) => { a.dataset.href = a.getAttribute('href'); a.removeAttribute('href'); a.setAttribute('role', 'presentation'); a.tabIndex = -1; });
+      if (!c.dataset.wired) { c.dataset.wired = '1'; c.addEventListener('click', (ev) => { if (!ev.target.closest('a, button')) return; ev.preventDefault(); ev.stopPropagation(); toast('این فقط پیش‌نمایشه؛ بعد از تأیید مدیر، کارت به صفحه‌ی برنامه می‌ره.'); }, true); }
       const m = this.missing(), ok = WZ_STEPS.slice(0, 5).map((n, k) => !m.some((x) => x[0] === k));
       $('#wzCheck', this.el).innerHTML = WZ_STEPS.slice(0, 5).map((n, k) => `<li class="${ok[k] ? 'is-ok' : ''}">${ico(ok[k] ? 'check' : 'info')}${esc(n)}</li>`).join('');
     };
@@ -7246,10 +7746,10 @@ const smsFill = (s) => s.replace(/\{([^}]+)\}/g, (m, k) => SMS_FIELDS[k] || m);
 admin.sms = function (el) {
   const saved = store.get('blit.sms', {}), list = SMS_DEF.map((x) => ({ ...x, v: saved[x.id] || x.v }));
   el.innerHTML = `${desk.head('پیامک‌ها', 'متن پیامک‌هایی که سایت می‌فرسته. فیلدها تو آکولاد پر می‌شن؛ هر پیامک فارسی ۷۰ حرفه و هر تکه‌ی پیامک بلند ۶۷ حرف. سامانه‌ی پیامک بعد از اینماد وصل می‌شه.')}
-    <div class="sm-fields evp-rise"><span>فیلدها:</span>${Object.keys(SMS_FIELDS).map((k) => `<code>{${esc(k)}}</code>`).join('')}</div>
-    <div class="sm-list">${list.map((x) => `<section class="panel dk-box sm-item evp-rise" data-id="${x.id}"><h2>${ico('bell')}${esc(x.t)}<small class="sm-n"></small></h2><div class="sm-g"><label class="bk-fld"><span class="sr">متن ${esc(x.t)}</span><textarea rows="5" dir="rtl">${esc(x.v)}</textarea></label><div class="sm-phone" aria-label="پیش‌نمایش"><div class="sm-bub"></div><small>بلیت · همین الان</small></div></div><div class="sm-acts"><button type="button" class="chip" data-reset>${ico('undo')}متن پیش‌فرض</button></div></section>`).join('')}</div>`;
-  $$('.sm-item', el).forEach((sec) => {
-    const ta = $('textarea', sec), bub = $('.sm-bub', sec), n = $('.sm-n', sec), def = SMS_DEF.find((x) => x.id === sec.dataset.id);
+    <div class="sms-fields evp-rise"><span>فیلدها:</span>${Object.keys(SMS_FIELDS).map((k) => `<code>{${esc(k)}}</code>`).join('')}</div>
+    <div class="sms-list">${list.map((x) => `<section class="panel dk-box sms-item evp-rise" data-id="${x.id}"><h2>${ico('bell')}${esc(x.t)}<small class="sms-n"></small></h2><div class="sms-g"><label class="bk-fld"><span class="sr">متن ${esc(x.t)}</span><textarea rows="5" dir="rtl">${esc(x.v)}</textarea></label><div class="sms-phone" aria-label="پیش‌نمایش"><div class="sms-bub"></div><small>بلیت · همین الان</small></div></div><div class="sms-acts"><button type="button" class="chip" data-reset>${ico('undo')}متن پیش‌فرض</button></div></section>`).join('')}</div>`;
+  $$('.sms-item', el).forEach((sec) => {
+    const ta = $('textarea', sec), bub = $('.sms-bub', sec), n = $('.sms-n', sec), def = SMS_DEF.find((x) => x.id === sec.dataset.id);
     const upd = () => { const out = smsFill(ta.value), p = smsParts(out), len = [...out].length; bub.textContent = out; n.textContent = `${fa(len)} حرف · ${fa(p)} پیامک`; n.dataset.tone = p > 2 ? 'bad' : p > 1 ? 'warn' : 'good'; };
     ta.addEventListener('input', () => { upd(); const s = store.get('blit.sms', {}); s[def.id] = ta.value; store.set('blit.sms', s); });
     ta.addEventListener('change', () => auditLog(`متن پیامک «${def.t}» عوض شد`));
@@ -7719,7 +8219,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, account, changes, tour, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

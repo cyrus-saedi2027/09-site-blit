@@ -297,10 +297,26 @@ hall's place (the sample's coordinates): «مسیریابی» on the show's page
 
 **The seats** (step 2): the show and the session (another session from a menu), the price chips (a tier's colour and
 price; a chip dims the other prices), the map and «صندلی‌های تو».
-- The map draws the **whole hall** (the stage, every section, the boxes' and tables' shapes, the standing area, the rows'
-  numbers, a label on every section); the tabs (کل سالن، پارتر، لژها …, each with its free seats) or a section's label
-  take the view into that section. Zoom: + − «کل سالن», Ctrl + wheel, two fingers; drag to move. The arrows go from seat
-  to seat (the nearest one that way), Enter picks, + and − zoom.
+- **The map (round J, rebuilt for speed and big seats; `seatmap.js`).** No zoom is ever needed to pick a seat. On top:
+  the **overview** (a small drawing of the whole hall on a `<canvas>`: the stage, every seat as a dot in its tier's colour,
+  the standing areas; the section on show is framed and bright, the others dim) beside **«بهترین صندلی‌ها»** (how many
+  side by side, − +, «پیدا کن»). Under them the tabs (one per section, each with its free seats) and **one section, big**:
+  its rows straightened (the plan's own arcs only order them), each seat a button of 28–34 px (34 px on a touch screen, the
+  size a finger needs) with its number, the aisles as gaps where the plan has them, the row's number at both ends (it stays
+  in view when a wide section scrolls sideways), «صحنه» above. Boxes and tables are cards (a box's four seats, a table's six
+  chairs round it), a standing area is a card with − +. A press on the overview (or a tab) changes the section; the overview's
+  tip names the section under the pointer. «پیدا کن» takes the best run of free seats side by side in one block (nearest the
+  stage and the middle), picks them, opens their section and makes them glow (a toast names them).
+- **The overview is also the navigator:** when a section is bigger than its panel (a phone, a wide parterre), a frame on
+  the overview shows the part of it in view and follows the panel's scroll; a tap inside the section on show takes the panel
+  there (the seat under the finger glows), a sideways drag follows the finger (an up-and-down swipe still scrolls the page).
+- **The map reads only the plan** (`hallLayout(plan)`: sections, rows, blocks, seats with x/y), so a real hall's plan
+  (from its seating chart) drops into `PLANS`/`HALLS` and the map draws it with no change here.
+- **Fast:** one section is in the page at a time (the parterre of a big hall is 488 buttons, not 1,500); a press repaints
+  one seat; the live updates repaint the seats they touch; nothing is measured while the pointer moves. CPU ×4 (a slow
+  phone): opening the map 250 ms longest task (was 2.4 s), moving the pointer over it 5–34 ms of blocking in all (was
+  7.9 s), a pick 0 long tasks, a change of section about 150 ms (was 400 ms).
+- Keys: the arrows go from seat to seat (along the row; up and down to the nearest one), Enter or Space picks.
 - A seat: free (its tier's colour, its number), yours (solid), held by someone paying (amber stripes), sold, not for sale.
   The map is **live**: every 2.6–5.2 s a free seat is held by another buyer, a held one is bought or let go (a small
   pulse), «زنده · N نفر همین الان دارن صندلی انتخاب می‌کنن»; your own seats are never touched. A press on a seat that
@@ -630,6 +646,15 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - No `backdrop-filter`, no blend modes, no WebGL, **no audio** (no `AudioContext`, no analyser, no beat). The mirrored edge (off by default) is the only `filter` on a big element: blurred once inside the layer that zooms.
 - Scenes are built once and reused; after the intro the other shows' scenes are built one at a time. At most `shows + 1` free scenes are kept.
 - The first banner is preloaded (`<link rel="preload" … imagesrcset imagesizes>`). When the tab is hidden, the hero is covered or the search is open, the timer and the zoom pause.
+- **Round J (the whole site, CPU ×4):** the scroll is read once a frame, before anything is written (the header's step, the
+  pill of the section in view and the ring of «back to the top» follow it in the same step), so the browser no longer
+  redoes the styles several times a frame: the styles and layout forced by scripts while the list scrolls fell from 1.5 s
+  to 0.4–0.7 s for the same scroll; the header's progress line gets its value on itself (on the header, every part of it
+  was redone each frame). The cards' soft copy behind the poster is a tiny picture made in a **worker** (fetched, decoded,
+  shrunk to 24 × 36 and tinted there) instead of two live `blur()` filters per card. The banner's ambient is drawn only
+  when it shows (the «glow» background). The live dots grow a copy of themselves (transform and opacity) instead of a
+  shadow, so a desk at rest repaints nothing (172 paints in 2 s → 2). The reveal of the cards is the stylesheet's own
+  transition (the same curve and timing as before).
 
 ---
 
