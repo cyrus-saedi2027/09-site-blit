@@ -1883,6 +1883,24 @@ button.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-
   .vz-rank span { grid-column: 1 / -1; }
 }
 
+/* the halls' pages (halls.js) */
+.hpm.hpm-big { height: auto; aspect-ratio: 4 / 3; max-height: min(70svh, 760px); margin-bottom: calc(var(--u) * .8); }
+.hpm-l { fill: rgba(var(--fg), .85); font: 800 30px var(--font); paint-order: stroke; stroke: var(--capsule); stroke-width: 8px; stroke-linejoin: round; }
+.hpm-w { fill: rgba(var(--fg), .7); font: 800 30px var(--font); }
+.hl-tbl td:last-child, .hl-tbl th:last-child { text-align: end; font-variant-numeric: tabular-nums; }
+.hl-tiers { display: inline-flex; gap: 3px; margin-inline-end: .6em; vertical-align: middle; }
+.hl-tiers i { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.hl-route { justify-content: flex-start; }
+.hl-facs { list-style: none; margin: 0; padding: 0; display: grid; gap: .5em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
+.hl-facs li { display: flex; align-items: center; gap: .5em; }
+.hl-facs svg.i { width: 1.1em; height: 1.1em; color: #22c55e; }
+a.wz-hall { color: inherit; text-decoration: none; cursor: pointer; }
+a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px); }
+.evp-hl { color: inherit; text-decoration: underline; text-decoration-color: rgba(var(--fg), .3); text-underline-offset: .3em; }
+.evp-hl:hover { text-decoration-color: currentColor; }
+.cy-hall b a { color: inherit; text-decoration: none; }
+.cy-hall b a:hover { text-decoration: underline; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -2212,6 +2230,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
             <p>بلیت کنسرت، تئاتر و جُنگ، با انتخاب زنده‌ی صندلی و دریافت آنی بلیت.</p>
             <ul>
               <li><a href="#s2Secs" data-go="all">برنامه‌ها</a></li>
+              <li><a href="#/halls">سالن‌ها</a></li>
               <li><a href="#" data-page="پشتیبانی">پشتیبانی</a></li>
               <li><a href="#" data-page="درباره‌ی ما">درباره‌ی ما</a></li>
               <li><a href="#" data-page="آرشیو برنامه‌ها">آرشیو برنامه‌ها</a></li>
@@ -4610,7 +4629,7 @@ const page = {
           <section class="evp-facts panel evp-rise" aria-label="مشخصات اجرا">
             <div class="fact"><span class="fi">${ico('calendar')}</span><span><small>دوره‌ی اجرا</small><b>${esc(e.w.short)}</b></span></div>
             <div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(e.w.time)} · ${fa(dur)} دقیقه</b></span></div>
-            <div class="fact wide"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${esc(h.name)}</b><em>${esc(h.addr)}</em></span></div>
+            <div class="fact wide"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${VENUES.some(([c, n]) => c === e.city && n === h.name) ? `<a class="evp-hl" href="${hallUrl(e.city, h.name)}">${esc(h.name)}</a>` : esc(h.name)}</b><em>${esc(h.addr)}</em></span></div>
           </section>
           <section class="evp-map panel evp-rise" aria-label="نقشه">${mapSVG(e)}<span class="mp-pin" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12.1A7 7 0 0 0 5 9.9C5 15.8 12 22 12 22z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
             <div class="mp-zoom"><button type="button" data-z="1" aria-label="بزرگ‌نمایی نقشه">${ico('plus')}</button><button type="button" data-z="-1" aria-label="کوچک‌نمایی نقشه">${ico('minus')}</button></div>
@@ -5057,7 +5076,8 @@ const buy = {
     const seats = h.items;
     const busy = !!(e.badge || saleMs(e) || /پرفروش/.test(e.badge || '')) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);   // a busy show asks for an SMS code (anti-bot, the brief §1.10)
     const w = whenOf(s), { src } = artOf(e);
-    this.payState = { e, s, seats, code: '', otp: !busy, phone: store.get('blit.phone', '') };
+    const om = store.get('blit.otpMode', 'busy'), need = om === 'always' || (om === 'busy' && busy);   // the admin's choice (پنل مدیر ← دسته‌ها و شهرها)
+    this.payState = { e, s, seats, code: '', otp: !need, phone: store.get('blit.phone', '') };
     el.innerHTML = `<div class="evp-in bk" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
       <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}برگشت به صندلی‌ها</a></nav>
       ${stepsHTML(3, e, s)}
@@ -5069,7 +5089,7 @@ const buy = {
             <p class="bk-lead">فقط شماره‌ی موبایلت لازمه: بلیت همین‌جا نشونت داده می‌شه و پیامک هم می‌شه؛ بعداً با همین شماره و کد پیامکی همه‌ی بلیت‌هات پیدا می‌شن.</p>
             <label class="bk-fld"><span>شماره‌ی موبایل</span><input id="bkPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" maxlength="13" value="${esc(this.payState.phone ? fa(this.payState.phone) : '')}" dir="ltr"></label>
             <label class="bk-fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی"></label>
-            ${busy ? `<div class="bk-otp" id="bkOtp"><p>${ico('shield-ok')}این اجرا پرطرفداره؛ برای اینکه ربات‌ها بلیت نخرن، شماره با یه کد پیامکی تأیید می‌شه.</p><div class="bk-otp-row"><button type="button" class="chip" id="bkSend">فرستادن کد</button><div class="otp" id="bkCode" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><span class="bk-otp-st" id="bkOtpSt"></span></div></div>` : ''}
+            ${need ? `<div class="bk-otp" id="bkOtp"><p>${ico('shield-ok')}${busy ? 'این اجرا پرطرفداره؛' : 'برای امنیت خریدت،'} برای اینکه ربات‌ها بلیت نخرن، شماره با یه کد پیامکی تأیید می‌شه.</p><div class="bk-otp-row"><button type="button" class="chip" id="bkSend">فرستادن کد</button><div class="otp" id="bkCode" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><span class="bk-otp-st" id="bkOtpSt"></span></div></div>` : ''}
           </section>
           <section class="panel bk-way evp-rise" aria-labelledby="bkWayH">
             <h2 id="bkWayH">${ico('shield')}روش پرداخت</h2>
@@ -5281,10 +5301,10 @@ const pages = {
     if ((m = /^#\/c\/(soon|(?:concert|theatre|comedy)-(?:tehran|other))$/.exec(h))) return { kind: 'cat', key: m[1].replace('-', ':') };
     if ((m = /^#\/city\/([^/?#]+)$/.exec(h))) return { kind: 'city', city: decodeURIComponent(m[1]) };
     if (h === '#/wallet') return { kind: 'wallet' };
-    return gate.parse(h) || desk.parse(h);
+    return hallsPage.parse(h) || gate.parse(h) || desk.parse(h);
   },
   render(v) {
-    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render() }[v.kind];
+    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x) }[v.kind];
     if (!fn) { if (v.kind === 'gate') gate.render(v); else desk.render(v); return; }
     fn.call(this, v);
     const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', page.el).appendChild(c); page.wireFooter(c); }
@@ -5380,7 +5400,7 @@ const pages = {
     const c = v.city, list = LIST().filter((e) => e.city === c && !['held', 'cancelled'].includes(statusOf(e).key)).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
     document.title = `برنامه‌های ${c} · بلیت`;
     const halls = [...new Map(LIST().filter((e) => e.city === c).map((e) => { const h = hallOf(e); return [h.name, h]; })).values()];
-    const box = this.wrap('pg-cy', this.head(`برنامه‌های ${c}`, 'pin', list.length ? `${fa(list.length)} برنامه پیش رو` : 'فعلاً برنامه‌ای پیش رو نیست.') + `<section class="panel pg-box evp-rise" id="pgGrid"></section>` + (halls.length ? `<section class="panel pg-box evp-rise"><h2>${ico('pin')}سالن‌های ${esc(c)}</h2><div class="cy-halls">${halls.map((h) => `<div class="cy-hall"><b>${esc(h.name)}</b><span>${esc(h.addr)}</span><a class="chip" target="_blank" rel="noopener" href="${h.lat ? `https://neshan.org/maps/@${h.lat},${h.lng},16z` : `https://neshan.org/maps/search/${encodeURIComponent(h.addr)}`}">${ico('route')}مسیریابی</a></div>`).join('')}</div></section>` : ''));
+    const box = this.wrap('pg-cy', this.head(`برنامه‌های ${c}`, 'pin', list.length ? `${fa(list.length)} برنامه پیش رو` : 'فعلاً برنامه‌ای پیش رو نیست.') + `<section class="panel pg-box evp-rise" id="pgGrid"></section>` + (halls.length ? `<section class="panel pg-box evp-rise"><h2>${ico('pin')}سالن‌های ${esc(c)}</h2><div class="cy-halls">${halls.map((h) => `<div class="cy-hall"><b>${VENUES.some(([cc, n]) => cc === c && n === h.name) ? `<a href="${hallUrl(c, h.name)}">${esc(h.name)}</a>` : esc(h.name)}</b><span>${esc(h.addr)}</span><a class="chip" target="_blank" rel="noopener" href="${h.lat ? `https://neshan.org/maps/@${h.lat},${h.lng},16z` : `https://neshan.org/maps/search/${encodeURIComponent(h.addr)}`}">${ico('route')}مسیریابی</a></div>`).join('')}</div></section>` : ''));
     const g = $('#pgGrid', box); if (list.length) g.appendChild(this.grid(list)); else g.innerHTML = `<p class="bk-lead">برای ${esc(c)} هنوز برنامه‌ای ثبت نشده؛ <a href="#" data-home>همه‌ی برنامه‌ها</a> رو ببین.</p>`;
   },
 };
@@ -5448,7 +5468,7 @@ const drawer = {
     box.innerHTML = `<nav class="dr-sheet panel" aria-label="منو"><div class="dr-top"><b>بلیت</b><button type="button" class="au-x" data-x aria-label="بستن">${ico('x')}</button></div>
       <a class="dr-login" href="#" data-act="login">${ico('users')}<span>${u ? `حساب من · ${esc(maskPhone(u.phone))}` : 'ورود یا ثبت‌نام'}</span></a>
       <h3>دسته‌ها</h3>${SEC_ORDER.map(cat).join('')}
-      <h3>صفحه‌ها</h3><a href="#/receipts" data-x>${ico('ticket')}<span>پیگیری خرید و بلیت‌های من</span></a><a href="#/wallet" data-x>${ico('tag')}<span>کیف پول</span><small>${money(wallet.bal())}</small></a><a href="#/archive" data-x>${ico('calendar')}<span>آرشیو برنامه‌ها</span></a><a href="#/p/rules" data-x>${ico('shield')}<span>قوانین خرید</span></a><a href="#/p/contact" data-x>${ico('headset')}<span>تماس و پشتیبانی</span></a><a href="#/p/about" data-x>${ico('spark')}<span>درباره‌ی بلیت</span></a>
+      <h3>صفحه‌ها</h3><a href="#/receipts" data-x>${ico('ticket')}<span>پیگیری خرید و بلیت‌های من</span></a><a href="#/wallet" data-x>${ico('tag')}<span>کیف پول</span><small>${money(wallet.bal())}</small></a><a href="#/archive" data-x>${ico('calendar')}<span>آرشیو برنامه‌ها</span></a><a href="#/halls" data-x>${ico('pin')}<span>سالن‌ها</span></a><a href="#/p/rules" data-x>${ico('shield')}<span>قوانین خرید</span></a><a href="#/p/contact" data-x>${ico('headset')}<span>تماس و پشتیبانی</span></a><a href="#/p/about" data-x>${ico('spark')}<span>درباره‌ی بلیت</span></a>
       <h3>همکاران</h3><a href="#/org" data-x>${ico('grid')}<span>پنل برگزارکننده</span></a><a href="#/admin" data-x>${ico('shield')}<span>پنل مدیر</span></a><a href="#/gate" data-x>${ico('shield-ok')}<span>کنترل ورود</span></a>
       <button type="button" class="dr-mode" data-act="mode">${ico('spark')}<span>${LOOK.mode === 'light' ? 'تم تیره' : 'تم روشن (سفید)'}</span></button></nav>`;
     $('#app').appendChild(box);
@@ -6689,9 +6709,11 @@ const admin = {
     const hidden = new Set(store.get('blit.hideCities', [])), all = [...new Set(CITIES.concat([...hidden]))].sort((a, b) => a.localeCompare(b, 'fa')), extra = store.get('blit.cats', []);
     el.innerHTML = `${desk.head('دسته‌ها و شهرها', 'شش دسته‌ی اصلی خودکار از نوع و شهر برنامه ساخته می‌شن؛ دسته‌ی تازه هم می‌شه اضافه کرد.')}
       <div class="dk-cols dk-cols-r"><section class="panel dk-box evp-rise"><h2>${ico('grid')}دسته‌ها</h2><ul class="ad-cats">${SEC_ORDER.map((k) => `<li><span class="sec-ic" style="--sc:${secColor(k)[0]}" aria-hidden="true">${ico(iconOfCat(k))}</span><b>${esc(catName(k))}</b><small>${fa(catCount(k))} برنامه · خودکار</small></li>`).join('')}${extra.map((c) => `<li><span class="sec-ic" aria-hidden="true">${ico('tag')}</span><b>${esc(c.t)}</b><small>با برچسب «${esc(c.tag)}» · دستی</small></li>`).join('')}</ul>
+        <h3 class="wz-h3">تأیید موبایل با کد پیامکی موقع خرید</h3><div class="bk-seg" role="radiogroup" aria-label="تأیید موبایل">${[['off', 'خاموش'], ['busy', 'فقط اجراهای پرطرفدار'], ['always', 'همیشه']].map(([k, t]) => `<button type="button" role="radio" data-otp="${k}" aria-checked="${store.get('blit.otpMode', 'busy') === k}">${t}</button>`).join('')}</div>
         <form class="rc-row" id="adCat"><label class="bk-fld"><span>دسته‌ی تازه</span><input name="t" placeholder="مثلاً: ویژه‌ی کودکان" required></label><button type="submit" class="chip">${ico('plus')}افزودن</button></form></section>
       <section class="panel dk-box evp-rise"><h2>${ico('pin')}شهرهایی که خریدار می‌بینه<small>${fa(all.length - hidden.size)} از ${fa(all.length)}</small></h2><p class="bk-lead">تو منوی شهر هدر و فیلتر لیست. شهری که برنامه نداره رو می‌شه پنهان کرد.</p><div class="ad-cities">${all.map((c) => `<label><input type="checkbox" data-city="${esc(c)}"${hidden.has(c) ? '' : ' checked'}><span>${esc(c)}<small>${fa(LIST().filter((e) => e.city === c).length)}</small></span></label>`).join('')}</div></section></div>`;
     $$('[data-city]', el).forEach((c) => c.addEventListener('change', () => { const h = new Set(store.get('blit.hideCities', [])), name = c.dataset.city; if (c.checked) { h.delete(name); if (!CITIES.includes(name)) { CITIES.push(name); CITIES.sort((a, b) => a.localeCompare(b, 'fa')); } } else { h.add(name); const i = CITIES.indexOf(name); if (i >= 0) CITIES.splice(i, 1); } store.set('blit.hideCities', [...h]); auditLog(`شهر ${name} ${c.checked ? 'نمایش داده' : 'پنهان'} شد`); }));
+    $$('[data-otp]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.otpMode', b.dataset.otp); $$('[data-otp]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`تأیید موبایل موقع خرید: ${b.textContent}`); toast(`تأیید موبایل موقع خرید: ${b.textContent}.`); }));
     $('#adCat', el).addEventListener('submit', (ev) => { ev.preventDefault(); const t = ev.target.elements.t.value.trim(); if (!t) return; store.set('blit.cats', extra.concat({ t, tag: t })); auditLog(`دسته‌ی «${t}» ساخته شد`); toast('دسته ساخته شد؛ برنامه‌ها با برچسبش توش می‌آن.'); this.site(el); });
   },
 
@@ -6799,6 +6821,60 @@ const walletPage = {
       if (used.includes(c)) { st.className = 'bk-code-st bad'; st.textContent = 'این کد قبلاً استفاده شده.'; return; }
       store.set('blit.giftUsed', used.concat(c)); g.used++; store.set('blit.gifts', gifts); wallet.add(g.v, `کد هدیه‌ی ${g.org}`); toast(`${money(g.v)} تومان هدیه به کیف پولت اضافه شد.`); this.render();
     });
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the halls' library, public (brief §2.3: «هر سالن صفحه‌ی عمومی دارد»): #/halls (every hall, by city) and
+   #/hall/<city>/<name> (its plan with its sections, how many seats where, the way there, what is on there). The show's page,
+   a city's page and the footer link to them. The facilities are a sample until the admin fills them.
+   ════════════════════════════════════════════════════════════════ */
+const FACS = [['parking', 'پارکینگ'], ['wheel', 'دسترسی با ویلچر'], ['metro', 'نزدیک مترو یا اتوبوس'], ['cafe', 'کافه و بوفه'], ['coat', 'کمد امانات'], ['pray', 'نمازخانه']];
+const hallUrl = (city, name) => `#/hall/${encodeURIComponent(city)}/${encodeURIComponent(name)}`;
+const routeLinks = (h) => {
+  const ll = h.lat ? `${h.lat},${h.lng}` : '', q = encodeURIComponent(`${h.name}، ${h.addr}`);
+  return [['نشان', ll ? `https://neshan.org/maps/@${ll},16z` : `https://neshan.org/maps/search/${q}`], ['بلد', ll ? `https://balad.ir/location?latitude=${h.lat}&longitude=${h.lng}&zoom=16` : `https://balad.ir/search?query=${q}`], ['گوگل‌مپ', ll ? `https://www.google.com/maps/dir/?api=1&destination=${ll}` : `https://www.google.com/maps/search/?api=1&query=${q}`], ['ویز', ll ? `https://waze.com/ul?ll=${ll}&navigate=yes` : `https://waze.com/ul?q=${q}`]];
+};
+// the plan, larger, with each section's name where the seat map puts it
+function hallPlanSVG(key) {
+  const L = hallLayout(PLANS[key] || PLANS['fan-m']), base = miniPlan(key);
+  const labels = L.secs.filter((z) => z.lp).map((z) => `<text x="${z.lp.x.toFixed(0)}" y="${(z.sec.k === 'stand' ? z.shapes[0].y + z.shapes[0].h / 2 + 10 : z.lp.y).toFixed(0)}" text-anchor="middle" class="hpm-l">${esc(z.sec.t)}</text>`).join('');
+  return base.replace('</svg>', `<text x="${L.cx}" y="${L.cy - 40}" text-anchor="middle" class="hpm-w">صحنه</text>${labels}</svg>`).replace('class="hpm"', 'class="hpm hpm-big"');
+}
+const hallsPage = {
+  parse(h) {
+    if (h === '#/halls') return { kind: 'halls' };
+    const m = /^#\/hall\/([^/?#]+)\/([^/?#]+)$/.exec(h);
+    return m ? { kind: 'hall', city: decodeURIComponent(m[1]), name: decodeURIComponent(m[2]) } : null;
+  },
+  shows(city, name) { return LIST().filter((e) => e.city === city && hallOf(e).name === name && !['held', 'cancelled'].includes(statusOf(e).key)).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt)); },
+  list() {
+    document.title = 'سالن‌ها · بلیت';
+    const by = {}; VENUES.forEach(([c, n]) => { (by[c] = by[c] || []).push(venueInfo(c, n)); });
+    const cities = Object.keys(by).sort((a, b) => (a === 'تهران' ? -1 : b === 'تهران' ? 1 : a.localeCompare(b, 'fa')));
+    pages.wrap('pg-hl', `${pages.head('سالن‌ها', 'pin', `${fa(VENUES.length)} سالن در ${fa(cities.length)} شهر؛ هر کدوم با پلان صندلی‌هاش و برنامه‌هایی که اونجاست.`)}
+      ${cities.map((c) => `<section class="panel pg-box evp-rise"><h2>${ico('pin')}${esc(c)}<small>${fa(by[c].length)} سالن</small></h2><div class="wz-halls">${by[c].map((h) => { const n = this.shows(h.city, h.name).length; return `<a class="wz-hall" href="${hallUrl(h.city, h.name)}">${miniPlan(h.plan)}<span><b>${esc(h.name)}</b><small>${esc(h.addr)}</small><small>${money(h.cap)} صندلی${n ? ` · ${fa(n)} برنامه‌ی پیش رو` : ''}</small></span></a>`; }).join('')}</div></section>`).join('')}`);
+  },
+  hall(v) {
+    const ok = VENUES.some(([c, n]) => c === v.city && n === v.name);
+    if (!ok) { pages.wrap('pg-hl', `${pages.head('سالن پیدا نشد', 'pin', 'این سالن تو کتابخانه نیست.')}<section class="panel pg-box evp-rise"><a class="chip" href="#/halls">${ico('arrow-r')}همه‌ی سالن‌ها</a></section>`); return; }
+    const h = venueInfo(v.city, v.name), L = hallLayout(PLANS[h.plan] || PLANS['fan-m']), list = this.shows(h.city, h.name), R = rngOf(seedOf(`fac:${h.name}`));
+    document.title = `${h.name} · ${h.city} · بلیت`;
+    const facs = FACS.filter(() => R() < 0.72);
+    const rows = L.secs.map((z) => { const seats = z.sec.k === 'stand' ? z.sec.cap : z.seats.length, tiers = [...new Set(z.sec.runs.map((r) => r[2]))]; return `<tr><td><span class="hl-tiers">${tiers.map((t) => `<i style="--c:${TIER[t].c}"></i>`).join('')}</span>${esc(z.sec.t)}</td><td>${esc(z.sec.k === 'stand' ? 'ایستاده' : z.sec.k === 'boxes' ? `${fa(z.sec.n)} لژ` : z.sec.k === 'tables' ? `${fa(z.sec.cols * z.sec.rows)} میز` : `${fa(z.sec.rows)} ردیف`)}</td><td>${money(seats)}</td></tr>`; }).join('');
+    const box = pages.wrap('pg-hl', `<nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#/halls">سالن‌ها</a><span aria-hidden="true">/</span><b>${esc(h.name)}</b></nav>
+      <section class="panel pg-head evp-rise"><span class="sec-ic" aria-hidden="true">${ico('pin')}</span><div><h1>${esc(h.name)}</h1><p>${esc(h.addr)} · ${esc(PLAN_T[h.plan] || '')} · ${money(h.cap)} صندلی</p></div></section>
+      <div class="evp-cols"><div class="evp-main">
+        <section class="panel pg-box evp-rise" aria-labelledby="hlPlanH"><h2 id="hlPlanH">${ico('ruler')}پلان سالن<small>هر رنگ یه رده‌ی قیمت</small></h2>${hallPlanSVG(h.plan)}
+          <div class="dk-tbl-w"><table class="dk-tbl hl-tbl"><thead><tr><th>بخش</th><th>چیدمان</th><th>صندلی</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td>جمع</td><td></td><td>${money(h.cap)}</td></tr></tfoot></table></div>
+          <p class="bk-note">${ico('info')}صندلی ۱ هر ردیف سمت راستِ کسیه که رو به صحنه نشسته؛ ردیف ۱ نزدیک‌ترین به صحنه‌ست.</p></section>
+        <section class="panel pg-box evp-rise" id="hlShows" aria-labelledby="hlShowsH"><h2 id="hlShowsH">${ico('ticket')}برنامه‌های این سالن<small>${fa(list.length)}</small></h2></section>
+      </div><aside class="evp-side">
+        <section class="panel pg-box evp-rise"><h2>${ico('route')}مسیریابی</h2><p class="bk-lead">${esc(h.addr)}</p><div class="sec-chips hl-route">${routeLinks(h).map(([t, u]) => `<a class="chip" href="${esc(u)}" target="_blank" rel="noopener">${ico('route')}${esc(t)}</a>`).join('')}</div></section>
+        <section class="panel pg-box evp-rise"><h2>${ico('check')}امکانات<small>نمونه</small></h2><ul class="hl-facs">${facs.map(([, t]) => `<li>${ico('check')}${esc(t)}</li>`).join('') || '<li>هنوز ثبت نشده</li>'}</ul></section>
+      </aside></div>`);
+    const s = $('#hlShows', box);
+    if (list.length) s.appendChild(pages.grid(list)); else s.insertAdjacentHTML('beforeend', '<p class="bk-lead">فعلاً برنامه‌ای اینجا نیست.</p>');
   },
 };
 
@@ -7180,7 +7256,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

@@ -396,6 +396,8 @@ as they change; a new hall is at once in the organisers' wizard); گزارش‌�
 below follows; CSV); کیف پول و کد هدیه (batches of gift codes of an organisation: a file or printed cards);
 تاریخچه‌ی تغییرات (who changed what, when).
 
+**The halls' pages** (`halls.js`): `#/halls` (every hall of the library by city, each with its plan small) and `#/hall/<city>/<name>` (the plan large with each section's name, a table of the sections and seats, the way there, sample facilities, the shows there); the show's page and a city's page link to them. **The SMS check at checkout** is the admin's choice (off, busy shows only, always: «دسته‌ها و شهرها»).
+
 **The wallet** (`#/wallet`, from «حساب من» and the phone's menu): the balance, a charge by the gateway, a gift code (demo
 code on the admin's page), what came in and went out; it pays at checkout (step 3) when it has enough; it has no paying out.
 
