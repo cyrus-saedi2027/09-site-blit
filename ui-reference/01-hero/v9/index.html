@@ -2027,6 +2027,25 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .ch-pane { display: grid; gap: .5em; margin-bottom: 1em; }
 .ad-ch .sec-ic { width: 44px; }
 
+/* the guided walk (tour.js) */
+.pg-tour { display: flex; align-items: center; gap: 1em; }
+.pg-tour > div { flex: 1; display: grid; gap: .2em; }
+.pg-tour b { font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); }
+.pg-tour p { margin: 0; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .65); }
+.pg-tour .buy { gap: .45em; }
+.tour { position: fixed; z-index: 90; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); translate: -50% 0; width: min(560px, calc(100vw - 24px)); display: grid; gap: 10px; padding: 14px 16px 14px; border-radius: 20px; color: rgb(var(--fg)); font-family: var(--font); direction: rtl; box-shadow: 0 30px 70px -20px rgba(0, 0, 0, .75), inset 0 0 0 1px rgba(var(--fg), .14); overflow: hidden; }
+.tour-bar { position: absolute; inset: 0 0 auto; height: 3px; background: rgba(var(--fg), .08); }
+.tour-bar i { display: block; height: 100%; width: calc(var(--p) * 100%); background: linear-gradient(90deg, #8b5cf6, #ec4899, #f97316); margin-inline-start: 0; transition: width .5s var(--ease); }
+.tour-t { display: grid; gap: 3px; }
+.tour-t small { font-size: 11.5px; color: rgba(var(--fg), .55); }
+.tour-t b { font-size: 16px; font-weight: 800; }
+.tour-t p { margin: 0; font-size: 13px; line-height: 1.9; color: rgba(var(--fg), .8); }
+.tour-a { display: flex; align-items: center; gap: 8px; }
+.tour-a .buy { gap: .4em; height: 40px; }
+.tour-a .chip { gap: .35em; }
+.tour-a .chip:disabled { opacity: .4; }
+.tour-a .au-x { position: static; margin-inline-start: auto; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -5506,7 +5525,7 @@ const pages = {
     } else if (v.name === 'map') {
       const e = LIST().find((x) => statusOf(x).key === 'normal' && sessionsOf(x).length) || LIST()[0], s = e && sessionsOf(e)[0];
       const g = (t, icon, rows) => `<section class="panel pg-box evp-rise"><h2>${ico(icon)}${esc(t)}</h2><ul class="pg-ml">${rows.map(([h, n, d]) => `<li><a href="${esc(h)}">${esc(n)}</a><span>${esc(d)}</span></li>`).join('')}</ul></section>`;
-      body = `<div class="pg-maps">${g('برای خریدار', 'ticket', [['#', 'صفحه‌ی اصلی', 'جایگاه ویژه، لیست برنامه‌ها به تفکیک دسته، پیش‌فروش، جستجو و شهر'], ['#/c/concert-tehran', 'صفحه‌ی هر دسته', 'همه‌ی برنامه‌های یه دسته (مثلاً کنسرت‌های تهران)'], ['#/city/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86', 'صفحه‌ی هر شهر', 'برنامه‌ها و سالن‌های یه شهر'], [e ? `#/e/${encodeURIComponent(e.id)}` : '#', 'صفحه‌ی برنامه (گام ۱)', 'سانس‌ها، مشخصات، طرح بها، قوانین، مسیریابی'], [e && s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : '#', 'انتخاب صندلی (گام ۲)', 'نقشه‌ی زنده‌ی کل سالن، زوم، فیلتر قیمت'], ['#/receipts', 'پیگیری خرید و بلیت‌های من', 'با کد پیگیری یا موبایل و کد پیامکی'], ['#/account', 'حساب من', 'بلیت‌های پیش رو، یادآوری‌ها، نام روی بلیت، پیامک‌ها'], ['#/wallet', 'کیف پول', 'شارژ، کد هدیه، گردش حساب'], ['#/halls', 'سالن‌ها', 'کتابخانه‌ی سالن‌ها با پلان و برنامه‌های هر سالن'], ['#/archive', 'آرشیو', 'برنامه‌های برگزارشده'], ['#/search/%DA%A9%D9%86%D8%B3%D8%B1%D8%AA', 'نتیجه‌ی جستجو', 'Enter تو جستجوی لیست'], ['#/p/rules', 'قوانین خرید', ''], ['#/p/contact', 'تماس و پشتیبانی', 'پرسش‌های پرتکرار و فرم'], ['#/p/about', 'درباره‌ی ما', '']])}
+      body = `<section class="panel pg-box evp-rise pg-tour"><span class="sec-ic" aria-hidden="true">${ico('play')}</span><div><b>تور راهنما</b><p>دوازده ایستگاه، از صفحه‌ی اصلی تا پنل مدیر؛ هر کدوم با یه خط توضیح.</p></div><button type="button" class="buy" id="pgTour">${ico('play')}شروع تور</button></section><div class="pg-maps">${g('برای خریدار', 'ticket', [['#', 'صفحه‌ی اصلی', 'جایگاه ویژه، لیست برنامه‌ها به تفکیک دسته، پیش‌فروش، جستجو و شهر'], ['#/c/concert-tehran', 'صفحه‌ی هر دسته', 'همه‌ی برنامه‌های یه دسته (مثلاً کنسرت‌های تهران)'], ['#/city/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86', 'صفحه‌ی هر شهر', 'برنامه‌ها و سالن‌های یه شهر'], [e ? `#/e/${encodeURIComponent(e.id)}` : '#', 'صفحه‌ی برنامه (گام ۱)', 'سانس‌ها، مشخصات، طرح بها، قوانین، مسیریابی'], [e && s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : '#', 'انتخاب صندلی (گام ۲)', 'نقشه‌ی زنده‌ی کل سالن، زوم، فیلتر قیمت'], ['#/receipts', 'پیگیری خرید و بلیت‌های من', 'با کد پیگیری یا موبایل و کد پیامکی'], ['#/account', 'حساب من', 'بلیت‌های پیش رو، یادآوری‌ها، نام روی بلیت، پیامک‌ها'], ['#/wallet', 'کیف پول', 'شارژ، کد هدیه، گردش حساب'], ['#/halls', 'سالن‌ها', 'کتابخانه‌ی سالن‌ها با پلان و برنامه‌های هر سالن'], ['#/archive', 'آرشیو', 'برنامه‌های برگزارشده'], ['#/search/%DA%A9%D9%86%D8%B3%D8%B1%D8%AA', 'نتیجه‌ی جستجو', 'Enter تو جستجوی لیست'], ['#/p/rules', 'قوانین خرید', ''], ['#/p/contact', 'تماس و پشتیبانی', 'پرسش‌های پرتکرار و فرم'], ['#/p/about', 'درباره‌ی ما', '']])}
         ${g('برای همکاران', 'users', [['#/org', 'پنل برگزارکننده', 'فروش زنده، برنامه‌ها، تسویه'], ['#/org/new', 'ساخت برنامه‌ی جدید', 'شش قدم تا تأیید مدیر: سالن، تقویم شمسی، قیمت روی پلان و تک‌صندلی'], ['#/org/codes', 'کدهای تخفیف', 'پیام تبلیغاتی و کارت چاپی A4'], ['#/org/staff', 'کنترل‌چی‌ها', 'کد ورود هر کنترل‌چی'], ['#/gate', 'کنترل ورود', 'اسکن QR با دوربین، اسکنر یا کد؛ آفلاین'], ['#/admin', 'پنل مدیر', 'پیشخوان کل سایت'], ['#/admin/shows', 'صف تأیید و لغو برنامه', 'با برگشت پول'], ['#/admin/orders', 'سفارش‌ها', 'جستجو، فیلتر، برگشت پول، فایل'], ['#/admin/team', 'کاربرها و نقش‌ها', 'مدیر کل، مالی، اپراتور'], ['#/admin/site', 'دسته‌ها، شهرها و تنظیمات خرید', 'کد پیامکی، صف انتظار'], ['#/admin/halls', 'طراح سالن', 'ساختن پلان سالن تازه'], ['#/admin/reports', 'گزارش‌ها', 'با فیلتر و فایل'], ['#/admin/gifts', 'کد هدیه‌ی سازمانی', ''], ['#/admin/sms', 'پیامک‌ها', 'متن پیامک‌ها با پیش‌نمایش و شمار پیامک'], ['#/admin/content', 'محتوای صفحه‌ی اصلی', 'شش جایگاه ویژه'], ['#/admin/log', 'تاریخچه‌ی تغییرات', '']])}</div>`;
     } else {
       body = `<div class="evp-cols"><div class="evp-main"><section class="panel pg-box evp-rise"><h2>${ico('info')}پرسش‌های پرتکرار</h2><div class="faq">${FAQ.map(([q, a], i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(q)}${ico('down')}</summary><p>${esc(a)}</p></details>`).join('')}</div></section>
@@ -5514,6 +5533,7 @@ const pages = {
         <aside class="evp-side"><section class="panel pg-box evp-rise"><h2>${ico('headset')}پشتیبانی</h2><ul class="pg-tips"><li>هر روز از ۹ صبح تا ۱۲ شب</li><li>تلفن: <span dir="ltr">۰۲۱ ۰۰۰۰ ۰۰۰۰</span> (نمونه)</li><li>ایمیل: <span dir="ltr">support@blit.example</span></li><li>پیگیری خرید بدون تماس: <a href="#/receipts">اینجا</a></li></ul></section></aside></div>`;
     }
     const box = this.wrap(`pg-st pg-${v.name}`, this.head(d.t, d.icon, d.lead) + body);
+    const tb = $('#pgTour', box); if (tb) tb.addEventListener('click', () => tour.start());
     const f = $('#pgForm', box); if (f) f.addEventListener('submit', (ev) => { ev.preventDefault(); toast(`پیامت ثبت شد؛ کد پیگیری‌اش ${fa(Math.floor(10000 + Math.random() * 89999))}. تا چند ساعت دیگه جواب می‌دیم.`); f.reset(); });
   },
 
@@ -7285,6 +7305,43 @@ const changes = {
 changes.apply();
 
 /* ════════════════════════════════════════════════════════════════
+   a guided walk through the prototype, for the owner's client (started from «نقشه‌ی سایت»): each stop opens a page and a
+   small card at the bottom says what to look at there; «بعدی», «قبلی», Esc to stop. Nothing is added to the home page.
+   ════════════════════════════════════════════════════════════════ */
+const tour = {
+  stops() {
+    const e = LIST().find((x) => statusOf(x).key === 'normal' && sessionsOf(x).some((s) => s.seats > 0)) || LIST()[0], s = e && sessionsOf(e).find((x) => x.seats > 0);
+    return [
+      ['#', 'صفحه‌ی اصلی', 'جایگاه ویژه با بنرها و حرکت آرامشون؛ پایین‌تر لیست برنامه‌ها به تفکیک دسته، پیش‌فروش با شمارش معکوس، جستجو و شهر.'],
+      [e ? `#/e/${encodeURIComponent(e.id)}` : '#', 'صفحه‌ی برنامه (گام ۱)', 'سانس‌ها مثل بلیت‌های کوچیک، مشخصات و نقشه، طرح بها با مالیات، قوانین و مسیریابی.'],
+      [e && s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : '#', 'انتخاب صندلی (گام ۲)', 'کل سالن روی یه نقشه‌ی زنده: زوم، فیلتر قیمت، و صندلی‌هایی که همین الان دیگران نگه می‌دارن.'],
+      ['#/halls', 'سالن‌ها', 'هر سالن با پلانش، بخش‌ها و صندلی‌ها، مسیریابی و برنامه‌هایی که اونجاست.'],
+      ['#/receipts', 'پیگیری خرید', 'بلیت‌ها با کد پیگیری، یا با موبایل و کد پیامکی؛ بدون ثبت‌نام.'],
+      ['#/org', 'پنل برگزارکننده', 'فروش زنده، پرفروش‌ها و سانس‌های پیش رو؛ از اینجا برنامه‌ی تازه، کد تخفیف و تسویه.'],
+      ['#/org/new', 'ساخت برنامه', 'شش قدم: مشخصات، پوستر، سالن از کتابخانه، تقویم شمسی، قیمت روی پلان سالن و تک‌صندلی، و فرستادن برای مدیر.'],
+      ['#/org/codes', 'کد تخفیف', 'پیام تبلیغاتی آماده (تصویر و متن) و کارت‌های چاپی اندازه‌ی کارت بانکی روی A4.'],
+      ['#/gate', 'کنترل ورود', 'دم در سالن با گوشی: دوربین QR رو می‌خونه، بلیت تکراری رو می‌شناسه و بی‌اینترنت هم کار می‌کنه.'],
+      ['#/admin/shows', 'پنل مدیر', 'هیچ برنامه‌ای بدون تأیید مدیر روی سایت نمی‌آد؛ لغو برنامه پول همه رو برمی‌گردونه.'],
+      ['#/admin/reports', 'گزارش‌ها', 'با فیلتر بازه، شهر و نوع؛ همه‌ی عددها و نمودارها با هم عوض می‌شن، با خروجی اکسل.'],
+      ['#/p/map', 'همه‌ی صفحه‌ها', 'بقیه‌ی صفحه‌ها (کیف پول، حساب من، پیامک‌ها، طراح سالن و …) از همین نقشه باز می‌شن.'],
+    ];
+  },
+  start() { this.list = this.stops(); this.i = 0; this.show(); this.key = (ev) => { if (ev.key === 'Escape') this.stop(); }; document.addEventListener('keydown', this.key); },
+  show() {
+    const [h, t, d] = this.list[this.i];
+    if (h === '#') { if (page.on) page.close(); else scrollTo({ top: 0, behavior: 'instant' }); } else page.go(h);
+    let c = $('#tourCard');
+    if (!c) { c = document.createElement('div'); c.id = 'tourCard'; c.className = 'tour panel'; c.setAttribute('role', 'dialog'); c.setAttribute('aria-label', 'تور'); document.body.appendChild(c); }
+    const n = this.list.length;
+    c.innerHTML = `<div class="tour-bar"><i style="--p:${((this.i + 1) / n).toFixed(3)}"></i></div><div class="tour-t"><small>${fa(this.i + 1)} از ${fa(n)}</small><b>${esc(t)}</b><p>${esc(d)}</p></div><div class="tour-a"><button type="button" class="chip" data-t="prev"${this.i ? '' : ' disabled'}>${ico('arrow-r')}قبلی</button><button type="button" class="buy" data-t="next">${this.i < n - 1 ? 'بعدی' : 'پایان'}${ico('arrow-l')}</button><button type="button" class="au-x" data-t="stop" aria-label="بستن تور">${ico('x')}</button></div>`;
+    $$('[data-t]', c).forEach((b) => b.addEventListener('click', () => { const k = b.dataset.t; if (k === 'stop') this.stop(); else if (k === 'prev') { this.i = Math.max(0, this.i - 1); this.show(); } else if (this.i < n - 1) { this.i++; this.show(); } else this.stop(); }));
+    if (MOTK()) gsap.fromTo(c, { y: 16, opacity: 0.4 }, { y: 0, opacity: 1, duration: 0.45, ease: 'expo.out' });
+    $('[data-t="next"]', c).focus({ preventScroll: true });
+  },
+  stop() { const c = $('#tourCard'); if (c) c.remove(); document.removeEventListener('keydown', this.key); },
+};
+
+/* ════════════════════════════════════════════════════════════════
    the touch of the page: a soft light that follows the pointer over a panel, a buy button that leans toward the
    pointer and ripples, banners that can be dragged to the next show, and the keys
    ════════════════════════════════════════════════════════════════ */
@@ -7662,7 +7719,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, account, changes, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, notif, account, changes, tour, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
