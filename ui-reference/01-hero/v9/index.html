@@ -1901,6 +1901,37 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .cy-hall b a { color: inherit; text-decoration: none; }
 .cy-hall b a:hover { text-decoration: underline; }
 
+/* the waiting room (queue.js) */
+.q-box { position: relative; width: min(760px, 100%); justify-self: center; display: grid; gap: calc(var(--u) * 1.1); padding: calc(var(--u) * 1.6) calc(var(--u) * 1.8); border-radius: calc(var(--r) * 1.3); overflow: hidden; }
+.q-box::before { content: ""; position: absolute; inset: -40% -20% auto; height: 80%; background: radial-gradient(closest-side, color-mix(in oklab, var(--viz-1) 30%, transparent), transparent); opacity: .6; pointer-events: none; animation: qGlow 6s ease-in-out infinite alternate; }
+@keyframes qGlow { to { transform: translateX(12%); } }
+.q-pg { --viz-1: #3987e5; }
+:root[data-mode="light"] .q-pg { --viz-1: #2a78d6; }
+.q-top { position: relative; display: flex; align-items: center; gap: 1em; }
+.q-top .bk-poster { width: max(64px, calc(var(--u) * 4.2)); }
+.q-top small { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: var(--viz-1); font-weight: var(--fwb); }
+.q-top h1 { margin: .1em 0; font-size: calc(max(20px, calc(var(--u) * 1.4)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.5; }
+.q-top p { margin: 0; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .62); }
+.q-pos { position: relative; display: grid; justify-items: center; gap: .15em; padding: calc(var(--u) * .6) 0; text-align: center; }
+.q-pos small { font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .65); }
+.q-pos b { font-size: clamp(48px, calc(var(--u) * 5.2), 92px); font-weight: 900; line-height: 1.15; }
+.q-pos span { min-height: 1.6em; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); color: rgba(var(--fg), .75); }
+.q-box.is-in .q-pos b { color: #22c55e; animation: dkTick .8s var(--ease); }
+.q-line { position: relative; direction: ltr; display: flex; justify-content: flex-end; align-items: center; gap: 6px; height: 34px; padding-inline-end: 42px; overflow: hidden; }
+.q-line i { flex: none; width: 12px; height: 12px; border-radius: 50%; background: rgba(var(--fg), .22); transition: transform .6s var(--ease); }
+.q-line i.is-me { background: var(--viz-1); box-shadow: 0 0 0 4px color-mix(in oklab, var(--viz-1) 30%, transparent); }
+.q-line.is-step i { animation: qStep .6s var(--ease); }
+@keyframes qStep { from { transform: translateX(-18px); } }
+.q-door { position: absolute; right: 0; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: color-mix(in oklab, #22c55e 22%, transparent); color: #22c55e; }
+.q-door svg.i { width: 18px; height: 18px; }
+.q-bar { height: 8px; border-radius: 4px; background: color-mix(in oklab, var(--viz-1) 16%, transparent); overflow: hidden; }
+.q-bar i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); border-radius: 4px; background: linear-gradient(90deg, #8b5cf6, var(--viz-1)); margin-inline-start: 0; }
+.q-nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8em; margin: 0; text-align: center; }
+.q-nums dt { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .58); }
+.q-nums dd { margin: .2em 0 0; font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)); font-weight: 800; }
+.q-tips { position: relative; }
+@media (max-width: 760px) { .q-nums { grid-template-columns: 1fr; } .q-box { padding: 18px; } }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -4509,7 +4540,9 @@ const page = {
   // #/e/<show> · #/e/<show>/s/<session> · #/e/<show>/s/<session>/pay · #/ticket/<code> · and the pages of buy.js
   parse(h) {
     let m = /^#\/e\/([^/?#]+)(?:\/s\/([^/?#]+)(\/pay)?)?$/.exec(h);
-    if (m) { const e = showById(decodeURIComponent(m[1])); if (!e) return null; if (!m[2]) return { kind: 'show', e }; return { kind: m[3] ? 'pay' : 'seats', e, sid: decodeURIComponent(m[2]) }; }
+    if (m) { const e = showById(decodeURIComponent(m[1])); if (!e) return null; if (!m[2]) return { kind: 'show', e }; const sid = decodeURIComponent(m[2]);
+      if (!m[3] && typeof queue !== 'undefined' && queue.need(e) && !queue.ok(sid) && statusOf(e).key !== 'soon' && sessionOf(e, sid)) { history.replaceState(null, '', queue.url(e, sid)); return { kind: 'queue', e, sid }; }   // a busy show: the waiting room first
+      return { kind: m[3] ? 'pay' : 'seats', e, sid }; }
     return typeof buy !== 'undefined' ? buy.parse(h) : null;
   },
   open(e, { from = null, to = null } = {}) { this.go(`#/e/${encodeURIComponent(e.id)}`, { from, to }); },
@@ -5301,10 +5334,10 @@ const pages = {
     if ((m = /^#\/c\/(soon|(?:concert|theatre|comedy)-(?:tehran|other))$/.exec(h))) return { kind: 'cat', key: m[1].replace('-', ':') };
     if ((m = /^#\/city\/([^/?#]+)$/.exec(h))) return { kind: 'city', city: decodeURIComponent(m[1]) };
     if (h === '#/wallet') return { kind: 'wallet' };
-    return hallsPage.parse(h) || gate.parse(h) || desk.parse(h);
+    return queue.parse(h) || hallsPage.parse(h) || gate.parse(h) || desk.parse(h);
   },
   render(v) {
-    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x) }[v.kind];
+    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x), queue: (x) => queue.render(x) }[v.kind];
     if (!fn) { if (v.kind === 'gate') gate.render(v); else desk.render(v); return; }
     fn.call(this, v);
     const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', page.el).appendChild(c); page.wireFooter(c); }
@@ -6711,9 +6744,11 @@ const admin = {
     el.innerHTML = `${desk.head('دسته‌ها و شهرها', 'شش دسته‌ی اصلی خودکار از نوع و شهر برنامه ساخته می‌شن؛ دسته‌ی تازه هم می‌شه اضافه کرد.')}
       <div class="dk-cols dk-cols-r"><section class="panel dk-box evp-rise"><h2>${ico('grid')}دسته‌ها</h2><ul class="ad-cats">${SEC_ORDER.map((k) => `<li><span class="sec-ic" style="--sc:${secColor(k)[0]}" aria-hidden="true">${ico(iconOfCat(k))}</span><b>${esc(catName(k))}</b><small>${fa(catCount(k))} برنامه · خودکار</small></li>`).join('')}${extra.map((c) => `<li><span class="sec-ic" aria-hidden="true">${ico('tag')}</span><b>${esc(c.t)}</b><small>با برچسب «${esc(c.tag)}» · دستی</small></li>`).join('')}</ul>
         <h3 class="wz-h3">تأیید موبایل با کد پیامکی موقع خرید</h3><div class="bk-seg" role="radiogroup" aria-label="تأیید موبایل">${[['off', 'خاموش'], ['busy', 'فقط اجراهای پرطرفدار'], ['always', 'همیشه']].map(([k, t]) => `<button type="button" role="radio" data-otp="${k}" aria-checked="${store.get('blit.otpMode', 'busy') === k}">${t}</button>`).join('')}</div>
+        <h3 class="wz-h3">صف انتظار مجازی موقع شروع فروش</h3><div class="bk-seg" role="radiogroup" aria-label="صف انتظار">${[['off', 'خاموش'], ['hot', 'فقط اجراهای پرطرفدار'], ['always', 'همه‌ی اجراها']].map(([k, t]) => `<button type="button" role="radio" data-qm="${k}" aria-checked="${store.get('blit.queueMode', 'hot') === k}">${t}</button>`).join('')}</div>
         <form class="rc-row" id="adCat"><label class="bk-fld"><span>دسته‌ی تازه</span><input name="t" placeholder="مثلاً: ویژه‌ی کودکان" required></label><button type="submit" class="chip">${ico('plus')}افزودن</button></form></section>
       <section class="panel dk-box evp-rise"><h2>${ico('pin')}شهرهایی که خریدار می‌بینه<small>${fa(all.length - hidden.size)} از ${fa(all.length)}</small></h2><p class="bk-lead">تو منوی شهر هدر و فیلتر لیست. شهری که برنامه نداره رو می‌شه پنهان کرد.</p><div class="ad-cities">${all.map((c) => `<label><input type="checkbox" data-city="${esc(c)}"${hidden.has(c) ? '' : ' checked'}><span>${esc(c)}<small>${fa(LIST().filter((e) => e.city === c).length)}</small></span></label>`).join('')}</div></section></div>`;
     $$('[data-city]', el).forEach((c) => c.addEventListener('change', () => { const h = new Set(store.get('blit.hideCities', [])), name = c.dataset.city; if (c.checked) { h.delete(name); if (!CITIES.includes(name)) { CITIES.push(name); CITIES.sort((a, b) => a.localeCompare(b, 'fa')); } } else { h.add(name); const i = CITIES.indexOf(name); if (i >= 0) CITIES.splice(i, 1); } store.set('blit.hideCities', [...h]); auditLog(`شهر ${name} ${c.checked ? 'نمایش داده' : 'پنهان'} شد`); }));
+    $$('[data-qm]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.queueMode', b.dataset.qm); $$('[data-qm]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`صف انتظار مجازی: ${b.textContent}`); toast(`صف انتظار مجازی: ${b.textContent}.`); }));
     $$('[data-otp]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.otpMode', b.dataset.otp); $$('[data-otp]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`تأیید موبایل موقع خرید: ${b.textContent}`); toast(`تأیید موبایل موقع خرید: ${b.textContent}.`); }));
     $('#adCat', el).addEventListener('submit', (ev) => { ev.preventDefault(); const t = ev.target.elements.t.value.trim(); if (!t) return; store.set('blit.cats', extra.concat({ t, tag: t })); auditLog(`دسته‌ی «${t}» ساخته شد`); toast('دسته ساخته شد؛ برنامه‌ها با برچسبش توش می‌آن.'); this.site(el); });
   },
@@ -6876,6 +6911,49 @@ const hallsPage = {
       </aside></div>`);
     const s = $('#hlShows', box);
     if (list.length) s.appendChild(pages.grid(list)); else s.insertAdjacentHTML('beforeend', '<p class="bk-lead">فعلاً برنامه‌ای اینجا نیست.</p>');
+  },
+};
+
+/* ════════════════════════════════════════════════════════════════
+   the waiting room (brief §2.2: «سایت زیر فشار سریع بماند»): when a busy show's sale opens, everyone who presses «خرید»
+   lines up here (#/q/<show>/<session>) instead of all reaching the seat map at once; one at a time they are let in, each with
+   ten minutes to choose. The seats' address can't skip it (it comes back here without a pass). The admin turns it on for the
+   busy shows (the default), for all, or off. Here the line is simulated and moves faster than a real one.
+   ════════════════════════════════════════════════════════════════ */
+const hotShow = (e) => !!(e.badge || saleMs(e)) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);
+const queue = {
+  need(e) { const m = store.get('blit.queueMode', 'hot'); return m === 'always' || (m === 'hot' && hotShow(e)); },
+  ok(sid) { const p = store.sget('blit.qpass', null); return !!(p && p.sid === sid && p.until > Date.now()); },
+  url(e, sid) { return `#/q/${encodeURIComponent(e.id)}/${encodeURIComponent(sid)}`; },
+  // the line's address; with a pass already, straight to the seats (the address becomes theirs)
+  parse(h) { const m = /^#\/q\/([^/?#]+)\/([^/?#]+)$/.exec(h); if (!m) return null; const e = showById(decodeURIComponent(m[1])), sid = decodeURIComponent(m[2]); if (!e) return null; if (this.ok(sid)) { history.replaceState(null, '', `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(sid)}`); return { kind: 'seats', e, sid }; } return { kind: 'queue', e, sid }; },
+  render(v) {
+    const e = v.e, s = sessionOf(e, v.sid);
+    if (!s) { page.el.innerHTML = buy.missing('این سانس پیدا نشد', 'شاید تموم شده یا نشانیش عوض شده.', e); return; }
+    const seats = `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}`;
+    document.title = `صف خرید · ${e.title} · بلیت`;
+    const w = whenOf(s), { src } = artOf(e), R = rngOf(seedOf(`${s.id}:${Math.floor(Date.now() / 6e4)}`)), total = Math.round(2400 + R() * 9000), P0 = Math.round(380 + R() * 1300), rate = Math.round(380 + R() * 220);
+    const box = pages.wrap('q-pg', `<section class="panel q-box evp-rise" aria-labelledby="qH">
+        <div class="q-top"><figure class="bk-poster"><img src="${esc(src)}" alt=""></figure><div><small>صف خرید بلیت</small><h1 id="qH">${esc(e.title)}</h1><p>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)} · ${esc(hallOf(e).name)}</p></div></div>
+        <div class="q-pos" aria-live="polite"><small id="qLab">نفرات جلوی تو</small><b id="qPos">${money(P0)}</b><span id="qEta"></span></div>
+        <div class="q-line" aria-hidden="true">${Array.from({ length: 26 }, (_, i) => `<i style="--i:${i}"${i === 18 ? ' class="is-me"' : ''}></i>`).join('')}<span class="q-door">${ico('ticket')}</span></div>
+        <div class="q-bar" aria-hidden="true"><i id="qBar"></i></div>
+        <dl class="q-nums"><div><dt>کل صف</dt><dd>${money(total)} نفر</dd></div><div><dt>سرعت ورود</dt><dd>${money(rate)} نفر در دقیقه</dd></div><div><dt>پشت سرت</dt><dd id="qMe">${money(total - P0)} نفر</dd></div></dl>
+        <ul class="pg-tips q-tips"><li>این صفحه رو نبند؛ نوبتت که شد خودکار می‌ری به انتخاب صندلی.</li><li>با باز کردن چند پنجره جلو نمی‌افتی؛ یه پنجره کافیه.</li><li>وقتی نوبتت شد ۱۰ دقیقه وقت داری صندلی‌هات رو انتخاب کنی.</li></ul>
+        <p class="bk-note">${ico('info')}تو این نمونه صف خیلی سریع‌تر از واقعیت جلو می‌ره. <a href="#" id="qSkip">رد شدن از صف</a></p>
+      </section>`);
+    const pos = $('#qPos', box), eta = $('#qEta', box), bar = $('#qBar', box), me = $('#qMe', box), t0 = performance.now(), D = reduceMotion ? 2500 : 9000 + R() * 5000;
+    let raf = 0, done = false, last = P0;
+    const pass = () => { if (done) return; done = true; cancelAnimationFrame(raf); store.sset('blit.qpass', { sid: s.id, until: Date.now() + 10 * 6e4 }); pos.textContent = 'نوبت توئه!'; $('#qLab', box).textContent = 'ورود به انتخاب صندلی'; eta.textContent = '۱۰ دقیقه وقت داری'; bar.style.setProperty('--p', 1); box.querySelector('.q-box').classList.add('is-in'); setTimeout(() => { if (page.v && page.v.kind === 'queue' && page.v.sid === s.id) page.go(seats); }, reduceMotion ? 300 : 1400); };
+    const step = (now) => {
+      const p = clamp((now - t0) / D, 0, 1), k = 1 - Math.pow(1 - p, 1.6), left = Math.max(0, Math.round(P0 * (1 - k)));
+      if (left !== last) { pos.textContent = money(left); me.textContent = `${money(total - P0 + Math.round(k * P0 * 0.7))} نفر`; const m = Math.ceil(left / rate); eta.textContent = left ? `حدود ${m <= 1 ? 'یک دقیقه' : `${fa(m)} دقیقه`} دیگه` : ''; if (Math.floor(last / 40) !== Math.floor(left / 40)) { const l = $('.q-line', box); l.classList.remove('is-step'); void l.offsetWidth; l.classList.add('is-step'); } last = left; }
+      bar.style.setProperty('--p', k.toFixed(4));
+      if (p >= 1) pass(); else raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    $('#qSkip', box).addEventListener('click', (ev) => { ev.preventDefault(); pass(); });
+    const inner = page.leave; page.leave = () => { cancelAnimationFrame(raf); done = true; if (inner) inner(); };
   },
 };
 
@@ -7257,7 +7335,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { stage, cards, timer, panel, look, hd, s2, page, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, CODES, PLANS, buildPlan, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CITIES, CAT_LABEL, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
