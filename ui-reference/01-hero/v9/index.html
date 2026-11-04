@@ -1952,6 +1952,21 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .wz-paint circle:hover { stroke: rgb(var(--fg)); stroke-width: 3; }
 .wz-vip { margin-top: .6em; max-width: 520px; }
 
+/* the admin's featured slots */
+.ad-slots { list-style: none; margin: 0; padding: 0; display: grid; gap: .5em; }
+.ad-slots li { display: flex; align-items: center; gap: .9em; padding: .55em .7em; border-radius: 12px; background: rgba(var(--fg), .035); }
+.ad-n { flex: none; display: grid; place-items: center; width: 2em; aspect-ratio: 1; border-radius: 50%; background: rgba(var(--fg), .08); font-weight: 900; }
+.ad-ban { flex: none; margin: 0; width: max(120px, calc(var(--u) * 8)); aspect-ratio: 1.74; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, var(--accent, #8b5cf6), #0b0a10); }
+.ad-ban img { width: 100%; height: 100%; object-fit: cover; }
+.ad-sw { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); vertical-align: middle; }
+.ad-slots .chip { gap: .4em; }
+
+/* less motion when asked */
+@media (prefers-reduced-motion: reduce) {
+  .gt-net i, .gt-live i, .dk-live i, .gt-view.is-cam .gt-line, .q-box::before, .q-line.is-step i, .gt-top.is-pulse .gt-ringw, .dk-tile > b.is-tick, .q-box.is-in .q-pos b, .gt-run[data-flash]::after, .gt-res-bar { animation: none !important; }
+  .vz-bars path, .vz-rank i::after, .gt-d i::after, #gtSpark i, .gt-ring .fg, .wz-steps .bar, .dk-tabs a, .wz-hall, .gt-ses, .q-line i, .wz-days button, .rc-card { transition: none !important; }
+}
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -6694,6 +6709,7 @@ const admin = {
     return [
       { id: 'home', t: 'پیشخوان', icon: 'grid', render: this.home },
       { id: 'shows', t: 'برنامه‌ها و تأیید', icon: 'ticket', n: q ? fa(q) : '', render: this.shows },
+      { id: 'content', t: 'محتوای صفحه‌ی اصلی', icon: 'sliders', render: this.content },
       { id: 'orders', t: 'سفارش‌ها', icon: 'bag', render: this.orders },
       { id: 'team', t: 'کاربرها و نقش‌ها', icon: 'users', render: this.team },
       { id: 'site', t: 'دسته‌ها و شهرها', icon: 'pin', render: this.site },
@@ -6749,6 +6765,14 @@ const admin = {
       let to = 'wallet'; $$('[data-to]', m.box).forEach((x) => x.addEventListener('click', () => { to = x.dataset.to; $$('[data-to]', m.box).forEach((y) => y.setAttribute('aria-checked', String(y === x))); }));
       $('#adCan', m.box).addEventListener('click', () => { store.set('blit.cancelled', cancelled().concat(e.id)); e.status = 'cancelled'; const sum = refund(os.map((o) => o.code), to, `لغو «${e.title}»`); auditLog(`برنامه‌ی «${e.title}» لغو شد`); m.shut(); toast(`لغو شد؛ ${money(sum)} تومان به ${fa(os.length)} خریدار برگشت.`); this.shows(el); });
     }));
+  },
+
+  // the home page's featured slots (the hero): each one's banner, layout, colour and label; editing opens the settings on the page
+  content(el) {
+    el.innerHTML = `${desk.head('محتوای صفحه‌ی اصلی', 'جایگاه ویژه‌ی بالای صفحه: شش اجرا، هر کدوم با بنر، چیدمان، رنگ و برچسب خودش. «ویرایش» پنجره‌ی تنظیمات همون جایگاه رو روی خود صفحه باز می‌کنه تا نتیجه رو همون لحظه ببینی (بنر تازه، رنگ، نوشته‌ها، شروع فروش).')}
+      <section class="panel dk-box evp-rise"><h2>${ico('sliders')}جایگاه‌ها<small>به ترتیب نمایش</small></h2><ol class="ad-slots">${EVENTS.map((e, i) => { const s = statusOf(e), b = e.banner || {}; return `<li><span class="ad-n">${fa(i + 1)}</span><figure class="ad-ban" style="--accent:${e.accent}"><img src="${esc(b.fake || b.thumb || b.src || '')}" alt="" loading="lazy"></figure><span class="dk-staff-t"><b>${esc(e.title)}</b><small>${esc(e.venue)} · ${esc(e.layout === 'text' ? 'عکس و متن' : 'بنر با نوشته')}</small><span>${s.label ? `<em class="st" data-tone="${s.tone}">${esc(s.label)}</em>` : '<em class="st" data-tone="good">در حال فروش</em>'}<i class="ad-sw" style="--c:${e.accent}" title="${esc((PALETTE[e.pal] || {}).label || '')}"></i></span></span><button type="button" class="chip" data-edit="${i}">${ico('sliders')}ویرایش</button></li>`; }).join('')}</ol></section>`;
+    $$('.ad-ban img', el).forEach((im) => { im.onerror = () => { im.onerror = null; im.style.visibility = 'hidden'; }; });
+    $$('[data-edit]', el).forEach((b) => b.addEventListener('click', () => { const i = +b.dataset.edit; page.close({ then: () => { go(i, 'user'); setTimeout(() => { panel.open(true); panel.tab('slot'); }, 350); } }); }));
   },
 
   // the orders: a search, the period and the state as filters, refunds, a file

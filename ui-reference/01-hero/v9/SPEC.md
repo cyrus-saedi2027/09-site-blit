@@ -388,7 +388,7 @@ shift.
   ten to an A4 sheet with crop marks, music or theatre graphics, a unique code per card or one for all; print or PDF.
 - کنترل‌چی‌ها: name, mobile, doors, a code sent by SMS (it opens the entry control).
 
-**The admin** (`admin.js`, `#/admin/<tab>`): the dashboard (30 days); **برنامه‌ها و تأیید** (the queue: «تأیید و انتشار»
+**The admin** (`admin.js`, `#/admin/<tab>`): the dashboard (30 days); **محتوای صفحه‌ی اصلی** (the six featured slots of the hero with their banner, layout, colour and label; «ویرایش» goes home and opens that slot's settings: the settings panel is the admin's slot editor, §14); **برنامه‌ها و تأیید** (the queue: «تأیید و انتشار»
 puts a show on the site at once, «برگردوندن» with a reason; a show on the site can be **cancelled**: its label becomes «لغو
 شد» and every buyer's money goes back, to the wallet at once or to the card); سفارش‌ها (search by code, mobile or show;
 today / 7 / 30 days; the state; a refund; CSV); کاربرها و نقش‌ها (مدیر کل، مالی، اپراتور and what each may do);
