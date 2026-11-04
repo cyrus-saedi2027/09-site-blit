@@ -6221,9 +6221,10 @@ function draftEvent(d) {
   const e = { id: d.id, draft: true, filler: true, layout: 'bar', kind: d.kind, city: d.city, type: d.type || KIND_T[d.kind], name: d.title || 'برنامه‌ی بی‌نام', desc: d.desc || '', venue: `${d.city}، ${d.venue || '…'}`,
     startsAt: new Date(ts[0] || Date.now() + 7 * DAY).toISOString(), endsAt: ts.length > 1 ? new Date(ts[ts.length - 1]).toISOString() : undefined, price: priceText(low < Infinity ? low : KIND_BASE[d.kind] || 500000),
     prices: d.prices, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
-    poster: { src: d.poster || 'assets/posters/none-yet.webp', w: 2, h: 3 }, ver: 0 };
+    poster: { src: d.poster || '', w: 2, h: 3 }, ver: 0 };
   e.title = `${e.type} ${e.name}`;
   setPal(e, d.pal || 'violet'); e.w = when(e);
+  if (!d.poster) e.poster.fake = fakeArt(e, { w: 2, h: 3 });   // no poster yet: the stand-in, drawn here (no request for a missing file)
   return e;
 }
 // the shows the admin said yes to are on the site (the list is drawn after this)
