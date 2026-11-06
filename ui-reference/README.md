@@ -28,7 +28,7 @@ Hosted previews (private to the owner; the hero preview includes the songs):
 | 4 | قفسه‌ی تئاتر | Theatre poster shelf | later | ۵، ۱۴ |
 | 5 | تقویم رویدادها | Events calendar (month + selected day) | later | ۱۳، ۹ |
 | 6 | هنرمندها | Artists as stories | later | ۷، ۲ |
-| 7 | سالن‌ها | Venues | later | ۸، ۱۶ |
+| 7 | سالن‌ها | Venues: the halls library (147 halls from the owner's package, real seat maps, optional map position), the cities (487) and the admin's cities/halls pages; built inside the site (round K, see `HANDOFF.md`) | built | ۸، ۱۶ |
 | 8 | قسطی، پکیج، اپ، فوتر | Instalments, packages, app, footer | later | ۱۱، ۵ |
 
 Reference numbers point to [`references.md`](references.md).
