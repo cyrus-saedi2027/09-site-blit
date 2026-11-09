@@ -800,70 +800,69 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 :root[data-pinfo="over"] .tkt-info { position: absolute; inset-inline: 0; bottom: 0; height: var(--notch); }
 :root[data-pinfo="over"] .tkt-bg { background: color-mix(in oklab, var(--capsule) 84%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 
-/* ───── the reveal card (round M, from the owner's three samples) ─────
-   The card IS the picture (3 : 4, a very soft corner). The words are a sheet that floats over its lower part, with a tab on the sheet's edge (the kind
-   and the days) and a pocket in the picture's corner (the date), both with concave fillets. On a desktop the sheet drops away while the pointer is on the
-   card (the whole picture is seen) and rises back, its words one after another, when the pointer leaves. A touch screen has no hover: the sheet stays.
-   (The fillets are drawn for a right-to-left page, as the whole site is.) */
-:root[data-pinfo="reveal"] .tkt { --m: calc(var(--u) * .5); --cr: calc(var(--r) * 1.7); --sr: calc(var(--cr) - var(--m)); --fr: calc(var(--sr) * .62); --sh: max(calc(var(--u) * 8.4 * var(--tx)), calc(121px * var(--tx))); --eh: 40px; --up: cubic-bezier(.16, 1, .3, 1); cursor: pointer; }
-:root[data-pinfo="reveal"] .tkt-in { display: block; aspect-ratio: var(--pr, .75); padding: 0; border-radius: var(--cr); -webkit-mask: none; mask: none; background: var(--capsule); }
-:root[data-pinfo="reveal"] .tkt-pic { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; }
-:root[data-pinfo="reveal"] .tkt-pic::after, :root[data-pinfo="reveal"] .tkt-perf { display: none; }
-:root[data-pinfo="reveal"] .tkt:hover .tkt-pic img { transform: scale(1.001); }   /* the picture is not zoomed: the whole of it is what the pointer is shown */
-/* a picture far from the frame's shape (a wide banner) sits a little higher while the words are over it, and comes to the middle when they are gone */
-:root[data-pinfo="reveal"] .tkt-pic.is-inset img { transform: translateY(-14cqh); transition: transform .9s var(--up); }
-/* the date: a pocket in the corner of the picture */
-:root[data-pinfo="reveal"] .tkt-date { top: 0; right: 0; inset-inline-start: auto; min-width: 3.9em; padding: .6em .8em .64em; border-radius: 0 0 0 var(--sr); background: var(--capsule); color: rgb(var(--fg)); box-shadow: none; font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); }
-:root[data-pinfo="reveal"] .tkt-date b { font-size: 2em; color: var(--tk-c); }
-:root[data-pinfo="reveal"] .tkt-date small { color: rgba(var(--fg), max(.7, var(--dmin))); }
-:root[data-pinfo="reveal"] .tkt-date i { align-self: stretch; margin: 0 0 .3em; padding: .12em .5em; border-radius: var(--rg); font-size: .88em; }
-:root[data-pinfo="reveal"] .tkt-date::before, :root[data-pinfo="reveal"] .tkt-date::after { content: ""; position: absolute; background: radial-gradient(circle var(--fr) at 0 100%, transparent calc(var(--fr) - .6px), var(--capsule) var(--fr)); pointer-events: none; }
-:root[data-pinfo="reveal"] .tkt-date::before { top: 0; right: calc(100% - 1px); width: calc(var(--fr) + 1px); height: var(--fr); }
-:root[data-pinfo="reveal"] .tkt-date::after { top: calc(100% - 1px); right: 0; width: var(--fr); height: calc(var(--fr) + 1px); }
-/* the sheet: a fixed height, so every card's words begin at the same line */
-:root[data-pinfo="reveal"] .tkt-info { position: absolute; z-index: 4; inset: auto var(--m) var(--m); height: var(--sh); display: grid; grid-template-rows: auto auto 1fr; align-content: start; row-gap: .1em; padding: .72em .95em .78em; overflow: visible; isolation: auto; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .34)); }
-:root[data-pinfo="reveal"] .tkt-bg { border-radius: var(--sr); border-top-right-radius: 0; background: radial-gradient(120% 90% at 100% 100%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 62%), var(--capsule); }
-:root[data-pinfo="reveal"] .tkt[data-st="soldout"] .tkt-bg, :root[data-pinfo="reveal"] .tkt[data-st="held"] .tkt-bg, :root[data-pinfo="reveal"] .tkt[data-st="cancelled"] .tkt-bg { background: var(--capsule); }
-/* the tab on the sheet's edge: the kind and the days */
-:root[data-pinfo="reveal"] .tkt-sub { position: absolute; z-index: 1; right: 0; bottom: 100%; max-width: calc(100% - var(--sr) - var(--fr)); padding: .46em 1em .2em; border-radius: var(--sr) var(--sr) 0 0; background: var(--capsule); font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); line-height: 1.7; }
-:root[data-pinfo="reveal"] .tkt-sub::before { content: ""; position: absolute; left: calc(var(--fr) * -1); bottom: -1px; width: calc(var(--fr) + 1px); height: calc(var(--fr) + 1px); background: radial-gradient(circle var(--fr) at 0 0, transparent calc(var(--fr) - .6px), var(--capsule) var(--fr)); pointer-events: none; }
-:root[data-pinfo="reveal"] .tkt-name { font-size: calc(max(14.5px, calc(var(--u) * .98)) * var(--tx) * var(--tx-main)); line-height: 1.5; }
-:root[data-pinfo="reveal"] .tkt-row { font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); line-height: 1.65; }
-:root[data-pinfo="reveal"] .tkt-foot { gap: .5em; }
-:root[data-pinfo="reveal"] .tkt .buy { width: max(34px, calc(var(--u) * 2.25)); height: max(34px, calc(var(--u) * 2.25)); min-width: 0; padding: 0; gap: 0; }
-:root[data-pinfo="reveal"] .tkt .buy .bl { display: none; }
-:root[data-pinfo="reveal"] .tkt .buy svg.i { width: 1.45em; height: 1.45em; }
-:root[data-pinfo="reveal"] .tkt-cd { gap: .4em; }
-:root[data-pinfo="reveal"] .tkt-cd .cd-l { font-size: calc(max(10.5px, calc(var(--u) * .62)) * var(--tx) * var(--tx-small)); }
-:root[data-pinfo="reveal"] .tkt-cd .cd-b b { min-width: 1.9em; padding: .2em .2em; font-size: calc(max(12.5px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); }
-/* a sold or ended show: its stamp is in the middle of what is seen */
-:root[data-pinfo="reveal"] .tkt-stamp { top: calc((100% - var(--sh) - var(--m)) / 2); transition: top .9s var(--up); }
-/* a desktop: the words are a sheet that drops away while the pointer is on the card and rises back (the tab with it, the words one after another) */
-@media (hover: hover) and (pointer: fine) {
-  :root[data-pinfo="reveal"] .tkt-info { transition: transform .95s var(--up) .05s; }
-  :root[data-pinfo="reveal"] .tkt-info > :is(.tkt-name, .tkt-row, .tkt-foot, .tkt-cd, .tkt-off) { transition: opacity .6s ease, transform .85s var(--up); }
-  :root[data-pinfo="reveal"] .tkt-info > .tkt-name { transition-delay: .22s; }
-  :root[data-pinfo="reveal"] .tkt-info > .tkt-row { transition-delay: .28s; }
-  :root[data-pinfo="reveal"] .tkt-info > :is(.tkt-foot, .tkt-cd, .tkt-off) { transition-delay: .34s; }
-  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-info { transform: translateY(calc(100% + var(--m) + var(--eh))); transition: transform .55s cubic-bezier(.5, 0, .2, 1); }
-  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-info > :is(.tkt-name, .tkt-row, .tkt-foot, .tkt-cd, .tkt-off) { opacity: 0; transform: translateY(16px); transition: opacity .2s ease, transform .3s ease; transition-delay: 0s; }
-  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-pic.is-inset img { transform: translateY(0); transition-duration: .6s; }
-  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-stamp { top: 50%; transition-duration: .55s; }
+/* ───── the framed card (round N, from the owner's samples) ─────
+   Nothing on it moves or hides while the pointer is over it. A mat (the card's own colour) frames the picture, whose corner is soft; three things are cut
+   out of the picture's edge: a pocket in the top corner (the date), a tab at the foot (the kind and the days) and, when the show has one, a label in the
+   other top corner. Under the picture: the name, the place, then the price and the buy button (or the countdown, or why it can't be bought).
+   The curves where a pocket or a tab meets the picture's edge are drawn in the card's own colour and go a pixel under their neighbour, so there is no seam;
+   the lengths that touch them are whole pixels. (They are drawn for a right-to-left page, as the whole site is.) */
+:root[data-pinfo="frame"] .tkt { --tk-card: color-mix(in oklab, var(--capsule) 91%, rgb(var(--fg))); --tk-sh: 0 1px 2px rgba(0, 0, 0, .5), 0 14px 26px -16px rgba(0, 0, 0, .8); --fw: max(calc(var(--u) * .52), 7px); --cr: calc(var(--r) * 1.4); --ir: calc(var(--cr) - var(--fw)); --tr: calc(var(--ir) * .78); --fr: var(--tr); container: tkt / inline-size; display: grid; cursor: pointer; }
+:root[data-pinfo="frame"][data-theme="light"] .tkt { --tk-card: var(--capsule); --tk-sh: 0 1px 2px rgba(15, 23, 42, .1), 0 14px 26px -16px rgba(15, 23, 42, .34); }
+@supports (width: round(1.4px, 1px)) {
+  :root[data-pinfo="frame"] .tkt { --fw: round(max(calc(var(--u) * .52), 7px), 1px); --cr: round(calc(var(--r) * 1.4), 1px); --tr: round(calc(var(--ir) * .78), 1px); }
 }
-/* a phone: a little taller card, a smaller sheet; the date is in the pocket, so the tab says only the kind */
+:root[data-pinfo="frame"] .tkt:hover, :root[data-pinfo="frame"] .tkt:focus-within { transform: none; filter: none; }
+:root[data-pinfo="frame"] .tkt-in { display: grid; grid-template-rows: auto 1fr; overflow: visible; -webkit-mask: none; mask: none; padding: var(--fw); border-radius: var(--cr); background: var(--tk-card); box-shadow: var(--tk-sh); transition: box-shadow .4s var(--ease); }
+:root[data-pinfo="frame"] .tkt:hover .tkt-in, :root[data-pinfo="frame"] .tkt:focus-within .tkt-in { box-shadow: 0 0 0 1px color-mix(in oklab, var(--ring) 55%, transparent), var(--tk-sh); }
+:root[data-pinfo="frame"] .tkt-pic { border-radius: var(--ir) 0 var(--ir) var(--ir); background: var(--tk-card); }   /* (the card's colour behind the picture, so a cut-away corner shows no dark rim; the top corner the pocket covers is square: a curve under it would put a faint line round the pocket) */
+:root[data-pinfo="frame"] .tkt-pic::after, :root[data-pinfo="frame"] .tkt-perf, :root[data-pinfo="frame"] .tkt-bg, :root[data-pinfo="frame"] .tkt-glare { display: none; }
+
+/* the date: a pocket in the picture's top corner (the card's colour, with a curve where it meets each edge) */
+:root[data-pinfo="frame"] .tkt-date { top: 0; inset-inline-start: 0; min-width: 3.7em; padding: .52em .8em .6em; border-radius: 0 0 0 var(--tr); background: var(--tk-card); color: rgb(var(--fg)); box-shadow: none; font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); }
+:root[data-pinfo="frame"] .tkt .tkt-date { opacity: 1; }
+:root[data-pinfo="frame"] .tkt-date b { font-size: 2em; color: var(--tk-c); }
+:root[data-pinfo="frame"] .tkt-date small { color: rgba(var(--fg), max(.7, var(--dmin))); }
+:root[data-pinfo="frame"] .tkt-date i { align-self: stretch; margin: 0 0 .3em; padding: .12em .5em; border-radius: var(--rg); font-size: .88em; }
+:root[data-pinfo="frame"] .tkt-date::before, :root[data-pinfo="frame"] .tkt-date::after { content: ""; position: absolute; background: radial-gradient(circle var(--fr) at 0 100%, transparent calc(var(--fr) - .5px), var(--tk-card) calc(var(--fr) + .5px)); pointer-events: none; }
+:root[data-pinfo="frame"] .tkt-date::before { top: 0; right: calc(100% - 1px); width: calc(var(--fr) + 1px); height: var(--fr); }
+:root[data-pinfo="frame"] .tkt-date::after { top: calc(100% - 1px); right: 0; width: var(--fr); height: calc(var(--fr) + 1px); }
+
+/* the kind and the days: a tab rising from the words into the picture's foot, curved out where it meets the picture's edge */
+:root[data-pinfo="frame"] .tkt-info { position: relative; z-index: 1; display: grid; grid-template-rows: auto auto 1fr; align-content: start; row-gap: .1em; overflow: visible; padding: calc(var(--fw) * 1.25) calc(var(--fw) * .6) calc(var(--fw) * .6); }
+:root[data-pinfo="frame"] .tkt-info > .tkt-sub { position: absolute; z-index: 1; bottom: 100%; inset-inline: 0; width: max-content; max-width: calc(100% - 2 * var(--fr) - var(--fw)); margin-inline: auto; justify-content: center; padding: .42em 1.15em .1em; border-radius: var(--tr) var(--tr) 0 0; background: var(--tk-card); font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); line-height: 1.7; }
+:root[data-pinfo="frame"] .tkt-info > .tkt-sub::before, :root[data-pinfo="frame"] .tkt-info > .tkt-sub::after { content: ""; position: absolute; bottom: -1px; width: calc(var(--fr) + 1px); height: calc(var(--fr) + 1px); pointer-events: none; }
+:root[data-pinfo="frame"] .tkt-info > .tkt-sub::before { right: calc(100% - 1px); background: radial-gradient(circle var(--fr) at 0 0, transparent calc(var(--fr) - .5px), var(--tk-card) calc(var(--fr) + .5px)); }
+:root[data-pinfo="frame"] .tkt-info > .tkt-sub::after { left: calc(100% - 1px); background: radial-gradient(circle var(--fr) at 100% 0, transparent calc(var(--fr) - .5px), var(--tk-card) calc(var(--fr) + .5px)); }
+:root[data-pinfo="frame"] .tkt-name { font-size: calc(max(15px, calc(var(--u) * 1.04)) * var(--tx) * var(--tx-main)); line-height: 1.55; }
+:root[data-pinfo="frame"] .tkt-row { font-size: calc(max(11.5px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); }
+
+/* the price and the button: side by side when the card is wide enough, else the price's line over a full-width button */
+:root[data-pinfo="frame"] .tkt-foot { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: calc(var(--fw) * .8); margin-top: calc(var(--fw) * .8); }
+:root[data-pinfo="frame"] .tkt .buy { width: 100%; min-width: 0; height: max(38px, calc(var(--u) * 2.4)); padding-inline: .8em; gap: .5em; font-size: calc(max(12.5px, calc(var(--u) * .76)) * var(--tx) * var(--tx-main)); }
+:root[data-pinfo="frame"] .tkt .buy .bl { display: inline; }
+:root[data-pinfo="frame"][data-buy="white"] .tkt .buy { background: linear-gradient(180deg, rgb(var(--fg)), color-mix(in oklab, rgb(var(--fg)) 86%, var(--tk-card))); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 1px 2px rgba(0, 0, 0, .35), 0 8px 16px -8px rgba(0, 0, 0, .6); }
+:root[data-pinfo="frame"][data-theme="light"][data-buy="white"] .tkt .buy { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 1px 2px rgba(15, 23, 42, .3), 0 8px 16px -8px rgba(15, 23, 42, .5); }
+:root[data-pinfo="frame"] .tkt-off, :root[data-pinfo="frame"] .tkt-cd { margin-top: calc(var(--fw) * .8); }
+:root[data-pinfo="frame"] .tkt-off { height: max(38px, calc(var(--u) * 2.4)); }
+@container tkt (max-width: 262px) {
+  :root[data-pinfo="frame"] .tkt-foot { grid-template-columns: minmax(0, 1fr); gap: calc(var(--fw) * .6); }
+  :root[data-pinfo="frame"] .tkt-price { display: flex; align-items: baseline; justify-content: space-between; gap: .5em; }
+  :root[data-pinfo="frame"] .tkt-cd { flex-wrap: wrap; justify-content: center; }
+}
+
+/* a phone: a thinner mat, only the kind on the tab (the date is in the pocket) */
 @media (max-width: 599px) {
-  :root[data-pinfo="reveal"] .tkt { --m: 5px; --cr: 22px; --sh: 106px; --eh: 36px; }
-  :root[data-pinfo="reveal"] .tkt-in { aspect-ratio: .7; }
-  :root[data-pinfo="reveal"] .tkt-info { padding: .55em .8em .62em; }
-  :root[data-pinfo="reveal"] .tkt-name { font-size: 13px; line-height: 1.45; }
-  :root[data-pinfo="reveal"] .tkt-row { font-size: 10.5px; }
-  :root[data-pinfo="reveal"] .tkt-sub > span:not(.k) { display: none; }
-  :root[data-pinfo="reveal"] .tkt-sub { font-size: 11px; padding-inline: .85em; }
-  :root[data-pinfo="reveal"] .tkt-date { min-width: 3.4em; }
-  :root[data-pinfo="reveal"] .tkt-stamp { font-size: 14px; }
-  :root[data-pinfo="reveal"] .tkt-off { padding-inline: .5em; font-size: 11px; }
+  :root[data-pinfo="frame"] .tkt { --fw: 6px; --cr: 20px; }
+  :root[data-pinfo="frame"] .tkt-info { padding: 11px 9px 9px; }
+  :root[data-pinfo="frame"] .tkt-info > .tkt-sub > span:not(.k) { display: none; }
+  :root[data-pinfo="frame"] .tkt-info > .tkt-sub { font-size: 11px; padding-inline: 1em; }
+  :root[data-pinfo="frame"] .tkt-name { font-size: 13px; line-height: 1.5; }
+  :root[data-pinfo="frame"] .tkt-row { font-size: 10.5px; }
+  :root[data-pinfo="frame"] .tkt .buy, :root[data-pinfo="frame"] .tkt-off { height: 36px; font-size: 12px; }
+  :root[data-pinfo="frame"] .tkt-date { min-width: 3.1em; padding: .4em .6em .5em; }
+  :root[data-pinfo="frame"] .tkt-date b { font-size: 1.8em; }
+  :root[data-pinfo="frame"] .tkt-stamp { font-size: 14px; }
 }
-@media (prefers-reduced-motion: reduce) { :root[data-pinfo="reveal"] .tkt-info, :root[data-pinfo="reveal"] .tkt-info > *, :root[data-pinfo="reveal"] .tkt-pic img, :root[data-pinfo="reveal"] .tkt-stamp { transition-duration: .01s !important; transition-delay: 0s !important; } }
 
 /* the presale (round L): a row of small tickets, two across on a wide window: the poster's stub on one side of a vertical perforation (a notch at its
    top and its bottom), the show in the middle, and at the far end when its sale starts, a small clock and «یادم بنداز» */
@@ -980,8 +979,13 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp { display: none; }
 .is-page .stack, .is-page .notes { display: none; }
 .is-page .evp { display: block; }
-.evp-in { --sc: var(--sc-d); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); align-content: start; min-height: 100svh; padding: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.8) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); color: rgb(var(--fg)); }
+.evp-in { --sc: var(--sc-d); --fl: max(1180px, calc(var(--u) * 62)); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); align-content: start; min-height: 100svh; padding: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.8) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); color: rgb(var(--fg)); }
 :root[data-mode="light"] .evp-in { --sc: var(--sc-l); }
+.evp-in.bk { --fl: max(1440px, calc(var(--u) * 86)); }
+.evp-in.tkp { --fl: min(1340px, 100%); }
+.evp-in > :is(.tk-ok, .tk-grid, .tk-help) { width: 100%; max-width: var(--fl); justify-self: center; }
+/* every block of a purchase page is as wide as its content needs, and sits in the middle (round N): the window's whole width made frames of 1900 px with a line of words in them */
+.evp-in > :is(.evp-toprow, .evp-cols, .evp-more, .bk-hold, .bk-miss) { width: 100%; max-width: var(--fl); justify-self: center; }
 /* the page in and out (a View Transition): the poster that was pressed flies, the rest cross-fades and rises a little */
 :root.vt-page::view-transition-old(root) { animation: vt-out .42s cubic-bezier(.4, 0, 1, 1) both; }
 :root.vt-page::view-transition-new(root) { animation: vt-in .62s cubic-bezier(.16, 1, .3, 1) both; }
@@ -1018,32 +1022,32 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .steps .bar { display: none; }
 
 /* the cover: the banner (or the poster, softened) behind, a few motes in its light, the poster standing on it, the name */
-.evp-cover { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: calc(var(--u) * 1.6); min-height: clamp(190px, calc(var(--u) * 12.5), 270px); padding: calc(var(--u) * 1.5) calc(var(--u) * 2); overflow: hidden; color: #fff; --fg: 255, 255, 255; background: #0c0b11; border-radius: calc(var(--r) * 1.3); }
+.evp-cover { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: calc(var(--u) * 1.4); min-height: 0; padding: calc(var(--u) * 1.2) calc(var(--u) * 1.5); overflow: hidden; color: #fff; --fg: 255, 255, 255; background: #0c0b11; border-radius: calc(var(--r) * 1.3); }
 .evp-bg { position: absolute; inset: 0; z-index: -2; background: var(--art) center / cover no-repeat; transform: scale(1.06); filter: saturate(1.1); animation: evp-drift 24s ease-in-out infinite alternate; }
 .evp-cover.is-soft .evp-bg { inset: -60px; filter: blur(34px) saturate(1.35) brightness(.78); }
-.evp-cover::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to left, rgba(8, 8, 12, .86) 0%, rgba(8, 8, 12, .58) 38%, rgba(8, 8, 12, .2) 70%, rgba(8, 8, 12, .5) 100%), linear-gradient(to top, rgba(8, 8, 12, .72), transparent 55%); }
+.evp-cover::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to left, rgba(8, 8, 12, .84) 0%, rgba(8, 8, 12, .66) 55%, rgba(8, 8, 12, .5) 100%), linear-gradient(to top, rgba(8, 8, 12, .5), transparent 55%); }
 @keyframes evp-drift { to { transform: scale(1.13) translate(-1.2%, -1%); } }
 .evp-motes { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
 .evp-motes i { position: absolute; bottom: -10px; left: calc(8% + var(--m) * 9%); width: calc(3px + var(--m) * .3px); aspect-ratio: 1; border-radius: 50%; background: rgba(255, 255, 255, .7); box-shadow: 0 0 8px rgba(255, 255, 255, .6); opacity: 0; animation: mote calc(9s + var(--m) * 1.3s) linear infinite; animation-delay: calc(var(--m) * -1.7s); }
 @keyframes mote { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: .75; } 80% { opacity: .5; } 100% { transform: translate(calc(var(--u) * 2), calc(var(--u) * -20)); opacity: 0; } }
-.evp-poster { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; height: clamp(126px, calc(var(--u) * 10.5), 210px); aspect-ratio: var(--ps, .75); border-radius: calc(var(--r) * .8); overflow: hidden; background: var(--pa) center / cover no-repeat; box-shadow: 0 24px 46px -20px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .16); transform: perspective(900px) rotateY(-7deg) rotate(1.2deg); transition: transform .9s var(--ease); }
+.evp-poster { grid-column: 1; grid-row: 1; align-self: center; margin: 0; height: clamp(150px, calc(var(--u) * 11), 220px); aspect-ratio: var(--ps, .75); border-radius: calc(var(--r) * .8); overflow: hidden; background: var(--pa) center / cover no-repeat; box-shadow: 0 24px 46px -20px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .16); transform: perspective(900px) rotateY(-7deg) rotate(1.2deg); transition: transform .9s var(--ease); }
 .evp-poster:hover { transform: perspective(900px) rotateY(0) rotate(0); }
 .evp-poster img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .evp-cover.no-poster { grid-template-columns: minmax(0, 1fr); }
-.evp-cover.no-poster .evp-title { grid-row: 1; }
-.evp-title { grid-column: 1; grid-row: 2; display: grid; gap: calc(var(--u) * .45); min-width: 0; padding-bottom: calc(var(--u) * .3); }
+.evp-cover.no-poster .evp-title { grid-column: 1; }
+.evp-title { grid-column: 2; grid-row: 1; display: grid; gap: calc(var(--u) * .45); min-width: 0; padding-inline-end: calc(var(--u) * 3); }
 .evp-kind { display: flex; flex-wrap: wrap; align-items: center; gap: .55em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
 .evp-kind > span { display: inline-flex; align-items: center; gap: .45em; padding: .28em .9em; border-radius: var(--rg); background: rgba(255, 255, 255, .14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); font-weight: var(--fwm); }
 .evp-kind svg.i { width: 1.25em; height: 1.25em; }
 :root[data-theme] .evp-kind .st { color: rgb(var(--st-d)); }
 .evp-kind .st { color: rgb(var(--st-d)); background: rgba(var(--st), .2); box-shadow: inset 0 0 0 1px rgba(var(--st), .6); }
 .evp-badge { font-style: normal; font-weight: var(--fwb); padding: .2em .8em; border-radius: var(--rg); background: var(--ring); color: var(--on-accent); }
-.evp-title h1 { margin: 0; font-size: calc(max(24px, calc(var(--u) * 2.1)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; text-wrap: balance; text-shadow: 0 2px 22px rgba(0, 0, 0, .35); }
+.evp-title h1 { margin: 0; font-size: calc(max(21px, calc(var(--u) * 1.62)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; text-wrap: balance; text-shadow: 0 2px 22px rgba(0, 0, 0, .35); }
 .evp-title h1 .w { display: inline-block; }
 .evp-title p { display: flex; flex-wrap: wrap; align-items: center; gap: .45em .6em; margin: 0; font-size: calc(max(13px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); color: rgba(255, 255, 255, .86); }
 .evp-title p svg.i { width: 1.25em; height: 1.25em; opacity: .85; }
-.evp-tools { position: absolute; top: calc(var(--u) * 1.2); right: calc(var(--u) * 1.2); display: flex; gap: calc(var(--u) * .45); }
-.ev-ic { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: max(42px, calc(var(--u) * 2.6)); aspect-ratio: 1; border-radius: 50%; color: #fff; background: rgba(12, 11, 17, .5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .26); transition: background-color .3s, transform .4s var(--ease); }
+.evp-tools { position: absolute; top: calc(var(--u) * 1); left: calc(var(--u) * 1); display: flex; gap: calc(var(--u) * .45); }
+.ev-ic { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: max(40px, calc(var(--u) * 2.3)); aspect-ratio: 1; border-radius: 50%; color: #fff; background: rgba(12, 11, 17, .5); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .26); transition: background-color .3s, transform .4s var(--ease); }
 .ev-ic:hover { background: rgba(12, 11, 17, .72); transform: scale(1.06); }
 .ev-ic svg.i { width: 45%; height: 45%; }
 .ev-ic[aria-pressed="true"] { color: #fb7185; }
@@ -1051,7 +1055,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .ev-ic:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
 /* the body: the facts, the map, what it is and the prices on one side; the sessions on the other (they follow the page) */
-.evp-cols { display: grid; grid-template-columns: minmax(0, 1fr) clamp(380px, calc(var(--u) * 30), 540px); gap: var(--gap); align-items: start; }
+.evp-cols { display: grid; grid-template-columns: minmax(0, 1fr) clamp(360px, calc(var(--u) * 21.5), 440px); gap: var(--gap); align-items: start; }
 .evp-main { display: grid; gap: var(--gap); min-width: 0; }
 .evp-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); min-width: 0; }
 .evp-main > .panel, .evp-side > .panel, .evp-more { border-radius: calc(var(--r) * 1.3); }
@@ -1126,15 +1130,18 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-plan li { isolation: isolate; }
 
 /* the buy panel: the rules (a large clear line), the nights as big cards (the first with seats is chosen already), how many, and two ways on */
-.evp-book { position: relative; display: grid; gap: calc(var(--u) * .9); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.5) calc(var(--u) * 1.5); }
-.evp-book > h2 { margin: 0; }
+.evp-book { position: relative; display: grid; gap: calc(var(--u) * .8); padding: calc(var(--u) * 1.1) calc(var(--u) * 1.2) calc(var(--u) * 1.2); }
+.evp-bh { display: flex; align-items: baseline; justify-content: space-between; gap: .8em; }
+.evp-book .evp-bh h2 { margin: 0; }
+.evp-from { font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.68, var(--dmin))); white-space: nowrap; }
+.evp-from b { font-size: 1.3em; font-weight: 900; color: rgb(var(--fg)); font-variant-numeric: tabular-nums; }
 .evp-book.is-flash { animation: book-flash 1.4s var(--ease); }
 @keyframes book-flash { 0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--sc) 70%, transparent); } 40% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--sc) 35%, transparent); } 100% { box-shadow: 0 0 0 0 transparent; } }
 .evp-sale { display: grid; gap: .5em; padding: calc(var(--u) * .9) calc(var(--u) * 1); border-radius: calc(var(--r) * .8); color: #fff; --fg: 255, 255, 255; background: linear-gradient(135deg, #0c4a6e, #1e1b4b) #0c4a6e; box-shadow: inset 0 0 0 1px rgba(56, 189, 248, .35); font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
 .evp-sale .cd-b { justify-content: flex-start; }
-.evp-rules { position: relative; display: flex; align-items: center; gap: .9em; padding: .95em 1.1em; border-radius: calc(var(--r) * .9); cursor: pointer; font-size: calc(max(14.5px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); line-height: 1.85; background: color-mix(in oklab, var(--sc) 9%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--sc) 52%, transparent); transition: background-color .3s, box-shadow .3s; }
+.evp-rules { position: relative; display: flex; align-items: center; gap: .75em; padding: .6em .9em; border-radius: calc(var(--r) * .7); cursor: pointer; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); line-height: 1.7; background: color-mix(in oklab, var(--sc) 9%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--sc) 52%, transparent); transition: background-color .3s, box-shadow .3s; }
 .evp-rules input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.evp-rules .box { flex: none; display: grid; place-items: center; width: 2.15em; aspect-ratio: 1; border-radius: .66em; box-shadow: inset 0 0 0 2px rgba(var(--fg), .55); color: transparent; transition: background-color .3s, color .3s, box-shadow .3s, transform .4s var(--ease); }
+.evp-rules .box { flex: none; display: grid; place-items: center; width: 1.9em; aspect-ratio: 1; border-radius: .66em; box-shadow: inset 0 0 0 2px rgba(var(--fg), .55); color: transparent; transition: background-color .3s, color .3s, box-shadow .3s, transform .4s var(--ease); }
 .evp-rules:not(.is-on) .box { animation: box-nudge 3.4s ease-in-out 1.2s infinite; }
 @keyframes box-nudge { 0%, 72%, 100% { transform: none; } 82% { transform: scale(1.14); } 91% { transform: scale(.96); } }
 .evp-rules .box svg.i { width: 72%; height: 72%; stroke-width: 3; }
@@ -1144,8 +1151,8 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-rules a { color: var(--sc); font-weight: var(--fwb); text-decoration: underline; text-underline-offset: .25em; text-decoration-thickness: 1.5px; }
 .evp-rules.is-shake { animation: shake .55s cubic-bezier(.36, .07, .19, .97); box-shadow: inset 0 0 0 1.5px #f43f5e; }
 @keyframes shake { 15%, 85% { transform: translateX(-2px); } 30%, 70% { transform: translateX(4px); } 45%, 55% { transform: translateX(-6px); } }
-.ses-list { display: grid; gap: calc(var(--u) * .5); max-height: min(44vh, calc(var(--u) * 24)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 3px; margin: -3px; }
-.ses { --sw: max(78px, calc(var(--u) * 4.9)); --nr: 8px; position: relative; display: grid; grid-template-columns: var(--sw) minmax(0, 1fr) auto; align-items: center; gap: 0 calc(var(--u) * .9); padding-inline-end: calc(var(--u) * .95); min-height: max(74px, calc(var(--u) * 4.7)); border-radius: calc(var(--r) * .8); background: rgba(var(--fg), .045); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .15); overflow: hidden; cursor: pointer; animation: ses-in .7s var(--ease) both; animation-delay: var(--d, 0s); transition: background-color .3s, box-shadow .3s;
+.ses-list { display: grid; gap: calc(var(--u) * .45); max-height: min(42vh, calc(var(--u) * 21)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 3px; margin: -3px; }
+.ses { --sw: max(68px, calc(var(--u) * 4.2)); --nr: 8px; position: relative; display: grid; grid-template-columns: var(--sw) minmax(0, 1fr) auto; align-items: center; gap: 0 calc(var(--u) * .8); padding-inline-end: calc(var(--u) * .85); min-height: max(66px, calc(var(--u) * 4.1)); border-radius: calc(var(--r) * .8); background: rgba(var(--fg), .045); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .15); overflow: hidden; cursor: pointer; animation: ses-in .7s var(--ease) both; animation-delay: var(--d, 0s); transition: background-color .3s, box-shadow .3s;
   -webkit-mask: radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
   mask: radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat; }
 @keyframes ses-in { from { opacity: 0; transform: translateY(10px); } }
@@ -1157,9 +1164,9 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .ses-stub { display: grid; justify-items: center; align-content: center; gap: .02em; align-self: stretch; padding: .6em .4em; color: #fff; background: #1c1828; line-height: 1.35; }   /* (one colour, so a checker can read the white on it) */
 .ses-stub > * { background: #1c1828; }   /* (the same colour under each word: a checker never has to guess the ground) */
 .ses-stub b { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); opacity: .92; }
-.ses-stub strong { font-size: calc(max(25px, calc(var(--u) * 1.75)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ses-stub strong { font-size: calc(max(22px, calc(var(--u) * 1.5)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .ses-stub span { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); opacity: .92; }
-.ses-body { display: grid; gap: .4em; min-width: 0; padding-block: .75em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.ses-body { display: grid; gap: .3em; min-width: 0; padding-block: .6em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
 .ses-time { display: inline-flex; align-items: center; gap: .45em; font-size: calc(max(15px, calc(var(--u) * .96)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
 .ses-time svg.i { width: 1.15em; height: 1.15em; color: var(--sc); }
 .ses-st { display: inline-flex; align-items: center; gap: .4em; font-weight: var(--fwb); }
@@ -1189,9 +1196,9 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .qty-st svg.i { width: 46%; height: 46%; }
 .qty-st output { min-width: 2.2ch; text-align: center; font-size: calc(max(19px, calc(var(--u) * 1.25)) * var(--tx) * var(--tx-main)); font-weight: 900; font-variant-numeric: tabular-nums; }
 .evp-est { margin-inline-start: auto; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), max(.68, var(--dmin))); }
-.evp-go { width: 100%; height: max(54px, calc(var(--u) * 3.5)); gap: .6em; font-size: calc(max(15.5px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); }
+.evp-go { width: 100%; height: max(50px, calc(var(--u) * 3.2)); gap: .6em; font-size: calc(max(15.5px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); }
 .evp-go svg.i { width: 1.3em; height: 1.3em; }
-.evp-go2 { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .55em; width: 100%; height: max(46px, calc(var(--u) * 3)); border-radius: var(--rb); font-size: calc(max(14px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgb(var(--fg)); background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), max(.3, var(--bt-line-a))); transition: background-color .3s, transform .4s var(--ease); }
+.evp-go2 { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .55em; width: 100%; height: max(44px, calc(var(--u) * 2.8)); border-radius: var(--rb); font-size: calc(max(14px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgb(var(--fg)); background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), max(.3, var(--bt-line-a))); transition: background-color .3s, transform .4s var(--ease); }
 .evp-go2:hover { background: rgba(var(--fg), .1); transform: translateY(-1px); }
 .evp-go2:active { transform: scale(.985); }
 .evp-go2:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
@@ -1199,10 +1206,8 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-note { display: flex; align-items: flex-start; gap: .55em; margin: 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), max(.64, var(--dmin))); }
 .evp-note svg.i { flex: none; width: 1.3em; height: 1.3em; margin-top: .2em; color: var(--sc); }
 .evp-note b { color: rgb(var(--fg)); font-weight: var(--fwb); }
-.evp-more .tkt-grid { --cols: 5; }
-.evp-more .tkt-grid > :nth-child(n+6) { display: none; }   /* one row: as many as there are columns */
-@media (min-width: 1700px) { .evp-more .tkt-grid { --cols: 6; } .evp-more .tkt-grid > :nth-child(6) { display: block; } }
-@media (max-width: 1199px) { .evp-more .tkt-grid { --cols: 4; } .evp-more .tkt-grid > :nth-child(5) { display: none; } }
+.evp-more .tkt-grid { --cols: 4; }
+.evp-more .tkt-grid > :nth-child(n+5) { display: none; }   /* one row: as many as there are columns */
 .evp-ft { margin-top: calc(var(--gap) * 1.5); }
 
 /* the rules' window */
@@ -1220,6 +1225,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
   .evp-cols { display: flex; flex-direction: column; align-items: stretch; }
   .evp-side { position: static; order: -1; }
   .evp-main { display: contents; }
+  .evp-cover { order: -2; }
 }
 .evp-cta { transition: transform .5s var(--ease), opacity .3s; }
 .evp-cta.is-hide { transform: translateY(170%); opacity: 0; pointer-events: none; }
@@ -1282,6 +1288,14 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 
 .bk .evp-crumb a:first-child { font-weight: var(--fwm); }
 
+/* one bar on top of the seats' page: the way back, the show, the night, the steps (round N) */
+.bk-top { gap: calc(var(--u) * .6) calc(var(--u) * 1.2); padding: calc(var(--u) * .55) calc(var(--u) * .9); border-radius: calc(var(--r) * 1.2); }
+.bk-top .evp-crumb a { padding: .35em .8em .35em .9em; border-radius: var(--rb); background: rgba(var(--fg), var(--bt-fill-a)); box-shadow: inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)); }
+.bk-show { flex: 1 1 380px; display: flex; align-items: center; gap: calc(var(--u) * .8); min-width: 0; }
+.bk-show .bk-what { flex: 1 1 140px; }
+.bk-top .steps { margin-inline-start: auto; }
+.evp-toprow.bk-top .evp-crumb { flex: none; }
+.bk-top .bk-poster { width: max(34px, calc(var(--u) * 2.1)); }
 /* the show and the session, the price filter */
 .bk-head { display: flex; flex-wrap: wrap; align-items: center; gap: calc(var(--u) * .6) calc(var(--u) * 1.1); padding: calc(var(--u) * .65) calc(var(--u) * .95); border-radius: calc(var(--r) * 1.3); min-width: 0; }
 .bk-head .bk-what { flex: 1 1 220px; }
@@ -1309,9 +1323,10 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .chip.tier[aria-pressed="true"] { background: color-mix(in oklab, var(--c) 18%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 60%, transparent); }
 
 /* the map: the zones as tabs, a live dot, the seats on their arcs; zoom and drag */
-.bk-cols { grid-template-columns: minmax(0, 1fr) clamp(340px, calc(var(--u) * 24), 480px); }
+.bk-cols { grid-template-columns: minmax(0, 1fr) clamp(320px, calc(var(--u) * 19), 390px); }
 .bk-map { position: relative; display: grid; grid-template-rows: auto 1fr auto auto; padding: calc(var(--u) * .7); border-radius: calc(var(--r) * 1.15); overflow: hidden; }
-.bk-mhead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6em 1em; padding: 0 calc(var(--u) * .3) calc(var(--u) * .6); }
+.bk-mhead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6em 1.2em; padding: 0 calc(var(--u) * .3) calc(var(--u) * .5); }
+.bk-mhead .bk-filter { margin-inline: auto; }
 .bk-seg { display: inline-flex; gap: 3px; padding: 3px; border-radius: var(--rb); background: rgba(var(--fg), var(--bt-fill-a)); box-shadow: inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)); }
 .bk-seg button { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: baseline; gap: .5em; padding: .5em 1.1em; border-radius: var(--rb); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), .72); transition: background-color .3s, color .3s; white-space: nowrap; }
 .bk-seg button small { font-size: .82em; opacity: max(.7, var(--omin)); font-variant-numeric: tabular-nums; }
@@ -1614,8 +1629,9 @@ a.buy, a.chip { text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) { .seat, .bk-list li, .bk-live > i, .seat.is-pop, .seat.is-live, .tk-check.is-in circle, .tk-check.is-in path, .spin { animation: none !important; transition: none !important; } }
 /* the checkout (round M): a narrow, centred column; the phone and the name side by side; the discount code a link */
-.bk-narrow > :not(.bk-bar) { width: min(100%, 1120px); justify-self: center; }
-.bk-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 0 calc(var(--u) * .9); }
+.bk-narrow > :not(.bk-bar) { width: min(100%, 1060px); justify-self: center; }
+.bk-narrow .evp-cols { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+.bk-duo { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 0 calc(var(--u) * .9); }   /* (a label that wraps in a half-width column no longer pushes its field lower than its neighbour) */
 .bk-who h2 { margin-bottom: calc(var(--u) * .7); }
 .bk-otp.is-ok { padding: .55em 1em; }
 .bk-otp.is-ok > p, .bk-otp.is-ok #bkSend { display: none; }
@@ -1646,12 +1662,20 @@ a.buy, a.chip { text-decoration: none; }
 @media print { .resume { display: none !important; } }
 @media (prefers-reduced-motion: reduce) { .resume { transition: none; } }
 
+/* the seats' top bar on a phone: the way back and the steps on one line, the show and the night under them (it was wider than the screen) */
+@media (max-width: 760px) {
+  .bk-top { padding: 8px 10px; gap: 8px 10px; }
+  .bk-show { flex: 1 1 100%; order: 2; flex-wrap: wrap; min-width: 0; }
+  .bk-show .bk-what { flex: 1 1 120px; }
+  .bk-show .bk-ses { flex: 1 1 100%; justify-content: space-between; }
+}
+
 /* ── the seat map (seatmap.js): the overview, the best seats, one section big; light on the browser (no per-seat transforms
    that change, no custom properties animated, one composited container) ── */
 .bk-map { grid-template-rows: none; gap: calc(var(--u) * .6); }
 .sm-tabs { flex-wrap: wrap; border-radius: 18px; }
-.sm-top { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(250px, 1fr); gap: calc(var(--u) * .6); }
-.sm-mini { position: relative; height: clamp(130px, 17svh, 190px); border-radius: calc(var(--r) * .8); overflow: hidden; cursor: default; background: radial-gradient(110% 70% at 50% 0%, color-mix(in oklab, var(--sc) 10%, transparent), transparent 65%), rgba(var(--fg), .03); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
+.sm-top { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr); gap: calc(var(--u) * .6); }
+.sm-mini { position: relative; height: clamp(104px, 12svh, 132px); border-radius: calc(var(--r) * .8); overflow: hidden; cursor: default; background: radial-gradient(110% 70% at 50% 0%, color-mix(in oklab, var(--sc) 10%, transparent), transparent 65%), rgba(var(--fg), .03); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
 .sm-mini.is-on { cursor: pointer; }
 .sm-mini canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sm-mini-tip { position: absolute; top: 8px; right: 10px; padding: 3px 11px; border-radius: var(--rg); font-size: 12px; font-weight: 700; background: var(--capsule); box-shadow: 0 6px 16px -8px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(var(--fg), .14); opacity: 0; transition: opacity .2s; pointer-events: none; }
@@ -1662,7 +1686,7 @@ a.buy, a.chip { text-decoration: none; }
 .sm-best > b, .sm-best > p { grid-column: 1 / -1; }
 .sm-best > b { display: flex; align-items: center; gap: .45em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.5; }
 .sm-best > b svg.i { width: 1.25em; height: 1.25em; color: var(--sc); }
-.sm-best p { margin: 0; font-size: calc(max(11px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); line-height: 1.7; color: rgba(var(--fg), max(.66, var(--dmin))); }
+.sm-best p { display: none; margin: 0; font-size: calc(max(11px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); line-height: 1.7; color: rgba(var(--fg), max(.66, var(--dmin))); }
 .sm-bn { justify-self: start; display: inline-flex; align-items: center; gap: .35em; padding: 3px; border-radius: var(--rb); background: rgba(var(--fg), .07); }
 .sm-bn button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--rb); color: rgb(var(--fg)); transition: background-color .2s; }
 .sm-bn button:hover { background: rgba(var(--fg), .1); }
@@ -1672,7 +1696,8 @@ a.buy, a.chip { text-decoration: none; }
 .sm-bn span { font-size: 12px; color: rgba(var(--fg), .65); margin-inline-end: .2em; }
 .sm-best .buy { justify-self: stretch; gap: .45em; height: 40px; min-width: 0; }
 .sm-head { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: 0 calc(var(--u) * .3); }
-.sm-head > div { display: grid; line-height: 1.6; }
+.sm-head .bk-live { margin-inline-start: auto; }
+.sm-head > div { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 .9em; line-height: 1.6; }
 .sm-head b { font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: 800; }
 .sm-head small { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.62, var(--dmin))); }
 .sm-stage { flex: none; display: inline-flex; align-items: center; gap: .35em; padding: .3em .9em; border-radius: 999px; font-size: 12px; font-weight: 600; color: rgba(var(--fg), .75); background: linear-gradient(90deg, rgba(139, 92, 246, .2), rgba(236, 72, 153, .2), rgba(249, 115, 22, .2)); }
@@ -3857,9 +3882,9 @@ const LOOK_DEF = {
   // the header
   hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdScroll: 'dock', hdWidth: 100, hdCompact: true, hdCompactW: 1400, hdSpeed: 0.8, hdHover: 'pill', hdProg: true,
   // motion
-  mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, magnetPow: 33, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
+  mot: 'balanced', trans: 'fade', zoom: 'mid', zoomShare: 100, dur: 7, fade: 1.2, spot: true, magnet: true, magnetPow: 33, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
   // the list under the hero: the sample shows that fill it, the shape of a poster's frame (width ÷ height), the words under the poster or over it
-  listFill: true, posterRatio: 0.75, posterFit: 'smart', posterInfo: 'reveal',
+  listFill: true, posterRatio: 0.75, posterFit: 'smart', posterInfo: 'frame',
   // how many rows of posters a section shows before «نمایش همه» (0: all), the presale's wide tickets, the cards' buy button (white as in the sample, or the show's colour), the columns on a wide window
   secRows: 2, presale: 'compact', buyStyle: 'white', listCols: 'auto',
   // the site's theme: dark (the approved one) or light (white); the light one keeps its own panel and page colours; the motion of the change
@@ -3881,9 +3906,9 @@ const dg = (s) => (LOOK.digits === 'en' ? String(s).replace(/[۰-۹]/g, (d) => '
 // photo, so its words aren't cut at the start); dur: seconds per show; fade: seconds of the fade into
 // the next
 const ZOOM = { bar: { low: 1.02, mid: 1.05, high: 1.09 }, text: { low: 1.08, mid: 1.15, high: 1.24 } };
-// a banner zooms out in the first 70 % of its time and then stands still, whole, so its words can be read at their
-// full size before the next show comes (a photo with the words over it keeps zooming to the end)
-const ZOOM_SHARE = 0.7;
+// a banner zooms out the whole time it is on (as a photo does; the owner: «the zoom must last all those seconds»), linearly, so the
+// motion is seen to the end and the banner is within 1 % of whole for its last second. `zoomShare` in the look can make it
+// stop earlier (85 or 70 %: then it stands still, whole, for the rest of its time).
 // how many cards the rail shows at once (its width is worked out for this many); more shows scroll inside it
 const VIS = 4;
 // a banner whose shape is within 2.5 % of its panel's fills the panel (it is stretched by less than that, which the
@@ -4408,8 +4433,8 @@ const stage = {
     // keep one free scene per show; drop the ones whose show has changed since
     if (s.ver !== s.e.ver || this.pool.filter((x) => !x.busy).length > EVENTS.length + 1) { if (s.ro) s.ro.disconnect(); s.el.remove(); this.pool.splice(this.pool.indexOf(s), 1); }
   },
-  // the show's picture zooms out inside its panel (a banner: in the first 70 % of its time, then it stands still
-  // and whole; a photo: all the time and the fade after it). dir: +1 going down the rail, -1 going up; style: how the
+  // the show's picture zooms out inside its panel (all the time and the fade after it; a banner can be set to stop earlier,
+  // `zoomShare`: then it stands still and whole). dir: +1 going down the rail, -1 going up; style: how the
   // change looks (the look's choice unless the caller says otherwise)
   async show(i, { instant = false, dir = 1, style } = {}) {
     const token = ++this.token, e = EVENTS[i], s = await this.acquire(e);
@@ -4419,7 +4444,8 @@ const stage = {
     s.el.style.zIndex = ++this.z; s.el.classList.add('is-on'); s.el.inert = false; s.el.setAttribute('aria-hidden', 'false'); this.top = s;
     const k = MOTK(), fade = reduceMotion ? 0.4 : LOOK.fade, from = reduceMotion ? 1 : 1 + (ZOOM[s.mode][LOOK.zoom] - 1) * (0.6 + 0.4 * k);
     const still = s.mode === 'bar' && !reduceMotion;   // a banner finishes its zoom (and then stands still, whole) before its time is up
-    s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: still ? LOOK.dur * ZOOM_SHARE : LOOK.dur + fade, ease: still ? 'sine.out' : 'none', paused: !timer.running() && !instant && !state.intro });
+    const share = clamp(+LOOK.zoomShare || 100, 40, 100) / 100, early = still && share < 1;   // (a banner whose zoom is set to stop early stands still, whole, after it)
+    s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: early ? LOOK.dur * share : LOOK.dur + fade, ease: early ? 'sine.out' : 'none', paused: !timer.running() && !instant && !state.intro });
     const done = () => { this.pool.slice().forEach((o) => { if (o !== s && o.busy && +o.el.style.zIndex < +s.el.style.zIndex) this.release(o); }); };
     if (instant) { gsap.set(s.el, { opacity: 1 }); done(); return s; }
     const T = reduceMotion ? 'fade' : style || LOOK.trans, old = prev && prev !== s && prev.art ? prev.art : null;
@@ -4711,7 +4737,8 @@ const UI = {
     { h: 'بنر', c: [
       S('fit', 'نمایش بنر', [['contain', 'کامل، بدون برش'], ['cover', 'پر کردن کادر (برش می‌خوره)']]),
       S('fill', 'جای خالی کنار بنر', [['black', 'سیاه'], ['edge', 'لبه‌ی محوشده‌ی خود بنر']]),
-      S('zoom', 'زوم اول تصویر', [['low', 'کم'], ['mid', 'متوسط'], ['high', 'زیاد']])] },
+      S('zoom', 'زوم اول تصویر', [['low', 'کم'], ['mid', 'متوسط'], ['high', 'زیاد']]),
+      S('zoomShare', 'مدت زوم‌اوت بنر', [[100, 'تا آخر زمان هر اجرا (یکنواخت)'], [85, '۸۵٪ زمان؛ بعدش کامل و ثابت می‌ایسته'], [70, '۷۰٪ زمان؛ بعدش کامل و ثابت (حالت قبلی)']])] },
     { h: 'پس‌زمینه‌ی صفحه', c: [
       S('bg', 'پس‌زمینه', [['black', 'سیاه'], ['color', 'رنگ دلخواه'], ['glow', 'درخشش محو بنر']]),
       Cs('bgColor', 'رنگ پس‌زمینه', BG_SW)] },
@@ -4721,9 +4748,9 @@ const UI = {
       R('dim', 'کم‌رنگ بودن کارت‌های غیرفعال', 0, 60, 1, '٪'),
       S('progress', 'نشونه‌ی زمان باقی‌مونده', [['bar', 'خط پایین'], ['ring', 'دور کارت'], ['off', 'هیچ']])] },
     { h: 'لیست زیر هیرو (پوستری)', n: 'تو همه‌ی بخش‌های بعد از هیرو هر اجرا یه پوستر عمودیه که کامل (بدون برش) تو کادر پوستر می‌شینه؛ پوستری که با این نسبت فرق داشته باشه با نسخه‌ی محوِ خودش پر می‌شه. اجراهای نمونه (از نمونه‌ی خودت، با عکس‌هاش به‌جای پوستر، به‌اضافه‌ی چند پوستر نهایی) لیست رو پر می‌کنن؛ تو هیرو فقط همون شش اجرای واقعی هستن.', c: [
-      R('posterRatio', 'نسبت کادر پوستر (عرض ÷ ارتفاع)', 0.5, 1, 0.01, ''),
+      R('posterRatio', 'نسبت کادر پوستر (عرض ÷ ارتفاع)', 0.5, 1.2, 0.01, ''),
       S('posterFit', 'جا شدن پوستر تو کادرش', [['smart', 'هوشمند (شکل نزدیک: پر می‌کنه؛ دورتر: کامل و گرد روی زمینه‌ی نرم)'], ['whole', 'همیشه کامل (با زمینه‌ی نرم کنارش)'], ['fill', 'همیشه پر (هر چی اضافه‌ست بریده می‌شه)']]),
-      S('posterInfo', 'نوشته‌های کارت', [['reveal', 'روی عکس؛ با رفتن موس روش کنار می‌ره و کل عکس دیده می‌شه (روی موبایل همیشه دیده می‌شه)'], ['below', 'زیر پوستر (پوستر کامل دیده می‌شه)'], ['over', 'روی پوستر، همیشه (مثل نمونه)']]),
+      S('posterInfo', 'کارت برنامه', [['frame', 'قاب ثابت (مثل نمونه‌ها): عکس تو قاب با زبانه‌های بریده؛ اسم، مکان، قیمت و دکمه‌ی خرید زیرش'], ['below', 'پوستر با نوشته‌های زیرش (کارت دور L)'], ['over', 'نوشته‌ها روی پوستر، همیشه']]),
       W('listFill', 'اجراهای نمونه برای پر کردن لیست'),
       S('secRows', 'ردیف‌های هر بخش (بقیه با «نمایش همه»)', [[1, '۱ ردیف'], [2, '۲ ردیف'], [3, '۳ ردیف'], [0, 'همه']]),
       S('listCols', 'تعداد پوستر در هر ردیف (پنجره‌ی پهن)', [['auto', 'خودکار (۵؛ از ۱۷۰۰ شش؛ از ۲۲۰۰ هفت؛ زیر ۱۲۰۰ چهار)'], ['5', '۵'], ['6', '۶'], ['7', '۷'], ['8', '۸']]),
@@ -4808,6 +4835,7 @@ const look = {
   take(j, lk = LOOK, tx = TXT) {
     let n = 0;
     for (const k of Object.keys(LOOK_DEF)) if (j.look && k in j.look && typeof j.look[k] === typeof LOOK_DEF[k]) { lk[k] = j.look[k]; n++; }
+    if (lk.posterInfo === 'reveal') lk.posterInfo = 'frame';   // (round M's hover card is gone: the framed card took its place)
     for (const k of Object.keys(TXT_DEF)) if (j.texts && typeof j.texts[k] === 'string') { tx[k] = j.texts[k]; n++; }
     return n;
   },
@@ -6448,18 +6476,18 @@ const page = {
     this.el.innerHTML = `<div class="evp-in" style="--sc-d:${cd};--sc-l:${cl}">
       <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
       ${stepsHTML(1, e, null)}</div>
-      <section class="evp-cover panel${cover === src ? ' is-soft' : ''}${hasPoster ? '' : ' no-poster'}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
-        <div class="evp-bg" aria-hidden="true"></div><span class="evp-motes" aria-hidden="true">${Array.from({ length: 8 }, (_, i) => `<i style="--m:${i}"></i>`).join('')}</span>
-        ${hasPoster ? `<figure class="evp-poster" style="--ps:${ps}"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure>` : ''}
-        <div class="evp-title">
-          <div class="evp-kind"><span>${ico(kindIcon)}${esc(e.type)}</span>${statusChip(e)}${e.badge ? `<em class="evp-badge">${esc(e.badge)}</em>` : ''}</div>
-          <h1>${words}</h1>
-          <p>${ico('pin')}${esc(h.name)}، ${esc(e.city)}<span aria-hidden="true">·</span>${ico('calendar')}${esc(e.w.short)}</p>
-        </div>
-        <div class="evp-tools"><button type="button" class="ev-ic" data-act="save" aria-pressed="false" aria-label="نشان کردن">${ico('heart')}</button><button type="button" class="ev-ic" data-act="share" aria-label="هم‌رسانی">${ico('share')}</button></div>
-      </section>
       <div class="evp-cols">
         <div class="evp-main">
+          <section class="evp-cover panel${cover === src ? ' is-soft' : ''}${hasPoster ? '' : ' no-poster'}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
+            <div class="evp-bg" aria-hidden="true"></div><span class="evp-motes" aria-hidden="true">${Array.from({ length: 8 }, (_, i) => `<i style="--m:${i}"></i>`).join('')}</span>
+            ${hasPoster ? `<figure class="evp-poster" style="--ps:${ps}"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure>` : ''}
+            <div class="evp-title">
+              <div class="evp-kind"><span>${ico(kindIcon)}${esc(e.type)}</span>${statusChip(e)}${e.badge ? `<em class="evp-badge">${esc(e.badge)}</em>` : ''}</div>
+              <h1>${words}</h1>
+              <p>${ico('pin')}${esc(h.name)}، ${esc(e.city)}<span aria-hidden="true">·</span>${ico('calendar')}${esc(e.w.short)}</p>
+            </div>
+            <div class="evp-tools"><button type="button" class="ev-ic" data-act="save" aria-pressed="false" aria-label="نشان کردن">${ico('heart')}</button><button type="button" class="ev-ic" data-act="share" aria-label="هم‌رسانی">${ico('share')}</button></div>
+          </section>
           <section class="evp-info panel evp-rise" aria-label="اطلاعات اجرا">
             ${tabbed ? `<div class="evp-tabs" role="tablist" aria-label="اطلاعات اجرا">${tabs.map(([k, t, ic], i) => `<button type="button" role="tab" id="evpTab-${k}" aria-controls="evpTabP-${k}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-tab="${k}">${ico(ic)}${t}</button>`).join('')}</div>` : `<h2 class="evp-info-h">${ico('info')}درباره‌ی اجرا</h2>`}
             <div class="evp-tabp"${tabbed ? ' role="tabpanel" id="evpTabP-about" aria-labelledby="evpTab-about"' : ''} data-p="about">
@@ -6478,16 +6506,16 @@ const page = {
         </div>
         <aside class="evp-side">
           <section class="evp-book panel evp-rise" id="evpBook" aria-labelledby="evpBookH">
-            <h2 id="evpBookH">${ico('calendar')}انتخاب سانس${ses.length ? `<small>${fa(ses.length)} سانس</small>` : ''}</h2>
+            <div class="evp-bh"><h2 id="evpBookH">${ico('ticket')}رزرو بلیت</h2><span class="evp-from">از <b>${esc(dg(e.price))}</b> ${esc(TXT.unit)}</span></div>
             ${timed ? `<div class="evp-sale"><span>شروع فروش · ${esc(saleWhen(e))}</span><div class="ptk-cd" data-sale-box="${esc(e.id)}"><span class="cd-b" aria-hidden="true">${unitHTML('d', 'روز', 0)}<em>:</em>${unitHTML('h', 'ساعت', 0)}<em>:</em>${unitHTML('m', 'دقیقه', 0)}<em>:</em>${unitHTML('s', 'ثانیه', 0)}</span></div></div>` : ''}
-            ${open && anyOk ? `<label class="evp-rules${acc ? ' is-on' : ''}"><input type="checkbox" id="evpRules"${acc ? ' checked' : ''}><span class="box" aria-hidden="true">${ico('check')}</span><span class="rt">اینجانب <a href="#" data-act="rules">قوانین خرید</a> را خوانده‌ام و همه‌ی شرایط را می‌پذیرم.</span></label>` : ''}
             <div class="ses-list" role="radiogroup" aria-label="سانس‌ها">${sesHTML}</div>
             ${open && anyOk ? `<div class="evp-act" id="evpAct">
               <div class="evp-qty"><span id="evpQtyL">چند بلیت؟</span><div class="qty-st" role="group" aria-labelledby="evpQtyL"><button type="button" data-q="-1" aria-label="یکی کمتر">${ico('minus')}</button><output id="evpQty" aria-live="polite">${fa(qty)}</output><button type="button" data-q="1" aria-label="یکی بیشتر">${ico('plus')}</button></div><span class="evp-est" id="evpEst"></span></div>
+              <label class="evp-rules${acc ? ' is-on' : ''}"><input type="checkbox" id="evpRules"${acc ? ' checked' : ''}><span class="box" aria-hidden="true">${ico('check')}</span><span class="rt"><a href="#" data-act="rules">قوانین خرید</a> رو خوندم و می‌پذیرم.</span></label>
               <button type="button" class="buy evp-go" data-go="best">${ico('spark')}<span>بهترین صندلی‌ها رو بگیر</span></button>
               <button type="button" class="evp-go2" data-go="map">${ico('grid')}<span>خودم روی نقشه انتخاب می‌کنم</span></button>
             </div>` : ''}
-            <p class="evp-note">${ico('tag')}<span>از <b>${esc(dg(e.price))} ${esc(TXT.unit)}</b> · قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان${open && anyOk ? ` · صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن` : ''}.</span></p>
+            <p class="evp-note">${ico('shield')}<span>قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان${open && anyOk ? `؛ صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن` : ''}.</span></p>
           </section>
         </aside>
       </div>
@@ -6756,16 +6784,15 @@ const buy = {
     const w = whenOf(s), { src } = artOf(e), tiers = [...new Map(tiersOf(e).map((t) => [t.t, t])).values()].sort((a, b) => b.price - a.price);
     const ses = sessionsOf(e);
     el.innerHTML = `<div class="evp-in bk" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
-      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-r')}برگشت به «${esc(e.name)}»</a></nav>${stepsHTML(2, e, s)}</div>
-      <section class="panel bk-head evp-rise" aria-label="برنامه، سانس و قیمت‌ها">
-        <figure class="bk-poster"><img src="${esc(src)}" alt=""></figure>
-        <div class="bk-what"><b>${esc(e.title)}</b><span>${esc(hallOf(e).name)}، ${esc(e.city)}</span></div>
+      <div class="evp-toprow bk-top panel evp-rise">
+        <nav class="evp-crumb" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}" aria-label="برگشت به «${esc(e.name)}»">${ico('arrow-r')}<span>برنامه</span></a></nav>
+        <div class="bk-show" aria-label="برنامه و سانس">
+          <figure class="bk-poster"><img src="${esc(src)}" alt=""></figure>
+          <div class="bk-what"><b>${esc(e.title)}</b><span>${esc(hallOf(e).name)}، ${esc(e.city)}</span></div>
         <button type="button" class="bk-ses" aria-haspopup="menu" aria-expanded="false">${ico('calendar')}<span><b>${esc(w.wd)} ${esc(w.dm)}</b><small>ساعت ${esc(w.tm)}</small></span>${ses.length > 1 ? `<em>تغییر سانس ${ico('down')}</em>` : ''}</button>
-        <div class="bk-filter">
-          <span class="bk-fl">${ico('tag')}قیمت‌ها</span>
-          <div class="bk-chips" role="group" aria-label="فیلتر قیمت"><button type="button" class="chip" data-t="" aria-pressed="${!this.tiers.size}">همه</button>${tiers.map((t) => `<button type="button" class="chip tier" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i>${money(t.price)}</button>`).join('')}</div>
         </div>
-      </section>
+        ${stepsHTML(2, e, s)}
+      </div>
       <div class="evp-cols bk-cols">
         <section class="panel bk-map evp-rise" aria-label="نقشه‌ی سالن">
           ${this.mapHTML(tiers)}
@@ -7014,7 +7041,7 @@ const buy = {
             <div class="bk-codebox" id="bkDiscBox" hidden><div class="bk-code"><input id="bkDisc" type="text" placeholder="کد تخفیف" dir="ltr" autocomplete="off" aria-label="کد تخفیف"><button type="button" class="chip" id="bkDiscGo">اعمال</button></div><p class="bk-code-st" id="bkDiscSt"></p></div>
             <dl class="bk-inv"></dl>
             <button type="button" class="buy bk-pay" id="bkPay">${ico('shield-ok')}<span>پرداخت</span></button>
-            <p class="bk-note">${ico('info')}با پرداخت، <a href="#" data-act="rules">قوانین خرید</a> رو می‌پذیری. برای آزمایش کد <b dir="ltr">BLIT10</b> رو امتحان کن.</p>
+            <p class="bk-note">${ico('info')}<span>با پرداخت، <a href="#" data-act="rules">قوانین خرید</a> رو می‌پذیری. برای آزمایش کد <b dir="ltr">BLIT10</b> رو امتحان کن.</span></p>
           </section>
         </aside>
       </div>
@@ -7264,17 +7291,17 @@ Object.assign(buy, {
   mapHTML(tiers) {
     return `${store.get('blit.tipSeat', 0) ? '' : `<div class="sm-help" id="smHelp" role="note"><span class="sec-ic" aria-hidden="true">${ico('info')}</span><p><b>سه قدم تا بلیت:</b> ۱) روی نقشه‌ی کوچیک یه بخش رو بزن تا صندلی‌هاش درشت بشه؛ ۲) صندلی‌های رنگی رو بزن؛ ۳) «ادامه». کنار هم می‌خواید بشینید؟ «پیدا کن» بهترین صندلی‌های کنار هم رو خودش برمی‌داره.</p><button type="button" class="chip" data-help-x>${ico('check')}فهمیدم</button></div>`}<div class="bk-mhead">
         ${this.tabsHTML()}
-        <span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span></div>
+        <div class="bk-filter"><span class="bk-fl">${ico('tag')}قیمت‌ها</span><div class="bk-chips" role="group" aria-label="فیلتر قیمت"><button type="button" class="chip" data-t="" aria-pressed="${!this.tiers.size}">همه</button>${tiers.map((t) => `<button type="button" class="chip tier" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i>${money(t.price)}</button>`).join('')}</div></div></div>
       <div class="sm-top">
         <div class="sm-mini" role="img" aria-label="نقشه‌ی کل سالن؛ روی هر بخش بزن تا صندلی‌هاش بزرگ دیده بشن"><canvas></canvas><i class="sm-mini-vp" hidden></i><span class="sm-mini-tip" aria-hidden="true"></span><small class="sm-mini-hint">${ico('info')}روی هر بخش بزن</small></div>
         <div class="sm-best" role="group" aria-labelledby="smBestH"><b id="smBestH">${ico('spark')}بهترین صندلی‌ها رو برام پیدا کن</b><p>کنار هم، نزدیک‌ترین به صحنه و وسط ردیف${tiers.length > 1 ? '؛ با قیمتی که بالا انتخاب کردی' : ''}.</p>
           <div class="sm-bn"><button type="button" data-bn="1" aria-label="یه صندلی بیشتر">${ico('plus')}</button><output id="smBn" aria-live="polite">${fa(this.bestN)}</output><span>صندلی</span><button type="button" data-bn="-1" aria-label="یه صندلی کمتر">${ico('minus')}</button></div>
           <button type="button" class="buy" id="smBest">${ico('search')}پیدا کن</button></div>
       </div>
-      <div class="sm-head"><div><b id="smTitle"></b><small id="smSub"></small></div></div>
+      <div class="sm-head"><div><b id="smTitle"></b><small id="smSub"></small></div><span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span></div>
       <div class="sm-view" id="smView"><div class="sm-in" id="smIn"></div></div>
       <div class="sm-tip" id="smTip" hidden></div>
-      <ul class="st-legend" aria-label="راهنما">${tiers.map((t) => `<li style="--c:${t.c}"><i class="lg free"></i>${money(t.price)}</li>`).join('')}<li><i class="lg mine"></i>انتخاب تو</li><li><i class="lg held"></i>در حال پرداخت دیگران</li><li><i class="lg sold"></i>فروخته شده</li><li><i class="lg off"></i>غیرقابل فروش</li></ul>`;
+      <ul class="st-legend" aria-label="راهنما"><li><i class="lg mine"></i>انتخاب تو</li><li><i class="lg held"></i>در حال پرداخت دیگران</li><li><i class="lg sold"></i>فروخته شده</li><li><i class="lg off"></i>غیرقابل فروش</li></ul>`;
   },
   // the sections as tabs: one for each, or (more than eight) a tab for each floor of the hall with its blocks beneath it
   groupsOf() {
@@ -7358,9 +7385,19 @@ Object.assign(buy, {
     box.innerHTML = (z.ga || z.sec.k === 'grid' || z.sec.k === 'boxes' || z.sec.k === 'tables' ? '' : '<div class="sm-stagebar" aria-hidden="true"><span>صحنه</span></div>') + html;
     const first = $('.sm-s[data-st="free"]', box) || $('.sm-s', box); if (first) first.tabIndex = 0;
     // a section wider than the panel opens at its middle (the best seats); the rows nearest the stage at the top
-    requestAnimationFrame(() => { if (!view.isConnected) return; view.scrollTop = 0; view.scrollLeft = Math.max(0, (view.scrollWidth - view.clientWidth) / 2); this.vpDraw(); });
+    requestAnimationFrame(() => { if (!view.isConnected) return; this.fitSeats(view, box); view.scrollTop = 0; view.scrollLeft = Math.max(0, (view.scrollWidth - view.clientWidth) / 2); this.vpDraw(); });
     if (anim && MOTK()) box.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.22,1,.36,1)' });
     this.miniSoon();
+  },
+  // a seat is as big as it can be (34 px at most) while the widest row still fits the panel: on a mouse it shrinks to 26 px rather than make the buyer scroll sideways (a touch screen keeps its big seats and scrolls)
+  fitSeats(view, box) {
+    view.style.removeProperty('--smz');
+    if (window.matchMedia && matchMedia('(pointer: coarse)').matches) return;
+    const seat = box.querySelector('.sm-s'); if (!seat) return;
+    // (the box is as wide as its content when that is wider than the panel, else as wide as the panel: so a width over the panel's is the content's own; a real plan's rows, a fan's rows and the rest are all measured by it)
+    const avail = view.clientWidth - 24, need = () => box.offsetWidth;
+    let s = seat.offsetWidth, w = need();
+    for (let k = 0; k < 4 && w > avail + 1 && s > 26; k++) { s = Math.max(26, Math.floor(s * avail / w)); view.style.setProperty('--smz', `${s}px`); w = need(); }
   },
   // the state of the seats on show (a few hundred at most) and, soon after, the overview
   paintOne(b) {
