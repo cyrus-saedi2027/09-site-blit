@@ -1115,21 +1115,9 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .mp-water { fill: none; stroke: var(--map-water); stroke-width: 26; stroke-linecap: round; }
 .mp-r1 { fill: none; stroke: var(--map-r1); stroke-width: 11; } .mp-r2 { fill: none; stroke: var(--map-r2); stroke-width: 7; }
 .mp-h1 { fill: none; stroke: var(--map-h1); stroke-width: 17; } .mp-h2 { fill: none; stroke: var(--map-h2); stroke-width: 12; }
-.mp-pin { position: absolute; left: 50%; top: 50%; width: max(38px, calc(var(--u) * 2.4)); aspect-ratio: 1; translate: -50% -88%; pointer-events: none; }
-.mp-pin svg { position: relative; width: 100%; height: 100%; fill: var(--sc); stroke: rgba(0, 0, 0, .25); stroke-width: .8; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .35)); animation: pin-drop 1s var(--ease) both .35s; }
-.mp-pin circle { fill: #fff; stroke: none; }
-.mp-pin i { position: absolute; left: 50%; bottom: -6%; width: 70%; aspect-ratio: 2.4; translate: -50% 50%; border-radius: 50%; background: color-mix(in oklab, var(--sc) 55%, transparent); animation: pulse 2.2s ease-out infinite; }
 @keyframes pin-drop { from { transform: translateY(-40%); opacity: 0; } }
 @keyframes pulse { from { transform: scale(.4); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
-.mp-zoom { position: absolute; top: calc(var(--u) * .7); left: calc(var(--u) * .7); display: grid; overflow: hidden; border-radius: calc(var(--r) * .55); background: var(--capsule); box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)); }
-.mp-zoom button { all: unset; cursor: pointer; display: grid; place-items: center; width: 36px; height: 34px; color: rgb(var(--fg)); }
-.mp-zoom button + button { border-top: 1px solid rgba(var(--fg), var(--bt-line-a)); }
-.mp-zoom button:hover { background: rgba(var(--fg), .08); }
 .mp-zoom svg.i { width: 16px; height: 16px; }
-.mp-route { all: unset; box-sizing: border-box; cursor: pointer; position: absolute; bottom: calc(var(--u) * .7); left: calc(var(--u) * .7); display: inline-flex; align-items: center; gap: .5em; height: 38px; padding-inline: 1em; border-radius: var(--rb); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); background: rgb(var(--fg)); color: var(--capsule); box-shadow: 0 8px 22px -10px rgba(0, 0, 0, .6); transition: transform .4s var(--ease); }
-.mp-route:hover { transform: translateY(-2px); }
-.mp-route svg.i { width: 1.2em; height: 1.2em; }
-.mp-zoom button:focus-visible, .mp-route:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
 
 /* what the show is: its people as tags (as in the sample), a line in its colour, the words */
 .evp-more, .evp-prices { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
@@ -1272,28 +1260,16 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 /* the map inside a tab: the tab is the panel */
 .evp-tabp .evp-map.is-tab { background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: 0; }
 .evp-tabp .evp-map.is-tab .lm-view { border-radius: calc(var(--r) * .9); }
-.evp-tabp .evp-map.is-tab .lm-bar { padding: 14px 2px 0; }
 
 /* the map block of a hall that has a position (hallslib.js: locBlockHTML): the map's tiles when the network gives them, a drawn backdrop
    before and without them; the pin is at the exact point either way. A hall with no position has no block at all. */
 .evp-map.loc-map { height: auto; display: grid; overflow: hidden; padding: 0; }
-.lm-view { position: relative; height: clamp(200px, 30svh, 320px); overflow: hidden; background-color: var(--map-bg);
-  background-image: linear-gradient(var(--map-r1) 1.5px, transparent 1.5px), linear-gradient(90deg, var(--map-r1) 1.5px, transparent 1.5px), radial-gradient(46% 60% at 24% 42%, var(--map-park), transparent 72%), radial-gradient(34% 36% at 78% 66%, var(--map-water), transparent 72%), linear-gradient(115deg, transparent 46%, var(--map-h1) 46.4%, var(--map-h1) 48.2%, transparent 48.6%);
-  background-size: 56px 56px, 56px 56px, auto, auto, auto; }
-.lm-tiles { position: absolute; inset: 0; overflow: hidden; }
-.lm-t { position: absolute; width: 256px; height: 256px; max-width: none; opacity: 0; transition: opacity .35s; user-select: none; -webkit-user-drag: none; }
-.lm-t.is-on { opacity: 1; }
-:root:not([data-mode="light"]) .lm-t { filter: invert(.92) hue-rotate(180deg) saturate(.75) brightness(.86) contrast(.92); }
-.lm-view .mp-zoom { top: 10px; left: 10px; z-index: 2; } .lm-view .mp-pin { z-index: 2; }
-.lm-credit { position: absolute; right: 8px; bottom: 5px; z-index: 2; font-size: 10px; padding: 1px 7px; border-radius: 6px; color: rgba(var(--fg), .8); background: color-mix(in oklab, var(--capsule) 86%, transparent); }
-.lm-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 12px 16px 14px; }
-.lm-where { display: flex; align-items: center; gap: .7em; min-width: 0; flex: 1 1 260px; }
-.lm-where > svg.i { flex: none; width: 1.4em; height: 1.4em; color: var(--sc); }
-.lm-where span { display: grid; min-width: 0; line-height: 1.7; }
-.lm-where b { font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); overflow-wrap: anywhere; }
-.lm-where em { font-style: normal; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); overflow-wrap: anywhere; }
-.lm-go { display: flex; flex-wrap: wrap; gap: 6px; }
-@media (max-width: 760px) { .lm-bar { padding: 10px 12px 12px; } .lm-view { height: clamp(180px, 28svh, 260px); } }
+.lm-view { position: relative; height: clamp(220px, 34svh, 360px); overflow: hidden; background: var(--map-bg); }
+.lm-g { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+.lm-open { position: absolute; inset: 0; margin: auto; width: fit-content; height: fit-content; display: inline-flex; align-items: center; gap: .55em; padding: .75em 1.3em; border-radius: var(--rb); background: rgb(var(--fg)); color: var(--capsule); font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); text-decoration: none; box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .6); }
+.lm-open svg.i { width: 1.25em; height: 1.25em; }
+.lm-open:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+@media (max-width: 760px) { .lm-view { height: clamp(200px, 30svh, 280px); } }
 
 /* ── steps 2–4 of a purchase: the seats, the booking and payment, the tickets (buy.js); the same panels and themes ── */
 .steps li a { display: inline-flex; align-items: center; gap: .5em; color: inherit; text-decoration: none; }
@@ -2862,6 +2838,7 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
   .wz-pair { grid-template-columns: 1fr; }
   .ad-des { grid-template-columns: minmax(0, 1fr); }
 }
+.ad-nohall { color: rgba(var(--fg), max(.66, var(--dmin))); font-size: 12px; white-space: nowrap; }   /* (a city with no hall is not in the visitor's lists) */
 
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -3641,11 +3618,11 @@ const lib = {
   bt: 0, dirty: false,
   batch(f) { this.bt++; try { f(); } finally { this.bt--; if (!this.bt && this.dirty) { this.dirty = false; this.save(); } } },
   save() { if (this.bt) { this.dirty = true; return; } try { localStorage.setItem(LIB_KEY, JSON.stringify(this.o)); } catch (err) { /* private window: the change lives until the page closes */ } this.touch(); },
-  touch() { this.v++; this.cc = null; this.hc = null; this.pc.clear(); this.fns.forEach((f) => { try { f(); } catch (err) { /* a listener must not stop the others */ } }); },
+  touch() { this.v++; this.cc = null; this.hc = null; this.hs = null; this.pc.clear(); this.fns.forEach((f) => { try { f(); } catch (err) { /* a listener must not stop the others */ } }); },
   on(f) { this.fns.push(f); },
   reset() { this.o = { v: 1, cities: {}, cityNew: [], halls: {}, hallNew: [], seq: 0 }; try { localStorage.removeItem(LIB_KEY); } catch (err) { /* nothing */ } this.touch(); },
   next(p) { this.o.seq++; return `${p}${this.o.seq.toString(36)}${Date.now().toString(36).slice(-3)}`; },
-  cc: null, hc: null, pc: new Map(), lc: new Map(),
+  cc: null, hc: null, hs: null, pc: new Map(), lc: new Map(),
 };
 lib.load();
 
@@ -3667,7 +3644,7 @@ function citiesAll() {
 const cityBySlug = (s) => { citiesAll(); return lib.cm.get(String(s)) || null; };
 const cityName = (s) => { const c = cityBySlug(s); return c ? c.name : ''; };
 const provOf = (c) => PROVS[c.p] || PROVS[0];
-const citiesShown = () => citiesAll().filter((c) => !c.hide);
+const citiesShown = () => citiesAll().filter((c) => !c.hide && cityHasHall(c.slug));   // (the admin's own list is citiesAll())
 // a city by the name a person types (for the old links and the tests): unique, or nothing
 function cityByName(name) {
   const k = lnorm(name), hit = citiesAll().filter((c) => lnorm(c.name) === k || (c.county && lnorm(c.county) === k));
@@ -3711,6 +3688,8 @@ function hallsAll() {
 }
 const hallById = (id) => { hallsAll(); const h = lib.hm.get(String(id)); return h || (HALL_ALIAS[id] != null ? lib.hm.get(String(HALL_ALIAS[id])) || null : null); };
 const hallsOfCity = (slug) => hallsAll().filter((h) => h.city === slug);
+// the cities the visitor sees (the picker, the search, the city pages) are the ones that have a hall: a city with none is only in the admin's list, where a first hall can be added to it
+const cityHasHall = (slug) => { if (!lib.hs) lib.hs = new Set(hallsAll().map((h) => h.city)); return lib.hs.has(String(slug)); };
 const hallFull = (h) => `${cityName(h.city)}، ${h.name}`;
 const hallLoc = (h) => (h && h.loc && isFinite(h.loc[0]) && isFinite(h.loc[1]) && h.loc[0] >= 24 && h.loc[0] <= 40 && h.loc[1] >= 44 && h.loc[1] <= 64 ? { lat: h.loc[0], lng: h.loc[1] } : null);
 // the address of a hall's page (the id alone decides; the name is only for reading)
@@ -3781,54 +3760,35 @@ function bindHall(e, id, lay = 0) {
   return e;
 }
 
-/* ───── the position on the map ───── */
-// the ways to go there (a link opens the service at the exact point)
-function routeLinksFor(h) {
-  const p = hallLoc(h); if (!p) return [];
-  const ll = `${p.lat},${p.lng}`;
-  return [['نشان', `https://neshan.org/maps/@${ll},16z`], ['بلد', `https://balad.ir/location?latitude=${p.lat}&longitude=${p.lng}&zoom=16`], ['گوگل‌مپ', `https://www.google.com/maps/dir/?api=1&destination=${ll}`], ['ویز', `https://waze.com/ul?ll=${ll}&navigate=yes`]];
-}
-// the tile of a point at a zoom (the slippy-map scheme), in tiles
-const tileOf = (lat, lng, z) => { const n = 2 ** z, s = Math.sin((lat * Math.PI) / 180); return [((lng + 180) / 360) * n, (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n]; };
-const NO_TILES = /[?&]notiles/.test(location.search);   // for the tests: no map service is asked
-const TILE_URL = (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
-// the map block of a hall: only for a hall that has a position. Nothing at all for the others (no words about a missing map)
+/* ───── the position on the map: Google Maps itself, in a frame, at the exact point the package gave for the hall (the owner: only Google's own map, no map of ours, no other service's
+   links, nothing written under it). A hall with no position has no block at all (and no words about it). ───── */
+const NO_TILES = /[?&]notiles/.test(location.search);   // for the tests: no outside page is asked
+const gmapSrc = (p) => `https://www.google.com/maps?q=${p.lat},${p.lng}&z=16&hl=fa&output=embed`;
+const gmapLink = (p) => `https://www.google.com/maps?q=${p.lat},${p.lng}`;
 function locBlockHTML(h, cls = '') {
   const p = hallLoc(h); if (!p) return '';
-  const links = routeLinksFor(h);
-  return `<section class="evp-map panel loc-map evp-rise${cls ? ' ' + cls : ''}" data-hall="${esc(h.id)}" data-lat="${p.lat}" data-lng="${p.lng}" data-z="16" aria-label="موقعیت ${esc(h.name)} روی نقشه">
-    <div class="lm-view" aria-hidden="false"><div class="lm-tiles" aria-hidden="true"></div>
-      <span class="mp-pin" aria-hidden="true"><i></i><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12.1A7 7 0 0 0 5 9.9C5 15.8 12 22 12 22z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
-      <div class="mp-zoom"><button type="button" data-z="1" aria-label="بزرگ‌نمایی نقشه">${ico('plus')}</button><button type="button" data-z="-1" aria-label="کوچک‌نمایی نقشه">${ico('minus')}</button></div>
-      <small class="lm-credit" hidden>© مشارکت‌کنندگان OpenStreetMap</small></div>
-    <div class="lm-bar"><span class="lm-where">${ico('pin')}<span><b>${esc(h.name)}</b><em>${esc(h.addr || cityName(h.city))}</em></span></span>
-      <span class="lm-go" role="group" aria-label="مسیریابی">${links.map(([t, u]) => `<a class="chip" href="${esc(u)}" target="_blank" rel="noopener">${ico('route')}${esc(t)}</a>`).join('')}<button type="button" class="chip" data-copy="${p.lat}, ${p.lng}" aria-label="کپی مختصات">${ico('copy')}مختصات</button></span></div>
+  return `<section class="evp-map panel loc-map evp-rise${cls ? ' ' + cls : ''}" data-hall="${esc(h.id)}" data-lat="${p.lat}" data-lng="${p.lng}" aria-label="موقعیت ${esc(h.name)}">
+    <div class="lm-view"><iframe class="lm-g" title="موقعیت ${esc(h.name)} روی گوگل مپ" data-src="${esc(gmapSrc(p))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><a class="lm-open" href="${esc(gmapLink(p))}" target="_blank" rel="noopener" hidden>${ico('pin')}<span>باز کردن در Google Maps</span></a></div>
   </section>`;
 }
-// draws the tiles of a map block (when it is on screen; with no network the schematic background stays, and the pin is where it is anyway)
-function mountLocMap(el) {
-  if (!el || el.dataset.mounted) return; el.dataset.mounted = '1';
-  const view = $('.lm-view', el), tiles = $('.lm-tiles', el), lat = +el.dataset.lat, lng = +el.dataset.lng;
-  let z = +el.dataset.z || 16, loaded = 0;
-  const draw = () => {
-    const w = view.clientWidth || 640, h = view.clientHeight || 280, [tx, ty] = tileOf(lat, lng, z), cx = tx * 256, cy = ty * 256, x0 = cx - w / 2, y0 = cy - h / 2, n = 2 ** z;
-    el.dataset.z = z; tiles.textContent = '';
-    if (NO_TILES || (location.protocol !== 'file:' && navigator.onLine === false)) return;
-    for (let X = Math.floor(x0 / 256); X <= Math.floor((x0 + w) / 256); X++) for (let Y = Math.floor(y0 / 256); Y <= Math.floor((y0 + h) / 256); Y++) {
-      if (Y < 0 || Y >= n) continue;
-      const im = new Image(); im.alt = ''; im.decoding = 'async'; im.referrerPolicy = 'no-referrer'; im.draggable = false; im.className = 'lm-t';
-      im.style.cssText = `left:${(X * 256 - x0).toFixed(1)}px;top:${(Y * 256 - y0).toFixed(1)}px`;
-      im.onload = () => { im.classList.add('is-on'); if (!loaded++) { const c = $('.lm-credit', el); if (c) c.hidden = false; } };
-      im.onerror = () => im.remove();
-      im.src = TILE_URL(z, ((X % n) + n) % n, Y); tiles.appendChild(im);
-    }
-  };
-  $$('.mp-zoom button', el).forEach((b) => b.addEventListener('click', () => { z = clamp(z + +b.dataset.z, 12, 18); draw(); }));
-  const cp = $('[data-copy]', el); if (cp) cp.addEventListener('click', () => { const t = cp.dataset.copy; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('مختصات کپی شد.'), () => toast(t)); });
-  if ('IntersectionObserver' in window) { const io = new IntersectionObserver((en) => { if (en.some((x) => x.isIntersecting)) { io.disconnect(); draw(); } }, { rootMargin: '200px' }); io.observe(el); } else draw();
-  if ('ResizeObserver' in window) { let t = 0; new ResizeObserver(() => { clearTimeout(t); t = setTimeout(() => { if (el.isConnected && tiles.childElementCount) draw(); }, 200); }).observe(view); }
+// a frame gets its address when its block is near the screen (the page does not ask Google for a map nobody scrolled to). Where the page may not frame Google (the preview's), the block
+// shows one link to Google Maps in place of the frame, and nothing else
+let mapGuard = false;
+function mountLocMaps(root) {
+  if (!mapGuard) {
+    mapGuard = true;
+    document.addEventListener('securitypolicyviolation', (ev) => {
+      if (!/frame|child/.test(ev.violatedDirective) || !/google\./.test(ev.blockedURI)) return;
+      $$('.loc-map .lm-open').forEach((a) => { a.hidden = false; }); $$('.loc-map .lm-g').forEach((f) => { f.hidden = true; });
+    });
+  }
+  $$('.loc-map', root).forEach((el) => {
+    if (el.dataset.mounted) return; el.dataset.mounted = '1';
+    const f = $('.lm-g', el); if (!f || NO_TILES) return;
+    const set = () => { f.src = f.dataset.src; }, go = () => { if (window.requestIdleCallback) requestIdleCallback(set, { timeout: 2500 }); else setTimeout(set, 600); };   // (after the page has settled: Google's map is heavy)
+    if ('IntersectionObserver' in window) { const io = new IntersectionObserver((en) => { if (en.some((x) => x.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: '200px' }); io.observe(el); } else go();
+  });
 }
-const mountLocMaps = (root) => $$('.loc-map', root).forEach(mountLocMap);
 
 /* ───── the admin's changes (every one goes through here: it is saved and every list is drawn again) ───── */
 const libSet = {
@@ -3891,10 +3851,10 @@ const csOf = (e) => e.cs || ((cityByName(e.city) || {}).slug || '');
 const geo = {
   slug: '', fns: [],
   load() { let v = ''; try { v = JSON.parse(localStorage.getItem(GEO_KEY) || '""'); } catch (err) { v = ''; } this.slug = typeof v === 'string' ? v : ''; this.fix(); },
-  // a city the admin hid or deleted is no longer the filter
-  fix() { const c = this.slug && cityBySlug(this.slug); if (!c || c.hide) this.slug = ''; },
+  // a city the admin hid or deleted, or that has no hall (any more), is no longer the filter
+  fix() { const c = this.slug && cityBySlug(this.slug); if (!c || c.hide || !cityHasHall(c.slug)) this.slug = ''; },
   set(slug) {
-    slug = slug || ''; const c = slug && cityBySlug(slug); if (slug && (!c || c.hide)) slug = '';
+    slug = slug || ''; const c = slug && cityBySlug(slug); if (slug && (!c || c.hide || !cityHasHall(slug))) slug = '';
     if (slug === this.slug) return;
     this.slug = slug; this.keep(); this.fire();
   },
@@ -5166,12 +5126,12 @@ function cityPick(anchor, side) {
     const q = inp.value.trim();
     if (q) {
       const hits = citySearch(q, shown).slice(0, 60);
-      body.innerHTML = hits.length ? `<ul class="cp-list">${hits.map((c) => `<li><button type="button" class="cp-r" data-s="${esc(c.slug)}"${c.slug === geo.slug ? ' aria-current="true"' : ''}><span><b>${esc(c.name)}</b><small>${esc(PROVS[c.p].name)}${c.county && lnorm(c.county) !== lnorm(c.name) ? ` · شهرستان ${esc(c.county)}` : ''}</small></span>${counts.get(c.slug) ? `<small class="n">${fa(counts.get(c.slug))} برنامه</small>` : ''}</button></li>`).join('')}</ul>` : `<p class="cp-none">شهری با «${esc(q)}» پیدا نشد؛ نوشتنش رو چک کن یا اسم استان رو بزن.</p>`;
+      body.innerHTML = hits.length ? `<ul class="cp-list">${hits.map((c) => `<li><button type="button" class="cp-r" data-s="${esc(c.slug)}"${c.slug === geo.slug ? ' aria-current="true"' : ''}><span><b>${esc(c.name)}</b><small>${esc(PROVS[c.p].name)}${c.county && lnorm(c.county) !== lnorm(c.name) ? ` · شهرستان ${esc(c.county)}` : ''}</small></span>${counts.get(c.slug) ? `<small class="n">${fa(counts.get(c.slug))} برنامه</small>` : ''}</button></li>`).join('')}</ul>` : `<p class="cp-none">شهری با «${esc(q)}» پیدا نشد؛ نوشتنش رو چک کن یا اسم استان رو بزن (تو فهرست فقط شهرهایی هستن که سالن دارن).</p>`;
       return;
     }
     body.innerHTML = `<button type="button" class="cp-all" data-s=""${!geo.slug ? ' aria-current="true"' : ''}>${ico('grid')}<span>همه‌ی شهرها</span><small class="n">${fa(total)}</small></button>
       ${withShows.length ? `<h3>شهرهایی که برنامه دارن</h3><div class="cp-chips">${withShows.map(cbtn).join('')}</div>` : ''}
-      <h3>همه‌ی شهرهای کشور<small>${fa(shown.length)} شهر</small></h3>
+      <h3>شهرهایی که سالن دارن<small>${fa(shown.length)} شهر</small></h3>
       <div class="cp-provs">${provs.map(({ p, cs }) => `<div class="cp-p${open === p.i ? ' is-open' : ''}"><button type="button" class="cp-ph" data-p="${p.i}" aria-expanded="${open === p.i}"><span>${esc(p.name)}</span><small>${fa(cs.length)}</small>${ico('down')}</button><div class="cp-cs"${open === p.i ? '' : ' hidden'}>${open === p.i ? cs.map(cbtn).join('') : ''}</div></div>`).join('')}</div>`;
   };
   const choose = (slug) => {
@@ -6601,7 +6561,7 @@ const page = {
     const plan = tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(runName(t))}</span><b>${money(t.price)} <small>تومان</small></b><em aria-hidden="true" style="--w:${(t.price / tiers.reduce((m, x) => Math.max(m, x.price), 1)).toFixed(3)}"></em></li>`).join('');
     const similar = LIST().filter((x) => x !== e && x.kind === e.kind && !['held', 'cancelled'].includes(statusOf(x).key)).sort((a, b) => (a.city === e.city ? 0 : 1) - (b.city === e.city ? 0 : 1) || Date.parse(a.startsAt) - Date.parse(b.startsAt)).slice(0, 6);
     const loc = h.hall ? locBlockHTML(h.hall, 'is-tab') : '';
-    const tabs = [['about', 'درباره‌ی اجرا', 'info'], loc ? ['place', 'مکان و مسیر', 'pin'] : null].filter(Boolean), tabbed = tabs.length > 1;
+    const tabs = [['about', 'درباره‌ی اجرا', 'info'], loc ? ['place', 'مکان', 'pin'] : null].filter(Boolean), tabbed = tabs.length > 1;
     // the three facts of the show: in the cover on a desktop (beside the big poster), in the information on a phone
     const facts = (where) => `<div class="evp-facts is-${where}" aria-label="مشخصات اجرا">
       <div class="fact"><span class="fi">${ico('calendar')}</span><span><small>دوره‌ی اجرا</small><b>${esc(e.w.short)}</b></span></div>
@@ -6633,7 +6593,7 @@ const page = {
               ${ab.line ? `<p class="evp-line">${esc(ab.line)}</p>` : ''}
               <p class="evp-text">${esc(ab.text)}</p>
             </div>
-            ${loc ? `<div class="evp-tabp" role="tabpanel" id="evpTabP-place" aria-labelledby="evpTab-place" data-p="place" hidden><h2 class="evp-pane-h">${ico('pin')}مکان و مسیر</h2>${loc}</div>` : ''}
+            ${loc ? `<div class="evp-tabp" role="tabpanel" id="evpTabP-place" aria-labelledby="evpTab-place" data-p="place" hidden><h2 class="evp-pane-h">${ico('pin')}مکان</h2>${loc}</div>` : ''}
           </section>
         </div>
         <aside class="evp-side">
@@ -7899,7 +7859,7 @@ const pages = {
   },
   city(v) {
     const c = v.city && cityBySlug(v.city);
-    if (!c) { this.wrap('pg-cy', `${this.head('شهر پیدا نشد', 'pin', 'این شهر تو فهرست نیست.')}<section class="panel pg-box evp-rise"><a class="chip" href="#/halls">${ico('pin')}سالن‌ها</a> <a class="chip" href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a></section>`); return; }
+    if (!c || !cityHasHall(c.slug)) { this.wrap('pg-cy', `${this.head(c ? 'هنوز سالنی نیست' : 'شهر پیدا نشد', 'pin', c ? `«${c.name}» هنوز سالنی تو بلیت نداره؛ با ثبت اولین سالنش، صفحه‌ی شهر هم باز می‌شه.` : 'این شهر تو فهرست نیست.')}<section class="panel pg-box evp-rise"><a class="chip" href="#/halls">${ico('pin')}سالن‌ها</a> <a class="chip" href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a></section>`); return; }
     const list = LIST().filter((e) => csOf(e) === c.slug && !['held', 'cancelled'].includes(statusOf(e).key)).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
     const halls = hallsOfCity(c.slug).sort((a, b) => byFa(a.name, b.name)), prov = provOf(c).name;
     document.title = `برنامه‌های ${c.name} · بلیت`;
@@ -9595,18 +9555,18 @@ const adminGeo = {
     const f = this.cf, all = citiesAll(), del = citiesDeleted(), nh = new Map(), ns = new Map();
     hallsAll().forEach((h) => nh.set(h.city, (nh.get(h.city) || 0) + 1));
     LIST().forEach((e) => { const c = csOf(e); if (c) ns.set(c, (ns.get(c) || 0) + 1); });
-    const CH = [['all', 'همه', all.length], ['shown', 'نمایان در فیلتر', all.filter((c) => !c.hide).length], ['hidden', 'پنهان', all.filter((c) => c.hide).length], ['halls', 'دارای سالن', all.filter((c) => nh.get(c.slug)).length], ['shows', 'دارای برنامه', all.filter((c) => ns.get(c.slug)).length], ['edited', 'افزوده یا ویرایش‌شده', all.filter((c) => c.edited || c.own).length], ['del', 'حذف‌شده', del.length]];
-    el.innerHTML = `${desk.head('شهرها', `همه‌ی شهرستان‌های کشور و چند شهر اضافه (مثل کیش) تو فهرستن، چه سالن یا برنامه‌ای داشته باشن چه نه. تعیین کن خریدار کدوم‌ها رو تو فیلتر شهر ببینه، و شهر تازه اضافه کن.`, `<span class="ad-head-a"><button type="button" class="buy" id="acAdd">${ico('plus')}شهر تازه</button><button type="button" class="chip" id="acBulk">${ico('upload')}افزودن گروهی</button></span>`)}
+    const CH = [['all', 'همه', all.length], ['shown', 'تو فیلتر خریدار', all.filter((c) => !c.hide && nh.get(c.slug)).length], ['hidden', 'پنهان', all.filter((c) => c.hide).length], ['halls', 'دارای سالن', all.filter((c) => nh.get(c.slug)).length], ['shows', 'دارای برنامه', all.filter((c) => ns.get(c.slug)).length], ['edited', 'افزوده یا ویرایش‌شده', all.filter((c) => c.edited || c.own).length], ['del', 'حذف‌شده', del.length]];
+    el.innerHTML = `${desk.head('شهرها', `همه‌ی شهرستان‌های کشور و چند شهر اضافه (مثل کیش) اینجا هستن تا برای هر کدوم بشه سالن ثبت کرد؛ ولی خریدار فقط شهرهایی رو تو فیلتر شهر و جستجو و صفحه‌ی شهر می‌بینه که سالن دارن: با ثبت اولین سالن یه شهر، خودکار می‌آد؛ با حذف آخرین سالنش خودکار می‌ره. شهری که سالن داره رو می‌تونی از فیلتر پنهان کنی، و شهر تازه اضافه کنی.`, `<span class="ad-head-a"><button type="button" class="buy" id="acAdd">${ico('plus')}شهر تازه</button><button type="button" class="chip" id="acBulk">${ico('upload')}افزودن گروهی</button></span>`)}
       <section class="panel dk-box evp-rise ad-tools" aria-label="فیلتر شهرها"><label class="s2-find ad-find panel"><svg class="i s2-fi" aria-hidden="true"><use href="#i-search"/></svg><input id="acQ" type="search" placeholder="اسم شهر، شهرستان یا استان…" autocomplete="off" value="${esc(f.q)}"></label>
         <div class="sec-chips ad-chips" role="group" aria-label="نوع">${CH.map(([k, t, n]) => `<button type="button" class="chip" data-show="${k}" aria-pressed="${f.show === k}">${t}<small>${fa(n)}</small></button>`).join('')}</div>
-        <div class="ad-bulk"><span>همه‌ی شهرهای فهرست:</span><button type="button" class="chip" id="acShowAll">${ico('check')}همه نمایان باشن</button><button type="button" class="chip" id="acHideEmpty">${ico('x')}شهرهای بدون سالن و برنامه پنهان بشن</button></div></section>
+        <div class="ad-bulk"><span>همه‌ی شهرهای فهرست:</span><button type="button" class="chip" id="acShowAll">${ico('check')}همه نمایان باشن</button><button type="button" class="chip" id="acHideEmpty" hidden>${ico('x')}شهرهای بدون سالن و برنامه پنهان بشن</button></div></section>
       <section class="panel dk-box evp-rise"><div class="dk-tbl-w"><table class="dk-tbl ad-tbl" id="acTbl"><thead><tr><th>شهر</th><th>استان</th><th>سالن</th><th>برنامه</th><th>تو فیلتر دیده بشه</th><th></th></tr></thead><tbody></tbody></table></div><p class="ad-more" id="acMore"></p></section>`;
     const body = $('#acTbl tbody', el), more = $('#acMore', el);
     const row = (c) => `<tr data-s="${esc(c.slug)}"><td><b>${esc(c.name)}</b>${c.own ? ' <em class="st" data-tone="info">افزوده‌شده</em>' : c.edited ? ' <em class="st" data-tone="mute">ویرایش‌شده</em>' : ''}${c.county && lnorm(c.county) !== lnorm(c.name) ? `<small>شهرستان ${esc(c.county)}</small>` : ''}</td><td>${esc(PROVS[c.p].name)}</td><td>${nh.get(c.slug) ? `<button type="button" class="ad-link" data-halls="${esc(c.slug)}">${fa(nh.get(c.slug))}</button>` : '—'}</td><td>${ns.get(c.slug) ? fa(ns.get(c.slug)) : '—'}</td>
-      <td><label class="ad-tg"><input type="checkbox" data-vis="${esc(c.slug)}"${c.hide ? '' : ' checked'} aria-label="دیده بشن ${esc(c.name)} تو فیلتر شهر"><span aria-hidden="true"></span></label></td><td class="ad-act"><button type="button" class="chip" data-edit="${esc(c.slug)}">ویرایش</button><button type="button" class="chip" data-del="${esc(c.slug)}" aria-label="حذف ${esc(c.name)}">حذف</button></td></tr>`;
+      <td>${nh.get(c.slug) ? `<label class="ad-tg"><input type="checkbox" data-vis="${esc(c.slug)}"${c.hide ? '' : ' checked'} aria-label="دیده بشن ${esc(c.name)} تو فیلتر شهر"><span aria-hidden="true"></span></label>` : '<small class="ad-nohall">سالن نداره؛ تو فیلتر نیست</small>'}</td><td class="ad-act"><button type="button" class="chip" data-edit="${esc(c.slug)}">ویرایش</button><button type="button" class="chip" data-del="${esc(c.slug)}" aria-label="حذف ${esc(c.name)}">حذف</button></td></tr>`;
     const paint = () => {
       const k = lnorm(f.q);
-      let list = f.show === 'del' ? [] : citySearch(k, all).filter((c) => ({ all: 1, shown: !c.hide, hidden: c.hide, halls: nh.get(c.slug), shows: ns.get(c.slug), edited: c.edited || c.own }[f.show]));
+      let list = f.show === 'del' ? [] : citySearch(k, all).filter((c) => ({ all: 1, shown: !c.hide && nh.get(c.slug), hidden: c.hide, halls: nh.get(c.slug), shows: ns.get(c.slug), edited: c.edited || c.own }[f.show]));
       if (!k && f.show !== 'del') list = [...list].sort((a, b) => byFa(PROVS[a.p].name, PROVS[b.p].name) || byFa(a.name, b.name));
       if (f.show === 'del') { const rows = del.filter((c) => !k || lnorm(c.name).includes(k)); body.innerHTML = rows.length ? rows.map((c) => `<tr><td><b>${esc(c.name)}</b></td><td>${esc(PROVS[c.p].name)}</td><td>—</td><td>—</td><td></td><td class="ad-act"><button type="button" class="chip" data-back="${esc(c.slug)}">${ico('undo')}برگردوندن</button></td></tr>`).join('') : `<tr><td colspan="6" class="ad-none">شهر حذف‌شده‌ای نیست.</td></tr>`; more.textContent = ''; return; }
       body.innerHTML = list.slice(0, f.n).map(row).join('') || `<tr><td colspan="6" class="ad-none">شهری پیدا نشد.</td></tr>`;
@@ -10577,7 +10537,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
