@@ -692,10 +692,10 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .more-btn svg.i { width: 1.15em; height: 1.15em; transition: transform .45s var(--ease); }
 .sec-more.is-open .more-btn svg.i { transform: rotate(180deg); }
 .more-btn:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
-.tkt-grid { display: grid; gap: var(--cg); grid-template-columns: repeat(var(--cols, 6), minmax(0, 1fr)); }
+.tkt-grid { display: grid; gap: var(--cg, calc(var(--u) * 1.05)); grid-template-columns: repeat(var(--cols, 5), minmax(0, 1fr)); }
+@media (min-width: 1700px) { .tkt-grid { --cols: 6; } }
 @media (min-width: 2200px) { .tkt-grid { --cols: 7; } }
-@media (max-width: 1299px) { .tkt-grid { --cols: 5; } }
-@media (max-width: 1099px) { .tkt-grid { --cols: 4; } }
+@media (max-width: 1199px) { .tkt-grid { --cols: 4; } }
 @media (max-width: 859px) { .tkt-grid { --cols: 3; } }
 @media (max-width: 599px) { .tkt-grid { --cols: 2; } }
 /* the look's choice of columns on a wide window */
@@ -712,17 +712,25 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .tkt { --nr: calc(var(--u) * .55); --notch: max(calc(var(--u) * 9.2 * var(--tx)), calc(152px * var(--tx))); --art: none; --tk-c: var(--accent-l); position: relative; transition: transform .6s var(--ease), filter .5s; -webkit-tap-highlight-color: transparent; }
 :root[data-theme="light"] .tkt, :root[data-theme="light"] .ptk { --tk-c: color-mix(in oklab, var(--ring) 40%, rgb(var(--fg))); }
 .tkt:hover, .tkt:focus-within { transform: translateY(calc(var(--u) * -.3 * var(--mot))); filter: drop-shadow(0 calc(var(--u) * .9) calc(var(--u) * 1.3) rgba(0, 0, 0, calc(.42 * var(--shk) + .08))); }
-.tkt-in { position: relative; display: grid; grid-template-rows: auto var(--notch); overflow: hidden; isolation: isolate; border-radius: var(--r); background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo));
+.tkt-in { position: relative; display: grid; grid-template-rows: auto var(--notch); overflow: hidden; isolation: isolate; border-radius: calc(var(--r) * 1.3); padding: calc(var(--u) * .38) calc(var(--u) * .38) 0; background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo));
   -webkit-mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat;
   mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat; }
 /* the poster's frame (--pr: width ÷ height). The poster is shown whole: it fills the frame when its shape is the frame's, else the frame is filled by a soft copy of it */
-.tkt-pic { position: relative; display: block; aspect-ratio: var(--pr, .8); overflow: hidden; background: #14121d; cursor: pointer; }
+.tkt-pic { position: relative; display: block; aspect-ratio: var(--pr, .8); overflow: hidden; container-type: size; border-radius: calc(var(--r) * 1.3 - var(--u) * .38); background: #14121d; cursor: pointer; }
 .tkt-pic::before, .ptk-pic::before { content: ""; position: absolute; inset: -14%; background: var(--art) center / cover no-repeat; filter: blur(16px) brightness(.72) saturate(1.2); }
 .tkt.has-soft .tkt-pic::before, .ptk.has-soft .ptk-pic::before { background-image: var(--art-p); filter: none; }   /* the small, already-blurred copy: no live filter */
 .tkt-pic.is-fill::before, .ptk-pic.is-fill::before { display: none; }
 .tkt-pic img, .ptk-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
 .tkt-pic.is-fill img, .ptk-pic.is-fill img { object-fit: fill; }
 .tkt:hover .tkt-pic img, .ptk:hover .ptk-pic img { transform: scale(1.04); }
+/* a picture a little off the frame's shape fills it, and the extra is cut (the upper part stays) */
+.tkt-pic.is-cover img, .ptk-pic.is-cover img { object-fit: cover; object-position: 50% var(--fy, 30%); }
+.tkt-pic.is-cover::before, .ptk-pic.is-cover::before { display: none; }
+/* a picture further off (a 2 : 3 poster, a wide banner) is shown whole at its own shape: rounded and lifted off the soft copy of itself; a wide one is a band across the frame */
+.tkt-pic.is-inset img, .ptk-pic.is-inset img { inset: 50% auto auto 50%; translate: -50% -50%; width: min(88cqw, calc(92cqh * var(--r, .67))); height: auto; aspect-ratio: var(--r, .67); object-fit: fill; border-radius: calc(var(--rt) * 1.7); box-shadow: 0 18px 34px -14px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .14); }
+.tkt-pic.is-inset.is-wide img, .ptk-pic.is-inset.is-wide img { width: 100cqw; border-radius: 0; box-shadow: 0 0 0 1px rgba(255, 255, 255, .1); }
+/* the foot of the poster melts into the words under it */
+.tkt-pic::after { content: ""; position: absolute; z-index: 1; inset: auto 0 0 0; height: 30%; background: linear-gradient(to top, rgba(8, 7, 12, .26), transparent); pointer-events: none; }
 .tkt-pic:focus-visible, .ptk-pic:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
 /* a sheen that crosses the poster once when the pointer arrives (as in the sample) */
 .tkt-glare { position: absolute; z-index: 2; inset: 0; overflow: hidden; pointer-events: none; }
@@ -792,9 +800,74 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 :root[data-pinfo="over"] .tkt-info { position: absolute; inset-inline: 0; bottom: 0; height: var(--notch); }
 :root[data-pinfo="over"] .tkt-bg { background: color-mix(in oklab, var(--capsule) 84%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 
+/* ───── the reveal card (round M, from the owner's three samples) ─────
+   The card IS the picture (3 : 4, a very soft corner). The words are a sheet that floats over its lower part, with a tab on the sheet's edge (the kind
+   and the days) and a pocket in the picture's corner (the date), both with concave fillets. On a desktop the sheet drops away while the pointer is on the
+   card (the whole picture is seen) and rises back, its words one after another, when the pointer leaves. A touch screen has no hover: the sheet stays.
+   (The fillets are drawn for a right-to-left page, as the whole site is.) */
+:root[data-pinfo="reveal"] .tkt { --m: calc(var(--u) * .5); --cr: calc(var(--r) * 1.7); --sr: calc(var(--cr) - var(--m)); --fr: calc(var(--sr) * .62); --sh: max(calc(var(--u) * 8.4 * var(--tx)), calc(121px * var(--tx))); --eh: 40px; --up: cubic-bezier(.16, 1, .3, 1); cursor: pointer; }
+:root[data-pinfo="reveal"] .tkt-in { display: block; aspect-ratio: var(--pr, .75); padding: 0; border-radius: var(--cr); -webkit-mask: none; mask: none; background: var(--capsule); }
+:root[data-pinfo="reveal"] .tkt-pic { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; }
+:root[data-pinfo="reveal"] .tkt-pic::after, :root[data-pinfo="reveal"] .tkt-perf { display: none; }
+:root[data-pinfo="reveal"] .tkt:hover .tkt-pic img { transform: scale(1.001); }   /* the picture is not zoomed: the whole of it is what the pointer is shown */
+/* a picture far from the frame's shape (a wide banner) sits a little higher while the words are over it, and comes to the middle when they are gone */
+:root[data-pinfo="reveal"] .tkt-pic.is-inset img { transform: translateY(-14cqh); transition: transform .9s var(--up); }
+/* the date: a pocket in the corner of the picture */
+:root[data-pinfo="reveal"] .tkt-date { top: 0; right: 0; inset-inline-start: auto; min-width: 3.9em; padding: .6em .8em .64em; border-radius: 0 0 0 var(--sr); background: var(--capsule); color: rgb(var(--fg)); box-shadow: none; font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); }
+:root[data-pinfo="reveal"] .tkt-date b { font-size: 2em; color: var(--tk-c); }
+:root[data-pinfo="reveal"] .tkt-date small { color: rgba(var(--fg), max(.7, var(--dmin))); }
+:root[data-pinfo="reveal"] .tkt-date i { align-self: stretch; margin: 0 0 .3em; padding: .12em .5em; border-radius: var(--rg); font-size: .88em; }
+:root[data-pinfo="reveal"] .tkt-date::before, :root[data-pinfo="reveal"] .tkt-date::after { content: ""; position: absolute; background: radial-gradient(circle var(--fr) at 0 100%, transparent calc(var(--fr) - .6px), var(--capsule) var(--fr)); pointer-events: none; }
+:root[data-pinfo="reveal"] .tkt-date::before { top: 0; right: calc(100% - 1px); width: calc(var(--fr) + 1px); height: var(--fr); }
+:root[data-pinfo="reveal"] .tkt-date::after { top: calc(100% - 1px); right: 0; width: var(--fr); height: calc(var(--fr) + 1px); }
+/* the sheet: a fixed height, so every card's words begin at the same line */
+:root[data-pinfo="reveal"] .tkt-info { position: absolute; z-index: 4; inset: auto var(--m) var(--m); height: var(--sh); display: grid; grid-template-rows: auto auto 1fr; align-content: start; row-gap: .1em; padding: .72em .95em .78em; overflow: visible; isolation: auto; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .34)); }
+:root[data-pinfo="reveal"] .tkt-bg { border-radius: var(--sr); border-top-right-radius: 0; background: radial-gradient(120% 90% at 100% 100%, color-mix(in oklab, var(--accent) 16%, transparent), transparent 62%), var(--capsule); }
+:root[data-pinfo="reveal"] .tkt[data-st="soldout"] .tkt-bg, :root[data-pinfo="reveal"] .tkt[data-st="held"] .tkt-bg, :root[data-pinfo="reveal"] .tkt[data-st="cancelled"] .tkt-bg { background: var(--capsule); }
+/* the tab on the sheet's edge: the kind and the days */
+:root[data-pinfo="reveal"] .tkt-sub { position: absolute; z-index: 1; right: 0; bottom: 100%; max-width: calc(100% - var(--sr) - var(--fr)); padding: .46em 1em .2em; border-radius: var(--sr) var(--sr) 0 0; background: var(--capsule); font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); line-height: 1.7; }
+:root[data-pinfo="reveal"] .tkt-sub::before { content: ""; position: absolute; left: calc(var(--fr) * -1); bottom: -1px; width: calc(var(--fr) + 1px); height: calc(var(--fr) + 1px); background: radial-gradient(circle var(--fr) at 0 0, transparent calc(var(--fr) - .6px), var(--capsule) var(--fr)); pointer-events: none; }
+:root[data-pinfo="reveal"] .tkt-name { font-size: calc(max(14.5px, calc(var(--u) * .98)) * var(--tx) * var(--tx-main)); line-height: 1.5; }
+:root[data-pinfo="reveal"] .tkt-row { font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); line-height: 1.65; }
+:root[data-pinfo="reveal"] .tkt-foot { gap: .5em; }
+:root[data-pinfo="reveal"] .tkt .buy { width: max(34px, calc(var(--u) * 2.25)); height: max(34px, calc(var(--u) * 2.25)); min-width: 0; padding: 0; gap: 0; }
+:root[data-pinfo="reveal"] .tkt .buy .bl { display: none; }
+:root[data-pinfo="reveal"] .tkt .buy svg.i { width: 1.45em; height: 1.45em; }
+:root[data-pinfo="reveal"] .tkt-cd { gap: .4em; }
+:root[data-pinfo="reveal"] .tkt-cd .cd-l { font-size: calc(max(10.5px, calc(var(--u) * .62)) * var(--tx) * var(--tx-small)); }
+:root[data-pinfo="reveal"] .tkt-cd .cd-b b { min-width: 1.9em; padding: .2em .2em; font-size: calc(max(12.5px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); }
+/* a sold or ended show: its stamp is in the middle of what is seen */
+:root[data-pinfo="reveal"] .tkt-stamp { top: calc((100% - var(--sh) - var(--m)) / 2); transition: top .9s var(--up); }
+/* a desktop: the words are a sheet that drops away while the pointer is on the card and rises back (the tab with it, the words one after another) */
+@media (hover: hover) and (pointer: fine) {
+  :root[data-pinfo="reveal"] .tkt-info { transition: transform .95s var(--up) .05s; }
+  :root[data-pinfo="reveal"] .tkt-info > :is(.tkt-name, .tkt-row, .tkt-foot, .tkt-cd, .tkt-off) { transition: opacity .6s ease, transform .85s var(--up); }
+  :root[data-pinfo="reveal"] .tkt-info > .tkt-name { transition-delay: .22s; }
+  :root[data-pinfo="reveal"] .tkt-info > .tkt-row { transition-delay: .28s; }
+  :root[data-pinfo="reveal"] .tkt-info > :is(.tkt-foot, .tkt-cd, .tkt-off) { transition-delay: .34s; }
+  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-info { transform: translateY(calc(100% + var(--m) + var(--eh))); transition: transform .55s cubic-bezier(.5, 0, .2, 1); }
+  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-info > :is(.tkt-name, .tkt-row, .tkt-foot, .tkt-cd, .tkt-off) { opacity: 0; transform: translateY(16px); transition: opacity .2s ease, transform .3s ease; transition-delay: 0s; }
+  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-pic.is-inset img { transform: translateY(0); transition-duration: .6s; }
+  :root[data-pinfo="reveal"] .tkt:hover:not(:has(:focus-visible)) .tkt-stamp { top: 50%; transition-duration: .55s; }
+}
+/* a phone: a little taller card, a smaller sheet; the date is in the pocket, so the tab says only the kind */
+@media (max-width: 599px) {
+  :root[data-pinfo="reveal"] .tkt { --m: 5px; --cr: 22px; --sh: 106px; --eh: 36px; }
+  :root[data-pinfo="reveal"] .tkt-in { aspect-ratio: .7; }
+  :root[data-pinfo="reveal"] .tkt-info { padding: .55em .8em .62em; }
+  :root[data-pinfo="reveal"] .tkt-name { font-size: 13px; line-height: 1.45; }
+  :root[data-pinfo="reveal"] .tkt-row { font-size: 10.5px; }
+  :root[data-pinfo="reveal"] .tkt-sub > span:not(.k) { display: none; }
+  :root[data-pinfo="reveal"] .tkt-sub { font-size: 11px; padding-inline: .85em; }
+  :root[data-pinfo="reveal"] .tkt-date { min-width: 3.4em; }
+  :root[data-pinfo="reveal"] .tkt-stamp { font-size: 14px; }
+  :root[data-pinfo="reveal"] .tkt-off { padding-inline: .5em; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) { :root[data-pinfo="reveal"] .tkt-info, :root[data-pinfo="reveal"] .tkt-info > *, :root[data-pinfo="reveal"] .tkt-pic img, :root[data-pinfo="reveal"] .tkt-stamp { transition-duration: .01s !important; transition-delay: 0s !important; } }
+
 /* the presale (round L): a row of small tickets, two across on a wide window: the poster's stub on one side of a vertical perforation (a notch at its
    top and its bottom), the show in the middle, and at the far end when its sale starts, a small clock and «یادم بنداز» */
-.ptk-grid { --pc: 2; display: grid; grid-template-columns: repeat(var(--pc), minmax(0, 1fr)); gap: var(--cg); }
+.ptk-grid { --pc: 2; display: grid; grid-template-columns: repeat(var(--pc), minmax(0, 1fr)); gap: var(--cg, calc(var(--u) * 1.05)); }
 @media (max-width: 999px) { .ptk-grid { --pc: 1; } }
 .ptk { --nr: calc(var(--u) * .5); --pw: clamp(66px, calc(var(--u) * 5.4), 100px); --art: none; --tk-c: var(--accent-l); position: relative; display: grid; grid-template-columns: var(--pw) minmax(0, 1fr) auto; align-items: stretch; border-radius: var(--r); overflow: hidden; isolation: isolate; background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo)); color: rgb(var(--fg)); transition: transform .6s var(--ease), filter .5s; -webkit-tap-highlight-color: transparent;
   -webkit-mask: radial-gradient(circle var(--nr) at calc(100% - var(--pw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--pw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
@@ -926,17 +999,26 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-crumb b { font-weight: var(--fwm); color: rgba(var(--fg), .8); }
 .evp-crumb a:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; border-radius: 4px; }
 
-/* the four steps of a purchase; a bar under the one you are on */
-.steps { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; padding: 0 calc(var(--u) * .6); list-style: none; border-radius: calc(var(--r) * 1.1); overflow: hidden; }
-.steps li { display: flex; align-items: center; justify-content: center; gap: .65em; height: max(52px, calc(var(--u) * 3.3)); font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgba(var(--fg), max(.5, var(--dmin))); white-space: nowrap; }
-.steps li[aria-current] { color: rgb(var(--fg)); }
-.steps .n { display: grid; place-items: center; width: 1.9em; aspect-ratio: 1; border-radius: 50%; font-size: .9em; font-weight: var(--fwb); background: rgba(var(--fg), .08); color: rgba(var(--fg), .7); }
-.steps li[aria-current] .n { background: rgb(var(--fg)); color: var(--capsule); }
-.steps .bar { position: absolute; bottom: 0; right: calc(var(--u) * .6); width: calc((100% - var(--u) * 1.2) / 4); height: 3px; border-radius: 3px 3px 0 0; background: linear-gradient(to left, var(--sc), var(--ring)); transform: translateX(40%) scaleX(.2); opacity: 0; transition: transform .9s var(--ease) .15s, opacity .5s .15s; }
-.steps .bar.is-in { transform: none; opacity: 1; }
+/* the four steps of a purchase: a slim line of dots beside the breadcrumb (the one you are on is filled, the ones done are green and take you back) */
+.evp-toprow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: calc(var(--u) * .5) calc(var(--u) * 1.8); padding-inline: calc(var(--u) * .3); }
+.evp-toprow .evp-crumb { padding-inline: 0; }
+/* the path never wraps on a desktop (the title of the show is cut with «…» instead): with the web font not loaded yet it was wider, wrapped, and the whole page moved up when the font came */
+@media (min-width: 761px) {
+  .evp-toprow .evp-crumb { flex: 1 1 280px; min-width: 0; flex-wrap: nowrap; overflow: hidden; }
+  .evp-toprow .evp-crumb > * { flex: none; }
+  .evp-toprow .evp-crumb > b { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+.steps { display: flex; align-items: center; margin: 0; padding: 0; list-style: none; }
+.steps li { display: flex; align-items: center; gap: .5em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), max(.58, var(--dmin))); white-space: nowrap; }
+.steps li + li::before { content: ""; flex: none; width: clamp(12px, calc(var(--u) * 1.9), 36px); height: 2px; margin-inline: .65em; border-radius: 2px; background: rgba(var(--fg), .18); }
+.steps li.is-done + li::before { background: linear-gradient(to left, #22c55e, color-mix(in oklab, #22c55e 40%, rgba(var(--fg), .18))); }
+.steps li[aria-current] { color: rgb(var(--fg)); font-weight: var(--fwb); }
+.steps .n { display: grid; place-items: center; width: 1.9em; aspect-ratio: 1; border-radius: 50%; font-size: .92em; font-weight: var(--fwb); background: rgba(var(--fg), .09); color: rgba(var(--fg), .74); }
+.steps li[aria-current] .n { background: rgb(var(--fg)); color: var(--capsule); box-shadow: 0 0 0 4px rgba(var(--fg), .12); }
+.steps .bar { display: none; }
 
 /* the cover: the banner (or the poster, softened) behind, a few motes in its light, the poster standing on it, the name */
-.evp-cover { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: calc(var(--u) * 2); min-height: clamp(300px, calc(var(--u) * 21), 470px); padding: calc(var(--u) * 2) calc(var(--u) * 2.4); overflow: hidden; color: #fff; --fg: 255, 255, 255; background: #0c0b11; border-radius: calc(var(--r) * 1.15); }
+.evp-cover { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: calc(var(--u) * 1.6); min-height: clamp(190px, calc(var(--u) * 12.5), 270px); padding: calc(var(--u) * 1.5) calc(var(--u) * 2); overflow: hidden; color: #fff; --fg: 255, 255, 255; background: #0c0b11; border-radius: calc(var(--r) * 1.3); }
 .evp-bg { position: absolute; inset: 0; z-index: -2; background: var(--art) center / cover no-repeat; transform: scale(1.06); filter: saturate(1.1); animation: evp-drift 24s ease-in-out infinite alternate; }
 .evp-cover.is-soft .evp-bg { inset: -60px; filter: blur(34px) saturate(1.35) brightness(.78); }
 .evp-cover::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to left, rgba(8, 8, 12, .86) 0%, rgba(8, 8, 12, .58) 38%, rgba(8, 8, 12, .2) 70%, rgba(8, 8, 12, .5) 100%), linear-gradient(to top, rgba(8, 8, 12, .72), transparent 55%); }
@@ -944,9 +1026,11 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-motes { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
 .evp-motes i { position: absolute; bottom: -10px; left: calc(8% + var(--m) * 9%); width: calc(3px + var(--m) * .3px); aspect-ratio: 1; border-radius: 50%; background: rgba(255, 255, 255, .7); box-shadow: 0 0 8px rgba(255, 255, 255, .6); opacity: 0; animation: mote calc(9s + var(--m) * 1.3s) linear infinite; animation-delay: calc(var(--m) * -1.7s); }
 @keyframes mote { 0% { transform: translate(0, 0); opacity: 0; } 12% { opacity: .75; } 80% { opacity: .5; } 100% { transform: translate(calc(var(--u) * 2), calc(var(--u) * -20)); opacity: 0; } }
-.evp-poster { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; width: clamp(150px, calc(var(--u) * 13.2), 300px); aspect-ratio: 2 / 3; border-radius: calc(var(--r) * .7); overflow: hidden; background: var(--pa) center / cover no-repeat; box-shadow: 0 30px 60px -22px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .14); transform: perspective(900px) rotateY(-7deg) rotate(1.2deg); transition: transform .9s var(--ease); }
+.evp-poster { grid-column: 2; grid-row: 1 / span 2; align-self: center; margin: 0; height: clamp(126px, calc(var(--u) * 10.5), 210px); aspect-ratio: var(--ps, .75); border-radius: calc(var(--r) * .8); overflow: hidden; background: var(--pa) center / cover no-repeat; box-shadow: 0 24px 46px -20px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .16); transform: perspective(900px) rotateY(-7deg) rotate(1.2deg); transition: transform .9s var(--ease); }
 .evp-poster:hover { transform: perspective(900px) rotateY(0) rotate(0); }
-.evp-poster img { width: 100%; height: 100%; object-fit: contain; background: rgba(12, 11, 17, .55); backdrop-filter: none; }
+.evp-poster img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.evp-cover.no-poster { grid-template-columns: minmax(0, 1fr); }
+.evp-cover.no-poster .evp-title { grid-row: 1; }
 .evp-title { grid-column: 1; grid-row: 2; display: grid; gap: calc(var(--u) * .45); min-width: 0; padding-bottom: calc(var(--u) * .3); }
 .evp-kind { display: flex; flex-wrap: wrap; align-items: center; gap: .55em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
 .evp-kind > span { display: inline-flex; align-items: center; gap: .45em; padding: .28em .9em; border-radius: var(--rg); background: rgba(255, 255, 255, .14); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); font-weight: var(--fwm); }
@@ -954,7 +1038,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 :root[data-theme] .evp-kind .st { color: rgb(var(--st-d)); }
 .evp-kind .st { color: rgb(var(--st-d)); background: rgba(var(--st), .2); box-shadow: inset 0 0 0 1px rgba(var(--st), .6); }
 .evp-badge { font-style: normal; font-weight: var(--fwb); padding: .2em .8em; border-radius: var(--rg); background: var(--ring); color: var(--on-accent); }
-.evp-title h1 { margin: 0; font-size: calc(max(26px, calc(var(--u) * 2.35)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; text-wrap: balance; text-shadow: 0 2px 22px rgba(0, 0, 0, .35); }
+.evp-title h1 { margin: 0; font-size: calc(max(24px, calc(var(--u) * 2.1)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; text-wrap: balance; text-shadow: 0 2px 22px rgba(0, 0, 0, .35); }
 .evp-title h1 .w { display: inline-block; }
 .evp-title p { display: flex; flex-wrap: wrap; align-items: center; gap: .45em .6em; margin: 0; font-size: calc(max(13px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); color: rgba(255, 255, 255, .86); }
 .evp-title p svg.i { width: 1.25em; height: 1.25em; opacity: .85; }
@@ -967,11 +1051,25 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .ev-ic:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
 /* the body: the facts, the map, what it is and the prices on one side; the sessions on the other (they follow the page) */
-.evp-cols { display: grid; grid-template-columns: minmax(0, 1fr) clamp(360px, calc(var(--u) * 28), 560px); gap: var(--gap); align-items: start; }
+.evp-cols { display: grid; grid-template-columns: minmax(0, 1fr) clamp(380px, calc(var(--u) * 30), 540px); gap: var(--gap); align-items: start; }
 .evp-main { display: grid; gap: var(--gap); min-width: 0; }
 .evp-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); min-width: 0; }
-.evp-main > .panel, .evp-side > .panel, .evp-more { border-radius: calc(var(--r) * 1.15); }
-.evp-facts { display: grid; grid-template-columns: 1fr 1fr; gap: calc(var(--u) * 1) calc(var(--u) * 1.6); padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5); }
+.evp-main > .panel, .evp-side > .panel, .evp-more { border-radius: calc(var(--r) * 1.3); }
+/* the information: three tabs (about, the place, the prices) in one panel; one is open at a time */
+.evp-info { padding: 0; overflow: hidden; }
+.evp-tabs { display: flex; gap: calc(var(--u) * .2); padding: calc(var(--u) * .5) calc(var(--u) * .8) 0; border-bottom: 1px solid rgba(var(--fg), .1); overflow-x: auto; scrollbar-width: none; }
+.evp-tabs::-webkit-scrollbar { display: none; }
+.evp-tabs [role="tab"] { all: unset; box-sizing: border-box; position: relative; cursor: pointer; display: inline-flex; align-items: center; gap: .55em; flex: none; padding: .85em 1.15em; border-radius: 12px 12px 0 0; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgba(var(--fg), max(.64, var(--dmin))); white-space: nowrap; transition: color .3s, background-color .3s; }
+.evp-tabs [role="tab"]:hover { color: rgb(var(--fg)); background: rgba(var(--fg), .05); }
+.evp-tabs [role="tab"][aria-selected="true"] { color: rgb(var(--fg)); font-weight: var(--fwb); }
+.evp-tabs [role="tab"]::after { content: ""; position: absolute; inset: auto .9em 0; height: 3px; border-radius: 3px 3px 0 0; background: var(--sc); transform: scaleX(0); transition: transform .5s var(--ease); }
+.evp-tabs [role="tab"][aria-selected="true"]::after { transform: scaleX(1); }
+.evp-tabs [role="tab"] svg.i { width: 1.25em; height: 1.25em; color: var(--sc); }
+.evp-tabs [role="tab"]:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
+.evp-tabp { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.5); animation: tabp-in .55s var(--ease) both; }
+.evp-tabp[hidden] { display: none; }
+@keyframes tabp-in { from { opacity: 0; transform: translateY(8px); } }
+.evp-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: calc(var(--u) * .9) calc(var(--u) * 1.4); margin-bottom: calc(var(--u) * 1.1); padding-bottom: calc(var(--u) * 1.1); border-bottom: 1px dashed rgba(var(--fg), .16); }
 .fact { display: flex; align-items: center; gap: calc(var(--u) * .75); min-width: 0; }
 .fact.wide { grid-column: 1 / -1; }
 .fi { flex: none; display: grid; place-items: center; width: max(42px, calc(var(--u) * 2.6)); aspect-ratio: 1; border-radius: calc(var(--r) * .6); color: var(--sc); background: color-mix(in oklab, var(--sc) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 32%, transparent); }
@@ -1006,7 +1104,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .mp-zoom button:focus-visible, .mp-route:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
 
 /* what the show is: its people as tags (as in the sample), a line in its colour, the words */
-.evp-about, .evp-plan, .evp-book, .evp-more { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
+.evp-more, .evp-prices { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
 .evp-main h2, .evp-side h2, .evp-more h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
 .evp-main h2 svg.i, .evp-side h2 svg.i, .evp-more h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc); }
 .evp-main h2 small, .evp-side h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), max(.6, var(--dmin))); }
@@ -1015,45 +1113,55 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-tags small { font-size: .82em; font-weight: var(--fwm); opacity: .85; }
 .evp-line { margin: 0 0 .4em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); color: var(--t-bad); }
 :root[data-mode="dark"] .evp-line { color: #fb7185; }
-.evp-about p:last-child { margin: 0; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); line-height: 2.1; color: rgba(var(--fg), .8); }
+.evp-text { margin: 0; max-width: 72ch; font-size: calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)); line-height: 2.1; color: rgba(var(--fg), .84); }
+.evp-main .evp-info-h { margin: 0; padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) 0; }
 
 /* the price plan: each run of rows with the colour of its tier, its price, and a bar for how dear it is */
-.evp-plan ul { display: grid; gap: calc(var(--u) * .35); margin: 0; padding: 0; list-style: none; }
-.evp-plan li { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8em; padding: .7em 1em; border-radius: calc(var(--r) * .55); background: rgba(var(--fg), .035); overflow: hidden; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); }
+.evp-plan { display: grid; gap: calc(var(--u) * .4); margin: 0; padding: 0; list-style: none; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); }
+.evp-plan li { position: relative; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .8em; padding: .8em 1.1em; border-radius: calc(var(--r) * .65); background: rgba(var(--fg), .04); overflow: hidden; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); }
 .evp-plan li > i { width: .7em; aspect-ratio: 1; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 25%, transparent); }
 .evp-plan li b { font-weight: var(--fwb); white-space: nowrap; }
 .evp-plan li small { font-weight: 400; opacity: max(.7, var(--omin)); font-size: .85em; }
 .evp-plan li em { position: absolute; inset-block: 0; right: 0; width: calc(var(--w) * 100%); background: linear-gradient(to left, color-mix(in oklab, var(--c) 14%, transparent), transparent); pointer-events: none; z-index: -1; }
 .evp-plan li { isolation: isolate; }
 
-/* the sessions: small tickets (a dark stub with the day, a perforation, the seats left and the buy button); the rules first */
-.evp-book { position: relative; }
+/* the buy panel: the rules (a large clear line), the nights as big cards (the first with seats is chosen already), how many, and two ways on */
+.evp-book { position: relative; display: grid; gap: calc(var(--u) * .9); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.5) calc(var(--u) * 1.5); }
+.evp-book > h2 { margin: 0; }
 .evp-book.is-flash { animation: book-flash 1.4s var(--ease); }
 @keyframes book-flash { 0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--sc) 70%, transparent); } 40% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--sc) 35%, transparent); } 100% { box-shadow: 0 0 0 0 transparent; } }
-.evp-sale { display: grid; gap: .5em; margin-bottom: calc(var(--u) * .9); padding: calc(var(--u) * .9) calc(var(--u) * 1); border-radius: calc(var(--r) * .7); color: #fff; --fg: 255, 255, 255; background: linear-gradient(135deg, #0c4a6e, #1e1b4b) #0c4a6e; box-shadow: inset 0 0 0 1px rgba(56, 189, 248, .35); font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.evp-sale { display: grid; gap: .5em; padding: calc(var(--u) * .9) calc(var(--u) * 1); border-radius: calc(var(--r) * .8); color: #fff; --fg: 255, 255, 255; background: linear-gradient(135deg, #0c4a6e, #1e1b4b) #0c4a6e; box-shadow: inset 0 0 0 1px rgba(56, 189, 248, .35); font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
 .evp-sale .cd-b { justify-content: flex-start; }
-.evp-rules { position: relative; display: flex; align-items: flex-start; gap: .7em; margin-bottom: calc(var(--u) * .9); padding: .8em 1em; border-radius: calc(var(--r) * .6); cursor: pointer; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); line-height: 1.9; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); transition: background-color .3s, box-shadow .3s; }
+.evp-rules { position: relative; display: flex; align-items: center; gap: .9em; padding: .95em 1.1em; border-radius: calc(var(--r) * .9); cursor: pointer; font-size: calc(max(14.5px, calc(var(--u) * .92)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); line-height: 1.85; background: color-mix(in oklab, var(--sc) 9%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--sc) 52%, transparent); transition: background-color .3s, box-shadow .3s; }
 .evp-rules input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.evp-rules .box { flex: none; display: grid; place-items: center; width: 1.45em; aspect-ratio: 1; margin-top: .25em; border-radius: .4em; box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .45); color: transparent; transition: background-color .3s, color .3s, box-shadow .3s, transform .4s var(--ease); }
-.evp-rules .box svg.i { width: 75%; height: 75%; stroke-width: 3; }
-.evp-rules.is-on { background: color-mix(in oklab, #22c55e 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, #22c55e 45%, transparent); }
-.evp-rules.is-on .box { background: #22c55e; box-shadow: none; color: #fff; transform: scale(1.06); }
+.evp-rules .box { flex: none; display: grid; place-items: center; width: 2.15em; aspect-ratio: 1; border-radius: .66em; box-shadow: inset 0 0 0 2px rgba(var(--fg), .55); color: transparent; transition: background-color .3s, color .3s, box-shadow .3s, transform .4s var(--ease); }
+.evp-rules:not(.is-on) .box { animation: box-nudge 3.4s ease-in-out 1.2s infinite; }
+@keyframes box-nudge { 0%, 72%, 100% { transform: none; } 82% { transform: scale(1.14); } 91% { transform: scale(.96); } }
+.evp-rules .box svg.i { width: 72%; height: 72%; stroke-width: 3; }
+.evp-rules.is-on { background: color-mix(in oklab, #22c55e 10%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, #22c55e 55%, transparent); }
+.evp-rules.is-on .box { background: #22c55e; box-shadow: none; color: #fff; transform: scale(1.04); }
 .evp-rules input:focus-visible + .box { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
-.evp-rules a { color: var(--sc); font-weight: var(--fwb); text-decoration: none; }
-.evp-rules a:hover { text-decoration: underline; text-underline-offset: .25em; }
+.evp-rules a { color: var(--sc); font-weight: var(--fwb); text-decoration: underline; text-underline-offset: .25em; text-decoration-thickness: 1.5px; }
 .evp-rules.is-shake { animation: shake .55s cubic-bezier(.36, .07, .19, .97); box-shadow: inset 0 0 0 1.5px #f43f5e; }
 @keyframes shake { 15%, 85% { transform: translateX(-2px); } 30%, 70% { transform: translateX(4px); } 45%, 55% { transform: translateX(-6px); } }
-.ses-list { display: grid; gap: calc(var(--u) * .45); max-height: min(60vh, calc(var(--u) * 30)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 2px; margin: -2px; }
-.ses { --nr: 7px; display: grid; grid-template-columns: max(84px, calc(var(--u) * 5.2)) minmax(0, 1fr) auto; align-items: center; gap: 0 calc(var(--u) * .8); padding-inline-end: calc(var(--u) * .65); border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); overflow: hidden; animation: ses-in .7s var(--ease) both; animation-delay: var(--d, 0s);
-  -webkit-mask: radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
-  mask: radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - max(84px, calc(var(--u) * 5.2))) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat; }
+.ses-list { display: grid; gap: calc(var(--u) * .5); max-height: min(44vh, calc(var(--u) * 24)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 3px; margin: -3px; }
+.ses { --sw: max(78px, calc(var(--u) * 4.9)); --nr: 8px; position: relative; display: grid; grid-template-columns: var(--sw) minmax(0, 1fr) auto; align-items: center; gap: 0 calc(var(--u) * .9); padding-inline-end: calc(var(--u) * .95); min-height: max(74px, calc(var(--u) * 4.7)); border-radius: calc(var(--r) * .8); background: rgba(var(--fg), .045); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .15); overflow: hidden; cursor: pointer; animation: ses-in .7s var(--ease) both; animation-delay: var(--d, 0s); transition: background-color .3s, box-shadow .3s;
+  -webkit-mask: radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat; }
 @keyframes ses-in { from { opacity: 0; transform: translateY(10px); } }
-.ses.is-picked { box-shadow: inset 0 0 0 2px var(--sc); background: color-mix(in oklab, var(--sc) 8%, transparent); }
-.ses-stub { display: grid; justify-items: center; align-content: center; gap: .05em; align-self: stretch; padding: .65em .4em; color: #fff; background: linear-gradient(160deg, #2b2440, #121019); line-height: 1.5; }
-.ses-stub b { font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
-.ses-stub span { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); opacity: .86; }
-.ses-stub i { margin-top: .15em; padding: 0 .55em; border-radius: 999px; font-style: normal; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); background: rgba(255, 255, 255, .14); font-variant-numeric: tabular-nums; }
-.ses-body { display: grid; gap: .3em; min-width: 0; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.ses:hover:not([aria-disabled="true"]) { background: rgba(var(--fg), .08); }
+.ses.is-picked { box-shadow: inset 0 0 0 2.5px var(--sc); background: color-mix(in oklab, var(--sc) 12%, transparent); }
+.ses[aria-disabled="true"] { cursor: not-allowed; }
+.ses[aria-disabled="true"] .ses-body, .ses[aria-disabled="true"] .ses-radio { opacity: .72; }
+.ses:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -5px; }
+.ses-stub { display: grid; justify-items: center; align-content: center; gap: .02em; align-self: stretch; padding: .6em .4em; color: #fff; background: #1c1828; line-height: 1.35; }   /* (one colour, so a checker can read the white on it) */
+.ses-stub > * { background: #1c1828; }   /* (the same colour under each word: a checker never has to guess the ground) */
+.ses-stub b { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); opacity: .92; }
+.ses-stub strong { font-size: calc(max(25px, calc(var(--u) * 1.75)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ses-stub span { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); opacity: .92; }
+.ses-body { display: grid; gap: .4em; min-width: 0; padding-block: .75em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.ses-time { display: inline-flex; align-items: center; gap: .45em; font-size: calc(max(15px, calc(var(--u) * .96)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.ses-time svg.i { width: 1.15em; height: 1.15em; color: var(--sc); }
 .ses-st { display: inline-flex; align-items: center; gap: .4em; font-weight: var(--fwb); }
 .ses-st svg.i { width: 1.25em; height: 1.25em; padding: .12em; border-radius: 50%; color: #fff; stroke-width: 2.6; }
 .ses[data-st="ok"] .ses-st { color: #16a34a; } .ses[data-st="ok"] .ses-st svg.i { background: #22c55e; }
@@ -1062,24 +1170,39 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 :root[data-mode="dark"] .ses[data-st="ok"] .ses-st { color: #4ade80; } :root[data-mode="dark"] .ses[data-st="low"] .ses-st { color: #fbbf24; }
 .ses-cap { display: inline-flex; align-items: center; gap: .5em; color: rgba(var(--fg), max(.62, var(--dmin))); }
 .ses-cap svg.i { width: 1.25em; height: 1.25em; }
-.ses-cap i { position: relative; width: min(100%, 7em); height: 5px; border-radius: 5px; background: rgba(var(--fg), .12); overflow: hidden; }
+.ses-cap i { position: relative; width: min(100%, 8em); height: 5px; border-radius: 5px; background: rgba(var(--fg), .13); overflow: hidden; }
 .ses-cap i::after { content: ""; position: absolute; inset-block: 0; right: 0; width: calc(var(--v) * 100%); border-radius: inherit; background: linear-gradient(to left, #22c55e, #84cc16); }
 .ses[data-st="low"] .ses-cap i::after { background: linear-gradient(to left, #f59e0b, #f97316); }
-.ses-buy { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: .45em; height: max(38px, calc(var(--u) * 2.4)); padding-inline: 1.1em; border-radius: var(--rb); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); white-space: nowrap; background: rgb(var(--fg)); color: var(--capsule); transition: transform .4s var(--ease), opacity .3s, filter .3s; }
-.ses-buy svg.i { width: 1.3em; height: 1.3em; }
-.ses-buy:hover { transform: translateY(-1px); }
-.ses-buy:active { transform: scale(.97); }
-.ses-buy[aria-disabled="true"] { opacity: .45; }
-.ses-buy:disabled { cursor: default; opacity: 1; background: rgba(var(--fg), .08); color: rgba(var(--fg), max(.55, var(--dmin))); }
-.ses-buy:disabled:hover { transform: none; }
-.ses-buy:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.ses-radio { display: grid; place-items: center; width: 2em; aspect-ratio: 1; border-radius: 50%; color: transparent; box-shadow: inset 0 0 0 2px rgba(var(--fg), .42); transition: background-color .3s, color .3s, box-shadow .3s, transform .5s var(--ease); }
+.ses-radio svg.i { width: 62%; height: 62%; stroke-width: 3.2; }
+.ses.is-picked .ses-radio { background: var(--sc); box-shadow: none; color: var(--capsule); transform: scale(1.06); }
 .ses-none { margin: 0; padding: 1em; text-align: center; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); }
-.evp-note { display: flex; align-items: center; gap: .55em; margin: calc(var(--u) * .9) 0 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.62, var(--dmin))); }
-.evp-note svg.i { width: 1.3em; height: 1.3em; color: var(--sc); }
+/* how many, and the two ways on: the best seats (held at once) or the map */
+.evp-act { display: grid; gap: calc(var(--u) * .6); }
+.evp-qty { display: flex; flex-wrap: wrap; align-items: center; gap: calc(var(--u) * .5) calc(var(--u) * .8); font-size: calc(max(14px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); }
+.qty-st { display: inline-flex; align-items: center; gap: .15em; padding: .2em; border-radius: var(--rb); background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)); }
+.qty-st button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: max(40px, calc(var(--u) * 2.5)); aspect-ratio: 1; border-radius: 50%; color: rgb(var(--fg)); background: rgba(var(--fg), .09); transition: background-color .3s, transform .4s var(--ease), opacity .3s; }
+.qty-st button:hover:not(:disabled) { background: rgba(var(--fg), .17); }
+.qty-st button:active:not(:disabled) { transform: scale(.92); }
+.qty-st button:disabled { opacity: .35; cursor: default; }
+.qty-st button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.qty-st svg.i { width: 46%; height: 46%; }
+.qty-st output { min-width: 2.2ch; text-align: center; font-size: calc(max(19px, calc(var(--u) * 1.25)) * var(--tx) * var(--tx-main)); font-weight: 900; font-variant-numeric: tabular-nums; }
+.evp-est { margin-inline-start: auto; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: rgba(var(--fg), max(.68, var(--dmin))); }
+.evp-go { width: 100%; height: max(54px, calc(var(--u) * 3.5)); gap: .6em; font-size: calc(max(15.5px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); }
+.evp-go svg.i { width: 1.3em; height: 1.3em; }
+.evp-go2 { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: .55em; width: 100%; height: max(46px, calc(var(--u) * 3)); border-radius: var(--rb); font-size: calc(max(14px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)); font-weight: var(--fwm); color: rgb(var(--fg)); background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), max(.3, var(--bt-line-a))); transition: background-color .3s, transform .4s var(--ease); }
+.evp-go2:hover { background: rgba(var(--fg), .1); transform: translateY(-1px); }
+.evp-go2:active { transform: scale(.985); }
+.evp-go2:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.evp-go2 svg.i { width: 1.25em; height: 1.25em; }
+.evp-note { display: flex; align-items: flex-start; gap: .55em; margin: 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), max(.64, var(--dmin))); }
+.evp-note svg.i { flex: none; width: 1.3em; height: 1.3em; margin-top: .2em; color: var(--sc); }
 .evp-note b { color: rgb(var(--fg)); font-weight: var(--fwb); }
-.evp-more .tkt-grid { --cols: 6; }
-@media (max-width: 1499px) { .evp-more .tkt-grid { --cols: 5; } }
-@media (max-width: 1249px) { .evp-more .tkt-grid { --cols: 4; } }
+.evp-more .tkt-grid { --cols: 5; }
+.evp-more .tkt-grid > :nth-child(n+6) { display: none; }   /* one row: as many as there are columns */
+@media (min-width: 1700px) { .evp-more .tkt-grid { --cols: 6; } .evp-more .tkt-grid > :nth-child(6) { display: block; } }
+@media (max-width: 1199px) { .evp-more .tkt-grid { --cols: 4; } .evp-more .tkt-grid > :nth-child(5) { display: none; } }
 .evp-ft { margin-top: calc(var(--gap) * 1.5); }
 
 /* the rules' window */
@@ -1087,40 +1210,47 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-dlg { width: min(640px, 100%); max-height: min(86vh, 760px); overflow: auto; padding: calc(var(--u) * 1.5) calc(var(--u) * 1.7); border-radius: calc(var(--r) * 1.15); }
 .evp-dlg h2 { display: flex; align-items: center; gap: .5em; margin: 0 0 .8em; font-size: calc(max(17px, calc(var(--u) * 1.1)) * var(--tx) * var(--tx-main)); }
 .evp-dlg h2 svg.i { width: 1.25em; height: 1.25em; color: var(--ring); }
-.evp-dlg ol { display: grid; gap: .55em; margin: 0; padding-inline-start: 1.4em; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); line-height: 2; color: rgba(var(--fg), .86); }
+.evp-dlg ol { display: grid; gap: .55em; margin: 0; padding-inline-start: 1.4em; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); line-height: 2; color: rgba(var(--fg), .86); list-style-type: persian; }
 .evp-dlg-end { display: flex; flex-wrap: wrap; align-items: center; gap: .8em; margin-top: 1.2em; }
 .evp-dlg .buy { gap: .5em; background: #22c55e; color: #052e16; box-shadow: none; }
 
 /* on a phone (or a tall window): one column; the sessions after the facts, and a bar at the bottom that takes you to them */
 .evp-cta { display: none; }
 @media (max-width: 1099px), (max-aspect-ratio: 5/4) {
-  .evp-cols { grid-template-columns: minmax(0, 1fr); }
+  .evp-cols { display: flex; flex-direction: column; align-items: stretch; }
   .evp-side { position: static; order: -1; }
   .evp-main { display: contents; }
-  .evp-cols { display: flex; flex-direction: column; align-items: stretch; }
-  .evp-facts { order: -3; }
-  .evp-side { order: -2; }
 }
+.evp-cta { transition: transform .5s var(--ease), opacity .3s; }
+.evp-cta.is-hide { transform: translateY(170%); opacity: 0; pointer-events: none; }
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
-  .evp-in { padding: calc(var(--pad-t) + var(--nav-h) + 18px) 10px 96px; }
-  .steps { padding: 0 4px; }
-  .steps li { flex-direction: column; gap: 2px; height: 58px; font-size: 11px; }
-  .steps .bar { right: 4px; width: calc((100% - 8px) / 4); }
-  .evp-cover { grid-template-columns: 1fr; justify-items: start; min-height: 0; padding: 18px; gap: 16px; }
-  .evp-poster { grid-column: 1; grid-row: 1; width: 132px; }
-  .evp-tools { right: auto; left: 14px; top: 14px; }
-  .evp-title { grid-row: 2; }
-  .evp-title h1 { font-size: 24px; }
-  .evp-facts { grid-template-columns: 1fr; padding: 16px; }
-  .evp-about, .evp-plan, .evp-book, .evp-more { padding: 16px; }
+  .evp-in { padding: calc(var(--pad-t) + var(--nav-h) + 14px) 10px 96px; }
+  .evp-toprow { gap: 8px 12px; }
+  .steps li:not([aria-current]) .t { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }   /* (named for a reader, not seen) */
+  .steps li + li::before { width: 16px; margin-inline: .4em; }
+  .evp-cover { grid-template-columns: auto minmax(0, 1fr); align-items: center; min-height: 0; padding: 54px 14px 14px; gap: 14px; }
+  .evp-poster { grid-column: 1; grid-row: 1; width: 92px; height: auto; }
+  .evp-tools { right: auto; left: 10px; top: 10px; }
+  .evp-title { grid-column: 2; grid-row: 1; }
+  .evp-title h1 { font-size: 21px; }
+  .evp-cover.no-poster { grid-template-columns: minmax(0, 1fr); }
+  .evp-cover.no-poster .evp-title { grid-column: 1; }
+  .evp-tabp { padding: 16px; }
+  .evp-facts { grid-template-columns: 1fr; }
+  .evp-book, .evp-more, .evp-prices { padding: 16px; }
   .evp-more .tkt-grid { --cols: 2; }
   .ses-list { max-height: none; }
-  .evp-cta { position: fixed; z-index: 35; inset-inline: 10px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; padding-inline: 16px 8px; border-radius: var(--rb); background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 18px 40px -14px rgba(0, 0, 0, calc(.9 * var(--shk) + .1)), inset 0 0 0 1px rgba(var(--fg), .14); font-size: 13px; }
+  .evp-cta { position: fixed; z-index: 35; inset-inline: 10px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; padding-inline: 16px 8px; border-radius: var(--rb); background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)); }
   .evp-cta b { font-weight: var(--fwb); }
   .evp-cta .buy { height: 44px; min-width: 0; padding-inline: 18px; gap: .45em; }
   .is-page .totop { bottom: 78px; }
 }
-@media (prefers-reduced-motion: reduce) { .evp-bg, .evp-motes i, .mp-pin svg, .mp-pin i, .ses, .evp-book.is-flash, .evp-rules.is-shake { animation: none !important; } .steps .bar, .mp, .evp-poster { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .evp-bg, .evp-motes i, .mp-pin svg, .mp-pin i, .ses, .evp-book.is-flash, .evp-rules.is-shake, .evp-rules .box, .evp-tabp { animation: none !important; } .mp, .evp-poster, .evp-cta, .evp-tabs [role="tab"]::after { transition: none; } }
+
+/* the map inside a tab: the tab is the panel */
+.evp-tabp .evp-map.is-tab { background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: 0; }
+.evp-tabp .evp-map.is-tab .lm-view { border-radius: calc(var(--r) * .9); }
+.evp-tabp .evp-map.is-tab .lm-bar { padding: 14px 2px 0; }
 
 /* the map block of a hall that has a position (hallslib.js: locBlockHTML): the map's tiles when the network gives them, a drawn backdrop
    before and without them; the pin is at the exact point either way. A hall with no position has no block at all. */
@@ -1144,16 +1274,18 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 @media (max-width: 760px) { .lm-bar { padding: 10px 12px 12px; } .lm-view { height: clamp(180px, 28svh, 260px); } }
 
 /* ── steps 2–4 of a purchase: the seats, the booking and payment, the tickets (buy.js); the same panels and themes ── */
-.steps li a { display: inline-flex; align-items: center; gap: .65em; color: inherit; text-decoration: none; }
+.steps li a { display: inline-flex; align-items: center; gap: .5em; color: inherit; text-decoration: none; }
 .steps li a:hover { color: rgb(var(--fg)); }
-.steps li.is-done { color: rgba(var(--fg), .78); }
+.steps li.is-done { color: rgba(var(--fg), .8); }
 .steps li.is-done .n { background: #22c55e; color: #fff; }
 .steps li.is-done .n svg.i { width: 62%; height: 62%; stroke-width: 3; }
-.steps .bar { right: calc(var(--u) * .6 + (100% - var(--u) * 1.2) / 4 * var(--cur, 0)); }
+
 .bk .evp-crumb a:first-child { font-weight: var(--fwm); }
 
 /* the show and the session, the price filter */
-.bk-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--gap); }
+.bk-head { display: flex; flex-wrap: wrap; align-items: center; gap: calc(var(--u) * .6) calc(var(--u) * 1.1); padding: calc(var(--u) * .65) calc(var(--u) * .95); border-radius: calc(var(--r) * 1.3); min-width: 0; }
+.bk-head .bk-what { flex: 1 1 220px; }
+.bk-head .bk-filter { margin-inline-start: auto; }
 .bk-showline { display: flex; align-items: center; gap: calc(var(--u) * .8); padding: calc(var(--u) * .7) calc(var(--u) * .9); border-radius: calc(var(--r) * 1.1); min-width: 0; }
 .bk-showline.in { padding: 0 0 calc(var(--u) * .9); margin-bottom: calc(var(--u) * .9); border-bottom: 1px solid rgba(var(--fg), .1); background: none; border-radius: 0; box-shadow: none; border-inline: 0; border-top: 0; }
 .bk-poster { flex: none; margin: 0; width: max(46px, calc(var(--u) * 3)); aspect-ratio: 2 / 3; border-radius: calc(var(--rt) * 1.1); overflow: hidden; background: #14121d; box-shadow: 0 6px 16px -8px rgba(0, 0, 0, .7); }
@@ -1169,7 +1301,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .bk-ses em { display: inline-flex; align-items: center; gap: .3em; font-style: normal; color: var(--sc); font-weight: var(--fwm); }
 .bk-ses em svg.i { width: 1em; height: 1em; }
 .bk-ses:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
-.bk-filter { display: flex; align-items: center; gap: calc(var(--u) * .7); padding: calc(var(--u) * .7) calc(var(--u) * .9); border-radius: calc(var(--r) * 1.1); min-width: 0; }
+.bk-filter { display: flex; flex-wrap: wrap; align-items: center; gap: calc(var(--u) * .5) calc(var(--u) * .7); min-width: 0; }
 .bk-fl { flex: none; display: inline-flex; align-items: center; gap: .45em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwb); }
 .bk-fl svg.i { width: 1.3em; height: 1.3em; color: var(--sc); }
 .bk-chips { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .3); min-width: 0; }
@@ -1274,17 +1406,17 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .bk-bar { display: none; }
 
 /* step 3: the hold, the buyer, the way to pay, the invoice */
-.bk-hold { display: flex; align-items: center; gap: calc(var(--u) * .9); padding: calc(var(--u) * .8) calc(var(--u) * 1.2); border-radius: calc(var(--r) * 1.1); background: color-mix(in oklab, var(--capsule) 92%, #f59e0b); }
-.bk-hold > div { display: grid; line-height: 1.8; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
-.bk-hold b { font-size: calc(max(14.5px, calc(var(--u) * .98)) * var(--tx) * var(--tx-main)); color: rgb(var(--fg)); }
+.bk-hold { display: flex; align-items: center; gap: calc(var(--u) * .8); padding: calc(var(--u) * .55) calc(var(--u) * 1.1); border-radius: calc(var(--r) * 1.3); background: color-mix(in oklab, var(--capsule) 92%, #f59e0b); }
+.bk-hold > div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 .9em; line-height: 1.8; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .7); }
+.bk-hold b { font-size: calc(max(14px, calc(var(--u) * .94)) * var(--tx) * var(--tx-main)); color: rgb(var(--fg)); }
 .bk-hold [data-hold] { font-variant-numeric: tabular-nums; color: var(--t-warn); }
-.bk-ring { position: relative; flex: none; display: grid; place-items: center; width: max(46px, calc(var(--u) * 3)); aspect-ratio: 1; color: var(--t-warn); }
+.bk-ring { position: relative; flex: none; display: grid; place-items: center; width: max(38px, calc(var(--u) * 2.4)); aspect-ratio: 1; color: var(--t-warn); }
 .bk-ring svg:not(.i) { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); fill: none; stroke-width: 3; }
 .bk-ring circle { stroke: rgba(var(--fg), .12); }
 .bk-ring .pr { stroke: #f59e0b; stroke-linecap: round; stroke-dasharray: 100px; stroke-dashoffset: calc((1 - var(--p, 1)) * 100px); transition: stroke-dashoffset 1s linear; }
 .bk-ring svg.i { width: 42%; height: 42%; }
-.bk-who, .bk-way { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5); }
-.bk-lead { margin: 0 0 calc(var(--u) * .9); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 2; color: rgba(var(--fg), .72); }
+.bk-who, .bk-way { padding: calc(var(--u) * 1.1) calc(var(--u) * 1.3) calc(var(--u) * 1.2); }
+.bk-lead { margin: 0 0 calc(var(--u) * .7); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 2; color: rgba(var(--fg), .72); }
 .bk-fld { display: grid; gap: .4em; margin-bottom: calc(var(--u) * .8); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
 .bk-fld > span { font-weight: var(--fwm); color: rgba(var(--fg), .8); }
 .bk-fld small { font-weight: 400; color: rgba(var(--fg), max(.55, var(--dmin))); }
@@ -1434,13 +1566,15 @@ a.buy, a.chip { text-decoration: none; }
 .tk-help ul { margin: 0; padding-inline-start: 1.3em; display: grid; gap: .4em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), .76); }
 
 @media (max-width: 1099px), (max-aspect-ratio: 5/4) {
-  .bk-top { grid-template-columns: 1fr; }
   .bk-cols .evp-side { order: 2; }
 }
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
-  .bk-showline { flex-wrap: wrap; }
+  .bk-head { gap: 10px; padding: 12px; }
+  .bk-head .bk-what { flex: 1 1 0; }
   .bk-ses { width: 100%; }
-  .bk-filter { flex-direction: column; align-items: flex-start; }
+  .bk-head .bk-filter { width: 100%; margin-inline-start: 0; flex-wrap: nowrap; }
+  .bk-head .bk-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .bk-head .bk-chips .chip { flex: none; }
   .st-view { height: 62svh; }
   .st-zoom { top: auto; bottom: 64px; left: 12px; }
   .bk-ways { grid-template-columns: 1fr; }
@@ -1479,23 +1613,56 @@ a.buy, a.chip { text-decoration: none; }
   .tk-cd { color: #333; }
 }
 @media (prefers-reduced-motion: reduce) { .seat, .bk-list li, .bk-live > i, .seat.is-pop, .seat.is-live, .tk-check.is-in circle, .tk-check.is-in path, .spin { animation: none !important; transition: none !important; } }
+/* the checkout (round M): a narrow, centred column; the phone and the name side by side; the discount code a link */
+.bk-narrow > :not(.bk-bar) { width: min(100%, 1120px); justify-self: center; }
+.bk-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 0 calc(var(--u) * .9); }
+.bk-who h2 { margin-bottom: calc(var(--u) * .7); }
+.bk-otp.is-ok { padding: .55em 1em; }
+.bk-otp.is-ok > p, .bk-otp.is-ok #bkSend { display: none; }
+.bk-code-t { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .45em; margin-bottom: calc(var(--u) * .6); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: var(--sc); text-decoration: underline dashed; text-underline-offset: .35em; text-decoration-thickness: 1.5px; }
+.bk-code-t svg.i { width: 1.25em; height: 1.25em; }
+.bk-code-t:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; border-radius: 4px; }
+.bk-code-t[aria-expanded="true"] { display: none; }
+.bk-codebox[hidden] { display: none; }
+.bk-bar { transition: transform .5s var(--ease), opacity .3s; }
+.bk-bar.is-hide { transform: translateY(170%); opacity: 0; pointer-events: none; }
+@media (max-width: 760px) { .bk-duo { grid-template-columns: 1fr; } .bk-hold > div { display: grid; } }
+@media (max-width: 1099px), (max-aspect-ratio: 5/4) { .bk-narrow .evp-side { order: 5; } }   /* a phone: the details first, then the invoice and the pay button */
+/* «continue your purchase»: a pill at the foot of the page while a hold runs */
+.resume { position: fixed; z-index: 45; left: 0; right: 0; bottom: max(14px, env(safe-area-inset-bottom)); width: fit-content; max-width: calc(100% - 20px); margin-inline: auto; display: flex; align-items: center; gap: .8em; padding: .45em .5em .45em 1.1em; padding-inline: .5em 1.1em; border-radius: var(--rb); background: var(--capsule); color: rgb(var(--fg)); text-decoration: none; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); box-shadow: 0 16px 36px -12px rgba(0, 0, 0, .65), inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)), 0 0 0 1px color-mix(in oklab, #f59e0b 50%, transparent); opacity: 0; transform: translateY(16px); transition: opacity .5s, transform .7s var(--ease); }
+.resume.is-in { opacity: 1; transform: none; }
+.resume[hidden] { display: none; }
+.resume .rs-ring { flex: none; display: grid; place-items: center; width: 2.4em; aspect-ratio: 1; border-radius: 50%; color: var(--t-warn); box-shadow: inset 0 0 0 2px color-mix(in oklab, #f59e0b 55%, transparent); }
+.resume .rs-ring svg.i { width: 52%; height: 52%; }
+.resume .rs-t { display: grid; min-width: 0; line-height: 1.4; }
+.resume .rs-t b { font-variant-numeric: tabular-nums; font-size: 1.08em; color: var(--t-warn); }
+.resume .rs-t small { font-size: .82em; color: rgba(var(--fg), max(.68, var(--dmin))); white-space: nowrap; }
+.resume .rs-go { flex: none; display: inline-flex; align-items: center; gap: .45em; height: 2.6em; padding-inline: 1em; border-radius: var(--rb); background: rgb(var(--fg)); color: var(--capsule); font-weight: var(--fwb); white-space: nowrap; transition: filter .3s; }
+.resume .rs-go svg.i { width: 1.2em; height: 1.2em; }
+.resume:hover .rs-go { filter: brightness(.9); }
+.resume:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.is-page .resume { bottom: max(14px, env(safe-area-inset-bottom)); }
+@media (max-width: 760px), (max-aspect-ratio: 5/4) { .is-page .resume { bottom: 78px; } .resume { font-size: 12.5px; gap: .6em; } .resume .rs-t small { display: none; } }
+@media print { .resume { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .resume { transition: none; } }
 
 /* ── the seat map (seatmap.js): the overview, the best seats, one section big; light on the browser (no per-seat transforms
    that change, no custom properties animated, one composited container) ── */
 .bk-map { grid-template-rows: none; gap: calc(var(--u) * .6); }
 .sm-tabs { flex-wrap: wrap; border-radius: 18px; }
-.sm-top { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(250px, 1fr); gap: calc(var(--u) * .6); }
-.sm-mini { position: relative; height: clamp(170px, 23svh, 260px); border-radius: calc(var(--r) * .8); overflow: hidden; cursor: default; background: radial-gradient(110% 70% at 50% 0%, color-mix(in oklab, var(--sc) 10%, transparent), transparent 65%), rgba(var(--fg), .03); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
+.sm-top { display: grid; grid-template-columns: minmax(0, 1.9fr) minmax(250px, 1fr); gap: calc(var(--u) * .6); }
+.sm-mini { position: relative; height: clamp(130px, 17svh, 190px); border-radius: calc(var(--r) * .8); overflow: hidden; cursor: default; background: radial-gradient(110% 70% at 50% 0%, color-mix(in oklab, var(--sc) 10%, transparent), transparent 65%), rgba(var(--fg), .03); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
 .sm-mini.is-on { cursor: pointer; }
 .sm-mini canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sm-mini-tip { position: absolute; top: 8px; right: 10px; padding: 3px 11px; border-radius: var(--rg); font-size: 12px; font-weight: 700; background: var(--capsule); box-shadow: 0 6px 16px -8px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(var(--fg), .14); opacity: 0; transition: opacity .2s; pointer-events: none; }
 .sm-mini-tip:not(:empty) { opacity: 1; }
 .sm-mini-hint { position: absolute; bottom: 8px; left: 10px; display: inline-flex; align-items: center; gap: .35em; font-size: 11px; color: rgba(var(--fg), max(.5, var(--dmin))); pointer-events: none; }
 .sm-mini-hint svg.i { width: 1.2em; height: 1.2em; }
-.sm-best { display: grid; align-content: center; gap: .55em; padding: calc(var(--u) * .8) calc(var(--u) * .9); border-radius: calc(var(--r) * .8); background: color-mix(in oklab, var(--sc) 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 26%, transparent); }
+.sm-best { display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: center; align-items: center; gap: .4em .6em; padding: calc(var(--u) * .65) calc(var(--u) * .85); border-radius: calc(var(--r) * 1); background: color-mix(in oklab, var(--sc) 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 26%, transparent); }
+.sm-best > b, .sm-best > p { grid-column: 1 / -1; }
 .sm-best > b { display: flex; align-items: center; gap: .45em; font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.5; }
 .sm-best > b svg.i { width: 1.25em; height: 1.25em; color: var(--sc); }
-.sm-best p { margin: 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), .65); }
+.sm-best p { margin: 0; font-size: calc(max(11px, calc(var(--u) * .68)) * var(--tx) * var(--tx-small)); line-height: 1.7; color: rgba(var(--fg), max(.66, var(--dmin))); }
 .sm-bn { justify-self: start; display: inline-flex; align-items: center; gap: .35em; padding: 3px; border-radius: var(--rb); background: rgba(var(--fg), .07); }
 .sm-bn button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--rb); color: rgb(var(--fg)); transition: background-color .2s; }
 .sm-bn button:hover { background: rgba(var(--fg), .1); }
@@ -1503,7 +1670,7 @@ a.buy, a.chip { text-decoration: none; }
 .sm-bn button svg.i { width: 15px; height: 15px; }
 .sm-bn output { min-width: 1.5em; text-align: center; font-size: 18px; font-weight: 900; }
 .sm-bn span { font-size: 12px; color: rgba(var(--fg), .65); margin-inline-end: .2em; }
-.sm-best .buy { justify-self: stretch; gap: .45em; height: 44px; min-width: 0; }
+.sm-best .buy { justify-self: stretch; gap: .45em; height: 40px; min-width: 0; }
 .sm-head { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding: 0 calc(var(--u) * .3); }
 .sm-head > div { display: grid; line-height: 1.6; }
 .sm-head b { font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: 800; }
@@ -1614,16 +1781,16 @@ a.buy, a.chip { text-decoration: none; }
 @media (max-width: 760px) { .sm-help { flex-wrap: wrap; } .sm-help .chip { margin-inline-start: auto; } }
 
 /* ── the other pages (pages.js): their head, boxes, the purchase tracking, the questions, the sign-in window, the phone's menu ── */
-.pg-head { display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.6); border-radius: calc(var(--r) * 1.15); }
-.pg-head .sec-ic { color: var(--sc, var(--ring)); background: color-mix(in oklab, var(--sc, var(--ring)) 15%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc, var(--ring)) 34%, transparent); }
-.pg-head h1 { margin: 0; font-size: calc(max(21px, calc(var(--u) * 1.55)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; }
+.pg-head { display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * .85) calc(var(--u) * 1.4); border-radius: calc(var(--r) * 1.3); }
+.pg-head .sec-ic { color: var(--sc, var(--ring)); background: color-mix(in oklab, var(--sc, var(--ring)) 15%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc, var(--ring)) 34%, transparent); width: max(36px, calc(var(--u) * 2.3)); }
+.pg-head h1 { margin: 0; font-size: calc(max(19px, calc(var(--u) * 1.4)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.45; }
 .pg-head p { margin: .15em 0 0; font-size: calc(max(12.5px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .66); line-height: 1.9; }
-.pg-box { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); border-radius: calc(var(--r) * 1.15); }
+.pg-box { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); border-radius: calc(var(--r) * 1.3); }
 .pg-box h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
 .pg-box h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc, var(--ring)); }
 .pg-box h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), max(.6, var(--dmin))); }
 .pg-box a:not(.chip):not(.buy):not(.rc-card):not(.oc) { color: var(--sc, var(--ring)); }
-.rc-row { display: flex; align-items: flex-end; gap: .7em; }
+.rc-row { display: flex; align-items: flex-end; gap: .7em; max-width: 640px; }
 .rc-row .bk-fld { flex: 1; margin: 0; }
 .rc-row .buy, .rc-row .chip { flex: none; height: max(46px, calc(var(--u) * 2.9)); }
 .rc-row .buy { gap: .45em; min-width: 0; padding-inline: 1.4em; }
@@ -1786,6 +1953,13 @@ a.buy, a.chip { text-decoration: none; }
 .oc-stub .st { margin-top: .5em; font-size: calc(max(10px, calc(var(--u) * .6)) * var(--tx) * var(--tx-small)); }
 @media (max-width: 460px) { .oc { --sw: 84px; } .oc-row { gap: .2em 1em; } }
 @media (prefers-reduced-motion: reduce) { .oc, .tk-card, .tk-qrb { transition: none; } }
+/* a phone: the category page's filters are one row to slide, not four lines */
+@media (max-width: 760px) {
+  .pg-flt-row { gap: 8px; }
+  .pg-flt .sec-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; padding-bottom: 2px; }
+  .pg-flt .sec-chips .chip { flex: none; }
+  .pg-flt-row > .sec-chips { order: 5; flex: 1 1 100%; }
+}
 
 /* ── the entry control (gate.js): the start (session, door, code) and the scanning (camera, the answer, the numbers, the log) ── */
 .gt { --ok: #22c55e; --bad: #f43f5e; --warn: #f59e0b; }
@@ -3685,7 +3859,7 @@ const LOOK_DEF = {
   // motion
   mot: 'balanced', trans: 'fade', zoom: 'mid', dur: 7, fade: 1.2, spot: true, magnet: true, magnetPow: 33, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
   // the list under the hero: the sample shows that fill it, the shape of a poster's frame (width ÷ height), the words under the poster or over it
-  listFill: true, posterRatio: 0.8, posterInfo: 'below',
+  listFill: true, posterRatio: 0.75, posterFit: 'smart', posterInfo: 'reveal',
   // how many rows of posters a section shows before «نمایش همه» (0: all), the presale's wide tickets, the cards' buy button (white as in the sample, or the show's colour), the columns on a wide window
   secRows: 2, presale: 'compact', buyStyle: 'white', listCols: 'auto',
   // the site's theme: dark (the approved one) or light (white); the light one keeps its own panel and page colours; the motion of the change
@@ -3716,6 +3890,7 @@ const VIS = 4;
 // eye can't see): no bars, nothing cut. A wider difference leaves the banner whole, with black (or its mirrored
 // edge) in the rest.
 const FILL_TOL = 0.025;
+const COVER_TOL = Math.log(1.14);   // a poster this close to its frame's shape fills it (the extra is cut); further off it is shown whole
 const state = { i: 0, userPaused: false, hover: false, visible: true, intro: true, admin: false, palette: false, page: false };
 
 /* ════════════════════════════════════════════════════════════════
@@ -4489,7 +4664,7 @@ const APPLY = {
   scroll: () => smoothScroll.sync(),
   listFill: () => { if (look.ready) { s2.refresh(); hd.refreshCats(); } },
   secRows: () => { if (look.ready) s2.clampAll(); }, presale: () => { if (look.ready) s2.refresh(); }, buyStyle: (v) => attr('data-buy', v), listCols: (v) => { attr('data-cols', v); if (look.ready) s2.clampAll(); },
-  posterRatio: (v) => { css('--pr', v); if (look.ready) { s2.refit(); panel.posterNote(); } }, posterInfo: (v) => attr('data-pinfo', v),
+  posterRatio: (v) => { css('--pr', v); if (look.ready) { s2.refit(); panel.posterNote(); } }, posterInfo: (v) => attr('data-pinfo', v), posterFit: () => { if (look.ready) s2.refit(); },
   dims: (v) => dims.on(v),
 };
 
@@ -4547,10 +4722,11 @@ const UI = {
       S('progress', 'نشونه‌ی زمان باقی‌مونده', [['bar', 'خط پایین'], ['ring', 'دور کارت'], ['off', 'هیچ']])] },
     { h: 'لیست زیر هیرو (پوستری)', n: 'تو همه‌ی بخش‌های بعد از هیرو هر اجرا یه پوستر عمودیه که کامل (بدون برش) تو کادر پوستر می‌شینه؛ پوستری که با این نسبت فرق داشته باشه با نسخه‌ی محوِ خودش پر می‌شه. اجراهای نمونه (از نمونه‌ی خودت، با عکس‌هاش به‌جای پوستر، به‌اضافه‌ی چند پوستر نهایی) لیست رو پر می‌کنن؛ تو هیرو فقط همون شش اجرای واقعی هستن.', c: [
       R('posterRatio', 'نسبت کادر پوستر (عرض ÷ ارتفاع)', 0.5, 1, 0.01, ''),
-      S('posterInfo', 'نوشته‌های کارت', [['below', 'زیر پوستر (پوستر کامل دیده می‌شه)'], ['over', 'روی پوستر (مثل نمونه)']]),
+      S('posterFit', 'جا شدن پوستر تو کادرش', [['smart', 'هوشمند (شکل نزدیک: پر می‌کنه؛ دورتر: کامل و گرد روی زمینه‌ی نرم)'], ['whole', 'همیشه کامل (با زمینه‌ی نرم کنارش)'], ['fill', 'همیشه پر (هر چی اضافه‌ست بریده می‌شه)']]),
+      S('posterInfo', 'نوشته‌های کارت', [['reveal', 'روی عکس؛ با رفتن موس روش کنار می‌ره و کل عکس دیده می‌شه (روی موبایل همیشه دیده می‌شه)'], ['below', 'زیر پوستر (پوستر کامل دیده می‌شه)'], ['over', 'روی پوستر، همیشه (مثل نمونه)']]),
       W('listFill', 'اجراهای نمونه برای پر کردن لیست'),
       S('secRows', 'ردیف‌های هر بخش (بقیه با «نمایش همه»)', [[1, '۱ ردیف'], [2, '۲ ردیف'], [3, '۳ ردیف'], [0, 'همه']]),
-      S('listCols', 'تعداد پوستر در هر ردیف (پنجره‌ی پهن)', [['auto', 'خودکار (۶ از ۱۳۰۰ تا ۲۲۰۰)'], ['5', '۵'], ['6', '۶'], ['7', '۷'], ['8', '۸']]),
+      S('listCols', 'تعداد پوستر در هر ردیف (پنجره‌ی پهن)', [['auto', 'خودکار (۵؛ از ۱۷۰۰ شش؛ از ۲۲۰۰ هفت؛ زیر ۱۲۰۰ چهار)'], ['5', '۵'], ['6', '۶'], ['7', '۷'], ['8', '۸']]),
       S('presale', 'بخش پیش‌فروش', [['compact', 'ردیف بلیت‌های کوچیک با شمارنده'], ['cards', 'مثل بقیه‌ی بخش‌ها (کارت پوستر)']]),
       S('buyStyle', 'دکمه‌ی خرید کارت‌ها', [['white', 'سفید (مثل نمونه)'], ['accent', 'رنگ خود اجرا']])] },
   ],
@@ -5599,16 +5775,15 @@ const s2 = {
     // the soft copy of the picture behind it (it fills what the picture leaves) and behind the words
     const bg = (u) => { c.style.setProperty('--art', `url("${u}")`); softArt(u).then((s) => { if (!s || c.style.getPropertyValue('--art') !== `url("${u}")`) return; c.style.setProperty('--art-p', `url("${s.p}")`); c.style.setProperty('--art-b', `url("${s.b}")`); c.classList.add('has-soft'); }); };
     const u0 = art.fake || (e.poster ? art.src : art.thumb); if (u0) bg(u0);
-    const size = e.poster ? { w: 2, h: 3 } : art;
+    const size = e.poster ? { w: LOOK.posterRatio, h: 1 } : art;   // (a drawn stand-in has the frame's shape)
     // a file that isn't there is drawn by the page; and the picture is shown whole: it fills the frame if its shape is the frame's (to FILL_TOL), else the soft copy fills the rest
     im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); const u = art.fake = fakeArt(e, size); im.src = u; bg(u); };
     im.addEventListener('load', () => this.fit(pic, im));
     if (im.complete && im.naturalWidth) this.fit(pic, im);
     // the poster and the name open the show's page; the buy button opens it at its sessions
     const open = (ev, to) => { ev.preventDefault(); page.open(e, { from: im, to }); };
-    $$(`${wide ? '.ptk-pic, .ptk-name a' : '.tkt-pic, .tkt-name'}`, c).forEach((x) => x.addEventListener('click', (ev) => open(ev)));
-    const b = $('.buy', c); if (b) b.addEventListener('click', (ev) => open(ev, 'sessions'));
-    const off = $('.tkt-off', c); if (off) off.addEventListener('click', (ev) => open(ev));
+    if (wide) $$('.ptk-pic, .ptk-name a', c).forEach((x) => x.addEventListener('click', (ev) => open(ev)));
+    else c.addEventListener('click', (ev) => open(ev, ev.target.closest('.buy') ? 'sessions' : undefined));   // (the whole card: the words sit over the picture)
     const rem = $('.ptk-rem', c);
     if (rem) {
       if (!this.remLoaded) { this.remLoaded = true; store.get('blit.remind', []).forEach((id) => this.reminded.add(id)); }   // the reminders are kept
@@ -5701,7 +5876,13 @@ const s2 = {
   },
   lazyOff() { if (this.lazy) { this.lazy.disconnect(); this.lazy = null; } },
   // the picture whole in the poster's frame: its own shape (to FILL_TOL of the frame's) fills it, any other leaves the soft copy round it
-  fit(pic, im) { if (!im.naturalWidth) return; const fr = pic.clientWidth && pic.clientHeight ? pic.clientWidth / pic.clientHeight : LOOK.posterRatio; pic.classList.toggle('is-fill', Math.abs(Math.log(im.naturalWidth / im.naturalHeight / fr)) < FILL_TOL); },
+  fit(pic, im) {
+    if (!im.naturalWidth) return;
+    const fr = pic.clientWidth && pic.clientHeight ? pic.clientWidth / pic.clientHeight : LOOK.posterRatio, r = im.naturalWidth / im.naturalHeight, d = Math.abs(Math.log(r / fr)), mode = LOOK.posterFit || 'smart';
+    const fill = d < FILL_TOL, cover = !fill && (mode === 'fill' || (mode === 'smart' && d < COVER_TOL));
+    pic.classList.toggle('is-fill', fill); pic.classList.toggle('is-cover', cover); pic.classList.toggle('is-inset', !fill && !cover); pic.classList.toggle('is-wide', !fill && !cover && r > 1.05);
+    pic.style.setProperty('--r', r.toFixed(4));
+  },
   refit() { $$('.tkt-pic, .ptk-pic', this.secs).forEach((pic) => this.fit(pic, $('img', pic))); },
   later() { clearTimeout(this.lt); this.lt = setTimeout(() => this.refresh(), 160); },
   // the cards are drawn again (a text, a colour, a status or the city changed)
@@ -6092,7 +6273,7 @@ function tiersOf(e) {
   if (e.seatTier && Object.values(e.seatTier).includes('V')) out.unshift({ zone: 'صندلی‌های ویژه', zid: '__v', kind: 'stand', word: '', a: 0, b: 0, t: 'V', c: TIER.V.c, price: e.prices && e.prices.V > 0 ? e.prices.V : Math.round(p('A') * 1.5 / 1e4) * 1e4 });
   return out;
 }
-const runName = (t) => (t.kind === 'stand' || t.kind === 'grid' ? t.zone : `${t.zone}، ${t.word} ${fa(t.a)}${t.b > t.a ? ` تا ${fa(t.b)}` : ''}`);
+const runName = (t) => (t.kind === 'stand' || t.kind === 'grid' ? fa(t.zone) : `${fa(t.zone)}، ${t.word} ${fa(t.a)}${t.b > t.a ? ` تا ${fa(t.b)}` : ''}`);
 // a small number that is always the same for the same show (so its seats and its map don't change on a reload)
 const seedOf = (s) => { let h = 2166136261; for (const ch of String(s)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
 const rngOf = (seed) => () => { seed = (seed + 0x6D2B79F5) | 0; let t = seed; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
@@ -6242,27 +6423,34 @@ const page = {
   },
   render(e) {
     const st = statusOf(e), h = hallOf(e), tiers = tiersOf(e), ses = sessionsOf(e), ab = aboutOf(e), dur = DUR[e.kind] || 100;
-    const { a: art, src } = artOf(e), cover = e.banner && !e.banner.sample && e.banner.src && !e.banner.fake ? e.banner.src : src;
+    const { a: art, src } = artOf(e), hasBanner = !!(e.banner && !e.banner.sample && e.banner.src && !e.banner.fake), cover = hasBanner ? e.banner.src : src, hasPoster = !!e.poster || !hasBanner;
     const kindIcon = iconOfCat(e.kind), cat = catOf(e), [cd, cl] = secColor(cat);
+    const ps = clamp(art && art.w && art.h ? art.w / art.h : 0.75, 0.6, 1).toFixed(4);   // the poster's frame has its picture's shape from the first paint (a poster's size is in its data; the sample photos are 3 : 4), so nothing moves when it loads
     const words = esc(e.title).split(' ').map((w) => `<span class="w">${w}</span>`).join(' ');
     const open = !st.cta && st.key !== 'soon', timed = st.key === 'soon' && saleMs(e) > Date.now();
     const acc = this.accepted.has(e.id);
+    const canSes = (x) => open && x.seats > 0;
+    const pick = Math.max(0, ses.findIndex(canSes)), qty = clamp(+store.get('blit.qty', 2) || 2, 1, MAX_SEATS);
+    this.pick = pick; this.qty = qty;
+    // the sessions: one card for each night (a dark stub like a calendar page, the hour, how many seats are left); the first with seats is chosen already
     const sesHTML = ses.length ? ses.map((x, i) => {
-      const d = new Date(x.t), full = x.seats === 0, low = !full && x.seats < 0.25;
+      const d = new Date(x.t), full = x.seats === 0, low = !full && x.seats < 0.25, ok = canSes(x);
       const state = st.key === 'soon' ? 'soon' : full ? 'full' : low ? 'low' : 'ok';
       const label = { soon: 'به‌زودی', full: 'تکمیل ظرفیت', low: 'رو به اتمام', ok: 'موجود است' }[state];
-      const btn = !open || full ? `<button type="button" class="ses-buy" disabled>${esc(st.key === 'soon' ? 'به‌زودی' : full ? 'تکمیل' : st.cta || 'خرید بلیت')}</button>` : `<button type="button" class="ses-buy" data-s="${i}"${acc ? '' : ' aria-disabled="true"'}>${ico('bag')}خرید بلیت</button>`;
-      return `<div class="ses" data-st="${state}" style="--d:${i * 70}ms"><div class="ses-stub"><b>${esc(F.week.format(d))}</b><span>${esc(`${F.day.format(d)} ${F.month.format(d)}`)}</span><i>${esc(F.time.format(d))}</i></div><div class="ses-body"><span class="ses-st">${ico(state === 'ok' ? 'check' : state === 'full' ? 'x' : 'clock')}${label}</span><span class="ses-cap" role="img" aria-label="ظرفیت باقی‌مانده: ${full ? 'تمام شد' : `${fa(Math.round(Math.max(0.06, x.seats) * 100))}٪`}">${ico('users')}<i style="--v:${full ? 0 : Math.max(0.06, x.seats).toFixed(2)}"></i></span></div>${btn}</div>`;
+      const on = ok && i === pick;
+      return `<div class="ses${on ? ' is-picked' : ''}" data-st="${state}" data-i="${i}" role="radio" aria-checked="${on}"${ok ? '' : ' aria-disabled="true"'} tabindex="${on ? 0 : -1}" style="--d:${i * 70}ms"><div class="ses-stub"><b>${esc(F.week.format(d))}</b><strong>${esc(F.day.format(d))}</strong><span>${esc(F.month.format(d))}</span></div><div class="ses-body"><span class="ses-time">${ico('clock')}ساعت ${esc(F.time.format(d))}</span><span class="ses-st">${ico(state === 'ok' ? 'check' : state === 'full' ? 'x' : 'clock')}${label}</span><span class="ses-cap" role="img" aria-label="ظرفیت باقی‌مانده: ${full ? 'تمام شد' : `${fa(Math.round(Math.max(0.06, x.seats) * 100))}٪`}">${ico('users')}<i style="--v:${full ? 0 : Math.max(0.06, x.seats).toFixed(2)}"></i></span></div><span class="ses-radio" aria-hidden="true">${ico('check')}</span></div>`;
     }).join('') : `<p class="ses-none">${st.key === 'held' ? 'این برنامه برگزار شده و فروش بلیتش تمام شده.' : 'سانسی برای فروش باز نیست.'}</p>`;
-    const steps = `<ol class="steps panel evp-rise" aria-label="مراحل خرید">${STEPS.map((n, i) => `<li${i === 0 ? ' aria-current="step"' : ''}><span class="n">${fa(i + 1)}</span>${n}</li>`).join('')}<i class="bar" aria-hidden="true"></i></ol>`;
+    const anyOk = ses.some(canSes);
     const plan = tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(runName(t))}</span><b>${money(t.price)} <small>تومان</small></b><em aria-hidden="true" style="--w:${(t.price / tiers.reduce((m, x) => Math.max(m, x.price), 1)).toFixed(3)}"></em></li>`).join('');
     const similar = LIST().filter((x) => x !== e && x.kind === e.kind && !['held', 'cancelled'].includes(statusOf(x).key)).sort((a, b) => (a.city === e.city ? 0 : 1) - (b.city === e.city ? 0 : 1) || Date.parse(a.startsAt) - Date.parse(b.startsAt)).slice(0, 6);
+    const loc = h.hall ? locBlockHTML(h.hall, 'is-tab') : '';
+    const tabs = [['about', 'درباره‌ی اجرا', 'info'], loc ? ['place', 'مکان و مسیر', 'pin'] : null].filter(Boolean), tabbed = tabs.length > 1;
     this.el.innerHTML = `<div class="evp-in" style="--sc-d:${cd};--sc-l:${cl}">
-      <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
-      ${steps}
-      <section class="evp-cover panel${cover === src ? ' is-soft' : ''}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
-        <div class="evp-bg" aria-hidden="true"></div><span class="evp-motes" aria-hidden="true">${Array.from({ length: 10 }, (_, i) => `<i style="--m:${i}"></i>`).join('')}</span>
-        <figure class="evp-poster"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure>
+      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
+      ${stepsHTML(1, e, null)}</div>
+      <section class="evp-cover panel${cover === src ? ' is-soft' : ''}${hasPoster ? '' : ' no-poster'}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
+        <div class="evp-bg" aria-hidden="true"></div><span class="evp-motes" aria-hidden="true">${Array.from({ length: 8 }, (_, i) => `<i style="--m:${i}"></i>`).join('')}</span>
+        ${hasPoster ? `<figure class="evp-poster" style="--ps:${ps}"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure>` : ''}
         <div class="evp-title">
           <div class="evp-kind"><span>${ico(kindIcon)}${esc(e.type)}</span>${statusChip(e)}${e.badge ? `<em class="evp-badge">${esc(e.badge)}</em>` : ''}</div>
           <h1>${words}</h1>
@@ -6272,30 +6460,34 @@ const page = {
       </section>
       <div class="evp-cols">
         <div class="evp-main">
-          <section class="evp-facts panel evp-rise" aria-label="مشخصات اجرا">
-            <div class="fact"><span class="fi">${ico('calendar')}</span><span><small>دوره‌ی اجرا</small><b>${esc(e.w.short)}</b></span></div>
-            <div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(e.w.time)} · ${fa(dur)} دقیقه</b></span></div>
-            <div class="fact wide"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${h.hall ? `<a class="evp-hl" href="${hallHref(h.hall)}">${esc(h.name)}</a>` : esc(h.name)}</b><em>${esc(h.addr)}</em></span></div>
+          <section class="evp-info panel evp-rise" aria-label="اطلاعات اجرا">
+            ${tabbed ? `<div class="evp-tabs" role="tablist" aria-label="اطلاعات اجرا">${tabs.map(([k, t, ic], i) => `<button type="button" role="tab" id="evpTab-${k}" aria-controls="evpTabP-${k}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-tab="${k}">${ico(ic)}${t}</button>`).join('')}</div>` : `<h2 class="evp-info-h">${ico('info')}درباره‌ی اجرا</h2>`}
+            <div class="evp-tabp"${tabbed ? ' role="tabpanel" id="evpTabP-about" aria-labelledby="evpTab-about"' : ''} data-p="about">
+              <div class="evp-facts" aria-label="مشخصات اجرا">
+                <div class="fact"><span class="fi">${ico('calendar')}</span><span><small>دوره‌ی اجرا</small><b>${esc(e.w.short)}</b></span></div>
+                <div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(e.w.time)} · ${fa(dur)} دقیقه</b></span></div>
+                <div class="fact"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${h.hall ? `<a class="evp-hl" href="${hallHref(h.hall)}">${esc(h.name)}</a>` : esc(h.name)}</b><em>${esc(h.addr)}</em></span></div>
+              </div>
+              ${ab.tags.length ? `<div class="evp-tags">${ab.tags.map(([k, v]) => `<span><small>${esc(k)}</small>${esc(v)}</span>`).join('')}</div>` : ''}
+              ${ab.line ? `<p class="evp-line">${esc(ab.line)}</p>` : ''}
+              <p class="evp-text">${esc(ab.text)}</p>
+            </div>
+            ${loc ? `<div class="evp-tabp" role="tabpanel" id="evpTabP-place" aria-labelledby="evpTab-place" data-p="place" hidden>${loc}</div>` : ''}
           </section>
-          ${h.hall ? locBlockHTML(h.hall) : ''}
-          <section class="evp-about panel evp-rise" aria-labelledby="evpAboutH">
-            <h2 id="evpAboutH">${ico('info')}درباره‌ی اجرا</h2>
-            ${ab.tags.length ? `<div class="evp-tags">${ab.tags.map(([k, v]) => `<span><small>${esc(k)}</small>${esc(v)}</span>`).join('')}</div>` : ''}
-            ${ab.line ? `<p class="evp-line">${esc(ab.line)}</p>` : ''}
-            <p>${esc(ab.text)}</p>
-          </section>
-          <section class="evp-plan panel evp-rise" aria-labelledby="evpPlanH">
-            <h2 id="evpPlanH">${ico('ticket')}طرح بها<small>+ ۱۰٪ مالیات بر ارزش افزوده</small></h2>
-            <ul>${plan}</ul>
-          </section>
+          <section class="evp-prices panel evp-rise" aria-labelledby="evpPriceH"><h2 id="evpPriceH">${ico('ticket')}قیمت‌ها<small>+ ۱۰٪ مالیات بر ارزش افزوده</small></h2><ul class="evp-plan">${plan}</ul></section>
         </div>
         <aside class="evp-side">
           <section class="evp-book panel evp-rise" id="evpBook" aria-labelledby="evpBookH">
             <h2 id="evpBookH">${ico('calendar')}انتخاب سانس${ses.length ? `<small>${fa(ses.length)} سانس</small>` : ''}</h2>
             ${timed ? `<div class="evp-sale"><span>شروع فروش · ${esc(saleWhen(e))}</span><div class="ptk-cd" data-sale-box="${esc(e.id)}"><span class="cd-b" aria-hidden="true">${unitHTML('d', 'روز', 0)}<em>:</em>${unitHTML('h', 'ساعت', 0)}<em>:</em>${unitHTML('m', 'دقیقه', 0)}<em>:</em>${unitHTML('s', 'ثانیه', 0)}</span></div></div>` : ''}
-            ${open ? `<label class="evp-rules${acc ? ' is-on' : ''}"><input type="checkbox" id="evpRules"${acc ? ' checked' : ''}><span class="box" aria-hidden="true">${ico('check')}</span><span>اینجانب <a href="#" data-act="rules">قوانین خرید</a> را خوانده‌ام و همه‌ی شرایط را می‌پذیرم.</span></label>` : ''}
-            <div class="ses-list">${sesHTML}</div>
-            <p class="evp-note">${ico('tag')}<span>از <b>${esc(dg(e.price))} ${esc(TXT.unit)}</b> · قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان.</span></p>
+            ${open && anyOk ? `<label class="evp-rules${acc ? ' is-on' : ''}"><input type="checkbox" id="evpRules"${acc ? ' checked' : ''}><span class="box" aria-hidden="true">${ico('check')}</span><span class="rt">اینجانب <a href="#" data-act="rules">قوانین خرید</a> را خوانده‌ام و همه‌ی شرایط را می‌پذیرم.</span></label>` : ''}
+            <div class="ses-list" role="radiogroup" aria-label="سانس‌ها">${sesHTML}</div>
+            ${open && anyOk ? `<div class="evp-act" id="evpAct">
+              <div class="evp-qty"><span id="evpQtyL">چند بلیت؟</span><div class="qty-st" role="group" aria-labelledby="evpQtyL"><button type="button" data-q="-1" aria-label="یکی کمتر">${ico('minus')}</button><output id="evpQty" aria-live="polite">${fa(qty)}</output><button type="button" data-q="1" aria-label="یکی بیشتر">${ico('plus')}</button></div><span class="evp-est" id="evpEst"></span></div>
+              <button type="button" class="buy evp-go" data-go="best">${ico('spark')}<span>بهترین صندلی‌ها رو بگیر</span></button>
+              <button type="button" class="evp-go2" data-go="map">${ico('grid')}<span>خودم روی نقشه انتخاب می‌کنم</span></button>
+            </div>` : ''}
+            <p class="evp-note">${ico('tag')}<span>از <b>${esc(dg(e.price))} ${esc(TXT.unit)}</b> · قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان${open && anyOk ? ` · صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن` : ''}.</span></p>
           </section>
         </aside>
       </div>
@@ -6311,7 +6503,12 @@ const page = {
   },
   wire(e, ses) {
     const pim = $('.evp-poster img', this.el), { a: pa } = artOf(e);
-    if (pim) pim.onerror = () => { pim.onerror = null; const u = pa.fake || (pa.fake = fakeArt(e, e.poster ? { w: 2, h: 3 } : pa)); pim.src = u; const cv = $('.evp-cover', this.el); cv.style.setProperty('--pa', `url('${u}')`); if (!e.banner || e.banner === pa) cv.style.setProperty('--art', `url('${u}')`); };
+    if (pim) {
+      pim.onerror = () => { pim.onerror = null; const u = pa.fake || (pa.fake = fakeArt(e, e.poster ? { w: LOOK.posterRatio, h: 1 } : pa)); pim.src = u; const cv = $('.evp-cover', this.el); cv.style.setProperty('--pa', `url('${u}')`); if (!e.banner || e.banner === pa) cv.style.setProperty('--art', `url('${u}')`); };
+      // the poster's frame has the poster's own shape (a 3:4 photo, a 2:3 poster): no bars round it
+      const shape = () => { if (pim.naturalWidth) { const f = $('.evp-poster', this.el); if (f) f.style.setProperty('--ps', clamp(pim.naturalWidth / pim.naturalHeight, 0.6, 1).toFixed(4)); } };
+      pim.addEventListener('load', shape); if (pim.complete) shape();
+    }
     const el = this.el, on = (sel, f) => $$(sel, el).forEach((x) => x.addEventListener('click', (ev) => { ev.preventDefault(); f(x, ev); }));
     on('[data-back]', () => this.close());
     on('.evp-crumb [data-cat]', (a) => { const k = a.dataset.cat; this.close({ then: () => s2.go(k) }); });
@@ -6322,32 +6519,60 @@ const page = {
       const url = location.href, data = { title: e.title, text: `${e.title} · ${e.w.short}`, url };
       try { if (navigator.share) { await navigator.share(data); return; } await navigator.clipboard.writeText(url); toast('نشانی این صفحه کپی شد.'); } catch (err) { toast('نشانی این صفحه: ' + url); }
     });
-    // the rules: until they are accepted, a session's buy button shakes the box and says so
-    const chk = $('#evpRules', el);
-    const sync = () => { const ok = chk && chk.checked; $$('.ses-buy[data-s]', el).forEach((b) => { if (ok) b.removeAttribute('aria-disabled'); else b.setAttribute('aria-disabled', 'true'); }); if (chk) chk.closest('.evp-rules').classList.toggle('is-on', ok); };
-    if (chk) chk.addEventListener('change', () => { if (chk.checked) this.accepted.add(e.id); else this.accepted.delete(e.id); sync(); });
-    on('.ses-buy[data-s]', (b) => {
-      if (b.getAttribute('aria-disabled') === 'true') {
-        const r = $('.evp-rules', el); r.classList.remove('is-shake'); void r.offsetWidth; r.classList.add('is-shake');
-        toast('اول قوانین خرید رو بخون و تیکش رو بزن.'); return;
-      }
-      const s = ses[+b.dataset.s];
-      $$('.ses', el).forEach((x) => x.classList.remove('is-picked')); b.closest('.ses').classList.add('is-picked');
-      this.go(`#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}`);
+    // the information's tabs (about, the place, the prices): one is open at a time; the arrows go from tab to tab
+    const tabs = $$('.evp-tabs [role="tab"]', el), panes = $$('.evp-tabp', el);
+    const showTab = (k, focus) => { tabs.forEach((t) => { const o = t.dataset.tab === k; t.setAttribute('aria-selected', String(o)); t.tabIndex = o ? 0 : -1; if (o && focus) t.focus(); }); panes.forEach((p) => { p.hidden = p.dataset.p !== k; }); };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => showTab(t.dataset.tab));
+      t.addEventListener('keydown', (ev) => { const d = { ArrowLeft: 1, ArrowRight: -1 }[ev.key]; if (!d) return; ev.preventDefault(); showTab(tabs[(i + d + tabs.length) % tabs.length].dataset.tab, true); });
     });
+    // the buy panel: a night (the first with seats is chosen already), how many seats, and how to get them. The rules come when they are needed:
+    // a press on either button before they are accepted opens them, and «می‌پذیرم و ادامه» goes on with what was pressed
+    const list = $('.ses-list', el), chk = $('#evpRules', el), qEl = $('#evpQty', el), est = $('#evpEst', el), low = priceNum(e);
+    let pick = this.pick, qty = this.qty;
+    const can = (c) => c && c.getAttribute('aria-disabled') !== 'true';
+    const paint = () => {
+      $$('.ses', list).forEach((c) => { const o = +c.dataset.i === pick && can(c); c.classList.toggle('is-picked', o); c.setAttribute('aria-checked', String(o)); c.tabIndex = o ? 0 : -1; });
+      if (qEl) qEl.textContent = fa(qty);
+      if (est) est.textContent = `از ${money(low * qty)} تومان`;
+      $$('[data-q]', el).forEach((b) => { b.disabled = (+b.dataset.q < 0 && qty <= 1) || (+b.dataset.q > 0 && qty >= MAX_SEATS); });
+    };
+    list.addEventListener('click', (ev) => { const c = ev.target.closest('.ses'); if (!can(c)) return; pick = +c.dataset.i; paint(); });
+    list.addEventListener('keydown', (ev) => {
+      const cs = $$('.ses', list).filter(can), c = ev.target.closest('.ses'); if (!c) return;
+      if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); if (can(c)) { pick = +c.dataset.i; paint(); } return; }
+      const d = { ArrowDown: 1, ArrowLeft: 1, ArrowUp: -1, ArrowRight: -1 }[ev.key]; if (!d || !cs.length) return;
+      ev.preventDefault(); const i = cs.indexOf(c), n = cs[(i + d + cs.length) % cs.length]; pick = +n.dataset.i; paint(); n.focus();
+    });
+    $$('[data-q]', el).forEach((b) => b.addEventListener('click', () => { qty = clamp(qty + +b.dataset.q, 1, MAX_SEATS); this.qty = qty; store.set('blit.qty', qty); paint(); }));
+    const sync = () => { const ok = !!(chk && chk.checked); if (chk) chk.closest('.evp-rules').classList.toggle('is-on', ok); };
+    if (chk) chk.addEventListener('change', () => { if (chk.checked) this.accepted.add(e.id); else this.accepted.delete(e.id); sync(); });
+    const run = (how) => {
+      const s = ses[pick]; if (!s || s.seats === 0) return;
+      const act = () => { $$('.ses', list).forEach((c) => c.classList.toggle('is-picked', +c.dataset.i === pick)); if (how === 'map') this.go(`#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}`); else buy.quick(e, s, qty); };
+      if (!this.accepted.has(e.id)) { this.rules({ then: act }); return; }
+      act();
+    };
+    $$('[data-go]', el).forEach((b) => b.addEventListener('click', () => run(b.dataset.go)));
+    paint();
+    // on a phone the bar at the bottom is only for when the panel is out of sight
+    const bar = $('.evp-cta', el), book = $('#evpBook', el);
+    if (bar && book && 'IntersectionObserver' in window) { const io = new IntersectionObserver(([en]) => bar.classList.toggle('is-hide', en.isIntersecting), { threshold: 0.35 }); io.observe(book); const prev = this.leave; this.leave = () => { io.disconnect(); if (prev) prev(); }; }
     // the map zooms round the hall
     let z = 1; const mp = $('.mp', el);
-    on('.mp-zoom [data-z]', (b) => { z = clamp(z + +b.dataset.z * 0.4, 1, 2.6); mp.style.transform = `scale(${z})`; });
+    if (mp) on('.mp-zoom [data-z]', (b) => { z = clamp(z + +b.dataset.z * 0.4, 1, 2.6); mp.style.transform = `scale(${z})`; });
   },
-  rules() {
+  // the rules: a window with a button that accepts them (and, when it was opened by a press on a buy button, goes on with it)
+  rules({ then } = {}) {
     const box = document.createElement('div'); box.className = 'evp-modal'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'قوانین خرید');
-    box.innerHTML = `<div class="evp-dlg panel"><h2>${ico('shield')}قوانین خرید</h2><ol>${RULES.map((r) => `<li>${esc(r)}</li>`).join('')}</ol><div class="evp-dlg-end"><button type="button" class="buy" data-ok>${ico('check')}خوندم و می‌پذیرم</button><button type="button" class="chip" data-x>بستن</button></div></div>`;
+    box.innerHTML = `<div class="evp-dlg panel"><h2>${ico('shield')}قوانین خرید</h2><ol>${RULES.map((r) => `<li>${esc(r)}</li>`).join('')}</ol><div class="evp-dlg-end"><button type="button" class="buy" data-ok>${ico('check')}${then ? 'می‌پذیرم و ادامه' : 'خوندم و می‌پذیرم'}</button><button type="button" class="chip" data-x>بستن</button></div></div>`;
     $('#app').appendChild(box);
     const prev = document.activeElement, k = MOTK();
     const shut = (ok) => {
-      if (ok) { const c = $('#evpRules'); if (c && !c.checked) { c.checked = true; c.dispatchEvent(new Event('change')); } }
+      if (ok) { if (this.e) this.accepted.add(this.e.id); const c = $('#evpRules'); if (c && !c.checked) { c.checked = true; c.dispatchEvent(new Event('change')); } }
       document.removeEventListener('keydown', key, true);
-      gsap.to(box, { opacity: 0, duration: 0.25, onComplete: () => box.remove() }); if (prev) prev.focus();
+      gsap.to(box, { opacity: 0, duration: 0.25, onComplete: () => box.remove() });
+      if (ok && then) then(); else if (prev) prev.focus();
     };
     const key = (ev) => { if (ev.key === 'Escape') { ev.preventDefault(); shut(false); } else if (ev.key === 'Tab') { const f = $$('button, a', box); const i = f.indexOf(document.activeElement); if (ev.shiftKey && i <= 0) { ev.preventDefault(); f[f.length - 1].focus(); } else if (!ev.shiftKey && i === f.length - 1) { ev.preventDefault(); f[0].focus(); } } };
     document.addEventListener('keydown', key, true);
@@ -6394,9 +6619,9 @@ const item = (x) => ({ key: x.key, zid: x.zid, zone: x.zone, word: x.word, row: 
 const STEP_LINKS = (e, s) => [`#/e/${encodeURIComponent(e.id)}`, s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : null, null, null];
 function stepsHTML(cur, e, s) {
   const links = STEP_LINKS(e, s);
-  return `<ol class="steps panel evp-rise" aria-label="مراحل خرید" style="--cur:${cur - 1}">${STEPS.map((n, i) => {
+  return `<ol class="steps evp-rise" aria-label="مراحل خرید" style="--cur:${cur - 1}">${STEPS.map((n, i) => {
     const k = i + 1, done = k < cur, here = k === cur, href = done && cur < 4 ? links[i] : null;
-    const inner = `<span class="n">${done ? ico('check') : fa(k)}</span>${n}`;
+    const inner = `<span class="n">${done ? ico('check') : fa(k)}</span><span class="t">${n}</span>`;
     return `<li${here ? ' aria-current="step"' : ''}${done ? ' class="is-done"' : ''}>${href ? `<a href="${href}">${inner}</a>` : inner}</li>`;
   }).join('')}<i class="bar" aria-hidden="true"></i></ol>`;
 }
@@ -6472,6 +6697,38 @@ const buy = {
     const inner = page.leave;   // a page's own (the gate's camera, a desk's timers)
     page.leave = () => { clearInterval(this.tick); clearTimeout(this.live); this.tick = 0; this.live = 0; if (inner) inner(); };
   },
+  // the quick way (the show page's «بهترین صندلی‌ها رو بگیر»): the best n seats side by side (nearest the stage, nearest the middle of the row; or n standing
+  // places) are held at once and the buyer lands on the payment. A busy show goes through its waiting room as always (and then to the seats).
+  quick(e, s, n) {
+    const base = `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}`;
+    if (typeof queue !== 'undefined' && queue.need(e) && !queue.ok(s.id)) { page.go(base); return false; }
+    const L = seatPlan(e, s), ys = L.secs.flatMap((z) => z.seats.map((p) => p.y));
+    let best = null, items = null;
+    if (ys.length) {
+      const y0 = Math.min(...ys), y1 = Math.max(...ys), H = Math.max(1, y1 - y0), W = Math.max(1, L.W / 2), ok = (p) => p.st === 'free';
+      const take = (run) => { for (let a = 0; a + n <= run.length; a++) { const w = run.slice(a, a + n), my = w.reduce((t, p) => t + p.y, 0) / n, mx = w.reduce((t, p) => t + p.x, 0) / n, sc = (my - y0) / H + 0.55 * Math.abs(mx - L.cx) / W; if (!best || sc < best.sc) best = { sc, w }; } };
+      L.secs.forEach((z) => {
+        if (z.ga) return;
+        if (z.sec.k === 'grid') {
+          const g = new Map(); z.seats.forEach((p) => { if (!g.has(p.rid)) g.set(p.rid, []); g.get(p.rid).push(p); });
+          for (const ps0 of g.values()) { let run = []; for (const p of ps0.slice().sort((a, b) => a.ci - b.ci)) { if (ok(p)) run.push(p); else { if (run.length >= n) take(run); run = []; } } if (run.length >= n) take(run); }
+          return;
+        }
+        const g = new Map(); z.seats.forEach((p) => { if (!g.has(p.row)) g.set(p.row, []); g.get(p.row).push(p); });
+        for (const [r, ps0] of g) {
+          const ps = ps0.slice().sort((a, b) => a.n - b.n), blocks = z.sec.k === 'boxes' || z.sec.k === 'tables' ? [ps.length] : typeof z.sec.seats === 'function' ? z.sec.seats(r - 1) : [ps.length];
+          let k = 0;
+          for (const bn of blocks) { const blk = ps.slice(k, k + bn); k += bn; let run = []; for (const p of blk) { if (ok(p)) run.push(p); else { if (run.length >= n) take(run); run = []; } } if (run.length >= n) take(run); }
+        }
+      });
+    }
+    if (best) items = best.w.map(item);
+    else { const z = L.secs.find((x) => x.ga && x.ga.left >= n); if (z) items = Array.from({ length: n }, (_, k) => item({ key: `ga:${z.sec.id}:${k + 1}`, zid: z.sec.id, zone: z.ga.zone, word: '', row: 0, n: k + 1, t: z.ga.t, c: z.ga.c, price: z.ga.price, ga: true })); }
+    if (!items) { toast(`${fa(n)} صندلی کنار هم پیدا نشد؛ تعداد کمتری رو امتحان کن یا خودت روی نقشه انتخاب کن.`); return false; }
+    store.sset('blit.hold', { eid: e.id, sid: s.id, items, until: Date.now() + HOLD_MIN * 6e4 });
+    this.expired = false; this.cart = new Map(); this.cartKey = null;
+    page.go(`${base}/pay`); return true;
+  },
   holdFor(e, s) { const h = store.sget('blit.hold', null); return h && h.eid === e.id && h.sid === s.id && h.until > Date.now() ? h : null; },
   clock() {
     const h = store.sget('blit.hold', null), left = h ? h.until - Date.now() : 0;
@@ -6499,19 +6756,16 @@ const buy = {
     const w = whenOf(s), { src } = artOf(e), tiers = [...new Map(tiersOf(e).map((t) => [t.t, t])).values()].sort((a, b) => b.price - a.price);
     const ses = sessionsOf(e);
     el.innerHTML = `<div class="evp-in bk" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
-      <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-r')}برگشت به «${esc(e.name)}»</a></nav>
-      ${stepsHTML(2, e, s)}
-      <div class="bk-top evp-rise">
-        <section class="panel bk-showline">
-          <figure class="bk-poster"><img src="${esc(src)}" alt=""></figure>
-          <div class="bk-what"><b>${esc(e.title)}</b><span>${esc(hallOf(e).name)}، ${esc(e.city)}</span></div>
-          <button type="button" class="bk-ses" aria-haspopup="menu" aria-expanded="false">${ico('calendar')}<span><b>${esc(w.wd)} ${esc(w.dm)}</b><small>ساعت ${esc(w.tm)}</small></span>${ses.length > 1 ? `<em>تغییر سانس ${ico('down')}</em>` : ''}</button>
-        </section>
-        <section class="panel bk-filter" aria-label="فیلتر قیمت">
+      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-r')}برگشت به «${esc(e.name)}»</a></nav>${stepsHTML(2, e, s)}</div>
+      <section class="panel bk-head evp-rise" aria-label="برنامه، سانس و قیمت‌ها">
+        <figure class="bk-poster"><img src="${esc(src)}" alt=""></figure>
+        <div class="bk-what"><b>${esc(e.title)}</b><span>${esc(hallOf(e).name)}، ${esc(e.city)}</span></div>
+        <button type="button" class="bk-ses" aria-haspopup="menu" aria-expanded="false">${ico('calendar')}<span><b>${esc(w.wd)} ${esc(w.dm)}</b><small>ساعت ${esc(w.tm)}</small></span>${ses.length > 1 ? `<em>تغییر سانس ${ico('down')}</em>` : ''}</button>
+        <div class="bk-filter">
           <span class="bk-fl">${ico('tag')}قیمت‌ها</span>
-          <div class="bk-chips" role="group"><button type="button" class="chip" data-t="" aria-pressed="${!this.tiers.size}">همه</button>${tiers.map((t) => `<button type="button" class="chip tier" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i>${money(t.price)}</button>`).join('')}</div>
-        </section>
-      </div>
+          <div class="bk-chips" role="group" aria-label="فیلتر قیمت"><button type="button" class="chip" data-t="" aria-pressed="${!this.tiers.size}">همه</button>${tiers.map((t) => `<button type="button" class="chip tier" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i>${money(t.price)}</button>`).join('')}</div>
+        </div>
+      </section>
       <div class="evp-cols bk-cols">
         <section class="panel bk-map evp-rise" aria-label="نقشه‌ی سالن">
           ${this.mapHTML(tiers)}
@@ -6727,19 +6981,21 @@ const buy = {
     const busy = !!(e.badge || saleMs(e) || /پرفروش/.test(e.badge || '')) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);   // a busy show asks for an SMS code (anti-bot, the brief §1.10)
     const w = whenOf(s), { src } = artOf(e);
     const om = store.get('blit.otpMode', 'busy'), need = om === 'always' || (om === 'busy' && busy);   // the admin's choice (پنل مدیر ← دسته‌ها و تنظیمات)
-    this.payState = { e, s, seats, code: '', otp: !need, phone: store.get('blit.phone', '') };
-    el.innerHTML = `<div class="evp-in bk" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
-      <nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}برگشت به صندلی‌ها</a></nav>
-      ${stepsHTML(3, e, s)}
+    const ph0 = store.get('blit.phone', '');
+    this.payState = { e, s, seats, code: '', need, otp: !need || (!!ph0 && store.sget('blit.otpOk', '') === ph0), phone: ph0 };
+    el.innerHTML = `<div class="evp-in bk bk-narrow" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
+      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}برگشت به صندلی‌ها</a></nav>${stepsHTML(3, e, s)}</div>
       <section class="panel bk-hold evp-rise" aria-live="polite"><span class="bk-ring" data-hold-bar aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21"/><circle class="pr" cx="24" cy="24" r="21" pathLength="100"/></svg>${ico('clock')}</span><div><b>صندلی‌هات تا <span data-hold>--:--</span> دیگه برات نگه داشته می‌شن</b><span>اگه تا اون موقع پرداخت نشه، آزاد می‌شن و بقیه می‌تونن بخرنشون.</span></div></section>
       <div class="evp-cols">
         <div class="evp-main">
           <section class="panel bk-who evp-rise" aria-labelledby="bkWhoH">
             <h2 id="bkWhoH">${ico('users')}خریدار<small>بدون ثبت‌نام</small></h2>
+            <div class="bk-duo">
+              <label class="bk-fld"><span>شماره‌ی موبایل</span><input id="bkPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" maxlength="13" value="${esc(this.payState.phone ? fa(this.payState.phone) : '')}" dir="ltr"></label>
+              <label class="bk-fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی" value="${esc(store.get('blit.profile', {}).name || '')}"></label>
+            </div>
             <p class="bk-lead">فقط شماره‌ی موبایلت لازمه: بلیت همین‌جا نشونت داده می‌شه و پیامک هم می‌شه؛ بعداً با همین شماره و کد پیامکی همه‌ی بلیت‌هات پیدا می‌شن.</p>
-            <label class="bk-fld"><span>شماره‌ی موبایل</span><input id="bkPhone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="۰۹۱۲ ۳۴۵ ۶۷۸۹" maxlength="13" value="${esc(this.payState.phone ? fa(this.payState.phone) : '')}" dir="ltr"></label>
-            <label class="bk-fld"><span>نام و نام خانوادگی <small>(اختیاری، روی بلیت می‌آد)</small></span><input id="bkName" type="text" autocomplete="name" placeholder="مثلاً سارا محمدی" value="${esc(store.get('blit.profile', {}).name || '')}"></label>
-            ${need ? `<div class="bk-otp" id="bkOtp"><p>${ico('shield-ok')}${busy ? 'این اجرا پرطرفداره؛' : 'برای امنیت خریدت،'} برای اینکه ربات‌ها بلیت نخرن، شماره با یه کد پیامکی تأیید می‌شه.</p><div class="bk-otp-row"><button type="button" class="chip" id="bkSend">فرستادن کد</button><div class="otp" id="bkCode" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><span class="bk-otp-st" id="bkOtpSt"></span></div></div>` : ''}
+            ${need ? `<div class="bk-otp${this.payState.otp ? ' is-ok' : ''}" id="bkOtp"><p>${ico('shield-ok')}${busy ? 'این اجرا پرطرفداره؛' : 'برای امنیت خریدت،'} برای اینکه ربات‌ها بلیت نخرن، شماره با یه کد پیامکی تأیید می‌شه.</p><div class="bk-otp-row"><button type="button" class="chip" id="bkSend">فرستادن کد</button><div class="otp" id="bkCode" hidden>${Array.from({ length: 5 }, (_, i) => `<input inputmode="numeric" maxlength="1" aria-label="رقم ${fa(i + 1)} کد" dir="ltr">`).join('')}</div><span class="bk-otp-st${this.payState.otp ? ' ok' : ''}" id="bkOtpSt">${this.payState.otp ? 'این شماره‌ی تأییدشده‌ست.' : ''}</span></div></div>` : ''}
           </section>
           <section class="panel bk-way evp-rise" aria-labelledby="bkWayH">
             <h2 id="bkWayH">${ico('shield')}روش پرداخت</h2>
@@ -6754,14 +7010,15 @@ const buy = {
             <div class="bk-showline in"><figure class="bk-poster"><img src="${esc(src)}" alt=""></figure><div class="bk-what"><b>${esc(e.title)}</b><span>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)}</span><span>${esc(hallOf(e).name)}</span></div></div>
             <h2 id="bkSumH">${ico('ticket')}صورت‌حساب<small>${fa(seats.length)} صندلی</small></h2>
             <ul class="bk-list">${seats.map((x) => `<li style="--c:${x.c}"><i aria-hidden="true"></i><span>${esc(seatName(x))}</span><b>${money(x.price)}</b></li>`).join('')}</ul>
-            <div class="bk-code"><input id="bkDisc" type="text" placeholder="کد تخفیف" dir="ltr" autocomplete="off" aria-label="کد تخفیف"><button type="button" class="chip" id="bkDiscGo">اعمال</button></div>
-            <p class="bk-code-st" id="bkDiscSt"></p>
+            <button type="button" class="bk-code-t" id="bkDiscT" aria-expanded="false" aria-controls="bkDiscBox">${ico('tag')}کد تخفیف دارم</button>
+            <div class="bk-codebox" id="bkDiscBox" hidden><div class="bk-code"><input id="bkDisc" type="text" placeholder="کد تخفیف" dir="ltr" autocomplete="off" aria-label="کد تخفیف"><button type="button" class="chip" id="bkDiscGo">اعمال</button></div><p class="bk-code-st" id="bkDiscSt"></p></div>
             <dl class="bk-inv"></dl>
             <button type="button" class="buy bk-pay" id="bkPay">${ico('shield-ok')}<span>پرداخت</span></button>
             <p class="bk-note">${ico('info')}با پرداخت، <a href="#" data-act="rules">قوانین خرید</a> رو می‌پذیری. برای آزمایش کد <b dir="ltr">BLIT10</b> رو امتحان کن.</p>
           </section>
         </aside>
       </div>
+      <div class="bk-bar bk-paybar" aria-hidden="false"><button type="button" class="bk-bar-l"><b class="bk-count2">${fa(seats.length)} صندلی</b><span class="bk-sum2"></span></button><button type="button" class="buy bk-pay2">${ico('shield-ok')}پرداخت</button></div>
     </div>`;
     this.invoice(); this.wirePay();
   },
@@ -6770,12 +7027,17 @@ const buy = {
     st.total = total;
     $('.bk-inv', page.el).innerHTML = `<dt>جمع بلیت‌ها</dt><dd>${money(sum)}</dd>${off ? `<dt>تخفیف (${esc(CODES[st.code].label)})</dt><dd class="neg">− ${money(off)}</dd>` : ''}<dt>مالیات بر ارزش افزوده (۱۰٪)</dt><dd>${money(tax)}</dd><dt class="tot">مبلغ قابل پرداخت</dt><dd class="tot">${money(total)} <small>تومان</small></dd>`;
     $('#bkPay span', page.el).textContent = `پرداخت ${money(total)} تومان`;
+    const s2 = $('.bk-paybar .bk-sum2', page.el); if (s2) s2.textContent = `${money(total)} تومان`;
   },
   wirePay() {
     const el = page.el, st = this.payState;
     $$('[data-act="rules"]', el).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); page.rules(); }));
     const ph = $('#bkPhone', el);
-    ph.addEventListener('input', () => { const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); st.phone = d; ph.closest('.bk-fld').classList.remove('is-bad'); });
+    let syncOtp = () => {};   // (the SMS check's own: set below, when the show asks for one)
+    ph.addEventListener('input', () => {
+      const d = enDigits(ph.value).replace(/\D/g, '').slice(0, 11); ph.value = fa(d); st.phone = d; ph.closest('.bk-fld').classList.remove('is-bad');
+      if (st.need) { const ok = !!d && d === store.sget('blit.otpOk', ''); if (ok !== st.otp) { st.otp = ok; syncOtp(); } }   // a number that was checked stays checked; another one is checked again
+    });
     $('#bkDiscGo', el).addEventListener('click', () => {
       const c = enDigits($('#bkDisc', el).value).trim().toUpperCase(), out = $('#bkDiscSt', el);
       if (!c) { st.code = ''; out.textContent = ''; this.invoice(); return; }
@@ -6789,12 +7051,18 @@ const buy = {
       const boxes = $$('#bkCode input', el), stl = $('#bkOtpSt', el);
       let wait = 0, t = 0;
       const tick = () => { if (wait <= 0) { send.disabled = false; send.textContent = 'فرستادن دوباره‌ی کد'; return; } send.textContent = `فرستادن دوباره تا ${mmss(wait * 1000)}`; wait--; t = setTimeout(tick, 1000); };
+      const otpEl = $('#bkOtp', el);
+      syncOtp = () => {
+        otpEl.classList.toggle('is-ok', st.otp);
+        if (st.otp) { stl.className = 'bk-otp-st ok'; stl.textContent = 'این شماره‌ی تأییدشده‌ست.'; return; }
+        clearTimeout(t); wait = 0; send.disabled = false; send.textContent = 'فرستادن کد'; $('#bkCode', el).hidden = true; boxes.forEach((x) => { x.disabled = false; x.value = ''; }); stl.className = 'bk-otp-st'; stl.textContent = '';
+      };
       send.addEventListener('click', () => {
         if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.bk-fld').classList.add('is-bad'); toast('اول شماره‌ی موبایل درست رو بنویس (۱۱ رقم، با ۰۹).'); ph.focus(); return; }
         $('#bkCode', el).hidden = false; boxes[0].focus(); send.disabled = true; wait = 90; clearTimeout(t); tick();
         stl.textContent = `کد به ${maskPhone(st.phone)} پیامک شد (برای آزمایش: ۱۲۳۴۵).`;
       });
-      const check = () => { const v = enDigits(boxes.map((b) => b.value).join('')); if (v.length < 5) return; if (v === '12345') { st.otp = true; stl.className = 'bk-otp-st ok'; stl.textContent = 'شماره تأیید شد.'; boxes.forEach((b) => { b.disabled = true; }); } else { stl.className = 'bk-otp-st bad'; stl.textContent = 'کد درست نیست.'; boxes.forEach((b) => { b.value = ''; }); boxes[0].focus(); } };
+      const check = () => { const v = enDigits(boxes.map((b) => b.value).join('')); if (v.length < 5) return; if (v === '12345') { st.otp = true; store.sset('blit.otpOk', st.phone); otpEl.classList.add('is-ok'); stl.className = 'bk-otp-st ok'; stl.textContent = 'شماره تأیید شد.'; boxes.forEach((b) => { b.disabled = true; }); } else { stl.className = 'bk-otp-st bad'; stl.textContent = 'کد درست نیست.'; boxes.forEach((b) => { b.value = ''; }); boxes[0].focus(); } };
       boxes.forEach((b, i) => {
         b.addEventListener('input', () => { b.value = fa(enDigits(b.value).replace(/\D/g, '').slice(-1)); if (b.value && boxes[i + 1]) boxes[i + 1].focus(); check(); });
         b.addEventListener('keydown', (ev) => { if (ev.key === 'Backspace' && !b.value && boxes[i - 1]) boxes[i - 1].focus(); });
@@ -6802,6 +7070,14 @@ const buy = {
       });
       const prev = page.leave; page.leave = () => { clearTimeout(t); if (prev) prev(); };
     }
+    // the discount code: a link that opens its field
+    const dt = $('#bkDiscT', el), db = $('#bkDiscBox', el);
+    dt.addEventListener('click', () => { db.hidden = false; dt.setAttribute('aria-expanded', 'true'); $('#bkDisc', el).focus(); });
+    // a phone: the bar at the bottom pays; it hides while the invoice's own button is on the screen
+    const bar = $('.bk-paybar', el), pay = $('#bkPay', el);
+    $('.bk-pay2', el).addEventListener('click', () => pay.click());
+    $('.bk-bar-l', el).addEventListener('click', () => { const c = $('.bk-sum', el); scrollTo({ top: c.getBoundingClientRect().top + scrollY - 100, behavior: reduceMotion ? 'auto' : 'smooth' }); });
+    if (bar && 'IntersectionObserver' in window) { const io = new IntersectionObserver(([en]) => bar.classList.toggle('is-hide', en.isIntersecting), { threshold: 0.6 }); io.observe(pay); const prev = page.leave; page.leave = () => { io.disconnect(); if (prev) prev(); }; }
     $('#bkPay', el).addEventListener('click', () => {
       if (!/^09\d{9}$/.test(st.phone)) { ph.closest('.bk-fld').classList.add('is-bad'); toast('شماره‌ی موبایل رو درست بنویس؛ بلیت به همین شماره پیامک می‌شه.'); ph.focus(); return; }
       if (!st.otp) { const o = $('#bkOtp', el); o.classList.remove('is-shake'); void o.offsetWidth; o.classList.add('is-shake'); toast('اول شماره رو با کد پیامکی تأیید کن.'); return; }
@@ -6912,7 +7188,7 @@ const buy = {
     document.title = `بلیت · ${e.title} · بلیت`;
     const s = { id: o.sid, t: o.t }, w = whenOf(s), h = hallOf(e), { src } = artOf(e);
     el.innerHTML = `<div class="evp-in bk tkp" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
-      ${stepsHTML(4, e, s)}
+      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a></nav>${stepsHTML(4, e, s)}</div>
       <section class="panel tk-ok evp-rise">
         <span class="tk-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27.5l7.2 7.2L38 18.8"/></svg></span>
         <div class="tk-say"><h1>پرداخت موفق بود؛ بلیت‌هات آماده‌ست</h1><p>بلیت‌ها به ${esc(maskPhone(o.phone))} پیامک شد. هر وقت خواستی با «پیگیری خرید» و همین شماره دوباره پیداشون کن.</p></div>
@@ -6947,6 +7223,25 @@ const buy = {
     return `<div class="evp-in bk"><section class="panel bk-miss evp-rise"><span class="bk-exp-ic">${ico('info')}</span><h1>${esc(title)}</h1><p>${esc(text)}</p><div class="evp-dlg-end">${e && s ? `<a class="buy" href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}انتخاب صندلی</a>` : ''}${e ? `<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">صفحه‌ی اجرا</a>` : ''}<a class="chip" href="#" data-home>همه‌ی برنامه‌ها</a></div></section></div>`;
   },
 };
+// «continue your purchase»: while a hold runs (the seats of a purchase that was left), a small pill on every other page says how long is left and goes back to the payment
+const resume = {
+  el: null,
+  init() {
+    const a = document.createElement('a'); a.className = 'resume'; a.hidden = true; a.href = '#';
+    a.innerHTML = `<span class="rs-ring" aria-hidden="true">${ico('clock')}</span><span class="rs-t"><b data-rs-t>--:--</b><small data-rs-n></small></span><span class="rs-go">ادامه‌ی پرداخت${ico('arrow-l')}</span>`;
+    a.addEventListener('click', (ev) => { ev.preventDefault(); const h = store.sget('blit.hold', null); if (h && h.until > Date.now()) page.go(`#/e/${encodeURIComponent(h.eid)}/s/${encodeURIComponent(h.sid)}/pay`); });
+    ($('#app') || document.body).appendChild(a); this.el = a;
+    setInterval(() => this.tick(), 1000); addEventListener('hashchange', () => this.tick()); this.tick();
+  },
+  tick() {
+    const h = store.sget('blit.hold', null), left = h ? h.until - Date.now() : 0;
+    const here = !!h && location.hash.startsWith(`#/e/${encodeURIComponent(h.eid)}/s/${encodeURIComponent(h.sid)}`);   // (the seats or the payment of that purchase)
+    const show = !!h && left > 0 && !here;
+    if (this.el.hidden === show) { this.el.hidden = !show; if (show) this.el.classList.remove('is-in'), requestAnimationFrame(() => this.el.classList.add('is-in')); }
+    if (show) { $('[data-rs-t]', this.el).textContent = mmss(left); $('[data-rs-n]', this.el).textContent = `${fa(h.items.length)} صندلی نگه داشته شده`; }
+  },
+};
+resume.init();
 // a link «همه‌ی برنامه‌ها» on any of these pages goes home
 document.addEventListener('click', (ev) => { const a = ev.target.closest('#evp [data-home]'); if (a) { ev.preventDefault(); page.close(); } });
 
