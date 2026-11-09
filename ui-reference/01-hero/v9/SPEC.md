@@ -23,6 +23,8 @@
 - *Round J*: «continue and build the other sections, until the tokens run out» and «take the halls' plans and places from iranejra.com/maps, but make the maps much more professional». The site does not answer from the build server (the connection is reset; the fetch tool gets 503), so the plans are the TYPES of the sample's halls until the owner sends the real ones. Built: steps 2–4 of a purchase (§10.2): the hall plan engine (seven plan types with boxes, tables, standing), the live seat map, the 15-minute hold, guest checkout with an SMS code for busy shows, a discount code and VAT, a demo gateway, the tickets with QR codes; «مسیریابی» to Neshan, Balad, Google Maps, Waze. Then (§10.3): the purchase tracking, sign-in with an SMS code and «حساب من», the phone's menu, the rules / about / contact pages, the archive, the search's page, a page for each category and each city. Then (§10.4): the entry control at the doors (camera, hand scanner, offline), the organiser's panel (live sales, a six-step wizard, settlement, discount codes with a promo picture and printed cards, controllers), the admin's panel (the review queue, cancellations with refunds, orders, roles, cities, the hall designer, reports, gift codes, history) and the wallet.
 - *Round K*: «add the halls package with a robust system; the site friendlier; better categories; a compact city filter». The halls library (147 halls, 150 layouts, 487 cities), one city filter for the whole site, the categories by kind, and the admin's cities / halls / shows (§9, §9.2, §10.5).
 - *Round L*: «the buttons soft by default and never full round; the light theme loses the buttons' frames; the magnet at a third; the site is too crowded; the cards are not attractive (a place for the city, every state); the presale is too long and big; the posters are too tall, big and stuck together; sold tickets after my three samples; the second header is bad — build both a widget on the right edge and one header that changes itself, so I can compare». §10.6 (the plan and everything built), §11 (the new options). **The hero's panels are still pixel-identical**; only the corners of the buttons and tags inside it changed shape, as asked.
+- *Round M*: «the site is still crowded; the way from a program to a ticket (the show's page, the mobile check, the seats, the rules, the ticket choice) has a bad structure and some of it is very stretched, make the rules and the nights bigger; the posters are not the size of their frames; then, after three samples, change the program frames entirely». §10.7.
+- *Round N*: «the purchase page is bad again; the program card must stand still like the samples, with a buy button (a rectangle with soft corners), and the pocket in its corner is fuzzy; the banners' zoom-out ends much sooner than its seconds; the road to a ticket is still not liked, some frames are very long and stretched, remake it from the root: clearer, more compact, more professional; look for other problems». §10.8 (the framed card, the whole-time zoom, one centred column, the other problems found). **The hero's panels are pixel-identical** (only the zoom's timing changed, as asked).
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -135,7 +137,7 @@ The banner is **never cut and never covered** (unless the owner asks for «پر 
 | 0 | The next scene is built or taken from the pool, its picture decoded (`img.decode()`), and put on top at `opacity 0`. |
 | 0 → 0.38 | The old panels' content fades out (`0.32 × fade`). |
 | 0.36 → 1.2 | The new panels' content fades in (starts at `0.3 × fade`, lasts `0.7 × fade`, `power2.out`). |
-| 0 → 4.9 | A banner (and its extension, as one layer) zooms out inside its panel (`sine.out`: it slows down into its place) over 70 % of the show's time (`ZOOM_SHARE`). |
+| 0 → 8.2 | A banner (and its extension, as one layer) zooms out inside its panel **linearly over the whole time of the show** (`dur` + the fade after it: 7 s + 1.2 s; round N: it used to run `sine.out` over 70 % of the time, so it looked finished in the first two seconds). `zoomShare` (100 % by default; 85 % and 70 % are the old ending, with its easing) is the look's choice. |
 | 4.9 → 7 | **The banner stands still, whole and at its full size**, so its words can be read; the time bar goes on. (A photo with the words over it, the text layout, keeps zooming out linearly over 8.2 s, until the next fade has finished.) |
 | 0.42 → | The new words fade in from 14px below (0.85 s, `power3.out`, stagger 0.07). |
 | 0.4 | The accent (the colour of the buy button, the ring, the hairline) changes. |
@@ -143,7 +145,7 @@ The banner is **never cut and never covered** (unless the owner asks for «پر 
 
 - **Four styles** («جابه‌جایی بین اجراها»): *fade*; *slide* (the new panel rises from below when going down the rail, from above when going up, `expo.out`); *zoom* (the old one shrinks away, the new one settles from 1.07); *wipe* (a clip opens from the start side, `expo.inOut`). Each leaves nothing behind (a test checks the opacity, the transform and the clip after each).
 - **Intensity** («شدت حرکت»: آروم 0.6 / متعادل 1 / قوی 1.6) multiplies the distances, the zoom and the hover lifts. Reduced motion makes it 0 and the change a 0.4 s fade.
-- **The zoom** starts small, because the banner's words are near its edges: banner 1.02 / **1.05** / 1.09, photo 1.08 / **1.15** / 1.24. A banner's zoom ends at 1 after `dur × 0.7` seconds (4.9 s of 7) and the banner then rests whole for the rest of its time; it is paused with the timer.
+- **The zoom** starts small, because the banner's words are near its edges: banner 1.02 / **1.05** / 1.09, photo 1.08 / **1.15** / 1.24. A banner's zoom ends at 1 **when its time and its fade end** (round N; with `zoomShare` below 100 it ends earlier, after `dur × share` seconds, easing out); it is paused with the timer.
 - **Pausing** (the timer, the time sign and the picture's motion pause together): the pointer over the rail or a drag in progress, focus inside the rail, the pause button, the settings panel open, the search window open, the hero covered by the second section, the tab hidden.
 - **Quick clicking:** a scene is never reused while it is still fading, and a scene is let go once a newer one has fully faded in. After five clicks 120 ms apart and after fourteen changes in a row exactly one scene is showing, with the right words and the right active card.
 - **Entrance:** the header drops in, the rail's pieces slide in one by one, the banner's panel opens from the start side (a clip, `expo.out`, 1.4 s) while the first scene fades in already zooming out, the facts panel rises, then the words.
@@ -259,6 +261,8 @@ A category is a **kind**: کنسرت‌ها، تئاترها، جُنگ و کم�
 ## 10.1 The show's page (the next section)
 
 > **Round M made this page over (§10.7):** a slim top row, a short cover, the information in two tabs, the prices as one panel, one big buy panel (the rules, the nights as cards, how many, «the best seats» or the map). The list below is round I's and is kept for what did not change (the in-and-out motion, the map's block, the facts).
+>
+> **Round N (§10.8) put the cover in the main column beside the booking card, in one centred column of 1180 px, and made the rules one short line.**
 
 The first of the four steps of a purchase (**choose the session** → the seats → book and pay → the ticket), after the sample's event page (`#/e/{slug}`), on our panels. Its address is **`#/e/<show>`** (a shared link opens it; the browser's back button closes it). The home page steps aside (`.is-page`: the hero and the list are hidden, not destroyed) and comes back **where it was** (the scroll is kept); «همه‌ی برنامه‌ها» goes back through every show opened since the list (the history stays honest). The hero's timer stops while the page is open.
 
@@ -285,6 +289,8 @@ On a phone a **bar at the bottom** says the lowest price and «انتخاب سا
 ## 10.2 Steps 2–4: the seats, the booking and payment, the tickets
 
 > **Round M compacted all three (§10.7):** one slim top row, one panel for the show / the night / the prices on the seats' page, a narrow centred checkout whose SMS check remembers a verified number, and a «continue your purchase» pill. The seat map itself did not change.
+>
+> **Round N (§10.8) made the seats' page one bar on top (the way back, the show, the night, the steps), put the price chips beside the tabs, and made the seats shrink to fit a row (a column of 1440–1650 px).**
 
 After the owner's sample (its seat page, payment and ticket) and the brief (§2.3 the hall designer, a live seat map, a
 15-minute hold; guest checkout by mobile; an SMS code for busy shows; 10 % VAT; a discount code; the ticket with its QR).
@@ -478,7 +484,7 @@ The owner's **halls package** is the source (its README's «قواعد صاحب 
 
 ## 10.6 Round L: a calmer site (the plan, the cards, the presale, the side dock, the sold tickets)
 
-> **The card of this section is now the `below` look (a choice).** Round M's default is the picture-sized card with the words on a sheet that drops away under the pointer (`posterInfo: reveal`, §10.7); everything said here about the states, the stamp, the label and the meter still holds for it.
+> **The card of this section is now the `below` look (a choice).** The default is round N's framed card (`posterInfo: frame`, §10.8: round M's hover card is gone); everything said here about the states, the stamp, the label and the meter still holds for it.
 
 The owner's words: the site is **too crowded**; the event cards are **not attractive**; they want «very professional, attractive curves, a place for the show's city, every state (ended, started, presale…)»; the presale section is **too long, tall and big** («minimal, compact, detailed»); the posters are **too tall, too big and stuck together**; the sold tickets should follow **three sample looks**; and the category bar that slides under the header is **a second header** («bad»). Buttons must be **soft** and never full-round; the light theme lost the buttons' frames; the magnet should be a third as strong.
 
@@ -571,6 +577,8 @@ All three take the show's colour and the theme's colours; the QR stays dark on w
 
 ## 10.7 Round M: from a program to a ticket in fewer, bigger steps; the new program card
 
+> **Round N replaced this section's card** (the owner did not like the words going away under the pointer) with the framed card of §10.8 and made the show's page, the seats' page and the checkout over again. What is said here stays true of what did not change: the quick way («the best seats» held at once), the rules asked when they are needed, the continue pill, the remembered SMS check, the posters' fit (`posterFit`) and the columns of the list.
+
 **What the owner said** (two messages, short): the site still felt crowded; the road from a program to a ticket (the show's page, the mobile check, the seats, the rules, the ticket choice) had a bad structure and some parts were very stretched; the rules and the ticket choice should be bigger and easier to see; posters did not fill their frames and the frames should be more attractive, curved and soft; then, with three sample images: *change the program frames entirely* (the picture a little tall, about 3 : 4, not the whole poster; with the mouse on it the **whole picture** is seen, and when the mouse leaves the words rise back with a smooth, professional motion; on a desktop only, and on a phone something else that is attractive). «Don't ask me anything; go on until all of it is done.»
 
 ### The road, before and after
@@ -654,6 +662,73 @@ The head of a page (icon, name, line) is slimmer (it was a tall, mostly empty pa
 - **Only Chromium was used** (no iOS Safari, no Firefox, no real touch screen): the touch layout was tested with an emulated phone (`hover: none`).
 - **The rules' tick** nudges every 3.4 s until it is ticked; with reduced motion it does not move.
 
+## 10.8 Round N: a card that stands still, one column for the road to a ticket, a banner that zooms for its whole time
+
+**What the owner said** (one message, with two sample cards: a white card with the picture on top, the words and a soft raised button under it; and a dark one with a picture in a frame, notched tabs cut into the picture's edge and a box of figures under it): the purchase page is bad again; *remove the mode where the words go away under the pointer, make the **fixed** state of the samples, the frame fixed altogether*; the pocket in the top corner is good but its surroundings are fuzzy; make the cards like the samples **with a buy button (square or a rectangle with soft corners like the other buttons)**; the banners' zoom-out ends much sooner than the seconds it should last; the purchase path is still not liked: *some frames on the page after choosing a program are very long and stretched; remake it from the root, clearer, more compact, more professional*; and *look for other problems and fix them*.
+
+### The card (`posterInfo: frame`, the default; the styles are at the end of the card's block in `s2.css`; `ticketHTML` did not change)
+
+A card is a **mat** (the card's own colour, a little lighter than the section on the dark theme) round a picture with a soft corner of its own; nothing on it moves or hides while the pointer is over it (the hover that dropped the words away, the lift, the shadow's change and the sheen are gone; the picture grows 4 % inside its frame and a ring of the show's colour comes up round the card, nothing else).
+
+| part | what it is |
+|---|---|
+| the picture | the frame's shape (`posterRatio`, 0.75 by default: the owner's 3 : 4); a corner of `--ir` (concentric with the card's `--cr`); the top corner under the pocket is square |
+| **the pocket** | the date (the day, the month, «tonight» / «tomorrow» in a small capsule) cut into the picture's top corner: the card's colour, a convex corner towards the picture and **a concave curve where it meets each edge** (two `radial-gradient`s that go a pixel under their neighbour) |
+| the label | the show's one word (a status, «last tickets», its own word) as a small glass chip in the other top corner, as before; a night that is nearly full has its thin bar along the picture's foot |
+| **the tab** | the kind and the days (`.tkt-sub`): a tab at the picture's foot, rising from the words into the picture, curved out at both feet; on a phone it says only the kind |
+| the words | the name (two lines at most), the city (bold) and the hall |
+| **the foot** | the price (the small «from» over the figure) and **the buy button**: a soft rectangle of the look's radius (`--rb`), the words' colour as everywhere (`buyStyle`), with a slight sheen; side by side when the card is 262 px wide or more, else the price's line over a full-width button (a container query on the card). A sold, ended or cancelled show has its reason in the same place, a show not on sale yet its countdown |
+
+*Why the old pocket looked fuzzy* (found by reading the pixels of a screenshot at the real size, not by looking): the picture's rounded corner was cut by `overflow: hidden` *under* a square corner of the pocket, and two layers that are both cut by an anti-aliased edge leave a line a few levels darker than either (3–5 of 255 here, a ring round the pocket); the picture's own colour behind it (`#14121d`) added a dark rim at every cut corner. Now the card's colour is behind the picture, and the corner the pocket covers is square, so the pocket's outer edge and the mat are one flat colour (measured at the real pixel size: the ring is gone, every pixel of the mat is 30, and the test `m-flow-test.js` reads those pixels). Every length that touches a curve (`--fw`, `--cr`, `--tr`) is a whole number of pixels (`round()`, Chrome 125; where it is not known the curves are still drawn, from the plain lengths).
+
+**The choices** (the look's panel, «کارت برنامه»): `frame` (this card), `below` (round L's card: the picture whole, the words under it), `over` (the words on the picture, always). A look saved with round M's `reveal` takes `frame`. `posterRatio` goes to 1.2 (a squarer picture, if the owner wants the samples' proportions).
+
+### The banner's zoom (`zoomShare`, `stage.show` in `app.js`)
+
+The zoom-out used to end after 70 % of the time with an easing that is fastest at the start (`sine.out`), so it looked finished in the first two seconds. It now runs **linearly over the whole time of the banner** (the show's `dur` and the fade after it: 7 s + 1.2 s), so it is still moving when the next one comes in. `zoomShare` (the look's panel, «مدت زوم‌اوت بنر») is 100 % by default; 85 % and 70 % bring back an ending earlier, with the old easing. (Rule 0: the hero's panels are pixel-identical to the approved version, checked: «Checked» below.)
+
+### The road, made over (round N)
+
+What was wrong, from a screenshot at 1920 × 1080: **every block was the window's whole width** (about 1900 px), so a poster, a title and a night's button were three small things at three ends of a long strip; the facts panel had three short facts and an empty middle; the prices panel was a strip of three chips; on the seats' page a panel for the show, a panel for the night and another for the prices were three frames of one row's worth of words, and the overview's frame was 900 px wide round a drawing 160 px wide.
+
+1. **One centred column** (`--fl` in `page.css`: 1180 px, or `62u` on a big window; the seats' page 1440 px or `86u` (the window's whole width up to 1440; 1651 px at 1920); the checkout 1060 px): the top row, the body and the strip of other shows are in it, so no block is wider than its words need.
+2. **The show's page**: the cover is **in the main column**, beside the booking card (not a strip over both); the poster first, then the name; one tab strip for the facts and the map; the prices as chips under it. **The booking card** (400 px, follows the page): a header with the lowest price, the nights as smaller cards, how many, **the rules as one short line** (they are still asked when a button is pressed and they are not accepted), and the two ways on. On a phone the order is the cover, the card, the information.
+3. **The seats' page**: **one bar** on top (the way back, the show with its poster, the night's button, the steps) instead of a row and a panel; **the price chips are the legend and the filter in one** and sit beside the sections' tabs (the legend under the map keeps only the seats' states); the overview is 104–132 px high; the title of the section, its free seats and the live count are one line; the order column is 320–390 px. **Seats are as big as they can be (34 px) while the widest row still fits the panel, down to 26 px on a mouse** (a touch screen keeps its big seats and scrolls), so the sample hall's widest row needs no sideways scroll at 1920 or at 1440.
+4. **The checkout**: two columns of the same weight in a column of 1060 px; the note under the pay button is one block of words (it was cut into pieces by the flex row).
+5. **The sold tickets' page** is in its own column too (1340 px, two tickets side by side at most).
+
+*Measured (dark):* at 1920 × 1080 the first seat is at 539 px (it was about 640 px), the seats are 31 px and the widest row fits (no sideways scroll); at 1440 × 900 the seats are 26 px and the widest row fits too; the seats' bar is 69–84 px high; no block of a purchase page is wider than 1651 px.
+
+### Other problems found and fixed (round N)
+
+- **The checkout's note under the pay button** was cut into pieces (its words and its link were separate items of a flex row; in the narrower column they wrapped apart): the words are one block now.
+- **The seats' page on a phone was 30 px wider than the screen** (the one bar's night button could not wrap), so the whole page shifted sideways: the bar wraps (the way back and the steps, then the show and the night). `scrollWidth` is 390.
+- **A hall's widest row needed a sideways scroll** once the page's column was narrower than the window: the seats shrink to fit (34 → 26 px, a mouse only).
+- **The buy button's words were hidden on a phone** by an older rule of round L's card (an icon button of 36 px); the framed card shows them.
+- **The legend under the map repeated the price chips** (colour, price) that are above it as the filter: the legend says only what a seat's state is.
+- **The two fields of the checkout were not level** when a label wrapped in a half-width column: the row aligns them at the bottom.
+- **A countdown digit was measured by axe at a quarter of its opacity** in its flip (light theme, a phone; found by the states' audit, not by the pages'): the flip turns the digit in without fading it.
+- **The sold tickets' page had its top row in one width and its tickets in another**: one column of 1340 px.
+
+### Checked (round N)
+
+- **The regression** (`tools/regress.sh`): **31 tests; 30 passed at the first run and the six-banner test failed two old checks that asserted the old early-ending zoom** (the zoom is over at 5.6 s; the layer is exactly the panel at that time): they were rewritten for the whole-time zoom (it is still going at 5.6 s and 6.5 s, its speed is even, 0.61 % of the size a second at the start and at the end, and at its end the layer is exactly the panel) and pass. After the last small edits (the checkout's columns and note, the seats' fit, the column's width, the digits' flip) the tests that touch the road, the cards and the zoom ran again on the final build: buying, flow, seat-price, map navigation, map, sales map, queue, pages, UI, poster and six-banner, all pass. `m-flow-test.js` has **36 checks** now (the framed card: the 3 : 4 frame, the pocket, the tab, the buy button's size and radius, nothing moves under the pointer, **the pocket's corner is one flat colour at the real pixel size**; the show's page: the cover in the main column level with the booking card, the column ≤ 1180 px, the rules one line, the card's order; the seats' page: one bar, the chips beside the tabs, a column ≤ 1651 px, seats of 26–34 px that fit the widest row; a phone's card). `ui-test.js` and `poster-test.js` were taught the framed card.
+- **The cards** (`tools/n-card-audit.js`): 39 cards × 8 windows (1100, 1280, 1440, 1700, 1920, 2560, 768 and 390 px wide) × both themes: the name does not meet the place, the place does not meet the foot, the button is whole and ≥ 33 px with its words, the price and the button do not overlap, the tab is on the picture's foot and inside it, the pocket and the label do not meet, every row of a section has cards of one height: **0 problems in 624 cards**.
+- **The pocket, at the pixel**: the mat is one colour (30 of 255 at the real size); before, a ring of 25–27 ran round the pocket and a dark rim round every cut corner.
+- **The hero** (Rule 0): the banner's panel and the facts panel are **pixel-identical** to the approved version (commit d4cc53c) with the pill look: banner 0 and facts 0 differing pixels at 1920×1080, 1920×862, 1536×730, 1366×768, 2560×1440 and 1440×900. The zoom's timing is the one thing asked to change: at 100 % a banner's scale goes from 1.048 to 1.008 evenly over its 7 s (and reaches 1.000 when its fade ends); at 70 % (the old ending) it is 1.017 at 2 s, with 64 % of the way gone, and 1.000 from 4.6 s.
+- **Accessibility** (axe-core, WCAG 2.1 A and AA): **no violations** on every page in both themes, on a desktop and a phone (`a11y-audit.js`); and **in all 38 states that need a press** (the search window, the city picker, the bell, the sign-in, the dock, the show's page, the rules asked before the best seats, the payment with its discount code and its SMS check, another page with the continue pill; a phone's menu and dock); its first run found one thing: a countdown digit caught at a quarter of its opacity in its flip (light theme, a phone), so the flip no longer fades the digit.
+- **The crawl** (`qa-crawl.js`, every page, both themes, 1920 / 1366 / 390): no script error, no sideways overflow, no cut-off, no broken picture; **354 links, none to nowhere**.
+- **Layout shift**: 0.000 on the first load (desktop and phone); a show's page opened by its link 0.000 to 0.0004; the seats' page on a phone 0.002 (all of it the View Transition's own layers).
+- **Speed** (CPU ×4, 30 wheel turns, `tools/perf-bisect.js`): **no clear change**: four runs measured 127 to 455 ms of blocking time (round M: 120 to 830 ms); the spread on this machine is larger than any difference between builds.
+- **The client's single file** (`client/export.py`, `client-test.js`): opens offline from the disk, dark, no notes, the font and 67 pictures inside, no failed request.
+
+### Honest notes (round N)
+
+- **The card is taller than round M's** (about 0.55 wide to high on a desktop; round M's was 0.75): the words are under the picture now, so a section of two rows is about 1100 px at 1920 × 1080. `posterRatio` (up to 1.2), `listCols` and `secRows` are the settings if the owner wants it shorter.
+- **A picture is cut a little** (a 3 : 4 frame, a 2 : 3 poster: a 11 % cut from the foot; a banner is shown whole over a soft copy of itself): `posterFit` has the other two choices.
+- **`round()` and `container-type`** (Chrome 125 / 105, Safari 15.4 / 16, Firefox 118+): without them the curves are still drawn from the plain lengths, and the price and the button stay side by side on a narrow card.
+- **Only Chromium was used** (no iOS Safari, no Firefox, no real touch screen).
+- **The seats' page keeps a sideways scroll on a touch screen** for a wide section (a seat of 34 px is the smallest a thumb should be asked to press).
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.
@@ -679,14 +754,15 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 | `fit` | بنر · نمایش بنر | contain / cover | contain |
 | `fill` | بنر · جای خالی کنار بنر | black / edge | black |
 | `zoom` | بنر · زوم اول تصویر | low / mid / high | mid |
+| `zoomShare` | بنر · مدت زوم‌اوت بنر | ۱۰۰٪ / ۸۵٪ / ۷۰٪ | ۱۰۰٪ (کل زمان نمایش) |
 | `bg` | پس‌زمینه‌ی صفحه · پس‌زمینه | black / color / glow | black |
 | `bgColor` | پس‌زمینه‌ی صفحه · رنگ پس‌زمینه | رنگ | #000000 |
 | `caps` | کارت‌ها · نوشته‌ی کارت‌ها | under / over / off | under |
 | `capDate` | کارت‌ها · روز اجرا کنار اسم | روشن / خاموش | روشن |
 | `dim` | کارت‌ها · کم‌رنگ بودن کارت‌های غیرفعال | 0–60 ٪ | 14 |
 | `progress` | کارت‌ها · نشونه‌ی زمان باقی‌مونده | bar / ring / off | bar |
-| `posterRatio` | لیست زیر هیرو · نسبت کادر پوستر (عرض ÷ ارتفاع) | ۰٫۵–۱ | ۰٫۷۵ (۳ به ۴؛ تا دور L ۰٫۸ بود) |
-| `posterInfo` | لیست زیر هیرو · نوشته‌های کارت | روی عکس، با رفتن موس کنار می‌ره / زیر پوستر / روی پوستر، همیشه | روی عکس، با رفتن موس کنار می‌ره (`reveal`) |
+| `posterRatio` | لیست زیر هیرو · نسبت کادر پوستر (عرض ÷ ارتفاع) | ۰٫۵–۱٫۲ | ۰٫۷۵ (۳ به ۴) |
+| `posterInfo` | لیست زیر هیرو · کارت برنامه | قاب ثابت (مثل نمونه‌ها) / پوستر با نوشته‌ی زیرش (کارت دور L) / نوشته‌ها روی پوستر، همیشه | قاب ثابت (`frame`؛ `reveal` دور M حذف شد و لوک ذخیره‌شده‌ش به `frame` می‌ره) |
 | `posterFit` | لیست زیر هیرو · جا شدن پوستر تو کادرش | هوشمند / همیشه کامل / همیشه پر | هوشمند |
 | `listFill` | لیست زیر هیرو · اجراهای نمونه برای پر کردن لیست | روشن / خاموش | روشن |
 | `secRows` | لیست زیر هیرو · ردیف‌های هر بخش (بقیه با «نمایش همه») | ۱ / ۲ / ۳ / همه | ۲ |
@@ -867,6 +943,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **The side dock** (round L) is an `aside` labelled «دسترسی سریع», `inert` (out of the keys' and the readers' way) until it is shown; its categories are links with names (count included) and `aria-current` on the one in view, its actions are buttons with names, its tab is a button with `aria-pressed` (pinned) and `aria-expanded`; focus inside it opens it, Esc closes it and keeps it shut for a moment so the focus it left does not reopen it; on a phone the same tab opens a list and a press outside closes it. A card's status label is in its poster link's name; a sold-out, over, cancelled or postponed card says so in its foot in words, not only in colour. The ticket's QR is a button with a name («نمایش بزرگ کد QR بلیت ۱»).
 - **Contrast, in both themes truly** (round L): axe (WCAG 2.1 A and AA) finds nothing on 26 pages in the dark and the light theme, on a desktop and a phone, and nothing on what only shows after a press (the search window, the city picker, the bell, the sign-in window, the side dock open and on a phone, the phone's menu, the show page with its rules accepted, a chosen seat). Dim text on light panels never goes under 64 % of the text colour (§10.6); the tones of green, amber, red and blue are deep ones there.
 - **Round M (the flow):** the show page's information is a real `tablist` (arrow keys, one panel at a time; with no map there is no tab bar); the nights are a `radiogroup` of `radio`s with one tab stop and arrow keys (a night with no seats is `aria-disabled`); the rules' window is a `dialog` with its focus kept inside, Esc, and the focus given back; the continue pill is a link with a name and the time; the steps' labels are kept for a reader on a phone (hidden for the eye only); the sheet of a card is plain text in the reading order whether or not the pointer has dropped it. Axe: nothing on 26 pages and in 38 states (§10.7).
+- **Round N:** the framed card keeps the same semantics as before (the whole card is one target, its picture link and its buy button are real controls, the tab and the pocket are `aria-hidden` copies of what the words already say, and the words are in the reading order with nothing hidden under the pointer); the seats' page's one bar is a `panel` with the way back (a named link), the show, the night's button (`aria-haspopup`) and the steps. Axe: see «Checked» in §10.8.
 - The banner is a link labelled «… صفحه‌ی اجرا»; it can also be dragged, but nothing needs dragging. Focus rings follow the text colour. Under `prefers-reduced-motion` nothing moves (a 0.4 s fade, no zoom, no pin effect, no light, no lean), and auto-advance starts paused.
 
 ---
@@ -890,6 +967,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
   transition (the same curve and timing as before).
 - **Round L (the list's scroll, CPU ×4; `tools/perf-bisect.js`, four warm runs of 30 wheel turns):** total blocking time is about the same as round K's (median 190 ms going down and 240 coming up in round K, 260 and 150 now). **It was 1.3 s until a trace showed why**: the side dock's progress ring was a custom property written on the dock every frame, which restyled its whole subtree (36 elements) and made the next layout read (`s2.probe`'s `getBoundingClientRect`, 17 ms a call at ×4) wait; with the dock hidden the same scroll blocked for 0.1 s. The ring is now one inline write (`stroke-dashoffset`) on the one element that draws it, only while the dock shows, in 1 % steps, and the old back-to-top ring is written only where it shows. The cards were not the cost: switching off their label's backdrop blur, their masks, transitions, glare, background gradient or every shadow in turn changed nothing measurable (the runs vary by a factor of two among themselves). A trace of the layout work (`perf-trace.js`) shows the same 70–100 layouts of about 20 dirty objects for a scroll in both builds.
 - **Round M:** layout shift 0.000 on the first load and 0.000 to 0.0003 on a show's page opened by its link (§10.7); the list's scroll cost is not clearly different from round L's (the measurement's spread is larger than the difference).
+- **Round N:** see «Checked» in §10.8 (layout shift, the list's scroll cost with the framed card, the seats' page).
 
 ---
 
@@ -943,3 +1021,5 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **A ticket-shaped card, cut-out people, 3D objects, a big countdown, a giant condensed title** (v5, v6): the banner has its own title and the facts sit in their own panel. (The sale-start countdown is built, as the buy button's own state: §9.1. What stays out is a *big* countdown in the banner's panel.)
 - **A «tap to peek» on a phone** (round M): a phone has no pointer, so the card's sheet stays (a little smaller) and a tap opens the show; a first tap that only hid the sheet would take the tap away from opening the show.
 - **Round L's card as the default** (the picture with the words under it): kept as `posterInfo: below`, not the default; the owner's samples asked for the words over the picture.
+- **Round M's hover card** (the words over the picture, dropping away under the pointer, a phone keeping them smaller): removed in round N at the owner's word; nothing of it is kept as a choice (`reveal` in a saved look becomes `frame`).
+- **A hover that lifts or zooms the card:** only the picture grows 4 % inside its frame and a ring of the show's colour comes up; the frame itself is fixed (the owner: «the frame fixed altogether»).

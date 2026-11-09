@@ -790,7 +790,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .cd-b .u { display: grid; justify-items: center; gap: .2em; }
 .cd-b b { min-width: 2.2em; padding: .24em .28em; border-radius: .5em; background: rgba(var(--fg), .08); box-shadow: inset 0 0 0 1px rgba(var(--fg), .22); font-size: calc(max(13.5px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.25; text-align: center; font-variant-numeric: tabular-nums; transform-origin: 50% 100%; }
 .cd-b b.fl { animation: flip .55s var(--ease); }
-@keyframes flip { 0% { transform: perspective(300px) rotateX(-88deg); opacity: .25; } 100% { transform: none; opacity: 1; } }
+@keyframes flip { 0% { transform: perspective(300px) rotateX(-88deg); } 100% { transform: none; } }   /* (no fade: a digit turning in is as readable as one at rest; axe caught it at a quarter of its opacity) */
 .cd-b i { font-size: calc(max(10px, calc(var(--u) * .58)) * var(--tx) * var(--tx-small)); font-style: normal; color: rgba(var(--fg), max(.6, var(--dmin))); }
 .cd-b em { padding-top: .3em; font-style: normal; font-weight: 800; color: rgba(var(--fg), max(.5, var(--dmin))); }
 
