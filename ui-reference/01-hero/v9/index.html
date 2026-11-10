@@ -983,8 +983,8 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 @keyframes dots-in { from { opacity: 0; } to { opacity: 1; } }
 @media print { .evp-dots { display: none !important; } }
 .is-page .stack, .is-page .notes { display: none; }
-.is-page .evp { display: block; }
-.evp-in { --sc: var(--sc-d); --fl: max(1180px, calc(var(--u) * 74)); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); align-content: start; min-height: 100svh; padding: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.8) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); color: rgb(var(--fg)); }
+.is-page .evp { display: flex; flex-direction: column; min-height: 100svh; }   /* (the page's column, then the footer: a short page has the footer at the bottom of the window) */
+.evp-in { --sc: var(--sc-d); --fl: max(1180px, calc(var(--u) * 74)); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); align-content: start; flex: 1 0 auto; min-height: 0; padding: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.8) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); color: rgb(var(--fg)); }
 :root[data-mode="light"] .evp-in { --sc: var(--sc-l); }
 .evp-in.bk { --fl: max(1440px, calc(var(--u) * 86)); }
 .evp-in.tkp { --fl: min(1340px, 100%); }
@@ -1121,6 +1121,8 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 
 /* what the show is: its people as tags (as in the sample), a line in its colour, the words */
 .evp-more, .evp-prices { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
+.evp-pmap { position: relative; aspect-ratio: 16 / 9; margin: 0 0 calc(var(--u) * .9); border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .035); overflow: hidden; }   /* the hall in the colours of its prices (page.js: priceMap) */
+.evp-pmap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .evp-main h2, .evp-side h2, .evp-more h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
 .evp-main h2 svg.i, .evp-side h2 svg.i, .evp-more h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc); }
 .evp-main h2 small, .evp-side h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), max(.6, var(--dmin))); }
@@ -1205,7 +1207,10 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-note b { color: rgb(var(--fg)); font-weight: var(--fwb); }
 .evp-more .tkt-grid { --cols: 4; }
 .evp-more .tkt-grid > :nth-child(n+5) { display: none; }   /* one row: as many as there are columns */
-.evp-ft { margin-top: calc(var(--gap) * 1.5); }
+.evp > .evp-ft { --fl: max(1180px, calc(var(--u) * 74)); flex: none; box-sizing: border-box; width: calc(100% - var(--pad-l) - var(--pad-r)); max-width: var(--fl); margin: 0 auto calc(var(--gap) * 2); }   /* the site's footer after the page's column, as wide as that column */
+.evp > .evp-ft.bk { --fl: max(1440px, calc(var(--u) * 86)); }
+.evp > .evp-ft.bk-narrow { --fl: 1200px; }
+.evp > .evp-ft.tkp { --fl: min(1340px, 100%); }
 
 /* the rules' window */
 .evp-modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: rgba(6, 5, 10, .62); }
@@ -1408,6 +1413,51 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .bk-go, .bk-pay { width: 100%; gap: .5em; }
 .bk-go:disabled, .bk-go2:disabled { opacity: .45; cursor: not-allowed; filter: grayscale(.4); }
 .bk-go:disabled:active, .bk-go2:disabled:active { transform: none; }
+/* the steps' bar says what was chosen (a step that is done); the payment's «after»: three small steps */
+.steps .tv { display: grid; gap: .05em; }
+.steps .v { font-size: .84em; font-weight: 400; color: rgba(var(--fg), max(.62, var(--dmin))); }
+.bk-top .steps .v { display: none; }
+@media (max-width: 760px), (max-aspect-ratio: 5/4) { .steps .v { display: none; } }
+.bk-next { padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); }
+.bk-next h2 { display: flex; align-items: center; gap: .5em; margin: 0 0 calc(var(--u) * 1); font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.bk-next h2 svg.i { width: 1.25em; height: 1.25em; color: var(--sc); }
+.bk-nx { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; }
+.bk-nx li { position: relative; display: grid; justify-items: center; align-content: start; gap: .3em; padding-inline: .3em; text-align: center; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
+.bk-nx .nx-i { display: grid; place-items: center; width: 2.9em; aspect-ratio: 1; border-radius: 50%; background: color-mix(in oklab, var(--sc) 16%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 42%, transparent); color: var(--sc); }
+.bk-nx .nx-i svg.i { width: 1.35em; height: 1.35em; }
+.bk-nx b { font-weight: var(--fwb); }
+.bk-nx small { font-size: .92em; color: rgba(var(--fg), max(.62, var(--dmin))); }
+.bk-nx li:not(:last-child)::after { content: ""; position: absolute; top: 1.45em; inset-inline-start: calc(50% + 1.75em); width: calc(100% - 3.5em); border-top: 2px dashed rgba(var(--fg), .22); }
+/* the seats' page (round P): the booking's facts, the cart's place-holders, the button's pulse, the tiers' legend */
+.bk-facts { display: grid; gap: .45em; margin: calc(var(--u) * .8) 0 0; padding: calc(var(--u) * .8) 0 0; list-style: none; border-top: 1px solid rgba(var(--fg), .1); font-size: calc(max(12px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.7, var(--dmin))); }
+.bk-facts li { display: flex; align-items: center; gap: .6em; }
+.bk-facts svg.i { flex: none; width: 1.35em; height: 1.35em; color: var(--sc); }
+.bk-facts b { color: rgb(var(--fg)); font-weight: var(--fwb); }
+.bk-list li.bk-slot { min-height: 2.6em; grid-template-columns: auto 1fr auto; background: none; border: 1px dashed rgba(var(--fg), .24); animation: bkSlot 2.6s ease-in-out infinite; }
+.bk-slot > i { width: .65em; aspect-ratio: 1; border-radius: 50%; background: rgba(var(--fg), .18); }
+.bk-slot > span { height: .55em; width: 64%; border-radius: 99px; background: rgba(var(--fg), .11); }
+.bk-slot > b { height: .55em; width: 3.4em; border-radius: 99px; background: rgba(var(--fg), .11); }
+.bk-slot + .bk-slot > span { width: 46%; }
+.bk-slot + .bk-slot { animation-delay: .35s; }
+@keyframes bkSlot { 50% { opacity: .5; } }
+.bk-list li.bk-slot-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; background: none; animation: none; }
+.bk-go.is-pulse { animation: bkPulse 1.1s ease-out 2; }
+@keyframes bkPulse { 0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, .65); } 100% { box-shadow: 0 0 0 16px rgba(244, 63, 94, 0); } }
+.bk-prices { padding: calc(var(--u) * 1.1) calc(var(--u) * 1.2) calc(var(--u) * 1.2); border-radius: calc(var(--r) * 1.15); }
+.bk-prices h2 { display: flex; align-items: center; gap: .5em; margin: 0 0 calc(var(--u) * .7); font-size: calc(max(14px, calc(var(--u) * .95)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.bk-prices h2 svg.i { width: 1.3em; height: 1.3em; color: var(--sc); }
+.bk-prl { display: grid; gap: 5px; }
+.bk-pr { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: .7em; row-gap: .05em; padding: .6em .8em; border-radius: calc(var(--r) * .5); background: rgba(var(--fg), .04); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); transition: background-color .25s, box-shadow .25s; }
+.bk-pr > i { grid-row: 1 / span 2; width: .8em; aspect-ratio: 1; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 25%, transparent); }
+.bk-pr-n { min-width: 0; color: rgba(var(--fg), .86); }
+.bk-pr > b { font-weight: var(--fwb); white-space: nowrap; }
+.bk-pr > small { grid-column: 2 / 4; font-size: .92em; color: rgba(var(--fg), max(.6, var(--dmin))); }
+.bk-pr:hover { background: rgba(var(--fg), .08); }
+.bk-pr[aria-pressed="true"] { background: color-mix(in oklab, var(--c) 18%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 60%, transparent); }
+.bk-pr.is-out { opacity: .55; }
+.bk-pr:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+@media (min-width: 1100px) and (min-aspect-ratio: 5/4) { .bk-mhead .bk-filter { display: none; } }   /* (the legend beside the map is the filter there) */
+@media (max-width: 1099px), (max-aspect-ratio: 5/4) { .bk-prices { display: none; } }
 .bk-note { display: flex; align-items: flex-start; gap: .5em; margin: calc(var(--u) * .7) 0 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), max(.62, var(--dmin))); }
 .bk-note svg.i { flex: none; width: 1.3em; height: 1.3em; margin-top: .3em; color: var(--sc); }
 .bk-note a { color: var(--sc); }
@@ -1608,7 +1658,7 @@ a.buy, a.chip { text-decoration: none; }
   .bk-bar .buy { height: 44px; min-width: 0; padding-inline: 22px; }
 }
 @media print {
-  .nav, .totop, .bk-bar, .evp-cta, .steps, .tk-acts, .tk-help, .toast, #protoFab, .pp-fab, .evp-crumb { display: none !important; }
+  .nav, .totop, .bk-bar, .evp-cta, .steps, .tk-acts, .tk-help, .toast, #protoFab, .pp-fab, .evp-crumb, .evp-ft { display: none !important; }
   body { background: #fff !important; color: #000 !important; }
   .tk-card { break-inside: avoid; box-shadow: none; filter: none; }
   .tk-in { border: 1px solid #ccc; -webkit-mask: none; mask: none; }
@@ -1733,7 +1783,7 @@ a.buy, a.chip { text-decoration: none; }
 .sm-head small { font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.62, var(--dmin))); }
 .sm-stage { flex: none; display: inline-flex; align-items: center; gap: .35em; padding: .3em .9em; border-radius: 999px; font-size: 12px; font-weight: 600; color: rgba(var(--fg), .75); background: linear-gradient(90deg, rgba(139, 92, 246, .2), rgba(236, 72, 153, .2), rgba(249, 115, 22, .2)); }
 .sm-stage svg.i { width: 1.1em; height: 1.1em; }
-.sm-view { --smz: clamp(28px, 1.8vw, 34px); position: relative; max-height: min(64svh, 760px); overflow: auto; overscroll-behavior: contain; direction: ltr; padding: 16px 12px 20px; border-radius: calc(var(--r) * .8); background: radial-gradient(120% 50% at 50% 0%, color-mix(in oklab, var(--sc) 9%, transparent), transparent 60%), rgba(var(--fg), .025); scrollbar-width: thin; }
+.sm-view { --smz: clamp(28px, 1.8vw, 34px); position: relative; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; direction: ltr; padding: 16px 12px 20px; border-radius: calc(var(--r) * .8); background: radial-gradient(120% 50% at 50% 0%, color-mix(in oklab, var(--sc) 9%, transparent), transparent 60%), rgba(var(--fg), .025); scrollbar-width: thin; }
 @media (pointer: coarse) { .sm-view { --smz: 34px; } }
 .sm-in { width: max-content; min-width: 100%; display: grid; justify-items: center; align-content: start; gap: 7px; direction: rtl; }
 .sm-row { display: flex; align-items: center; gap: 10px; }
@@ -1829,12 +1879,12 @@ a.buy, a.chip { text-decoration: none; }
 .sm-stabs { flex-wrap: wrap; margin-top: 6px; border-radius: 16px; } .sm-stabs [hidden] { display: none; }
 .sm-gtabs { flex-wrap: wrap; border-radius: 18px; }
 
-/* the first-time guide above the map */
-.sm-help { display: flex; align-items: center; gap: calc(var(--u) * .8); margin-bottom: calc(var(--u) * .6); padding: calc(var(--u) * .6) calc(var(--u) * .9); border-radius: calc(var(--r) * .9); background: color-mix(in oklab, var(--ring) 12%, transparent); border: 1px solid color-mix(in oklab, var(--ring) 38%, transparent); font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; }
-.sm-help .sec-ic { flex: none; width: 34px; }
-.sm-help p { flex: 1; margin: 0; }
-.sm-help .chip { flex: none; gap: .4em; }
-@media (max-width: 760px) { .sm-help { flex-wrap: wrap; } .sm-help .chip { margin-inline-start: auto; } }
+/* the first visit's cue (round P): one free seat is ringed and a small finger taps it, until the buyer touches the map; no words */
+.sm-s.is-coach { position: relative; z-index: 2; animation: smCoach 1.9s ease-out infinite; }
+.sm-s.is-coach::after { content: ""; position: absolute; inset-inline-end: -4px; top: 55%; width: 15px; height: 15px; border-radius: 50%; background: rgb(var(--fg)); border: 3px solid var(--capsule); box-shadow: 0 4px 10px -2px rgba(0, 0, 0, .55); pointer-events: none; animation: smFinger 1.9s ease-in-out infinite; }
+@keyframes smCoach { 0% { box-shadow: inset 0 0 0 1.5px var(--c), 0 0 0 0 color-mix(in oklab, var(--c) 80%, transparent); } 70%, 100% { box-shadow: inset 0 0 0 1.5px var(--c), 0 0 0 13px transparent; } }
+@keyframes smFinger { 0%, 100% { translate: 5px 7px; scale: 1; } 42% { translate: 0 0; scale: .8; } 55% { translate: 0 0; scale: .8; } }
+@media (prefers-reduced-motion: reduce) { .sm-s.is-coach { animation: none; box-shadow: inset 0 0 0 1.5px var(--c), 0 0 0 5px color-mix(in oklab, var(--c) 45%, transparent); } .sm-s.is-coach::after { animation: none; translate: 2px 3px; } }
 
 /* ── the other pages (pages.js): their head, boxes, the purchase tracking, the questions, the sign-in window, the phone's menu ── */
 .pg-head { display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * .85) calc(var(--u) * 1.4); border-radius: calc(var(--r) * 1.3); }
@@ -6607,14 +6657,15 @@ const page = {
             </div>` : ''}
             <p class="evp-note">${ico('shield')}<span>قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان${open && anyOk ? `؛ صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن` : ''}.</span></p>
           </section>
-          <section class="evp-prices panel evp-rise" aria-labelledby="evpPriceH"><h2 id="evpPriceH">${ico('ticket')}قیمت‌ها<small>+ ۱۰٪ مالیات بر ارزش افزوده</small></h2><ul class="evp-plan">${plan}</ul></section>
+          <section class="evp-prices panel evp-rise" aria-labelledby="evpPriceH"><h2 id="evpPriceH">${ico('ticket')}قیمت‌ها<small>+ ۱۰٪ مالیات بر ارزش افزوده</small></h2>${ses.length ? `<div class="evp-pmap" role="img" aria-label="نقشه‌ی سالن؛ هر صندلی به رنگ قیمتش"><canvas></canvas></div>` : ''}<ul class="evp-plan">${plan}</ul></section>
         </aside>
       </div>
       ${similar.length ? `<section class="evp-more panel evp-rise" aria-labelledby="evpMoreH"><h2 id="evpMoreH">${ico(kindIcon)}${esc({ concert: 'کنسرت‌های دیگه', theatre: 'نمایش‌های دیگه', comedy: 'جُنگ‌ها و کمدی‌های دیگه' }[e.kind] || 'برنامه‌های دیگه')}</h2><div class="tkt-grid"></div></section>` : ''}
       <div class="evp-cta" aria-hidden="false"><span>از <b>${esc(dg(e.price))}</b> ${esc(TXT.unit)}</span><button type="button" class="buy" data-act="book">${ico('calendar')}انتخاب سانس</button></div>
     </div>`;
     const grid = $('.evp-more .tkt-grid', this.el); if (grid) similar.forEach((x) => grid.appendChild(s2.card(x, false)));
-    const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', this.el).appendChild(c); this.wireFooter(c); }
+    this.addFooter();
+    this.priceMap(e, ses);
     $$('.evp-more .tkt', this.el).forEach((c) => c.classList.add('is-in'));
     this.wire(e, ses);
     mountLocMaps(this.el);
@@ -6703,6 +6754,43 @@ const page = {
     gsap.from($$('.evp-dlg li', box), { x: -14 * k, opacity: 0, duration: 0.5, stagger: 0.035, ease: 'expo.out', delay: 0.1, clearProps: 'transform,opacity' });
     $('[data-ok]', box).focus();
   },
+  // the hall, small, every seat in the colour of its price (the colours of the list under it and of the seats' page): the buyer sees where the cheaper and the dearer seats are
+  // before choosing. Drawn once, when the page is idle, in a box of a fixed shape (so nothing moves when it comes)
+  priceMap(e, ses) {
+    const go = () => {
+      const host = $('.evp-pmap', this.el), s = ses && (ses.find((x) => x.seats > 0) || ses[0]);
+      if (!host || !s || !host.isConnected || !this.on || this.e !== e) return;
+      let L; try { L = seatPlan(e, s); } catch (err) { host.remove(); return; }
+      this.pm = { e, L }; this.priceMapDraw();
+    };
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 500);
+    if (!this.pmOn) { this.pmOn = true; let t = 0; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { if (this.on && this.pm && this.v && this.v.kind === 'show') this.priceMapDraw(); }, 200); }); }
+  },
+  priceMapDraw() {
+    const host = $('.evp-pmap', this.el), cv = host && $('canvas', host), pm = this.pm;
+    if (!cv || !pm || !host.isConnected) return;
+    const L = pm.L, dpr = Math.min(2, devicePixelRatio || 1), cw = host.clientWidth, ch = host.clientHeight; if (!cw || !ch) return;
+    cv.width = Math.round(cw * dpr); cv.height = Math.round(ch * dpr);
+    const x = cv.getContext('2d'), k = Math.min(cw / L.W, ch / L.H) * 0.94, ox = (cw - L.W * k) / 2, oy = (ch - L.H * k) / 2;
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, cw, ch); x.save(); x.translate(ox, oy); x.scale(k, k);
+    const cx = L.cx, cy = L.cy; x.fillStyle = 'rgba(150, 150, 175, .34)'; x.beginPath();   // (the stage: a colour that reads on both themes)
+    if (L.stage === 'arc') { x.moveTo(cx - 230, cy - 96); x.lineTo(cx + 230, cy - 96); x.lineTo(cx + 230, cy - 20); x.quadraticCurveTo(cx, cy + 70, cx - 230, cy - 20); x.closePath(); } else { const w = L.stage === 'wide' ? 330 : 250; x.roundRect(cx - w, cy - 96, w * 2, L.stage === 'wide' ? 110 : 96, 14); }
+    x.fill();
+    L.secs.forEach((z) => { if (!z.ga || !z.shapes[0]) return; const p = z.shapes[0]; x.globalAlpha = 0.85; x.fillStyle = z.ga.c; x.beginPath(); x.roundRect(p.x, p.y, p.w, p.h, 22); x.fill(); x.globalAlpha = 1; });
+    const groups = new Map(), r = 11;   // (a little bigger than the overview's: here the hall is a picture, not a map to press)
+    L.secs.forEach((z) => { for (const p of z.seats) { if (p.st === 'off') continue; if (!groups.has(p.c)) groups.set(p.c, []); groups.get(p.c).push(p); } });
+    for (const [col, ps] of groups) { x.fillStyle = col; x.beginPath(); for (const p of ps) x.rect(p.x - r, p.y - r, r * 2, r * 2); x.fill(); }
+    x.restore();
+  },
+  // the site's footer, at the end of a page inside the site: a copy of the list's, put after the page's column (so a short page has it at the bottom of the window and a long
+  // one at its end), in the width of that column. The copy must not keep the list's «waiting to be revealed» state: that made it invisible, with its room kept
+  addFooter() {
+    const ft = $('#ft'), host = this.el, col = host && $('.evp-in', host); if (!ft || !col) return;
+    $$('.evp-ft', host).forEach((x) => x.remove());
+    const c = ft.cloneNode(true); c.removeAttribute('id'); c.removeAttribute('data-rv'); c.classList.remove('rv-wait', 'is-in'); c.classList.add('evp-ft'); c.style.cssText = '';
+    ['bk', 'bk-narrow', 'tkp'].forEach((k) => { if (col.classList.contains(k)) c.classList.add(k); });
+    host.appendChild(c); this.wireFooter(c);
+  },
   wireFooter(ft) {
     $$('[data-go]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const k = a.dataset.go; if (k === 'top') scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); else this.close({ then: () => s2.go(k) }); }));
     $$('[data-page]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); { const r = PAGE_ROUTE[a.dataset.page]; if (r) page.go(r); else toast(`اینجا صفحه‌ی «${a.dataset.page}» باز می‌شه.`); }; }));
@@ -6738,11 +6826,11 @@ const whenOf = (s) => { const d = new Date(s.t); return { wd: F.week.format(d), 
 const seatName = (x) => (x.ga ? `${x.zone} · بلیت ${fa(x.n)}` : `${x.zone}، ${x.word || 'ردیف'} ${fa(x.row)}، صندلی ${fa(x.n)}`);
 const item = (x) => ({ key: x.key, zid: x.zid, zone: x.zone, word: x.word, row: x.row, n: x.n, t: x.t, c: x.c, price: x.price, ga: !!x.ga });
 const STEP_LINKS = (e, s) => [`#/e/${encodeURIComponent(e.id)}`, s ? `#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}` : null, null, null];
-function stepsHTML(cur, e, s) {
-  const links = STEP_LINKS(e, s);
+function stepsHTML(cur, e, s, seats) {
+  const links = STEP_LINKS(e, s), w = s ? whenOf(s) : null, vals = [w ? `${w.wd} ${w.dm}` : '', seats ? `${fa(seats)} صندلی` : '', cur > 3 ? 'پرداخت شد' : '', ''];   // (a step that is done says what was chosen)
   return `<ol class="steps evp-rise" aria-label="مراحل خرید" style="--cur:${cur - 1}">${STEPS.map((n, i) => {
     const k = i + 1, done = k < cur, here = k === cur, href = done && cur < 4 ? links[i] : null;
-    const inner = `<span class="n">${done ? ico('check') : fa(k)}</span><span class="t">${n}</span>`;
+    const inner = `<span class="n">${done ? ico('check') : fa(k)}</span><span class="tv"><span class="t">${n}</span>${done && vals[i] ? `<small class="v">${esc(vals[i])}</small>` : ''}</span>`;
     return `<li${here ? ' aria-current="step"' : ''}${done ? ' class="is-done"' : ''}>${href ? `<a href="${href}">${inner}</a>` : inner}</li>`;
   }).join('')}<i class="bar" aria-hidden="true"></i></ol>`;
 }
@@ -6813,6 +6901,7 @@ const buy = {
   render(v) {
     clearInterval(this.tick); clearTimeout(this.live);
     if (v.kind === 'seats') this.seats(v); else if (v.kind === 'pay') this.pay(v); else if (v.kind === 'ticket') this.ticket(v); else pages.render(v);
+    if (v.kind === 'seats' || v.kind === 'pay' || v.kind === 'ticket') page.addFooter();   // (the steps end with the site's footer, like every page)
     // one clock for the hold's timers
     this.tick = setInterval(() => this.clock(), 1000); this.clock();
     const inner = page.leave;   // a page's own (the gate's camera, a desk's timers)
@@ -6829,7 +6918,7 @@ const buy = {
   /* ───── step 2: the seats ───── */
   seats(v) {
     const e = v.e, s = sessionOf(e, v.sid), el = page.el;
-    this.e = e; this.s = s;   // the show and the session on the screen (the tests read them)
+    this.e = e; this.s = s; this.coachDone = false;   // the show and the session on the screen (the tests read them)
     if (!s) { el.innerHTML = this.missing('این سانس پیدا نشد', 'شاید تموم شده یا نشانیش عوض شده.', e); return; }
     const st = statusOf(e);
     if (st.key === 'soon' || st.cta) { el.innerHTML = this.missing(st.key === 'soon' ? 'فروش هنوز شروع نشده' : `«${e.title}»: ${st.label}`, st.key === 'soon' ? `فروش ${saleWhen(e)} شروع می‌شه.` : 'برای این اجرا بلیتی فروخته نمی‌شه.', e); return; }
@@ -6866,8 +6955,12 @@ const buy = {
             ${hold ? `<p class="bk-held">${ico('clock')}رزرو تا <b data-hold>--:--</b></p>` : ''}
             <ul class="bk-list"></ul>
             <div class="bk-total"><span>جمع، بدون مالیات</span><b class="bk-sum"></b></div>
-            <button type="button" class="buy bk-go" disabled>${ico('arrow-l')}ادامه و رزرو صندلی‌ها</button>
-            <p class="bk-note">${ico('shield')}با «ادامه» صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن تا پرداخت کنی. هر خرید تا ${fa(MAX_SEATS)} صندلی.</p>
+            <button type="button" class="buy bk-go" disabled>${ico('arrow-l')}<span class="bk-go-t">ادامه و رزرو صندلی‌ها</span></button>
+            <ul class="bk-facts" aria-label="شرایط رزرو"><li>${ico('clock')}<span><b>${fa(HOLD_MIN)} دقیقه</b> نگه‌داری صندلی‌ها</span></li><li>${ico('ticket')}<span>تا <b>${fa(MAX_SEATS)} صندلی</b> در هر خرید</span></li><li>${ico('shield')}<span>پرداخت امن بانکی</span></li></ul>
+          </section>
+          <section class="panel bk-prices evp-rise" aria-labelledby="bkPrH">
+            <h2 id="bkPrH">${ico('tag')}قیمت‌ها</h2>
+            <div class="bk-prl" role="group" aria-label="فیلتر قیمت">${tiers.map((t) => `<button type="button" class="bk-pr" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i><span class="bk-pr-n">${esc(runName(t))}</span><b>${money(t.price)}</b><small data-free></small></button>`).join('')}</div>
           </section>
         </aside>
       </div>
@@ -6883,11 +6976,11 @@ const buy = {
   wireSeats(e, s, ses) {
     const el = page.el;
     $$('.bk-seg [data-z]', el).forEach((b) => b.addEventListener('click', () => this.focusZone(+b.dataset.z)));
-    $$('.bk-chips .chip', el).forEach((b) => b.addEventListener('click', () => {
+    $$('.bk-chips .chip, .bk-pr', el).forEach((b) => b.addEventListener('click', () => {
       const t = b.dataset.t;
       if (!t) this.tiers.clear(); else if (this.tiers.has(t)) this.tiers.delete(t); else this.tiers.add(t);
-      $$('.bk-chips .chip', el).forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.t ? this.tiers.has(x.dataset.t) : !this.tiers.size)));
-      this.paintSeats();
+      $$('.bk-chips .chip, .bk-pr', el).forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.t ? this.tiers.has(x.dataset.t) : !this.tiers.size)));
+      this.paintSeats(); this.coach();
     }));
     const sb = $('.bk-ses', el);
     if (ses.length > 1) sb.addEventListener('click', () => {
@@ -6964,7 +7057,7 @@ const buy = {
     const items = [...this.cart.values()], ga = new Map(); items.filter((x) => x.ga).forEach((x) => { if (!ga.has(x.zid)) ga.set(x.zid, []); ga.get(x.zid).push(x); });
     list.innerHTML = n ? items.filter((x) => !x.ga).map((x) => `<li style="--c:${x.c}"><i aria-hidden="true"></i><span>${esc(seatName(x))}</span><b>${money(x.price)}</b><button type="button" data-rm="${x.key}" aria-label="برداشتن ${esc(seatName(x))}">${ico('x')}</button></li>`).join('')
       + [...ga.entries()].map(([zid, xs]) => `<li class="ga" style="--c:${xs[0].c}"><i aria-hidden="true"></i><span>${esc(xs[0].zone)} × ${fa(xs.length)}</span><b>${money(xs[0].price * xs.length)}</b><span class="qty"><button type="button" data-ga-add="${zid}" aria-label="یه بلیت ایستاده‌ی دیگه">${ico('plus')}</button><button type="button" data-ga-rm="${zid}" aria-label="یه بلیت کمتر">${ico('minus')}</button></span></li>`).join('')
-      : `<li class="bk-empty">${ico('info')}روی صندلی‌های آزاد نقشه بزن تا انتخاب بشن${this.plan.secs.some((z) => z.ga) ? '، یا روی بخش ایستاده' : ''}.</li>`;
+      : `<li class="bk-empty bk-slot" aria-hidden="true"><i></i><span></span><b></b></li><li class="bk-empty bk-slot" aria-hidden="true"><i></i><span></span><b></b></li><li class="bk-empty bk-slot-sr">${this.plan.secs.some((z) => z.ga) ? 'صندلی‌ای انتخاب نشده؛ از نقشه، صندلی آزاد یا بخش ایستاده انتخاب کن.' : 'صندلی‌ای انتخاب نشده؛ از نقشه، صندلی آزاد انتخاب کن.'}</li>`;
     $$('[data-rm]', list).forEach((b) => b.addEventListener('click', () => { this.cart.delete(b.dataset.rm); this.paintSeats(); this.cartPaint(e, s); }));
     $$('[data-ga-add]', list).forEach((b) => b.addEventListener('click', () => this.addGA(e, s, b.dataset.gaAdd, 1)));
     $$('[data-ga-rm]', list).forEach((b) => b.addEventListener('click', () => this.addGA(e, s, b.dataset.gaRm, -1)));
@@ -6972,7 +7065,18 @@ const buy = {
     $('.bk-sum', el).textContent = `${money(sum)} تومان`;
     $('.bk-count2', el).textContent = n ? `${fa(n)} صندلی` : 'صندلی انتخاب نشده';
     $('.bk-sum2', el).textContent = n ? `${money(sum)} تومان` : '';
-    $('.bk-go', el).disabled = !n; $('.bk-go2', el).disabled = !n;
+    const go = $('.bk-go', el), was = go.classList.contains('is-ready');
+    go.disabled = !n; $('.bk-go2', el).disabled = !n;
+    $('.bk-go-t', go).textContent = n ? `ادامه با ${fa(n)} ${items.some((x) => x.ga) && !items.some((x) => !x.ga) ? 'بلیت' : 'صندلی'}` : 'ادامه و رزرو صندلی‌ها';
+    go.classList.toggle('is-ready', !!n);
+    if (n && !was && MOTK()) { go.classList.remove('is-pulse'); void go.offsetWidth; go.classList.add('is-pulse'); }   // (the first seat: the button says it can go on)
+    this.priceFree();
+  },
+  // the tiers' legend under the cart: how many seats of each price are still free (the standing places count as they are left)
+  priceFree() {
+    const rows = $$('.bk-pr', page.el); if (!rows.length || !this.plan) return;
+    const n = new Map(); for (const z of this.plan.secs) { if (z.ga) { const t = z.ga.t; n.set(t, (n.get(t) || 0) + Math.max(0, z.ga.left - [...this.cart.values()].filter((x) => x.ga && x.zid === z.sec.id).length)); } else for (const p of z.seats) if (p.st === 'free' && !this.cart.has(p.key)) n.set(p.t, (n.get(p.t) || 0) + 1); }
+    rows.forEach((r) => { const k = n.get(r.dataset.t) || 0, el = $('[data-free]', r); if (el) el.textContent = k ? `${fa(k)} آزاد` : 'تمام شد'; r.classList.toggle('is-out', !k); });
   },
   pick(e, s, b) {
     const x = this.find(b.dataset.k); if (!x) return;
@@ -7074,7 +7178,7 @@ const buy = {
     const user = userOf(), ph0 = user ? user.phone : store.get('blit.phone', ''), ver = !!ph0 && (store.sget('blit.otpOk', '') === ph0 || (!!user && user.phone === ph0));   // (a number that was checked, or the signed-in account's, is a checked one)
     this.payState = { e, s, seats, code: '', need, otp: !need || ver, verified: ver ? ph0 : '', phone: ph0 };
     el.innerHTML = `<div class="evp-in bk bk-narrow" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
-      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}برگشت به صندلی‌ها</a></nav>${stepsHTML(3, e, s)}</div>
+      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}برگشت به صندلی‌ها</a></nav>${stepsHTML(3, e, s, seats.length)}</div>
       <section class="panel bk-hold evp-rise" aria-live="polite"><span class="bk-ring" data-hold-bar aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21"/><circle class="pr" cx="24" cy="24" r="21" pathLength="100"/></svg>${ico('clock')}</span><div><b>صندلی‌هات تا <span data-hold>--:--</span> دیگه برات نگه داشته می‌شن</b><span>اگه تا اون موقع پرداخت نشه، آزاد می‌شن و بقیه می‌تونن بخرنشون.</span></div></section>
       <div class="evp-cols">
         <div class="evp-main">
@@ -7100,6 +7204,10 @@ const buy = {
               <label class="way is-on"><input type="radio" name="way" value="gate" checked><span class="way-ic">${ico('shield-ok')}</span><span><b>درگاه بانکی (شاپرک)</b><small>همه‌ی کارت‌های عضو شتاب</small></span></label>
               <label class="way${wallet.bal() > 0 ? '' : ' is-off'}"><input type="radio" name="way" value="wallet"${wallet.bal() > 0 ? '' : ' disabled'}><span class="way-ic">${ico('tag')}</span><span><b>کیف پول بلیت</b><small>موجودی: ${money(wallet.bal())} تومان</small></span></label>
             </div>
+          </section>
+          <section class="panel bk-next evp-rise" aria-labelledby="bkNxH">
+            <h2 id="bkNxH">${ico('spark')}بعد از پرداخت</h2>
+            <ol class="bk-nx"><li><span class="nx-i">${ico('shield-ok')}</span><b>تأیید پرداخت</b><small>همین‌جا، بدون انتظار</small></li><li><span class="nx-i">${ico('bell')}</span><b>پیامک بلیت</b><small>به شماره‌ی تو</small></li><li><span class="nx-i">${ico('ticket')}</span><b>QR دم در</b><small>روی گوشی یا چاپی</small></li></ol>
           </section>
         </div>
         <aside class="evp-side">
@@ -7299,7 +7407,7 @@ const buy = {
     document.title = `بلیت · ${e.title} · بلیت`;
     const s = { id: o.sid, t: o.t }, w = whenOf(s), h = hallOf(e), { a: art, src } = artOf(e), ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4);
     el.innerHTML = `<div class="evp-in bk tkp" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
-      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a></nav>${stepsHTML(4, e, s)}</div>
+      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a></nav>${stepsHTML(4, e, s, o.seats.length)}</div>
       <section class="panel tk-ok evp-rise">
         <span class="tk-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27.5l7.2 7.2L38 18.8"/></svg></span>
         <div class="tk-say"><h1>پرداخت موفق بود؛ بلیت‌هات آماده‌ست</h1><p>بلیت‌ها به ${esc(maskPhone(o.phone))} پیامک شد. هر وقت خواستی با «پیگیری خرید» و همین شماره دوباره پیداشون کن.</p></div>
@@ -7371,7 +7479,7 @@ Object.assign(buy, {
   // the map's panel: on top a row (the show with its poster, the hall's overview, the guide), then the sections and the prices, then the section on show
   mapHTML(tiers, card) {
     const L = this.plan, oa = clamp(L.W / L.H || 2, 1.15, 2.6).toFixed(3);
-    return `${store.get('blit.tipSeat', 0) ? '' : `<div class="sm-help" id="smHelp" role="note"><span class="sec-ic" aria-hidden="true">${ico('info')}</span><p><b>سه قدم تا بلیت:</b> ۱) روی نقشه‌ی کوچیک یه بخش رو بزن تا صندلی‌هاش درشت بشه؛ ۲) صندلی‌های رنگی رو خودت انتخاب کن؛ ۳) «ادامه».</p><button type="button" class="chip" data-help-x>${ico('check')}فهمیدم</button></div>`}<div class="sm-top" style="--oa:${oa}">
+    return `<div class="sm-top" style="--oa:${oa}">
         ${card || ''}
         <div class="sm-mini" role="img" aria-label="نقشه‌ی کل سالن؛ روی هر بخش بزن تا صندلی‌هاش بزرگ دیده بشن"><canvas></canvas><i class="sm-mini-vp" hidden></i><span class="sm-mini-tip" aria-hidden="true"></span><small class="sm-mini-hint">${ico('info')}روی هر بخش بزن</small></div>
         <div class="sm-guide" role="group" aria-label="راهنمای نقشه"><b>${ico('info')}راهنمای صندلی‌ها</b><ul class="st-legend" aria-label="راهنما"><li><i class="lg mine"></i><span><b>انتخاب تو</b><small>صندلی‌هایی که الان برداشتی</small></span></li><li><i class="lg held"></i><span><b>در حال پرداخت دیگران</b><small>خریدار دیگه‌ای برداشته؛ شاید آزاد بشه</small></span></li><li><i class="lg sold"></i><span><b>فروخته شده</b><small>دیگه خریدنی نیست</small></span></li><li><i class="lg off"></i><span><b>غیرقابل فروش</b><small>برای این اجرا فروخته نمی‌شه</small></span></li></ul></div>
@@ -7465,7 +7573,7 @@ Object.assign(buy, {
     box.innerHTML = (z.ga || z.sec.k === 'grid' || z.sec.k === 'boxes' || z.sec.k === 'tables' ? '' : '<div class="sm-stagebar" aria-hidden="true"><span>صحنه</span></div>') + html;
     const first = $('.sm-s[data-st="free"]', box) || $('.sm-s', box); if (first) first.tabIndex = 0;
     // a section wider than the panel opens at its middle (the best seats); the rows nearest the stage at the top
-    requestAnimationFrame(() => { if (!view.isConnected) return; this.fitSeats(view, box); view.scrollTop = 0; view.scrollLeft = Math.max(0, (view.scrollWidth - view.clientWidth) / 2); this.vpDraw(); });
+    requestAnimationFrame(() => { if (!view.isConnected) return; this.fitSeats(view, box); view.scrollTop = 0; view.scrollLeft = Math.max(0, (view.scrollWidth - view.clientWidth) / 2); this.vpDraw(); this.coach(); });
     if (anim && MOTK()) box.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.22,1,.36,1)' });
     this.miniSoon();
   },
@@ -7493,6 +7601,19 @@ Object.assign(buy, {
     for (const b of box.querySelectorAll('.sm-s')) this.paintOne(b);
     if (!noMini) this.miniSoon();
   },
+  // the first visit, the cue that has no words: one free seat near the middle of the section on show is ringed and a small finger taps it (CSS), until the buyer touches the map;
+  // the first seat chosen ends it for good (`blit.tipSeat`)
+  coach() {
+    const box = $('#smIn', page.el); if (!box) return;
+    $$('.is-coach', box).forEach((x) => x.classList.remove('is-coach'));
+    if (this.coachDone || this.cart.size || store.get('blit.tipSeat', 0)) return;
+    const seats = [...box.querySelectorAll('.sm-s[data-st="free"]:not(.is-dim)')].slice(0, 200); if (!seats.length) return;
+    const bq = box.getBoundingClientRect(), tx = bq.left + bq.width / 2, ty = bq.top + Math.min(bq.height * 0.3, 190);
+    let best = null, bd = 1e12;
+    for (const b of seats) { const q = b.getBoundingClientRect(); if (!q.width) continue; const d = (q.left + q.width / 2 - tx) ** 2 + (q.top + q.height / 2 - ty) ** 2; if (d < bd) { bd = d; best = b; } }
+    if (best) best.classList.add('is-coach');
+  },
+  coachOff(save) { this.coachDone = true; $$('.is-coach', page.el).forEach((x) => x.classList.remove('is-coach')); if (save) store.set('blit.tipSeat', 1); },
   seatEl(k) { const box = $('#smIn', page.el); return box ? box.querySelector(`.sm-s[data-k="${k}"]`) : null; },
   pick(e, s, b) {
     const x = this.find(b.dataset.k); if (!x) return;
@@ -7502,7 +7623,7 @@ Object.assign(buy, {
     else if (x.st === 'off') { toast('این صندلی برای فروش نیست.'); return; }
     else if (this.tiers.size && !this.tiers.has(x.t)) { toast('این صندلی تو قیمتی که انتخاب کردی نیست.'); return; }
     else if (this.cart.size >= MAX_SEATS) { toast(`هر خرید تا ${fa(MAX_SEATS)} صندلی.`); return; }
-    else { this.cart.set(x.key, x); if (MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
+    else { this.cart.set(x.key, x); this.coachOff(true); if (MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
     this.paintOne(b); this.miniSoon(); this.cartPaint(e, s);
   },
   // standing places: as many as you add, of the area's price
@@ -7629,7 +7750,7 @@ Object.assign(buy, {
       box.addEventListener('pointerout', (ev) => { if (!ev.relatedTarget || !ev.relatedTarget.closest || !ev.relatedTarget.closest('.sm-s')) stip.hidden = true; });
       view.addEventListener('scroll', () => { stip.hidden = true; }, { passive: true });
     }
-    const help = $('#smHelp', el); if (help) $('[data-help-x]', help).addEventListener('click', () => { store.set('blit.tipSeat', 1); help.remove(); });
+    if (view) view.addEventListener('pointerdown', () => this.coachOff(false), { passive: true });   // (the buyer has found the map: the cue is done for this visit)
     $$('.sm-gtabs [data-g]', el).forEach((b) => b.addEventListener('click', () => { const g = this.groups[+b.dataset.g]; if (!g || g.idx.includes(this.zone)) return; const L = this.plan, i = g.idx.find((q) => (L.secs[q].ga ? L.secs[q].ga.left > 0 : L.secs[q].seats.some((x) => x.st === 'free'))); this.focusZone(i != null ? i : g.idx[0]); }));
     // the keys: Left and Right go along the row (seat 1 is on the right), Up and Down to the row before and after
     view.addEventListener('keydown', (ev) => {
@@ -7658,7 +7779,7 @@ Object.assign(buy, {
       this.plan.secs.forEach((z, i) => { const tab = $(`.bk-seg [data-z="${i}"] small`, page.el); if (tab && !z.ga) tab.textContent = this.freeOf(z); });
       if (this.groups) this.groups.forEach((g, gi) => { const tab = $(`.sm-gtabs [data-g="${gi}"] small`, page.el); if (tab) tab.textContent = `${fa(g.idx.reduce((n, q) => n + (this.plan.secs[q].ga ? Math.max(0, this.plan.secs[q].ga.left) : this.plan.secs[q].seats.filter((x) => x.st === 'free').length), 0))} آزاد`; });
       const cur = this.plan.secs[this.zone]; if (cur && !cur.ga) { const sub = $('#smSub', page.el); if (sub) sub.textContent = sub.textContent.replace(/^[^·]+/, `${this.freeOf(cur)} `); }
-      this.miniSoon();
+      this.miniSoon(); this.priceFree();
       n = clamp(n + Math.round((R() - 0.5) * 4), 2, 40); if (watchers) watchers.textContent = `${fa(n)} نفر همین الان دارن صندلی انتخاب می‌کنن`;
       this.live = setTimeout(step, 2600 + R() * 2600);
     };
@@ -7724,7 +7845,7 @@ const pages = {
     const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), account: () => account.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x), queue: (x) => queue.render(x) }[v.kind];
     if (!fn) { if (v.kind === 'gate') gate.render(v); else desk.render(v); return; }
     fn.call(this, v);
-    const ft = $('#ft'); if (ft) { const c = ft.cloneNode(true); c.removeAttribute('id'); c.classList.add('evp-ft'); c.style.cssText = ''; $('.evp-in', page.el).appendChild(c); page.wireFooter(c); }
+    page.addFooter();
     $$('.evp-in .tkt', page.el).forEach((c) => c.classList.add('is-in'));
   },
   // the head of a page: the path and a panel with its icon, name and line
