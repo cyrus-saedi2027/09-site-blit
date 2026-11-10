@@ -10,7 +10,7 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, now at round O (the latest owner round, §10.9). History of v9:
+**Status:** v9, now at round P (the latest owner round, §10.10). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
@@ -26,6 +26,7 @@
 - *Round M*: «the site is still crowded; the way from a program to a ticket (the show's page, the mobile check, the seats, the rules, the ticket choice) has a bad structure and some of it is very stretched, make the rules and the nights bigger; the posters are not the size of their frames; then, after three samples, change the program frames entirely». §10.7.
 - *Round N*: «the purchase page is bad again; the program card must stand still like the samples, with a buy button (a rectangle with soft corners), and the pocket in its corner is fuzzy; the banners' zoom-out ends much sooner than its seconds; the road to a ticket is still not liked, some frames are very long and stretched, remake it from the root: clearer, more compact, more professional; look for other problems». §10.8 (the framed card, the whole-time zoom, one centred column, the other problems found). **The hero's panels are pixel-identical** (only the zoom's timing changed, as asked).
 - *Round O*: «the pages inside a program still have too many empty places: put a dotted background like the picture but not in order, faded here and not there, in the black-and-white theme, changing very calmly and never hurting the speed; the poster is very small, make it seen much better; remove the search for an empty seat, the buyer chooses; the phone's check must not be a separate frame: a button in the number's own box, the number goes with an animation and squares for the code come, and a verified number signs the buyer in; **the home page is perfect, do not touch it**». §10.9.
+- *Round P*: «inside a program there used to be an ending, a footer, and now it is gone: give it an ending, do not just leave it; the emptiness is better but there is room to be more professional, smoother and fuller, so that even someone who does not understand sees the road to a ticket and how to choose the seats; do not keep writing «do this and that», make the road plain for the buyer». §10.10.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -302,7 +303,7 @@ simulated until the real gateway and SMS panel are connected (brief §2.5); orde
 **The halls' plans** (`hall.js`: `hallLayout`, `hallLayoutGrid`; the plans themselves come from `hallslib.js`, §10.5). A plan is a stage and its sections. A real hall's section is the table of its cells: seats, aisles, row labels, blocks, texts (`k: 'grid'`; the seat's key is its own number in the package; seat 1 is where the package puts it); the designer's plans (what the admin draws) are `fan` (rows on arcs round the stage), `rect`, `boxes`, `tables` and `stand`, as before. A section whose seat numbers are only a count (`sym`: a stand, a balcony sold by number) is sold by quantity, like a standing area. The seats outside the capacity are drawn but not for sale.
 
 **The seats** (step 2): the show and the session (another session from a menu), the price chips (a tier's colour and
-price; a chip dims the other prices), the map and «صندلی‌های تو».
+price; a chip dims the other prices), the map and «صندلی‌های تو». (Round P: on a wide window the filter is the prices' legend under the cart, and the first-time bar of orders is a ringed seat with a small finger; §10.10.)
 - **The map (round J, rebuilt for speed and big seats; `seatmap.js`).** No zoom is ever needed to pick a seat. On top:
   the **overview** (a small drawing of the whole hall on a `<canvas>`: the stage, every seat as a dot in its tier's colour,
   the standing areas; the section on show is framed and bright, the others dim) (round O: the **«بهترین صندلی‌ها» box that stood beside it is gone**, the buyer chooses; the overview is on a top row with the show's poster and the guide of the colours, §10.9). Under them the tabs (one per section, each with its free seats) and **one section, big**:
@@ -824,6 +825,60 @@ The visitor's lists (the header's city picker, the search window and the results
 - **The check is a demo**: the code is `12345` and no SMS is sent; the real gateway and SMS panel come with the server.
 - **Only Chromium was used** (no iOS Safari, no Firefox, no real touch screen); a wide section of the seats' page still scrolls sideways on a touch screen.
 
+## 10.10 Round P: the pages inside a program end again, and the road to a ticket shows itself
+
+**What the owner said** (one message): *inside a program there used to be an ending, a footer, and now it is gone: give it an ending, do not just leave it*; *the emptiness is better, but there is still room to make the pages more professional, smoother and fuller, so that someone who does not understand still sees the road to a ticket and how to choose the seats; and do not keep writing «do this and do that», make the road plain for the buyer; it is good now, but it can be better*. And, mid-round: *continue, and do the rest of what I asked*.
+
+**The home page was not touched** (Rule 0 and round O's «do not touch it»): its panels are pixel-identical to the approved version and its cards pass the same audit (§ «Checked» below).
+
+### The footer: it was there, and nobody could see it
+
+The show's page and the fixed pages (rules, about, the archive, a category, a city, the hall's page) did carry a copy of the list's footer, but the copy **kept the list's «waiting to be revealed» state** (`rv-wait`: opacity 0, its room kept in the layout) whenever the list's own footer had not been scrolled into view yet, which is how most buyers arrive (they press a card). So the page ended in an empty stretch of the page's height. The seats', the payment's and the ticket's pages never had one.
+
+Now `page.addFooter()` (`page.js`) puts **a clean copy after the page's column**, as a sibling of `.evp-in` inside `.evp` (a flex column of at least the window's height): a short page has its footer **at the bottom of the window**, a long one at its **end**, and it is as wide as that page's own column (the show's, the map's 1440–1650, the payment's 1200, the tickets' 1340). It is called by the show's page, the three steps and the fixed pages; it is not printed with the tickets; on a phone, where the seats' and the payment's pages have a fixed bar at the bottom, the footer keeps room under its last line (`.evp:has(.bk-bar)`).
+
+### The seats' page: guided by what it shows, not by sentences
+
+| before | now |
+|---|---|
+| a bar of orders on a first visit: «سه قدم تا بلیت: ۱) … ۲) … ۳) …» with «فهمیدم» | **gone**. One free seat near the middle of the section on show is **ringed, and a small finger taps it** (CSS only: `.sm-s.is-coach`, `smCoach`, `smFinger`), until the buyer touches the map; a first seat chosen ends it for good (`blit.tipSeat`) |
+| the empty cart: a sentence («روی صندلی‌های آزاد نقشه بزن …») | **two dashed place-holders** that the chosen seats replace (one hidden line is kept for a screen reader) |
+| the button: «ادامه و رزرو صندلی‌ها» always | the button **says what goes on**: «ادامه با ۲ صندلی» (or «بلیت» for standing places); the first seat makes it pulse twice (`is-pulse`) |
+| a sentence under the button («با «ادامه» صندلی‌ها ۱۵ دقیقه برات نگه داشته می‌شن …») | **three small lines with icons**: ۱۵ دقیقه نگه‌داری صندلی‌ها · تا ۱۰ صندلی در هر خرید · پرداخت امن بانکی |
+| price chips above the map; the left column empty under the cart | on a wide window **a panel «قیمت‌ها» under the cart**: the price tiers as a legend that **is** the filter (colour, name, price, how many seats are free, live), the chips above the map are not shown; on a narrower window (under 1100 px or a portrait window) the chips stay and the panel is not shown |
+| the section on show scrolled inside a box of its own (`max-height: min(64svh, 760px)`), which hid the back rows | the section shows all its rows; **the page scrolls** and the cart and the prices follow it (a phone and a touch screen keep the sideways scroll of a wide section) |
+
+### The show's page: the hall, in the colours of its prices
+
+The prices' panel (under the booking card) starts with **the hall, small, every seat in the colour of its price** (`page.priceMap`, drawn from the same plan as the seats' page, `seatPlan`): the buyer sees where the cheaper and the dearer seats are before choosing, and the list under it is the legend. It is drawn once, **when the page is idle**, on a canvas in a box of a fixed 16 : 9 shape, so **nothing moves when it comes** (the panel is the same height before and after); it uses colours that read on both themes; a show with no session (one that sells elsewhere) has no box.
+
+### The payment, and the steps' bar
+
+- Under «روش پرداخت»: a panel **«بعد از پرداخت»** with three small steps and icons: تأیید پرداخت (همین‌جا، بدون انتظار) → پیامک بلیت (به شماره‌ی تو) → QR دم در (روی گوشی یا چاپی). The payment's right column used to end 82 px above the left one (an empty stretch under it); with the panel it ends 69 px below it, and the page's end is the footer.
+- **The steps' bar says what was chosen**: on the payment's and the ticket's pages a step that is done has a second line (the night; the number of seats; «پرداخت شد»). On the seats' page (the bar already holds the night) and on a phone the second line is not shown.
+
+### The look: nothing new
+
+No new setting. The footer follows the page's theme; `evpPlace`, `pageDots`, `dotsPow` (§11) are as in round O.
+
+### Checked (round P)
+
+- **The whole regression**, 24 suites on the final build (the 23 of round O and the new `p-test.js`): all pass, no script error. Three older checks were changed with the page (m-flow's phone pay bar, buy-test's price filter; see the honest notes).
+- **`p-test.js`** (35 checks): a show's page opened straight from a link ends with the footer, seen (opacity 1, one copy, after the page's column); the footer's link opens the rules page which ends with it; the seats' page, the payment and the ticket pages end with it; it is not printed; on a tall window a short page has it at the bottom of the window; the first-time bar of orders is gone and one free seat is ringed with a small finger, ended by a touch and, for good, by a first seat; the cart is two place-holders with no sentence; the button says «ادامه با ۲ صندلی»; the three facts; the prices' legend (count of each price against the plan's own, the filter, the chip that follows, the chips not shown on a wide window and the legend not shown on a narrow one); the section has no box with a scroll of its own; the show's page draws the hall in the colours of its prices without moving anything (the panel is 434 px before and after) and so do the halls of three more shows; the payment's «بعد از پرداخت» and the steps' bar with what was chosen (on the payment's and the ticket's pages); on a phone nothing is wider than the screen, the footer is above the fixed bar on the seats' and the payment's pages, and the three small steps fit.
+- **axe-core** (WCAG 2.1 A and AA): 26 routes in both themes at 1440 px and on a phone, and 46 open states (the windows, the dock, the rules asked, the seats' page, the payment with the discount open, the phone's box in its stages, the continue pill): **no violation**.
+- **The crawl** (every page, both themes, desktop and phone): no console error, no failed request (what Google's own map frame asks for is not counted), no overflow, no broken picture; 353 links, none to nowhere.
+- **The home page was not touched**: the hero's panels are pixel-identical to the approved version (d4cc53c) at five of six window sizes, and at 2560 × 1440 the only difference is the status labels of two cards of the rail («تمدید شد», «تمام شد»: the design has had them since round G, and that size shows more cards); against round O's build, drawn the same minute with the same look, **the whole page is identical** at five sizes and differs by two pixels at the sixth; the cards pass the audit (312 cards at 8 sizes in each theme, 0 problems). (The first comparison with round O's build showed differences: the check applied the pill look to one side only; with the look on both sides they are gone.)
+- **Layout shift and speed**: the show, the category and the seats' pages 0 (with the footer and the price map added); first loads 0.000; the seats' page 0.003 on a desktop and 0.007 on a phone (the page transition). The list's scroll cost (CPU × 4), round O's build against this one, one after another on the same machine, four runs each, twice: the total blocking time of the downward scroll is 216–953 ms for round O and 220–932 ms for this build (medians about 530 and 375 ms), long tasks 20–31 and 16–27; the machine's own noise is large, and this build is not slower on this path (nothing of the new pages is on the home page's scroll).
+- **The client's single file** (rebuilt from the same parts): opened from the disk with no network it is dark by default, has no design notes, carries the font and GSAP, every picture is embedded, the theme button and a reload keep the choice, no script error; the one request that fails offline is the Google map frame (it needs the network).
+
+### Honest notes (round P)
+
+- **Three older checks had to change with the page, not the other way round**: m-flow's «the pay bar steps aside on a phone» scrolled to the end of the document to find the invoice's button (the end is the footer now: it brings the button itself into view); buy-test pressed a price chip (on a wide window the legend is the filter; the chips are for the narrower ones); and the pocket-corner check of the cards, in round O.
+- **The cue is a finger on one seat**, not a walk-through: a buyer who has never seen a seat map sees where to press, and the cart, the button and the steps' bar then say what happened; the first look of a real first-time buyer on a real phone is still to be seen on the real site.
+- **The hall's picture on the show's page is a picture, not a map**: pressing it does nothing (the seats' page has the map that is pressed).
+- **A page opened under a fixed bar on a phone** keeps 88 px under the footer; the footer's own links stay above it.
+- **The footer's two trust badges** («نماد اعتماد الکترونیکی», «نشان ساماندهی») are still places for the real badges (as on the home page).
+
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.
@@ -1043,6 +1098,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **Round M (the flow):** the show page's information is a real `tablist` (arrow keys, one panel at a time; with no map there is no tab bar); the nights are a `radiogroup` of `radio`s with one tab stop and arrow keys (a night with no seats is `aria-disabled`); the rules' window is a `dialog` with its focus kept inside, Esc, and the focus given back; the continue pill is a link with a name and the time; the steps' labels are kept for a reader on a phone (hidden for the eye only); the sheet of a card is plain text in the reading order whether or not the pointer has dropped it. Axe: nothing on 26 pages and in 38 states (§10.7).
 - **Round N:** the framed card keeps the same semantics as before (the whole card is one target, its picture link and its buy button are real controls, the tab and the pocket are `aria-hidden` copies of what the words already say, and the words are in the reading order with nothing hidden under the pointer); the seats' page's one bar is a `panel` with the way back (a named link), the show, the night's button (`aria-haspopup`) and the steps. Axe: see «Checked» in §10.8.
 - **Round O:** the dotted canvas is `aria-hidden` and takes no clicks; the phone's box is a group named by its label, the part that is not shown is `inert`, the line under it is a live region, the squares are named «رقم n کد» (the first has `autocomplete=one-time-code`); on a big window the information's two panes are one under the other with real headings and the tab bar is not shown (a tablet or a phone keeps the `tablist`); the seats' top row has the poster with its alt text, the overview as a named image and the guide as a named group; axe finds nothing (§10.9).
+- **Round P:** the footer is one `<footer>` landmark after the page's column (the list's own is hidden with the home page, so there is one); the seats' cue is a class on a seat (no new words, `aria-label` unchanged); the cart's place-holders are `aria-hidden` and one hidden line says nothing is chosen; the prices' legend is a group of toggle buttons (`aria-pressed`) with the free count in each; the hall's picture on the show's page is an image with a label (its prices are the list under it); the steps' second line is plain text; axe finds nothing on 26 routes and 46 states (§10.10).
 - The banner is a link labelled «… صفحه‌ی اجرا»; it can also be dragged, but nothing needs dragging. Focus rings follow the text colour. Under `prefers-reduced-motion` nothing moves (a 0.4 s fade, no zoom, no pin effect, no light, no lean), and auto-advance starts paused.
 
 ---
@@ -1068,6 +1124,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **Round M:** layout shift 0.000 on the first load and 0.000 to 0.0003 on a show's page opened by its link (§10.7); the list's scroll cost is not clearly different from round L's (the measurement's spread is larger than the difference).
 - **Round N:** see «Checked» in §10.8 (layout shift, the list's scroll cost with the framed card, the seats' page).
 - **Round O (the dotted background):** a draw is 0.3–0.6 ms (about 740 dots in 12 paths), about three a second, nothing while the tab is hidden or after the page is left, once with reduced motion; no long task; the canvas is fixed and out of the flow, so layout shift stays 0.000 (§10.9).
+- **Round P (the footer, the price map):** the hall's picture on the show's page is drawn once, when the page is idle (`requestIdleCallback`), on a canvas in a box of a fixed shape (no layout shift), a resize redraws it; the seats' cue is two CSS animations on one seat; the legend's free counts are recounted with the cart and with the live changes (one pass over the plan's seats); the footer is a copy of the list's (no new request). Layout shift stays 0 on the show pages (§10.10).
 
 ---
 
@@ -1121,6 +1178,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **A ticket-shaped card, cut-out people, 3D objects, a big countdown, a giant condensed title** (v5, v6): the banner has its own title and the facts sit in their own panel. (The sale-start countdown is built, as the buy button's own state: §9.1. What stays out is a *big* countdown in the banner's panel.)
 - **A «tap to peek» on a phone** (round M): a phone has no pointer, so the card's sheet stays (a little smaller) and a tap opens the show; a first tap that only hid the sheet would take the tap away from opening the show.
 - **Round L's card as the default** (the picture with the words under it): kept as `posterInfo: below`, not the default; the owner's samples asked for the words over the picture.
+- **The first-time bar of orders on the seats' page** («سه قدم تا بلیت: ۱) … ۲) … ۳) …», «فهمیدم»), the cart's sentence and the sentence under the button: removed in round P at the owner's word («do not keep writing «do this and that»»); a ringed seat with a small finger, two place-holders, the button's words and three small lines with icons took their places. **The section's own scroll box** on a mouse screen is gone too (the page scrolls).
 - **«The best seats»** (rounds J–M: the seats' box, the show page's main button, the quick buy and the how-many stepper): removed in round O at the owner's word («the buyer chooses the seat»); nothing of it is kept as a choice.
 - **Tabs for the show's information on a big window** (round M): the place and its map are under the words now (`evpPlace: inline`); `evpPlace: tabs` brings the tabs back.
 - **Round M's hover card** (the words over the picture, dropping away under the pointer, a phone keeping them smaller): removed in round N at the owner's word; nothing of it is kept as a choice (`reveal` in a saved look becomes `frame`).
