@@ -4177,7 +4177,7 @@ const DAY = 24 * HOUR;
 const inDays = (d, hm = '20:00') => `${TEHRAN_DAY.format(new Date(Date.now() + d * DAY))}T${hm}:00+03:30`;
 const fpd = (v) => String(v).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
 const priceText = (n) => `${fpd(Math.round(n / 1000))} هزار`;
-const posterFile = (name) => ({ src: `assets/posters/${name}.webp`, w: 2, h: 3 });   // the size is read when it loads; 2×3 only shapes the stand-in
+const posterFile = (name) => ({ src: `assets/posters/${name}.webp`, w: 2, h: 3, nat: 0.75 });   // 2×3 only shapes the stand-in (a file that is missing); the sample photos themselves are 3 : 4, which is what the pages' frames start with (`nat`), so nothing moves when a photo comes
 // the owner's sample: kind, city, the word before the name, name, the hall's ID in the library (halls-data.js), colour, first day, last day (0 = one day), time, lowest price (toman), status, minutes until the sale, poster
 const SAMPLE = [
   ['concert', 'تهران', 'کنسرت', 'سپهر آریا', 36, 'green', 9, 10, '20:30', 980000, 'soon', 321, 'photo-pop-green'],
@@ -6542,7 +6542,7 @@ const page = {
     const st = statusOf(e), h = hallOf(e), tiers = tiersOf(e), ses = sessionsOf(e), ab = aboutOf(e), dur = DUR[e.kind] || 100;
     const { a: art, src } = artOf(e), hasBanner = !!(e.banner && !e.banner.sample && e.banner.src && !e.banner.fake), cover = hasBanner ? e.banner.src : src, hasPoster = !!e.poster || !hasBanner;
     const kindIcon = iconOfCat(e.kind), cat = catOf(e), [cd, cl] = secColor(cat);
-    const ps = clamp(art && art.w && art.h ? art.w / art.h : 0.75, 0.6, 1).toFixed(4);   // the poster's frame has its picture's shape from the first paint (a poster's size is in its data; the sample photos are 3 : 4), so nothing moves when it loads
+    const ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4);   // the poster's frame has its picture's shape from the first paint (a poster's size is in its data; the sample photos are 3 : 4), so nothing moves when it loads
     const words = esc(e.title).split(' ').map((w) => `<span class="w">${w}</span>`).join(' ');
     const open = !st.cta && st.key !== 'soon', timed = st.key === 'soon' && saleMs(e) > Date.now();
     const acc = this.accepted.has(e.id);
@@ -6623,7 +6623,7 @@ const page = {
   wire(e, ses) {
     const pim = $('.evp-poster img', this.el), { a: pa } = artOf(e);
     if (pim) {
-      pim.onerror = () => { pim.onerror = null; const u = pa.fake || (pa.fake = fakeArt(e, e.poster ? { w: LOOK.posterRatio, h: 1 } : pa)); pim.src = u; const cv = $('.evp-cover', this.el); cv.style.setProperty('--pa', `url('${u}')`); if (!e.banner || e.banner === pa) cv.style.setProperty('--art', `url('${u}')`); };
+      pim.onerror = () => { pim.onerror = null; const u = pa.fake || (pa.fake = fakeArt(e, e.poster ? { w: LOOK.posterRatio, h: 1 } : pa)); pim.src = u; const fr = $('.evp-poster', this.el); if (fr && pa.nat) fr.style.setProperty('--ps', clamp(pa.w / pa.h, 0.6, 1).toFixed(4)); const cv = $('.evp-cover', this.el); cv.style.setProperty('--pa', `url('${u}')`); if (!e.banner || e.banner === pa) cv.style.setProperty('--art', `url('${u}')`); };
       // the poster's frame has the poster's own shape (a 3:4 photo, a 2:3 poster): no bars round it
       const shape = () => { if (pim.naturalWidth) { const f = $('.evp-poster', this.el); if (f) f.style.setProperty('--ps', clamp(pim.naturalWidth / pim.naturalHeight, 0.6, 1).toFixed(4)); } };
       pim.addEventListener('load', shape); if (pim.complete) shape();
@@ -6842,7 +6842,7 @@ const buy = {
     // a hold that is still running (back from the payment): its seats are yours again
     if (hold) { this.cart = new Map(); hold.items.forEach((x) => { const y = this.find(x.key); if (y) { y.st = 'free'; this.cart.set(y.key, y); } else if (x.ga) this.cart.set(x.key, x); }); }
     else this.cart.forEach((x, k) => { const y = this.find(k); if (x.ga) return; if (!y || y.st !== 'free') this.cart.delete(k); else this.cart.set(k, y); });
-    const w = whenOf(s), { a: art, src } = artOf(e), ps = clamp(art && art.w && art.h ? art.w / art.h : 0.75, 0.6, 1).toFixed(4), tiers = [...new Map(tiersOf(e).map((t) => [t.t, t])).values()].sort((a, b) => b.price - a.price);
+    const w = whenOf(s), { a: art, src } = artOf(e), ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4), tiers = [...new Map(tiersOf(e).map((t) => [t.t, t])).values()].sort((a, b) => b.price - a.price);
     const ses = sessionsOf(e);
     // the show on the map's top row: its poster, seen, with the words
     const card = `<div class="sm-card"><figure class="bk-poster sm-poster" style="--ps:${ps}"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure><div class="sm-what"><b>${esc(e.title)}</b><span>${ico('pin')}${esc(hallOf(e).name)}، ${esc(e.city)}</span><span>${ico('calendar')}${esc(w.wd)} ${esc(w.dm)}</span><span>${ico('clock')}ساعت ${esc(w.tm)}</span></div></div>`;
@@ -7069,7 +7069,7 @@ const buy = {
     document.title = `رزرو و پرداخت · ${e.title} · بلیت`;
     const seats = h.items;
     const busy = !!(e.badge || saleMs(e) || /پرفروش/.test(e.badge || '')) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);   // a busy show asks for an SMS code (anti-bot, the brief §1.10)
-    const w = whenOf(s), { a: art, src } = artOf(e), ps = clamp(art && art.w && art.h ? art.w / art.h : 0.75, 0.6, 1).toFixed(4);
+    const w = whenOf(s), { a: art, src } = artOf(e), ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4);
     const om = store.get('blit.otpMode', 'busy'), need = om === 'always' || (om === 'busy' && busy);   // the admin's choice (پنل مدیر ← دسته‌ها و تنظیمات)
     const user = userOf(), ph0 = user ? user.phone : store.get('blit.phone', ''), ver = !!ph0 && (store.sget('blit.otpOk', '') === ph0 || (!!user && user.phone === ph0));   // (a number that was checked, or the signed-in account's, is a checked one)
     this.payState = { e, s, seats, code: '', need, otp: !need || ver, verified: ver ? ph0 : '', phone: ph0 };
@@ -7297,7 +7297,7 @@ const buy = {
     if (!o || !e) { el.innerHTML = this.missing('بلیتی با این کد پیدا نشد', 'کد پیگیری رو دوباره ببین، یا از «پیگیری خرید» با شماره‌ی موبایلت پیداش کن.'); return; }
     page.e = e; page.v.e = e;
     document.title = `بلیت · ${e.title} · بلیت`;
-    const s = { id: o.sid, t: o.t }, w = whenOf(s), h = hallOf(e), { a: art, src } = artOf(e), ps = clamp(art && art.w && art.h ? art.w / art.h : 0.75, 0.6, 1).toFixed(4);
+    const s = { id: o.sid, t: o.t }, w = whenOf(s), h = hallOf(e), { a: art, src } = artOf(e), ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4);
     el.innerHTML = `<div class="evp-in bk tkp" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
       <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a></nav>${stepsHTML(4, e, s)}</div>
       <section class="panel tk-ok evp-rise">
