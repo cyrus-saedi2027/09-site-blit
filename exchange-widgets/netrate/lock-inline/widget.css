@@ -1,0 +1,15 @@
+/* N07 · lock-inline — 1u = 1 pt of a 172-wide line (--u = 100cqi / 172): text and one icon, one colour */
+.l7 { --u: calc(100cqi / 172); display: flex; align-items: center; }
+.l7-a { position: absolute; inset: 0; display: flex; align-items: center; gap: calc(3.5 * var(--u)); padding-inline: calc(1 * var(--u)); color: inherit; white-space: nowrap; font-size: calc(13 * var(--u)); line-height: 1; }
+.l7-ic { display: grid; place-items: center; width: calc(13 * var(--u)); font-size: calc(13 * var(--u)); }
+.l7-ic .nr-i { width: 1em; height: 1em; stroke-width: 2.1; }
+.l7-num { font-size: calc(13 * var(--u)); font-weight: 700; }
+.l7-num .nr-roll { height: 1.12em; }
+.l7-unit { font-size: calc(11.5 * var(--u)); color: var(--oi2);  }
+.l7-sep { display: none; }
+.l7-a .nr-age { font-size: calc(11.2 * var(--u)); color: var(--oi2); gap: calc(3 * var(--u)); }
+.l7.is-empty > :not(.l7-empty) { visibility: hidden; }
+.l7-empty { position: absolute; inset: 0; z-index: 3; }
+.l7-empty .nr-ph { position: absolute; display: block; background: rgba(255, 255, 255, .22); }
+.l7-emptytext { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: calc(5 * var(--u)); font-size: calc(12.5 * var(--u)); font-weight: 600; color: #fff; background: rgba(8, 8, 20, .0); }
+.l7-emptytext .nr-i { font-size: calc(13 * var(--u)); }

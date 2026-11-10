@@ -258,7 +258,12 @@
   function natural(snap) {
     const s = clone(snap), last = dayMs(s.series['1w'].points[s.series['1w'].points.length - 1].date), w0 = wob(0);
     const f = (ms, shift = 0) => { const u = (last - ms) / 86400000 + shift; return u < .01 ? 0 : (wob(u) - w0) + jit(Math.round(ms / 86400000) + shift * 7) * .0019; };
-    Object.values(s.series).forEach(sr => { sr.points.forEach(p => { const k = 1 + f(dayMs(p.date)); ['average', 'best', 'low', 'high'].forEach(key => { p[key] = money(num(p[key]) * k); }); }); fixStats(sr); });
+    /* the day's spread is not constant either: high (= best when sending) and low move on their own a little; today's point is left alone */
+    Object.values(s.series).forEach(sr => { sr.points.forEach((p, i) => {
+      const k = 1 + f(dayMs(p.date)), d = Math.round(dayMs(p.date) / 86400000), last = i === sr.points.length - 1;
+      const kh = last ? 1 : 1 + .016 * jit(d * 5 + 3), kl = last ? 1 : 1 + .026 * jit(d * 5 + 4);
+      p.average = money(num(p.average) * k); p.high = money(num(p.high) * k * kh); p.best = money(num(p.best) * k * kh); p.low = money(num(p.low) * k * kl);
+    }); fixStats(sr); });
     s.week.days.forEach(d => { const ms = dayMs(d.date); d.this = money(num(d.this) * (1 + 1.5 * f(ms))); d.last = money(num(d.last) * (1 + 1.5 * f(ms, 7))); });   // six days only: a larger swing so the week reads as days, not a ramp
     fixWeek(s.week, false);
     return s;

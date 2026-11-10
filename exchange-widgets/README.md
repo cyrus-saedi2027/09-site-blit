@@ -65,6 +65,12 @@ The NetRate section: home-screen widgets for the NetRate app (UK exchange-office
 |---|---|---|---|---|---|
 | N01 | نرخ امروز · بزرگ | `rate-large`: most toman today, the first three offices as slips, a chart with range and direction buttons | 01 Budget | [`netrate/rate-large`](netrate/rate-large/) | **new, waiting for feedback** |
 | N02 | نمودار بازار · متوسط | `chart-medium`: the market average, the move, a chart (the range in white, the period before it in grey) and a range button | 02 Market Size | [`netrate/chart-medium`](netrate/chart-medium/) | **new, waiting for feedback** |
+| N03 | این هفته در برابر هفته‌ی پیش · بزرگ | `week-large`: this week's average, the change, an area chart with the dashed last-week line, direction and compare buttons | 03 Revenue | [`netrate/week-large`](netrate/week-large/) | **new, waiting for feedback** |
+| N04 | روند بازار · متوسط | `trend-medium`: a dot-matrix number, a pill that switches it (average ⇄ most / least toman), one range bar per day for a month | 04 Daily health (Heart Rate) | [`netrate/trend-medium`](netrate/trend-medium/) | **new, waiting for feedback** |
+| N05 | نرخ روی صفحه‌ی قفل · مستطیل | `lock-rect`: label, change, dot-matrix number, unit, age, direction; one colour | 04 (Activity) | [`netrate/lock-rect`](netrate/lock-rect/) | **new, waiting for feedback** |
+| N06 | جای امروز در ماه · دایره | `lock-circle`: a ring of dots for today's place between the month's low and high, the percent in dots | 04 (Stress dots) | [`netrate/lock-circle`](netrate/lock-circle/) | **new, waiting for feedback** |
+| N07 | نرخ تو یک خط · قفل | `lock-inline`: one line of text with an icon | 04 | [`netrate/lock-inline`](netrate/lock-inline/) | **new, waiting for feedback** |
+| N08 | تیکر نرخ · نوار ۴×۱ | `strip-4x1` (Android): four frames, the average and the first three offices, with a tick row | 04 | [`netrate/strip-4x1`](netrate/strip-4x1/) | **new, waiting for feedback** |
 
 Each widget also builds to **one self-contained HTML file** (`node tools/bundle.mjs` → `dist/netrate/<name>.html`): the font is inlined, there is no network and no library. Checks: `tools/netrate/qa.js` (the brief's hard rules over ~300 combinations; blocks all network) and `tools/netrate/aa.js` + `aa.py` (contrast of every text box).
 
@@ -86,7 +92,7 @@ exchange-widgets/
   widgets/08-earnings/     the same three files (one card)
   backgrounds/          the backgrounds section: index.html, engine.js (every background and the
                         renderer), page.js (tiles, viewer, downloads), page.css, SPEC.md
-  netrate/              the NetRate section: index.html, data.js (the sample answer object), i18n.js (fa / en texts),
+  netrate/              the NetRate section: index.html, data.js (the sample answer object), i18n.js (fa / en texts), dots.js (the dot-matrix numbers, Latin and Persian),
                         kit.js (formatting, ages, the demo answer builder, drawing helpers), kit.css (themes, tinted,
                         phone mock, page), page.js (controls and stages), fonts/ (Vazirmatn), and one folder per
                         widget: widget.js, widget.css, SPEC.md

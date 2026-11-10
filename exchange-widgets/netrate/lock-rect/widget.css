@@ -1,0 +1,25 @@
+/* N05 · lock-rect — the design unit here is 1 pt of a 172-wide widget (--u = 100cqi / 172): no card, one colour */
+.nrl { --u: calc(100cqi / 172); position: absolute; inset: 0; color: var(--oi); }
+.l5-a { position: absolute; inset: 0; display: block; padding: calc(8 * var(--u)) calc(8 * var(--u)) 0; color: inherit; }
+.l5-r1 { display: flex; align-items: center; justify-content: space-between; gap: calc(6 * var(--u)); height: calc(17 * var(--u)); font-size: calc(12.5 * var(--u)); font-weight: 600; line-height: 1; white-space: nowrap; }
+.l5-chg { display: inline-flex; align-items: center; gap: calc(3 * var(--u)); }
+.l5-chg .nr-arrow { font-size: calc(11 * var(--u)); }
+.l5-state { display: inline-flex; align-items: center; gap: calc(5 * var(--u)); }
+.l5-state .nr-i { font-size: calc(12 * var(--u)); }
+.l5.has-banner .l5-lab, .l5.has-banner .l5-chg { display: none; }
+.l5-r2 { display: flex; align-items: flex-end; gap: calc(7 * var(--u)); margin-top: calc(4 * var(--u)); height: calc(23 * var(--u)); }
+.l5-num { display: block; overflow: visible; flex: none; }
+.l5-unit { font-size: calc(12 * var(--u)); color: var(--oi2); line-height: 1; padding-bottom: calc(0 * var(--u)); white-space: nowrap; }
+.l5-r3 { display: flex; align-items: center; justify-content: space-between; gap: calc(6 * var(--u)); margin-top: calc(6 * var(--u)); font-size: calc(12 * var(--u)); color: var(--oi2); white-space: nowrap; line-height: 1.2; }
+.l5-r3 .nr-age { font-size: calc(12 * var(--u)); }
+
+.l5.is-empty > :not(.l5-empty) { visibility: hidden; }
+.l5-empty { position: absolute; inset: 0; z-index: 3; }
+.l5-empty .nr-ph { position: absolute; display: block; background: rgba(255, 255, 255, .2); }
+.l5-emptychip { position: absolute; inset-inline: calc(14 * var(--u)); top: calc(20 * var(--u)); display: flex; align-items: center; justify-content: center; gap: calc(6 * var(--u)); height: calc(36 * var(--u)); border-radius: calc(12 * var(--u)); background: rgba(8, 8, 20, .72); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); font-size: calc(12.5 * var(--u)); font-weight: 600; color: #fff; white-space: nowrap; }
+.l5-emptychip .nr-i { font-size: calc(13 * var(--u)); }
+.l5-emptychip b { font-weight: 600; }
+
+.is-intro .l5-r1, .is-intro .l5-unit, .is-intro .l5-r3 { animation: l5-rise calc(.7s * var(--nr-ts, 1)) cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.25s * var(--nr-ts, 1)); }
+.is-intro .l5-r3 { animation-delay: calc(.5s * var(--nr-ts, 1)); }
+@keyframes l5-rise { from { transform: translateY(calc(6 * var(--u))); opacity: 0; } }

@@ -221,3 +221,28 @@
 @media (prefers-reduced-motion: reduce) {
   .nrs-notes summary::after, .nr-toast { transition: none; }
 }
+
+/* ── dot-matrix numbers (sample 04): every dot is a circle that scales in and out ── */
+.nrd-dot { fill: var(--oi); transform: scale(0); transform-box: fill-box; transform-origin: center; transition: transform .42s cubic-bezier(.3, 1.8, .5, 1), opacity .3s ease; }
+.nrd-dot.is-on { transform: scale(1); }
+.nrd-dot.is-dim { opacity: .22; }
+.is-lens .nrd-dot { transition: transform .12s ease-out, opacity .3s ease; }
+.is-still .nrd-dot { transition: none; }
+
+/* ── the lock screen (widgets with def.lock): one colour on the wallpaper, no card and no shadow ── */
+.nrx[data-lock="1"][data-theme], .nrx[data-lock="1"][data-render="tinted"] {
+  --ink: #fff; --ink2: rgba(255, 255, 255, .9); --ink3: rgba(255, 255, 255, .8); --edge: rgba(255, 255, 255, .34);
+  --oi: #fff; --oi2: rgba(255, 255, 255, .9); --oi3: rgba(255, 255, 255, .8); --oup: #fff; --odown: #fff; --oamber: #fff; --up: #fff; --down: #fff; --amber: #fff;
+  --lockwall: linear-gradient(165deg, #5560d0 0%, #3a3f9a 38%, #1c1f55 74%, #101238 100%);
+}
+.nrx[data-lock="1"][data-theme="black"] { --lockwall: linear-gradient(165deg, #3b3f84 0%, #232660 40%, #12143a 78%, #090a1f 100%); }
+.nrx[data-lock="1"][data-theme="dawn"] { --lockwall: linear-gradient(165deg, #b05a44 0%, #8a3f3a 38%, #4d2330 74%, #2a1420 100%); }
+.nrx[data-lock="1"] .nrr, .nrx[data-lock="1"][data-render="tinted"] .nrr { background: var(--lockwall); }
+.nrp.is-lock { background: var(--lockwall); min-height: 560px; }
+.nrp-lock { position: relative; z-index: 2; padding-top: 74px; display: grid; justify-items: center; gap: 2px; color: #fff; }
+.nrp-lock p { margin: 0; }
+.nrp-lockdate { font-size: 18px; font-weight: 500; color: rgba(255, 255, 255, .92); line-height: 1.5; }
+.nrp-lockclock { font: 600 86px/1 "Vazirmatn", system-ui, sans-serif; letter-spacing: -.02em; margin-bottom: 26px !important; color: #fff; font-variant-numeric: tabular-nums; }
+.nrp-lockbtns { position: absolute; z-index: 2; inset: auto 0 34px; display: flex; justify-content: space-between; padding-inline: 48px; }
+.nrp-lockbtns i { display: block; width: 50px; height: 50px; border-radius: 50%; background: rgba(0, 0, 0, .35); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); }
+.nrp.is-lock .nrp-status { color: #fff; }

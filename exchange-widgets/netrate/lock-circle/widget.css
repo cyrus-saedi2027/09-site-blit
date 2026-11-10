@@ -1,0 +1,30 @@
+/* N06 · lock-circle — 1u = 1 pt of a 76-wide widget (--u = 100cqi / 76): no card, one colour */
+.l6 { --u: calc(100cqi / 76); }
+.l6-a { position: absolute; inset: 0; display: block; color: inherit; }
+.l6-ring { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.l6-d { fill: var(--oi); opacity: .5; transform: scale(.45); transform-box: fill-box; transform-origin: center; transition: transform .45s cubic-bezier(.3, 1.8, .5, 1), opacity .3s ease; }
+.l6-d.is-lit { opacity: 1; transform: scale(1); }
+.l6-mark { transition: transform .7s cubic-bezier(.3, 1.2, .5, 1); }
+.l6-halo { fill: none; stroke: var(--oi); stroke-width: 1.2; opacity: .75; }
+.l6-core { fill: var(--oi); }
+.is-still .l6-mark, .is-still .l6-d { transition: none; }
+.l6-ic { position: absolute; left: 50%; top: calc(20 * var(--u)); width: calc(12 * var(--u)); height: calc(12 * var(--u)); margin-left: calc(-6 * var(--u)); font-size: calc(12 * var(--u)); display: grid; place-items: center; color: var(--oi); }
+.l6-ic .nr-i { width: 1em; height: 1em; stroke-width: 2.1; }
+.l6-num { position: absolute; left: 50%; top: calc(35 * var(--u)); transform: translateX(-50%); display: block; overflow: visible; }
+.l6-age { position: absolute; left: 0; right: 0; top: calc(63 * var(--u)); text-align: center; font-size: calc(10.5 * var(--u)); line-height: 1.2; color: var(--oi2); white-space: nowrap; }
+.l6-age .nr-age { font-size: calc(10.5 * var(--u)); justify-content: center; color: var(--oi2); }
+.l6-age .nr-age .nr-i { font-size: 1em; }
+
+.l6.is-empty > :not(.l6-empty) { visibility: hidden; }
+.l6-empty { position: absolute; inset: 0; z-index: 3; }
+.l6-ph { fill: rgba(255, 255, 255, .45); }
+.l6-emptytext { position: absolute; inset: 0; margin: 0; display: grid; align-content: center; justify-items: center; gap: calc(1 * var(--u)); text-align: center; font-size: calc(11 * var(--u)); line-height: 1.25; color: #fff; }
+.l6-emptytext b { font-weight: 600; }
+.l6-emptytext .nr-i { font-size: calc(13 * var(--u)); margin-bottom: calc(1 * var(--u)); }
+
+.is-intro .l6-d { animation: l6-in calc(.5s * var(--nr-ts, 1)) cubic-bezier(.3, 1.8, .5, 1) both; animation-delay: calc(var(--i, 0) * .035s * var(--nr-ts, 1)); }
+.is-intro .l6-mark { animation: l6-pop calc(.7s * var(--nr-ts, 1)) cubic-bezier(.3, 1.7, .5, 1) both; animation-delay: calc(1.1s * var(--nr-ts, 1)); }
+.is-intro .l6-ic, .is-intro .l6-age { animation: l6-fade calc(.7s * var(--nr-ts, 1)) ease both; animation-delay: calc(.6s * var(--nr-ts, 1)); }
+@keyframes l6-in { from { transform: scale(0); opacity: 0; } }
+@keyframes l6-pop { from { opacity: 0; } }
+@keyframes l6-fade { from { opacity: 0; } }

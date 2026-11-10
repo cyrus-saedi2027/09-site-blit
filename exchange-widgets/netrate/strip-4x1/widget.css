@@ -1,0 +1,47 @@
+/* N08 · strip-4x1 — design units (364 wide → 78 tall for the 336 × 72 strip), scaled by --u. Ink card, as sample 04's. */
+.s8-card { --dirc: var(--oup); }
+.s8-card.is-down { --dirc: var(--odown); }
+.s8-card.is-flat { --dirc: var(--oi3); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .s8-card {
+  --oi2: #B3ADA8; --oi3: #A8A29D; --oup: #7FB0FF; --odown: #FF8F85;
+  background: linear-gradient(180deg, #1b1716 0%, #1c1817 40%, #221e1b 78%, #282320 100%);
+  box-shadow: inset 0 calc(1.2 * var(--u)) 0 rgba(255, 255, 255, .09), inset 0 0 calc(14 * var(--u)) rgba(255, 255, 255, .03);
+}
+.s8-card::after { content: ""; position: absolute; inset: 0; z-index: 4; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.s8-a { position: absolute; inset: 0; display: flex; align-items: stretch; justify-content: space-between; padding: calc(8 * var(--u)) calc(22 * var(--u)) calc(7 * var(--u)); color: inherit; }
+.s8-l { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+.s8-l p, .s8-r p { margin: 0; }
+.s8-title { font-size: calc(15.5 * var(--u)); font-weight: 500; line-height: 1.25; color: var(--oi); white-space: nowrap; }
+.s8-r2 { display: flex; align-items: center; gap: calc(7 * var(--u)); height: calc(19 * var(--u)); }
+.s8-rank { display: inline-grid; place-items: center; width: calc(20 * var(--u)); height: calc(20 * var(--u)); border-radius: calc(6 * var(--u)); background: rgba(0, 0, 0, .38); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); font-size: calc(12.5 * var(--u)); font-weight: 600; color: var(--oi); line-height: 1; }
+.s8-chg { display: inline-flex; align-items: center; gap: calc(4 * var(--u)); font-size: calc(13.5 * var(--u)); font-weight: 600; color: var(--oi); white-space: nowrap; }
+.s8-chg .nr-arrow { font-size: calc(12.5 * var(--u)); color: var(--dirc); }
+.s8-card.has-banner .s8-chg { display: none; }
+.s8-banner { height: calc(19 * var(--u)); font-size: max(11px, calc(12 * var(--u))); padding-inline: calc(8 * var(--u)); }
+.s8-age { font-size: calc(12.5 * var(--u)); line-height: 1.2; }
+.s8-age .nr-age { font-size: calc(12.5 * var(--u)); }
+.s8-r { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; }
+.s8-num { display: block; overflow: visible; }
+.s8-unit { font-size: calc(12.5 * var(--u)); line-height: 1.2; color: var(--oi3); white-space: nowrap; }
+.s8-ticks { display: flex; align-items: center; gap: calc(5 * var(--u)); height: calc(6 * var(--u)); font-style: normal; direction: ltr; }
+.s8-ticks u { display: block; width: calc(5 * var(--u)); height: calc(5 * var(--u)); border-radius: calc(3 * var(--u)); background: var(--oi); opacity: .32; text-decoration: none; transition: width .3s cubic-bezier(.3, 1.7, .5, 1), opacity .3s ease; }
+.s8-ticks u.is-on { width: calc(14 * var(--u)); opacity: 1; }
+/* the unit and the ticks share a line: unit at the start, ticks at the end of the right block */
+.s8-r { position: relative; min-width: calc(112 * var(--u)); }
+.s8-unit { position: absolute; inset-inline-end: 0; bottom: calc(14 * var(--u)); }
+.s8-ticks { position: absolute; inset-inline-end: 0; bottom: 0; }
+
+.s8-card.is-empty > :not(.s8-empty) { visibility: hidden; }
+.s8-empty { position: absolute; inset: 0; z-index: 5; }
+.s8-empty .nr-ph { position: absolute; display: block; background: rgba(255, 255, 255, .1); }
+.s8-emptytext { position: absolute; inset: calc(16 * var(--u)) calc(60 * var(--u)); display: grid; place-items: center; border-radius: calc(16 * var(--u)); background: rgba(14, 12, 11, .94); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14); text-align: center; color: var(--oi); }
+.s8-emptytext .nr-banner.is-lg { height: auto; background: none; box-shadow: none; padding: 0; color: var(--oi); font-size: calc(14 * var(--u)); font-weight: 600; flex-wrap: wrap; justify-content: center; line-height: 1.3; }
+.s8-emptytext .nr-banner.is-gal { flex-direction: column; gap: calc(1 * var(--u)); }
+.s8-emptytext .nr-banner.is-gal b { font-size: calc(15 * var(--u)); font-weight: 700; }
+.s8-emptytext .s8-gl { font-size: calc(12 * var(--u)); font-weight: 400; color: var(--oi2); }
+.s8-emptytext .nr-banner .nr-i { font-size: calc(14 * var(--u)); }
+
+.is-intro .s8-l, .is-intro .s8-unit { animation: s8-rise calc(.7s * var(--nr-ts, 1)) cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.25s * var(--nr-ts, 1)); }
+.is-intro .s8-ticks { animation: s8-fade calc(.7s * var(--nr-ts, 1)) ease both; animation-delay: calc(.7s * var(--nr-ts, 1)); }
+@keyframes s8-rise { from { transform: translateY(calc(7 * var(--u))); opacity: 0; } }
+@keyframes s8-fade { from { opacity: 0; } }

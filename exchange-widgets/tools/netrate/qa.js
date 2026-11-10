@@ -64,7 +64,7 @@ function scan(sel, expect) {
   });
   if (greens.length) fail('green found: ' + greens.slice(0, 3).join(' | '));
   // 5. aria: one complete sentence on the card
-  const card = root.querySelector('.nrw-card');
+  const card = root.querySelector('.nrw-card, .nrl');
   const al = card && card.getAttribute('aria-label') || '';
   if (!al) fail('no aria-label on the card');
   if (!expect.empty && expect.number && !al.includes(expect.number)) fail(`aria-label lacks the number ${expect.number}: ${al}`);
@@ -86,6 +86,13 @@ function scan(sel, expect) {
       }
     }
   }
+  // 7b. a dot-matrix number is not text, so it is checked as a box: nothing may overlap it and it stays inside the widget
+  [...root.querySelectorAll('svg')].filter(s => visible(s) && s.querySelector('.nrd-dot')).forEach(sv => {
+    const r = sv.getBoundingClientRect(); if (!r.width) return;
+    if (r.left < rb.left - 1 || r.right > rb.right + 1 || r.top < rb.top - 1 || r.bottom > rb.bottom + 1) fail('dot number leaves the widget');
+    const dr = { left: r.left + 1.5, right: r.right - 1.5, top: r.top + 1.5, bottom: r.bottom - 1.5 };
+    inner.forEach(A => A.rects.forEach(t => { const w = Math.min(dr.right, t.right) - Math.max(dr.left, t.left), h = Math.min(dr.bottom, t.bottom) - Math.max(dr.top, t.top); if (w > 2 && h > 2) fail(`text overlaps the dot number: "${A.t.slice(0, 18)}" (${w.toFixed(1)}×${h.toFixed(1)})`); }));
+  });
   // 8. no clipped text (ellipsis or hidden overflow)
   all.forEach(el => { const cs = getComputedStyle(el); if ((cs.overflow === 'hidden' || cs.textOverflow === 'ellipsis') && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) && !el.classList.contains('rc') && el.scrollWidth > el.clientWidth + 1) fail(`clipped text: "${el.textContent.trim().slice(0, 24)}"`); });
   // 9. hit targets >= 44 x 44 (probed with elementFromPoint, in px = pt at 1:1)
@@ -125,8 +132,8 @@ function scan(sel, expect) {
   console.log('widgets on the page:', present.join(','), '| testing', W.join(','));
   const fails = []; let combos = 0;
   const setCtl = (k, v) => page.evaluate(([k, v]) => NR.setControl(k, v), [k, v]);
-  const setDir = (w, d) => page.evaluate(([w, d]) => { const st = NR.stages.find(s => s.def.no.toLowerCase() === w); st.L.dir = d; st.inst.update({ animate: false }); }, [w, d]);
-  const facts = (w, expectOverrides = {}) => page.evaluate(([sel, e]) => document.querySelector(sel) ? scanFn(sel, e) : null, [`#${w} .nrw`, expectOverrides]);
+  const setDir = (w, d) => page.evaluate(([w, d]) => { const st = NR.stages.find(s => s.def.no.toLowerCase() === w); st.L.dir = d; if (st.inst) st.inst.update({ animate: false }); }, [w, d]);
+  const facts = (w, expectOverrides = {}) => page.evaluate(([w, sel, e]) => { const st = NR.stages.find(s => s.def.no.toLowerCase() === w); return st && st.inst && document.querySelector(sel) ? scanFn(sel, e) : null; }, [w, `#${w} .nrw`, expectOverrides]);
   await page.addScriptTag({ content: `window.scanFn = ${scan.toString()};` });
   await page.addStyleTag({ content: '.nrc{display:none!important}' });
 
@@ -204,6 +211,18 @@ function scan(sel, expect) {
     res.push(['n02 recv average', txt('#n02 .js-num'), NR.int(D.snapshot_receive.market.average, 'fa')]);
     document.querySelector('#n02 [data-cfg-dir="send"]').click(); await new Promise(r => setTimeout(r, 80));
     }
+    // N04: the pill switches the number between the average and the most (send) / least (receive) toman
+    if (has.n04) {
+      const aria = () => document.querySelector('#n04 .nrw-card').getAttribute('aria-label');
+      const avgN = NR.int(M.market.average, 'fa'), bestN = NR.int(M.top.rate, 'fa');
+      res.push(['n04 starts on the average', aria().includes(avgN) && aria().includes(NR.text.fa.avg), true]);
+      await click('#n04 .js-pill');
+      res.push(['n04 pill → most toman', aria().includes(bestN) && aria().includes(NR.text.fa.title.send) && document.querySelector('#n04 .js-pill').getAttribute('aria-pressed') === 'true', true]);
+      res.push(['n04 title follows', txt('#n04 .js-title'), NR.text.fa.title.send]);
+      await click('#n04 .js-pill');
+      res.push(['n04 pill → back to the average', aria().includes(avgN) && txt('#n04 .js-title') === NR.text.fa.avg, true]);
+      res.push(['n04 one bar per day', document.querySelectorAll('#n04 .n4-bar').length, M.series['1m'].points.length]);
+    }
     // N03: direction and the compare switch
     if (has.n03) {
       const r1 = txt('#n03 .js-num'); await click('#n03 .js-dir');
@@ -223,8 +242,30 @@ function scan(sel, expect) {
     res.push(['n01 slip link', document.querySelector('.nr-toast').textContent.includes('netrate://office/pars?cur=gbp&type=cash&dir=send'), true]);
     }
     return res;
-  }, { n01: W.includes('n01'), n02: W.includes('n02'), n03: W.includes('n03') });
+  }, { n01: W.includes('n01'), n02: W.includes('n02'), n03: W.includes('n03'), n04: W.includes('n04') });
   beh.forEach(([name, got, want]) => { if (String(got) !== String(want)) fails.push(`[behaviour] ${name}: got "${got}", want "${want}"`); });
+  let behCount = beh.length;
+  // N08: the ticker steps through four frames: the average, then the first three offices, all in one style
+  if (W.includes('n08')) {
+    await setCtl('platform', 'android'); await setCtl('st', 'normal');
+    const b8 = await page.evaluate(async () => {
+      const res = [], D = NR.data, M = NR.model({ lang: 'fa', st: 'normal', stress: 'calm' }, { dir: 'send' }), st = NR.stages.find(s => s.def.no === 'N08');
+      const a = () => document.querySelector('#n08 .s8-a'), title = () => document.querySelector('#n08 .js-title').textContent.trim(), rank = () => { const r = document.querySelector('#n08 .js-rank'); return r.hidden ? '' : r.textContent.trim(); };
+      const style = () => { const c = x => getComputedStyle(document.querySelector(x)); return ['#n08 .js-title', '#n08 .js-chg', '#n08 .js-rank', '#n08 .js-num'].map(s => { const e = document.querySelector(s); const cs = getComputedStyle(e), r = e.getBoundingClientRect(); return [cs.fontSize, cs.fontWeight, cs.color, cs.backgroundColor, cs.boxShadow, cs.opacity, Math.round(r.height)].join('|'); }).join(' ; '); };
+      const wait = () => new Promise(r => setTimeout(r, 520));
+      const seen = [], styles = [];
+      for (let i = 0; i < 4; i++) { seen.push([a().dataset.frame, title(), rank()].join('/')); if (i > 0) styles.push(style()); st.inst.step(); await wait(); }
+      const want = ['0/' + NR.text.fa.avg + '/', ...M.best.slice(0, 3).map((b, i) => `${i + 1}/${NR.office(b.exchange.id, 'fa').name}/${NR.digits(i + 1, 'fa')}`)];
+      res.push(['n08 frames in order', seen.join(' | '), want.join(' | ')]);
+      res.push(['n08 the three offices share one style', new Set(styles).size, 1]);
+      res.push(['n08 back to frame 0', a().dataset.frame, '0']);
+      res.push(['n08 tap link of frame 1', (() => { st.inst.step(); return a().getAttribute('href'); })().includes('office/' + M.best[0].exchange.id), true]);
+      return res;
+    });
+    b8.forEach(([name, got, want]) => { if (String(got) !== String(want)) fails.push(`[behaviour] ${name}: got "${got}", want "${want}"`); });
+    behCount += b8.length;
+    await setCtl('platform', 'ios393');
+  }
   // the three slips are one style (no featured office): compare computed styles
   const slipStyles = !W.includes('n01') ? ['x'] : await page.evaluate(() => { const g = i => { const e = document.querySelector(`#n01 .n1-slip[data-i="${i}"] .n1-slip-in`), c = getComputedStyle(e); return ['backgroundImage', 'boxShadow', 'borderRadius', 'opacity', 'filter', 'width', 'height', 'outline'].map(p => c[p]).join('|'); }; return [0, 1, 2].map(g); });
   if (new Set(slipStyles).size !== 1) fails.push('[rule 4] the three slips differ in style: ' + JSON.stringify(slipStyles));
@@ -244,7 +285,7 @@ function scan(sel, expect) {
   if (ext.length) fails.push('[offline] requests made: ' + ext.slice(0, 3).join(', '));
   // a blocked Google Fonts request logs a console error; that is the test's own doing, not the page's
   logs.filter(l => !(ext.length === 0 && /Failed to load resource/.test(l))).forEach(l => fails.push('[console] ' + l));
-  console.log(`${combos} combinations scanned; ${fails.length} failures`);
+  console.log(`${combos} combinations and ${behCount} behaviour checks; ${fails.length} failures`);
   const seen = new Set(); fails.forEach(f => { const k = f.replace(/\[[^\]]*\]/, '').slice(0, 90); if (!seen.has(k)) { seen.add(k); console.log(f); } });
   await browser.close();
   process.exit(fails.length ? 1 : 0);

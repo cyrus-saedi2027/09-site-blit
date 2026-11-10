@@ -94,7 +94,7 @@
           <p class="nrs-desc">${def.desc}</p>
           <ul class="nrs-hints">${def.hints.map(h => `<li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${h[0]}"/></svg><span>${h[1]}</span></li>`).join('')}</ul>
           <ul class="nrs-legend" aria-label="برچسب ساخت‌پذیری"><li>${NR.lab('A')}همین‌طور که هست ساخته می‌شود</li><li>${NR.lab('B')}با دکمه یا تازه شدن</li><li>${NR.lab('C')}فقط نمایش</li></ul>
-          <div class="nrs-actions"><button class="nrc-act js-refresh" type="button">تازه‌سازی این ویجت</button>${def.config && def.config.dir ? `<div class="nrc-g" role="group" aria-label="ویرایش ویجت: جهت"><b>ویرایش ویجت · جهت</b><div class="nrc-seg">${[['send', 'ارسال به ایران'], ['recv', 'دریافت از ایران']].map(o => `<button type="button" data-cfg-dir="${o[0]}" aria-pressed="${st.L.dir === o[0]}">${o[1]}</button>`).join('')}</div></div>` : ''}</div>
+          <div class="nrs-actions"><button class="nrc-act js-refresh" type="button">تازه‌سازی این ویجت</button>${(def.actions || []).map((a, i) => `<button class="nrc-act js-action" data-i="${i}" type="button">${a.label}</button>`).join('')}${def.config && def.config.dir ? `<div class="nrc-g" role="group" aria-label="ویرایش ویجت: جهت"><b>ویرایش ویجت · جهت</b><div class="nrc-seg">${[['send', 'ارسال به ایران'], ['recv', 'دریافت از ایران']].map(o => `<button type="button" data-cfg-dir="${o[0]}" aria-pressed="${st.L.dir === o[0]}">${o[1]}</button>`).join('')}</div></div>` : ''}</div>
         </div>
       </div>
       <div class="nrs-notes">${(typeof def.notes === 'function' ? def.notes() : def.notes).concat([NR.checklist(def)]).map((n, i) => `<details${i === 0 ? ' open' : ''}><summary>${n.title}</summary><div class="nrs-sec">${n.html}</div></details>`).join('')}</div>`;
@@ -103,6 +103,7 @@
     st.root = el('div', 'nrw');
     st.in = el('div', 'nrw-in'); st.root.appendChild(st.in);
     art.querySelector('.js-refresh').addEventListener('click', () => refresh(st));
+    art.querySelectorAll('.js-action').forEach(b => b.addEventListener('click', () => { const a = (def.actions || [])[+b.dataset.i]; if (a && st.inst && st.inst[a.fn]) st.inst[a.fn](); }));
     art.querySelectorAll('[data-cfg-dir]').forEach(b => b.addEventListener('click', () => {   // the widget's own setting ("Edit widget"), not a button on it
       st.L.dir = b.dataset.cfgDir; art.querySelectorAll('[data-cfg-dir]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
       if (st.inst) st.inst.update({ animate: true });
@@ -144,20 +145,27 @@
   /* the frame around the widget: real size on the home-screen colour, or inside a phone */
   function layout(st) {
     const sc = st.scope;
-    sc.dataset.theme = S.theme; sc.dataset.skin = st.def.id; sc.dataset.render = S.render; sc.dataset.platform = S.platform.startsWith('ios') ? 'ios' : 'android'; sc.dataset.lang = S.lang; sc.dataset.view = S.view;
+    sc.dataset.theme = S.theme; sc.dataset.skin = st.def.id; sc.dataset.render = S.render; sc.dataset.platform = S.platform.startsWith('ios') ? 'ios' : 'android'; sc.dataset.lang = S.lang; sc.dataset.view = S.view; sc.dataset.lock = st.def.lock ? '1' : '0';
     const size = sizeOf(st.def, S.platform), root = st.root;
     sc.textContent = '';
     if (S.view === 'phone' && size) {
       const w = phoneW(S.platform), and = S.platform === 'android';
-      const phone = el('div', 'nrp'); phone.style.width = w + 'px';
+      const phone = el('div', 'nrp' + (st.def.lock ? ' is-lock' : '')); phone.style.width = w + 'px';
       const iconRows = and ? 2 : 2;
+      if (st.def.lock) {
+        const nowMs = NR.model(S, { dir: 'send' }).now || Date.parse(NR.data.snapshot.generated_at), wd = new Date(nowMs).getUTCDay();
+        phone.innerHTML = `<div class="nrp-status"><span></span><i></i></div><div class="nrp-island"></div>
+          <div class="nrp-lock"><p class="nrp-lockdate">${NR.weekday(wd === 0 ? 7 : wd, S.lang)}</p>${st.def.size === 'lock-inline' ? '<div class="js-slot"></div>' : ''}<p class="nrp-lockclock">${clockText()}</p>${st.def.size === 'lock-inline' ? '' : '<div class="js-slot"></div>'}</div>
+          <div class="nrp-lockbtns"><i></i><i></i></div>`;
+        phone.querySelector('.js-slot').appendChild(root); sc.appendChild(phone);
+      } else
       phone.innerHTML = `<div class="nrp-status"><span>${clockText()}</span><i></i></div><div class="nrp-island${and ? ' is-hole' : ''}"></div>
         <div class="nrp-body">${and ? '<div class="nrp-search"></div>' : ''}<div class="js-slot"></div>
         <div class="nrp-icons${and ? ' is-and' : ''}">${Array.from({ length: iconRows * 4 }, () => '<div><b></b><i></i></div>').join('')}</div></div><div class="nrp-fade"></div>`;
       phone.querySelector('.js-slot').appendChild(root);
       sc.appendChild(phone);
     } else {
-      const real = el('div', 'nrr'); real.appendChild(root); sc.appendChild(real);
+      const real = el('div', 'nrr' + (st.def.lock ? ' is-lock' : '')); real.appendChild(root); sc.appendChild(real);
     }
     st.cap.textContent = size ? `${S.platform.startsWith('ios') ? 'iOS' : 'Android'} · ${size[0]} × ${size[1]} ${S.platform.startsWith('ios') ? 'pt' : 'dp'} · 1 : 1` : '';
     fit(st);

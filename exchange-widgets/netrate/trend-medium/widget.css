@@ -1,0 +1,76 @@
+/* N04 · trend-medium — design units (364 wide) scaled by --u. The card is an "ink" card (dark in every theme).
+   Sample theme: the warm charcoal of sample 04; the dots and bars are white on it, as in the sample. */
+.n4-card { --dirc: var(--oup); }
+.n4-card.is-down { --dirc: var(--odown); }
+.n4-card.is-flat { --dirc: var(--oi3); }
+
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n4-card {
+  --oi2: #B3ADA8; --oi3: #A8A29D; --oup: #7FB0FF; --odown: #FF8F85;
+  background: linear-gradient(180deg, #1b1716 0%, #1c1817 40%, #221e1b 78%, #282320 100%);
+  box-shadow: inset 0 calc(1.2 * var(--u)) 0 rgba(255, 255, 255, .09), inset 0 0 calc(14 * var(--u)) rgba(255, 255, 255, .03);
+}
+.n4-card::after { content: ""; position: absolute; inset: 0; z-index: 4; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.n4-glare { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity .4s ease; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 50%), rgba(255, 255, 255, .11), rgba(255, 255, 255, 0) 46%); }
+
+/* head: title, change, basis (or a status chip) */
+.n4-head { position: absolute; z-index: 3; inset-inline-start: calc(18 * var(--u)); top: calc(11 * var(--u)); max-width: calc(152 * var(--u)); pointer-events: none; }
+.n4-head p, .n4-head h3 { margin: 0; }
+.n4-title { font-size: calc(18.5 * var(--u)); font-weight: 500; line-height: 1.3; letter-spacing: -.005em; color: var(--oi); white-space: nowrap; }
+.n4-chg { display: flex; align-items: center; gap: calc(5 * var(--u)); margin-top: calc(4 * var(--u)) !important; font-size: calc(14 * var(--u)); font-weight: 600; color: var(--oi); white-space: nowrap; line-height: 1.35; }
+.n4-chg .nr-arrow { font-size: calc(13 * var(--u)); color: var(--dirc); }
+.n4-vs { margin-top: calc(1 * var(--u)) !important; font-size: calc(12.5 * var(--u)); color: var(--oi2); white-space: nowrap; line-height: 1.4; }
+.n4-banner { margin-top: calc(6 * var(--u)); }
+.n4-card.has-banner .n4-chg, .n4-card.has-banner .n4-vs { display: none; }
+
+/* the number: dots, then its unit and its age */
+.n4-main { position: absolute; z-index: 2; inset-inline-end: calc(54 * var(--u)); top: calc(15 * var(--u)); width: calc(152 * var(--u)); display: flex; flex-direction: column; align-items: flex-end; color: inherit; }
+.n4-main p { margin: 0; }
+.n4-num { display: block; overflow: visible; }
+.n4-unit { margin-top: calc(7 * var(--u)) !important; font-size: calc(12.5 * var(--u)); color: var(--oi3); line-height: 1.3; white-space: nowrap; }
+.n4-age { margin-top: calc(2 * var(--u)) !important; font-size: calc(12.5 * var(--u)); line-height: 1.3; }
+.n4-age .nr-age { font-size: calc(12.5 * var(--u)); }
+
+/* the round pill: three lines, the one that is lit says which number is shown (a 50 x 54 hit area around a 30 x 46 pill) */
+.nrw .n4-pill { position: absolute; z-index: 4; inset-inline-end: calc(6 * var(--u)); top: calc(10 * var(--u)); width: calc(50 * var(--u)); height: calc(54 * var(--u)); display: grid; place-items: center; }
+.n4-pill::before { content: ""; position: absolute; inset: calc(4 * var(--u)) calc(10 * var(--u)); border-radius: calc(15 * var(--u)); background: rgba(0, 0, 0, .38); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); transition: background-color .25s ease; }
+.n4-pill:hover::before { background: rgba(0, 0, 0, .55); }
+.n4-pill-in { position: relative; display: grid; place-items: center; transition: transform .3s cubic-bezier(.3, 1.7, .5, 1); }
+.n4-pill:active .n4-pill-in { transform: scale(.88); }
+.n4-pill svg { width: calc(15 * var(--u)); height: calc(15 * var(--u)); fill: var(--oi); }
+.n4-pill svg rect { opacity: .38; transition: opacity .3s ease; }
+.n4-pill[data-hl="mid"] .b2, .n4-pill[data-hl="top"] .b1, .n4-pill[data-hl="bot"] .b3 { opacity: 1; }
+.nrw .n4-pill:focus-visible { outline: 2px solid var(--oi); outline-offset: -3px; }
+
+/* the chart: day ranges as round bars, a dotted baseline, three time labels */
+.n4-svg { position: absolute; inset: 0; width: 100%; height: 100%; direction: ltr; overflow: visible; pointer-events: none; z-index: 2; }
+.n4-axis text { fill: var(--oi3); font-family: inherit; font-size: 11.5px; font-weight: 400; }
+.n4-xax text { fill: var(--oi2); font-size: 12px; }
+.n4-bar { stroke: #fff; stroke-width: 3; stroke-linecap: round; opacity: .88; transition: opacity .28s ease; }
+.n4-bar.is-last { stroke-width: 3.8; opacity: 1; }
+.n4-bar.is-dim { opacity: .2; }
+.n4-dots { stroke: rgba(255, 255, 255, .42); stroke-width: 1.7; stroke-linecap: round; stroke-dasharray: .01 8.1; }
+.n4-pick { stroke: #fff; stroke-width: 1; stroke-dasharray: 2 3; transition: opacity .2s ease; }
+.n4-scrub { display: none; }
+
+/* empty (unset / gallery) */
+.n4-card.is-empty > :not(.n4-empty) { visibility: hidden; }
+.n4-empty { position: absolute; inset: 0; z-index: 5; }
+.n4-empty .nr-ph { position: absolute; display: block; background: rgba(255, 255, 255, .1); }
+.n4-emptytext { position: absolute; inset-inline: calc(34 * var(--u)); top: calc(70 * var(--u)); display: grid; justify-items: center; gap: calc(3 * var(--u)); padding: calc(10 * var(--u)) calc(14 * var(--u)); border-radius: calc(16 * var(--u)); background: rgba(14, 12, 11, .94); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14); text-align: center; color: var(--oi); }
+.n4-emptytext p { margin: 0; font-size: calc(12.5 * var(--u)); color: var(--oi2); line-height: 1.55; }
+.n4-emptytext .nr-banner.is-lg { height: calc(28 * var(--u)); font-size: calc(14.5 * var(--u)); font-weight: 600; background: none; box-shadow: none; padding: 0; color: var(--oi); }
+.n4-emptytext .nr-banner.is-lg.is-gal b { font-size: calc(16 * var(--u)); font-weight: 700; }
+.n4-emptytext .nr-banner .nr-i { font-size: calc(14 * var(--u)); }
+
+/* ── C · display-only motion ── */
+.is-fx .n4-bar.is-last { animation: n4-breathe calc(2.4s * var(--nr-ts, 1)) ease-in-out infinite alternate; }
+@keyframes n4-breathe { from { stroke-width: 3.8; } to { stroke-width: 5.6; } }
+.is-intro .n4-head, .is-intro .n4-unit, .is-intro .n4-age { animation: n4-rise calc(.8s * var(--nr-ts, 1)) cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.3s * var(--nr-ts, 1)); }
+.is-intro .n4-unit { animation-delay: calc(.5s * var(--nr-ts, 1)); }
+.is-intro .n4-age { animation-delay: calc(.65s * var(--nr-ts, 1)); }
+.is-intro .n4-pill { animation: n4-pop calc(.7s * var(--nr-ts, 1)) cubic-bezier(.3, 1.8, .5, 1) both; animation-delay: calc(.9s * var(--nr-ts, 1)); }
+.is-intro .n4-axis, .is-intro .n4-dots { animation: n4-fade calc(.8s * var(--nr-ts, 1)) ease both; animation-delay: calc(.5s * var(--nr-ts, 1)); }
+@keyframes n4-rise { from { transform: translateY(calc(9 * var(--u))); opacity: 0; } }
+@keyframes n4-pop { from { transform: scale(.5); opacity: 0; } }
+@keyframes n4-fade { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .is-fx .n4-bar.is-last { animation: none; } }
