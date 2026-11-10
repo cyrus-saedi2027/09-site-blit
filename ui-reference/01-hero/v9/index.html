@@ -7633,7 +7633,7 @@ const tkx = {
   // the phone's own share sheet with the picture as a file; where there is none, a small menu
   async share(o, e, i, anchor) {
     const blob = i == null ? await this.pngAll(o, e) : await this.png(o, e, i), name = `blit-${o.code}${i == null ? '' : `-${i + 1}`}.png`, file = new File([blob], name, { type: 'image/png' }), data = { files: [file], title: e.title, text: this.text(o, e) };
-    if (navigator.canShare && navigator.canShare(data) && navigator.share) { try { await navigator.share(data); } catch (err) { /* closed by the buyer */ } return; }
+    if (navigator.canShare && navigator.canShare(data) && navigator.share) { try { await navigator.share(data); return; } catch (err) { if (err && err.name === 'AbortError') return; /* closed by the buyer; any other refusal (a phone that let the tap lapse while the picture was drawn) goes on to the small menu below */ } }
     const msg = this.text(o, e), url = `${location.href.split('#')[0]}#/ticket/${encodeURIComponent(o.code)}`;
     const items = [{ t: 'ارسال در تلگرام', v: 'tg' }, { t: 'ارسال در واتس‌اپ', v: 'wa' }, { t: 'کپی متن بلیت', v: 'copy' }, { t: 'ذخیره‌ی تصویر برای ارسال', v: 'img' }];
     menuPop(anchor, items, '', async (v) => {
