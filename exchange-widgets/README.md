@@ -71,6 +71,12 @@ The NetRate section: home-screen widgets for the NetRate app (UK exchange-office
 | N06 | جای امروز در ماه · دایره | `lock-circle`: a ring of dots for today's place between the month's low and high, the percent in dots | 04 (Stress dots) | [`netrate/lock-circle`](netrate/lock-circle/) | **new, waiting for feedback** |
 | N07 | نرخ تو یک خط · قفل | `lock-inline`: one line of text with an icon | 04 | [`netrate/lock-inline`](netrate/lock-inline/) | **new, waiting for feedback** |
 | N08 | تیکر نرخ · نوار ۴×۱ | `strip-4x1` (Android): four frames, the average and the first three offices, with a tick row | 04 | [`netrate/strip-4x1`](netrate/strip-4x1/) | **new, waiting for feedback** |
+| N09 | نرخ امروز · کوچک | `rate-small`: most / least toman, the office, the change pill, a direction-coloured panel; "+" opens this week's capsules | 05 Progress Report | [`netrate/rate-small`](netrate/rate-small/) | **new, waiting for feedback** |
+| N10 | تابلوی ارزها · بزرگ | `board-large`: six currencies as pages (dashes), a six-day line with guides, light in the direction's colour | 06 Insights | [`netrate/board-large`](netrate/board-large/) | **new, waiting for feedback** |
+| N11 | مبدل · بزرگ | `convert-large`: an amount in pounds → toman at the first office, five equal dots on a glowing wave against the market average, four amounts | 06 Conversion | [`netrate/convert-large`](netrate/convert-large/) | **new, waiting for feedback** |
+| N12 | فهرست صرافی‌ها · متوسط | `offices-medium`: folder-tab card, three rows (rank, name and city, rate and age, change), ⋯ switches direction | 07 folder cards | [`netrate/offices-medium`](netrate/offices-medium/) | **new, waiting for feedback** |
+| N13 | فهرست صرافی‌ها · بزرگ | `offices-large`: the same with five rows and the distance from the average | 07 folder cards | [`netrate/offices-large`](netrate/offices-large/) | **new, waiting for feedback** |
+| N14 | مبدل · متوسط | `convert-medium`: the converted figure (tail muted), the week line, the month slider, an amount chip | 08 Live Earnings | [`netrate/convert-medium`](netrate/convert-medium/) | **new, waiting for feedback** |
 
 Each widget also builds to **one self-contained HTML file** (`node tools/bundle.mjs` → `dist/netrate/<name>.html`): the font is inlined, there is no network and no library. Checks: `tools/netrate/qa.js` (the brief's hard rules over ~300 combinations; blocks all network) and `tools/netrate/aa.js` + `aa.py` (contrast of every text box).
 
@@ -92,7 +98,7 @@ exchange-widgets/
   widgets/08-earnings/     the same three files (one card)
   backgrounds/          the backgrounds section: index.html, engine.js (every background and the
                         renderer), page.js (tiles, viewer, downloads), page.css, SPEC.md
-  netrate/              the NetRate section: index.html, data.js (the sample answer object), i18n.js (fa / en texts), dots.js (the dot-matrix numbers, Latin and Persian),
+  netrate/              the NetRate section: index.html, data.js (the sample answer object), i18n.js (fa / en texts), dots.js (the dot-matrix numbers, Latin and Persian), folder.js (the folder-card office list),
                         kit.js (formatting, ages, the demo answer builder, drawing helpers), kit.css (themes, tinted,
                         phone mock, page), page.js (controls and stages), fonts/ (Vazirmatn), and one folder per
                         widget: widget.js, widget.css, SPEC.md

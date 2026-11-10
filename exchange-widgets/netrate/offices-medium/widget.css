@@ -1,0 +1,2 @@
+/* N12 · offices-medium: the folder card's shared styles are in kit.css (.nrf-*); this size only sets its metrics */
+.nrf-card.is-medium { --tab: 22; --strip-top: 42; --strip-bottom: 12; --head-top: 11; }

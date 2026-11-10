@@ -254,6 +254,7 @@
   const WAVES = [[2.3, .9], [3.7, 1.7], [6.1, 2.6], [9.4, 4.1], [15, 5.3], [26, .8], [41, 2.2], [67, 4.0], [110, 1.1], [180, 3.5], [300, 5.0]];
   const wob = u => WAVES.reduce((s, [T, ph]) => s + .0011 * Math.pow(T, .45) * Math.sin(2 * Math.PI * u / T + ph), 0);
   const jit = n => { n = Math.imul(n ^ n >>> 15, 0x2c1b3c6d); n = Math.imul(n ^ n >>> 12, 0x297a2d39); return ((n ^ n >>> 15) >>> 0) / 4294967296 - .5; };
+  NR._wob = wob; NR._jit = jit;   // shared with the widgets that need more history of their own (the board)
   const dayMs = d => Date.parse(d + 'T12:00:00Z');
   function natural(snap) {
     const s = clone(snap), last = dayMs(s.series['1w'].points[s.series['1w'].points.length - 1].date), w0 = wob(0);

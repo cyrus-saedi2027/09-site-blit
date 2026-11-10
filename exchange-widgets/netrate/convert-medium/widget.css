@@ -1,0 +1,50 @@
+/* N14 · convert-medium — design units (364 wide) scaled by --u. Charcoal card, as sample 08's. */
+.n14-card { --dirc: var(--oup); }
+.n14-card.is-down { --dirc: var(--odown); }
+.n14-card.is-flat { --dirc: var(--oi3); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n14-card { background: #141414; --oi2: #b0b0b0; --oi3: #a3a3a3; --oup: #7FB0FF; --odown: #FF8F85; box-shadow: inset 0 calc(1 * var(--u)) 0 rgba(255, 255, 255, .06); }
+.n14-card::after { content: ""; position: absolute; inset: 0; z-index: 6; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }
+
+.n14-main { position: absolute; z-index: 3; inset-inline: calc(18 * var(--u)); top: calc(13 * var(--u)); display: block; color: inherit; }
+.n14-main p { margin: 0; }
+.n14-lab { font-size: calc(14.5 * var(--u)); color: var(--oi2); line-height: 1.3; white-space: nowrap; }
+.n14-numrow { display: flex; align-items: baseline; gap: calc(7 * var(--u)); margin-top: calc(1 * var(--u)); }
+.n14-num { font-size: calc(40 * var(--u)); font-weight: 600; line-height: 1.1; letter-spacing: -.02em; color: var(--oi); white-space: nowrap; }
+.n14-num .nr-roll { height: 1.1em; }
+.n14-unit { font-size: calc(13.5 * var(--u)); color: var(--oi2); white-space: nowrap; }
+.n14-age { position: absolute; inset-inline-end: 0; top: calc(32 * var(--u)); font-size: calc(12 * var(--u)); line-height: 1.3; }
+.n14-age .nr-age { font-size: calc(12 * var(--u)); }
+.n14-banner { position: absolute; inset-inline-start: 0; top: calc(0 * var(--u)); }
+.n14-card.has-banner .n14-lab { visibility: hidden; }
+/* the sample mutes the decimals of its figure; here the last group of three */
+.n14-num .nr-roll > :nth-last-child(-n + 4) { opacity: .5; }
+.n14-card:not(.has-tail) .n14-num .nr-roll > * { opacity: 1; }
+
+.nrw .n14-chip { position: absolute; z-index: 4; inset-inline-end: calc(8 * var(--u)); top: calc(2 * var(--u)); height: calc(50 * var(--u)); min-width: calc(110 * var(--u)); display: grid; place-items: center; }
+.n14-chip-in { display: inline-flex; align-items: center; gap: calc(7 * var(--u)); height: calc(30 * var(--u)); padding-inline: calc(12 * var(--u)); border-radius: calc(10 * var(--u)); background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); font-size: calc(13.5 * var(--u)); font-weight: 600; color: var(--oi); white-space: nowrap; transition: background-color .25s ease, transform .3s cubic-bezier(.3, 1.7, .5, 1); }
+.n14-chip:hover .n14-chip-in { background: rgba(255, 255, 255, .2); }
+.n14-chip:active .n14-chip-in { transform: scale(.94); }
+.n14-chip .nr-i { font-size: calc(11 * var(--u)); }
+.nrw .n14-chip:focus-visible { outline: 2px solid var(--oi); outline-offset: -3px; }
+
+.n14-svg { position: absolute; inset: 0; width: 100%; height: 100%; direction: ltr; overflow: visible; pointer-events: none; z-index: 2; }
+.n14-line { fill: none; stroke: var(--dirc); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.n14-track { stroke: rgba(255, 255, 255, .4); stroke-width: 1.4; stroke-dasharray: 4 4; }
+.n14-thumb-dot { fill: #fff; }
+.n14-thumb-halo { fill: none; stroke: #fff; stroke-width: 1.2; opacity: .5; }
+.n14-slab { position: absolute; z-index: 3; inset-inline: calc(18 * var(--u)); bottom: calc(44 * var(--u)); margin: 0; display: flex; align-items: baseline; justify-content: space-between; gap: calc(8 * var(--u)); font-size: calc(13 * var(--u)); color: var(--oi2); white-space: nowrap; line-height: 1.2; }
+.n14-slab b { font-weight: 600; color: var(--oi); }
+.n14-minmax { position: absolute; z-index: 3; inset-inline: calc(18 * var(--u)); bottom: calc(8 * var(--u)); margin: 0; display: flex; justify-content: space-between; direction: ltr; font-size: calc(11 * var(--u)); color: var(--oi3); line-height: 1.2; }
+
+.n14-card.is-empty > :not(.n14-empty) { visibility: hidden; }
+.n14-empty { position: absolute; inset: 0; z-index: 7; }
+.n14-empty .nr-ph { position: absolute; display: block; background: rgba(255, 255, 255, .1); }
+.n14-emptytext { position: absolute; inset-inline: calc(60 * var(--u)); top: calc(72 * var(--u)); display: grid; justify-items: center; gap: calc(3 * var(--u)); padding: calc(10 * var(--u)) calc(14 * var(--u)); border-radius: calc(16 * var(--u)); background: rgba(10, 10, 12, .96); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14); text-align: center; color: var(--oi); }
+.n14-emptytext p { margin: 0; font-size: calc(12.5 * var(--u)); color: var(--oi2); line-height: 1.55; }
+.n14-emptytext .nr-banner.is-lg { height: calc(28 * var(--u)); font-size: calc(14.5 * var(--u)); font-weight: 600; background: none; box-shadow: none; padding: 0; color: var(--oi); }
+.n14-emptytext .nr-banner.is-lg.is-gal b { font-size: calc(16 * var(--u)); font-weight: 700; }
+.n14-emptytext .nr-banner .nr-i { font-size: calc(14 * var(--u)); }
+
+.is-intro .n14-main, .is-intro .n14-chip, .is-intro .n14-slab, .is-intro .n14-minmax { animation: n14-rise calc(.8s * var(--nr-ts, 1)) cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.2s * var(--nr-ts, 1)); }
+.is-intro .n14-slab, .is-intro .n14-minmax { animation-delay: calc(.8s * var(--nr-ts, 1)); }
+@keyframes n14-rise { from { transform: translateY(calc(8 * var(--u))); opacity: 0; } }

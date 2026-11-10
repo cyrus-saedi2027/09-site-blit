@@ -1,0 +1,2 @@
+/* N13 · offices-large: the folder card's shared styles are in kit.css (.nrf-*); this size only sets its metrics */
+.nrf-card.is-large { --tab: 26; --strip-top: 58; --strip-bottom: 68; --head-top: 14; }
