@@ -164,12 +164,11 @@
   }
   function fit(st) {
     st.fit.style.transform = ''; st.fitbox.style.height = '';
-    const avail = st.show.clientWidth - 8, w = st.fit.scrollWidth, h = st.fit.offsetHeight;
+    const cs = getComputedStyle(st.show), avail = st.show.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), w = st.fit.offsetWidth, h = st.fit.offsetHeight;
     if (!avail || !w) return;
     const f = Math.min(1, avail / w);
     if (f < 1) { st.fit.style.transform = `scale(${f.toFixed(4)})`; st.fitbox.style.height = Math.ceil(h * f) + 'px'; st.fit.dataset.scaled = f.toFixed(2); }
     else delete st.fit.dataset.scaled;
-    st.fit.style.width = '';
   }
 
   function refresh(st) {
