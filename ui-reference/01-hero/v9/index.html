@@ -1121,6 +1121,34 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 
 /* what the show is: its people as tags (as in the sample), a line in its colour, the words */
 .evp-more, .evp-prices { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
+/* the program's picture in its own column (round Q): a wide window, landscape. The poster, or a banner shown whole on its own blurred copy; its three facts under it */
+.evp-pic { display: none; }
+@media (min-width: 1600px) and (min-aspect-ratio: 5/4) {
+  .evp-in.has-pic { --pic: clamp(300px, calc(var(--u) * 19.5), 480px); }
+  .evp-in.evp-show { --fl: max(1180px, calc(var(--u) * 74 + var(--pic) + var(--gap))); }
+  .evp-in.evp-show .evp-cols { grid-template-columns: var(--pic) minmax(0, 1fr) clamp(360px, calc(var(--u) * 21.5), 440px); }
+  .evp-pic { display: grid; align-content: start; gap: var(--gap); min-width: 0; position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); }
+  .evp-pic-f { position: relative; margin: 0; aspect-ratio: var(--ps, .75); border-radius: calc(var(--r) * 1.3); overflow: hidden; background: #0c0b11 var(--pa) center / cover no-repeat; box-shadow: 0 26px 50px -24px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .14); }
+  .evp-pic-f img { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; }
+  .evp-pic.is-banner .evp-pic-f::before { content: ""; position: absolute; inset: -24px; background: var(--art) center / cover no-repeat; filter: blur(22px) saturate(1.2) brightness(.72); }
+  .evp-pic.is-banner .evp-pic-f img { object-fit: contain; }
+  .evp-pic-facts { padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.3); }
+  .evp-pic .evp-facts { display: grid; grid-template-columns: minmax(0, 1fr); gap: calc(var(--u) * 1); margin: 0; padding: 0; border: 0; }
+  .evp-cover .evp-poster { display: none; }
+  .evp-cover { grid-template-columns: minmax(0, 1fr); }
+  .evp-cover .evp-title { grid-column: 1; }
+  .evp-facts.is-cover { display: none; }
+  .evp-cover .evp-title > p { display: flex; }
+  /* the payment and the ticket: the same column, the same picture */
+  .bk-narrow.has-pic > :not(.bk-bar) { width: min(100%, calc(1200px + var(--pic) + var(--gap))); }
+  .bk-narrow.has-pic .evp-cols { grid-template-columns: var(--pic) minmax(0, 1.05fr) minmax(0, 1fr); }
+  .bk-narrow.has-pic .bk-showline .bk-poster { display: none; }
+  .evp-in.tkp.has-pic { grid-template-columns: minmax(0, 1fr) var(--pic) minmax(0, min(1340px, 100%)) minmax(0, 1fr); }
+  .evp-in.tkp.has-pic > .evp-toprow { grid-column: 2 / 4; max-width: none; }
+  .evp-in.tkp.has-pic > .evp-pic { grid-column: 2; grid-row: 2 / span 3; align-self: start; }
+  .evp-in.tkp.has-pic > :is(.tk-ok, .tk-grid, .tk-help) { grid-column: 3; }
+}
+@media (min-width: 1600px) and (min-aspect-ratio: 5/4) and (max-height: 800px) { .evp-pic { position: static; } }
 .evp-pmap { position: relative; aspect-ratio: 16 / 9; margin: 0 0 calc(var(--u) * .9); border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .035); overflow: hidden; }   /* the hall in the colours of its prices (page.js: priceMap) */
 .evp-pmap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .evp-main h2, .evp-side h2, .evp-more h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
@@ -1207,10 +1235,8 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-note b { color: rgb(var(--fg)); font-weight: var(--fwb); }
 .evp-more .tkt-grid { --cols: 4; }
 .evp-more .tkt-grid > :nth-child(n+5) { display: none; }   /* one row: as many as there are columns */
-.evp > .evp-ft { --fl: max(1180px, calc(var(--u) * 74)); flex: none; box-sizing: border-box; width: calc(100% - var(--pad-l) - var(--pad-r)); max-width: var(--fl); margin: 0 auto calc(var(--gap) * 2); }   /* the site's footer after the page's column, as wide as that column */
-.evp > .evp-ft.bk { --fl: max(1440px, calc(var(--u) * 86)); }
-.evp > .evp-ft.bk-narrow { --fl: 1200px; }
-.evp > .evp-ft.tkp { --fl: min(1340px, 100%); }
+@media (min-width: 1600px) and (min-aspect-ratio: 5/4) { .evp-more .tkt-grid { --cols: 6; } .evp-more .tkt-grid > :nth-child(n+5) { display: block; } .evp-more .tkt-grid > :nth-child(n+7) { display: none; } }   /* (round Q: the row takes the whole width) */
+.evp > .evp-ft { flex: none; box-sizing: border-box; width: calc(100% - var(--pad-l) - var(--pad-r)); margin: 0 auto calc(var(--gap) * 2); }   /* the site's footer after the page's column, from edge to edge like the header (round Q) */
 @media (max-width: 1099px), (max-aspect-ratio: 5/4) { .evp:has(.bk-bar) > .evp-ft { margin-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } }   /* (the fixed bar of the seats' and the payment's pages must not cover the footer's last lines) */
 
 /* the rules' window */
@@ -1276,6 +1302,19 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .lm-open svg.i { width: 1.25em; height: 1.25em; }
 .lm-open:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
 @media (max-width: 760px) { .lm-view { height: clamp(200px, 30svh, 280px); } }
+
+/* ── the panels' finish (round Q; inside a program only: the home page is as it was) ── a fine light on the top edge, a layered soft shadow, headings with an icon chip, an accent hairline on the booking panels */
+.evp .panel:not(.evp-cover) { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .075), inset 0 0 0 1px rgba(255, 255, 255, .035), 0 1px 2px rgba(0, 0, 0, .28), 0 22px 40px -28px rgba(0, 0, 0, .72); }
+:root[data-mode="light"] .evp .panel:not(.evp-cover) { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 1px 2px rgba(40, 30, 70, .08), 0 22px 40px -28px rgba(40, 30, 70, .35); }
+.evp :is(.evp-main, .evp-side, .evp-more, .pg-box, .bk-who, .bk-way, .bk-next, .bk-prices, .bk-cart, .bk-sum, .tk-help, .evp-info) > h2 > svg.i:first-child,
+.evp :is(.bk-who, .bk-way, .bk-next, .bk-prices, .bk-cart, .bk-sum, .tk-help, .evp-prices, .evp-book) h2 > svg.i:first-child { box-sizing: content-box; width: 1.05em; height: 1.05em; padding: .36em; border-radius: .62em; background: color-mix(in oklab, var(--sc, var(--ring)) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc, var(--ring)) 30%, transparent); }
+.evp :is(.evp-book, .bk-sum, .bk-cart, .bk-who) { position: relative; }
+.evp :is(.evp-book, .bk-sum, .bk-cart, .bk-who)::before { content: ""; position: absolute; top: 0; inset-inline: 12%; height: 2px; border-radius: 0 0 3px 3px; background: linear-gradient(90deg, transparent, var(--sc, var(--ring)), transparent); opacity: .85; pointer-events: none; }
+.evp-pic-f { box-shadow: 0 26px 50px -24px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .14), 0 36px 70px -40px color-mix(in oklab, var(--sc, var(--ring)) 55%, transparent); }
+.evp .buy:not(:disabled) { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 12px 26px -14px rgba(244, 63, 94, .75); }
+/* the footer's last line keeps clear of the «back to top» button (the footer is as wide as the window now, so the line reaches the corner where the button stands) */
+.evp > .evp-ft .ft-end { padding-inline-start: calc(max(48px, var(--u) * 3) + 18px); }
+@media (max-width: 760px) { .evp > .evp-ft .ft-end { padding-inline-start: 0; } }
 
 /* ── steps 2–4 of a purchase: the seats, the booking and payment, the tickets (buy.js); the same panels and themes ── */
 .steps li a { display: inline-flex; align-items: center; gap: .5em; color: inherit; text-decoration: none; }
@@ -1414,6 +1453,19 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .bk-go, .bk-pay { width: 100%; gap: .5em; }
 .bk-go:disabled, .bk-go2:disabled { opacity: .45; cursor: not-allowed; filter: grayscale(.4); }
 .bk-go:disabled:active, .bk-go2:disabled:active { transform: none; }
+/* a ticket as a file (round Q): the buttons under each ticket's QR */
+.tk-sv { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: .7em; }
+.tk-sv button { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .4em; min-height: 32px; padding: 0 .8em; border-radius: var(--rb); background: rgba(var(--fg), .08); box-shadow: inset 0 0 0 1px rgba(var(--fg), .16); font-size: 12.5px; font-weight: var(--fwm); color: rgb(var(--fg)); transition: background-color .2s; }
+.tk-sv button svg.i { width: 1.1em; height: 1.1em; }
+.tk-sv button:hover { background: rgba(var(--fg), .16); }
+.tk-sv button:focus-visible, .tk-acts .chip:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.tk-sv button.is-busy, .tk-acts .chip.is-busy { opacity: .55; cursor: progress; }
+.tk-acts [data-act="pdf"] svg.i, .tk-acts [data-act="img"] svg.i, .tk-sv [data-sv="img"] svg.i, .tk-sv [data-sv="pdf"] svg.i { transform: rotate(180deg); }   /* (the sprite's «upload» arrow, turned down: a download) */
+/* the dark stub of a wide ticket: its buttons are white on dark (they took the page's text colour, which is dark in the light theme) */
+.tk-stub .tk-sv button { background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .34); color: #fff; }
+.tk-stub .tk-sv button:hover { background: rgba(255, 255, 255, .24); }
+.tk-stub .tk-sv button:focus-visible { outline-color: #fff; }
+@media print { .tk-sv { display: none !important; } }
 /* the steps' bar says what was chosen (a step that is done); the payment's «after»: three small steps */
 .steps .tv { display: grid; gap: .05em; }
 .steps .v { font-size: .84em; font-weight: 400; color: rgba(var(--fg), max(.62, var(--dmin))); }
@@ -1651,6 +1703,9 @@ a.buy, a.chip { text-decoration: none; }
   .tk-stub { background: transparent; color: inherit; padding: 14px 18px 16px; }
   .tk-qrb { max-width: 180px; box-shadow: inset 0 0 0 1px rgba(var(--fg), .18); }
   .tk-cd { color: rgba(var(--fg), .66); }
+  .tk-stub .tk-sv button { background: rgba(var(--fg), .08); box-shadow: inset 0 0 0 1px rgba(var(--fg), .16); color: rgb(var(--fg)); }
+  .tk-stub .tk-sv button:hover { background: rgba(var(--fg), .16); }
+  .tk-stub .tk-sv button:focus-visible { outline-color: rgb(var(--fg)); }
   .bk-bar { position: fixed; z-index: 35; inset-inline: 10px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px; padding-inline-start: 16px; border-radius: var(--rb); background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 18px 40px -14px rgba(0, 0, 0, calc(.9 * var(--shk) + .1)), inset 0 0 0 1px rgba(var(--fg), .14); }
   .bk-bar-l { all: unset; display: grid; align-content: center; min-height: 44px; padding-inline: 6px; border-radius: 12px; line-height: 1.5; font-size: 12.5px; cursor: pointer; }   /* a finger-sized press (it takes you to your seats) */
   .bk-bar-l:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }
@@ -2067,6 +2122,29 @@ a.buy, a.chip { text-decoration: none; }
   .pg-flt .sec-chips .chip { flex: none; }
   .pg-flt-row > .sec-chips { order: 5; flex: 1 1 100%; }
 }
+
+/* the fixed pages (round Q): the way back, the head and the stats are as wide as the page's column, not as wide as the window */
+.evp-in.pg > :is(.evp-crumb, .pg-head, .pg-stats) { width: 100%; max-width: var(--fl); justify-self: center; }
+.pg-ac .wz-sw { display: flex; width: 100%; margin: 0 0 .5em; }   /* (the three notices, one on each line) */
+
+/* the stat tiles (round Q): the number and its words side by side with a small icon chip: a row, not a tall box with air in it */
+.pg-stats .panel { display: flex; align-items: center; justify-content: flex-start; gap: .75em; padding: calc(var(--u) * .8) calc(var(--u) * 1.1); }
+.pg-stats .st-ic { flex: none; display: grid; place-items: center; width: max(34px, calc(var(--u) * 2.1)); aspect-ratio: 1; border-radius: .8em; color: var(--ring); background: color-mix(in oklab, var(--ring) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ring) 30%, transparent); }
+.pg-stats .st-ic svg.i { width: 52%; height: 52%; }
+.pg-stats b { font-size: calc(max(24px, calc(var(--u) * 1.9)) * var(--tx) * var(--tx-main)); line-height: 1.2; }
+.pg-stats .panel > span:not(.st-ic) { margin-inline-start: auto; text-align: end; line-height: 1.5; }
+
+/* the head's quick links (round Q): on the far side of the head, the way the page's own corner is used */
+.pg-head .pg-acts { margin-inline-start: auto; display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+.pg-head .pg-acts .chip { text-decoration: none; display: inline-flex; align-items: center; gap: .45em; }
+.pg-head .pg-acts .chip svg.i { width: 1.1em; height: 1.1em; }
+
+/* the customer's page: the columns end where their own content ends (no panel stretched to its neighbour's height); the empty reminders are a small calm state, not a bare line */
+.pg-ac .evp-cols { align-items: start; }
+.ac-empty { display: flex; align-items: center; gap: 1em; padding: .9em 1em; border-radius: calc(var(--r) * 1.1); border: 1px dashed rgba(var(--fg), .22); background: rgba(var(--fg), .03); }
+.ac-empty > i { flex: none; display: grid; place-items: center; width: 2.6em; aspect-ratio: 1; border-radius: 50%; color: var(--ring); background: color-mix(in oklab, var(--ring) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ring) 30%, transparent); }
+.ac-empty > i svg.i { width: 48%; height: 48%; }
+.ac-empty p { margin: 0; }
 
 /* ── the entry control (gate.js): the start (session, door, code) and the scanning (camera, the answer, the numbers, the log) ── */
 .gt { --ok: #22c55e; --bad: #f43f5e; --warn: #f59e0b; }
@@ -5417,7 +5495,7 @@ const hd = {
     $('#ticketsBtn').addEventListener('click', () => page.go('#/receipts'));
     $('#bellBtn').addEventListener('click', (ev) => notif.open(ev.currentTarget)); notif.init();   // the notifications (notif.js)
     auth.init(); drawer.init();
-    $('.brand', nav).addEventListener('click', (ev) => { ev.preventDefault(); scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); });
+    $('.brand', nav).addEventListener('click', (ev) => { ev.preventDefault(); if (page.on) { page.close({ then: () => scrollTo({ top: 0, behavior: 'instant' }) }); return; } scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); });   // (the logo goes to the start of the home page, from a page inside the site too)
     this.search.setPlaceholder();
   },
 };
@@ -6481,7 +6559,7 @@ const dots = {
 };
 
 // the poster that is on the screen now (a purchase page has one in its card and one in its bar; the one a window hides has no box)
-const pimg = (el) => $$('.evp-poster img, .bk-poster img', el).find((x) => x.getClientRects().length) || null;
+const pimg = (el) => $$('.evp-poster img, .evp-pic-f img, .bk-poster img', el).find((x) => x.getClientRects().length) || null;
 const page = {
   on: false, el: $('#evp'), e: null, y: 0, accepted: new Set(), from: null, to: null, then: null, trail: [],
   init() {
@@ -6619,10 +6697,14 @@ const page = {
       <div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(e.w.time)} · ${fa(dur)} دقیقه</b></span></div>
       <div class="fact"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${h.hall ? `<a class="evp-hl" href="${hallHref(h.hall)}">${esc(h.name)}</a>` : esc(h.name)}</b><em>${esc(h.addr)}</em></span></div>
     </div>`;
-    this.el.innerHTML = `<div class="evp-in" style="--sc-d:${cd};--sc-l:${cl}">
+    this.el.innerHTML = `<div class="evp-in evp-show has-pic" style="--sc-d:${cd};--sc-l:${cl}">
       <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
       ${stepsHTML(1, e, null)}</div>
       <div class="evp-cols">
+        <aside class="evp-pic${hasPoster ? '' : ' is-banner'} evp-rise" aria-label="تصویر برنامه" style="--ps:${hasPoster ? ps : '0.75'};--pa:url('${esc(hasPoster ? src : cover)}');--art:url('${esc(cover)}')">
+          <figure class="evp-pic-f"><img src="${esc(hasPoster ? src : cover)}" alt="${hasPoster ? 'پوستر' : 'تصویر'} ${esc(e.title)}"></figure>
+          <div class="evp-pic-facts panel">${facts('pic')}</div>
+        </aside>
         <div class="evp-main">
           <section class="evp-cover panel${cover === src ? ' is-soft' : ''}${hasPoster ? '' : ' no-poster'}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
             <div class="evp-bg" aria-hidden="true"></div><span class="evp-motes" aria-hidden="true">${Array.from({ length: 8 }, (_, i) => `<i style="--m:${i}"></i>`).join('')}</span>
@@ -7178,10 +7260,11 @@ const buy = {
     const om = store.get('blit.otpMode', 'busy'), need = om === 'always' || (om === 'busy' && busy);   // the admin's choice (پنل مدیر ← دسته‌ها و تنظیمات)
     const user = userOf(), ph0 = user ? user.phone : store.get('blit.phone', ''), ver = !!ph0 && (store.sget('blit.otpOk', '') === ph0 || (!!user && user.phone === ph0));   // (a number that was checked, or the signed-in account's, is a checked one)
     this.payState = { e, s, seats, code: '', need, otp: !need || ver, verified: ver ? ph0 : '', phone: ph0 };
-    el.innerHTML = `<div class="evp-in bk bk-narrow" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
+    el.innerHTML = `<div class="evp-in bk bk-narrow has-pic" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
       <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}برگشت به صندلی‌ها</a></nav>${stepsHTML(3, e, s, seats.length)}</div>
       <section class="panel bk-hold evp-rise" aria-live="polite"><span class="bk-ring" data-hold-bar aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="21"/><circle class="pr" cx="24" cy="24" r="21" pathLength="100"/></svg>${ico('clock')}</span><div><b>صندلی‌هات تا <span data-hold>--:--</span> دیگه برات نگه داشته می‌شن</b><span>اگه تا اون موقع پرداخت نشه، آزاد می‌شن و بقیه می‌تونن بخرنشون.</span></div></section>
       <div class="evp-cols">
+        ${this.picAside(e, s)}
         <div class="evp-main">
           <section class="panel bk-who evp-rise" aria-labelledby="bkWhoH">
             <h2 id="bkWhoH">${ico('users')}خریدار<small>بدون ثبت‌نام</small></h2>
@@ -7378,6 +7461,7 @@ const buy = {
           <button type="button" class="tk-qrb" data-pass="${i}" aria-label="نمایش بزرگ کد QR بلیت ${fa(i + 1)}" title="نمایش بزرگ">${qrSVG(qrText(o.code, o.sid, x.key))}</button>
           <small dir="ltr" class="tk-cd">${esc(code)}</small>
           <span class="tk-price">${money(x.price)} <small>تومان</small></span>
+          <span class="tk-sv" role="group" aria-label="ذخیره و اشتراک بلیت ${fa(i + 1)}"><button type="button" data-sv="img" data-i="${i}" aria-label="ذخیره‌ی تصویر بلیت ${fa(i + 1)}">${ico('upload')}تصویر</button><button type="button" data-sv="pdf" data-i="${i}" aria-label="ذخیره‌ی PDF بلیت ${fa(i + 1)}">${ico('upload')}PDF</button><button type="button" data-sv="share" data-i="${i}" aria-label="اشتراک بلیت ${fa(i + 1)}">${ico('share')}اشتراک</button></span>
         </div>
       </div>
     </article>`;
@@ -7407,13 +7491,14 @@ const buy = {
     page.e = e; page.v.e = e;
     document.title = `بلیت · ${e.title} · بلیت`;
     const s = { id: o.sid, t: o.t }, w = whenOf(s), h = hallOf(e), { a: art, src } = artOf(e), ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4);
-    el.innerHTML = `<div class="evp-in bk tkp" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
+    el.innerHTML = `<div class="evp-in bk tkp has-pic" style="--sc-d:${secColor(catOf(e))[0]};--sc-l:${secColor(catOf(e))[1]}">
       <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a></nav>${stepsHTML(4, e, s, o.seats.length)}</div>
+      ${this.picAside(e, s)}
       <section class="panel tk-ok evp-rise">
         <span class="tk-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27.5l7.2 7.2L38 18.8"/></svg></span>
         <div class="tk-say"><h1>پرداخت موفق بود؛ بلیت‌هات آماده‌ست</h1><p>بلیت‌ها به ${esc(maskPhone(o.phone))} پیامک شد. هر وقت خواستی با «پیگیری خرید» و همین شماره دوباره پیداشون کن.</p></div>
         <div class="tk-code"><small>کد پیگیری</small><b dir="ltr">${esc(o.code)}</b><button type="button" class="chip" data-act="copy">${ico('copy')}کپی</button></div>
-        <div class="tk-acts"><button type="button" class="chip" data-act="ics">${ico('calendar')}افزودن به تقویم</button><button type="button" class="chip" data-act="print">${ico('ticket')}چاپ یا ذخیره‌ی PDF</button><a class="chip" href="#/receipts">${ico('search')}پیگیری خرید</a></div>
+        <div class="tk-acts"><button type="button" class="chip" data-act="ics">${ico('calendar')}افزودن به تقویم</button><button type="button" class="chip" data-act="pdf">${ico('upload')}ذخیره‌ی PDF</button><button type="button" class="chip" data-act="img">${ico('upload')}ذخیره‌ی تصویر</button><button type="button" class="chip" data-act="share">${ico('share')}اشتراک‌گذاری</button><button type="button" class="chip" data-act="print">${ico('ticket')}چاپ</button><a class="chip" href="#/receipts">${ico('search')}پیگیری خرید</a></div>
       </section>
       <div class="tk-grid">${o.seats.map((x, i) => this.passHTML(o, e, x, i, { w, h, src, ps })).join('')}</div>
       <section class="panel tk-help evp-rise"><h2>${ico('info')}روز اجرا</h2><ul><li>یک ساعت پیش از شروع در سالن باش؛ پس از شروع، ورود ممکن نیست.</li><li>کد QR هر بلیت رو دم در نشون بده (روی گوشی یا چاپی)؛ هر کد فقط یک بار باز می‌شه.</li><li>بلیت شخصیه؛ برای همراهانت هر کدوم یه بلیت جدا داره.</li></ul></section>
@@ -7421,12 +7506,13 @@ const buy = {
     const on = (sel, f) => $$(sel, el).forEach((x) => x.addEventListener('click', (ev) => { ev.preventDefault(); f(x); }));
     on('[data-act="copy"]', async () => { try { await navigator.clipboard.writeText(o.code); toast('کد پیگیری کپی شد.'); } catch (err) { toast(`کد پیگیری: ${o.code}`); } });
     on('[data-act="print"]', () => window.print());
+    const busy = async (btn, f, ok) => { if (btn.disabled) return; btn.disabled = true; btn.classList.add('is-busy'); try { await f(); if (ok) toast(ok); } catch (err) { toast('این‌جا نشد؛ بعداً دوباره امتحان کن.'); } btn.disabled = false; btn.classList.remove('is-busy'); };
+    on('[data-act="pdf"]', (x) => busy(x, async () => tkx.save(await tkx.pdf(o, e), `blit-${o.code}.pdf`), 'PDF بلیت‌ها ذخیره شد.'));
+    on('[data-act="img"]', (x) => busy(x, async () => tkx.save(await tkx.pngAll(o, e), `blit-${o.code}.png`), 'تصویر بلیت‌ها ذخیره شد.'));
+    on('[data-act="share"]', (x) => busy(x, () => tkx.share(o, e, null, x)));
+    on('[data-sv]', (x) => { const i = +x.dataset.i; const k = x.dataset.sv; busy(x, async () => { if (k === 'img') tkx.save(await tkx.png(o, e, i), `blit-${o.code}-${i + 1}.png`); else if (k === 'pdf') tkx.save(await tkx.pdf(o, e, i), `blit-${o.code}-${i + 1}.pdf`); else await tkx.share(o, e, i, x); }, k === 'share' ? '' : (k === 'img' ? 'تصویر بلیت ذخیره شد.' : 'PDF بلیت ذخیره شد.')); });
     on('[data-pass]', (x) => this.passOpen(o, e, o.seats[+x.dataset.pass], +x.dataset.pass, { w, h, src }));
-    on('[data-act="ics"]', () => {
-      const d = new Date(o.t), z = (n) => String(n).padStart(2, '0'), f = (x) => `${x.getUTCFullYear()}${z(x.getUTCMonth() + 1)}${z(x.getUTCDate())}T${z(x.getUTCHours())}${z(x.getUTCMinutes())}00Z`;
-      const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Blit//FA', 'BEGIN:VEVENT', `UID:${o.code}@blit`, `DTSTAMP:${f(new Date())}`, `DTSTART:${f(d)}`, `DTEND:${f(new Date(+d + (DUR[e.kind] || 100) * 6e4))}`, `SUMMARY:${e.title}`, `LOCATION:${h.name}، ${h.addr}`, `DESCRIPTION:${o.seats.map(seatName).join(' / ')} · کد پیگیری ${o.code}`, 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = `blit-${o.code}.ics`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-    });
+    on('[data-act="ics"]', () => { tkx.save(new Blob([tkx.ics(o, e)], { type: 'text/calendar' }), `blit-${o.code}.ics`); toast('بلیت به تقویم اضافه شد؛ فایل رو باز کن.'); });
     if (MOTK()) { const c = $('.tk-check', el); c.classList.add('is-in'); this.confetti($('.tk-ok', el)); }
   },
   // a little burst of the three kinds' colours over the success panel (transform and opacity only)
@@ -7439,8 +7525,123 @@ const buy = {
       gsap.fromTo(p, { x: 0, y: 0, rotate: 0, opacity: 1 }, { x: Math.cos(a) * d, y: Math.sin(a) * d - 40, rotate: Math.random() * 540, opacity: 0, duration: 1.4 + Math.random() * 0.6, ease: 'expo.out', delay: 0.25, onComplete: () => p.remove() });
     }
   },
+  // the program's picture in its own column on a wide window (round Q): the poster, or a banner shown whole on its blurred copy, and the three facts (hidden on a narrower window)
+  picAside(e, s) {
+    const { a: art, src } = artOf(e), hasBanner = !!(e.banner && !e.banner.sample && e.banner.src && !e.banner.fake), cover = hasBanner ? e.banner.src : src, hasPoster = !!e.poster || !hasBanner;
+    const ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4), w = whenOf(s), h = hallOf(e), img = hasPoster ? src : cover;
+    return `<aside class="evp-pic${hasPoster ? '' : ' is-banner'} evp-rise" aria-label="تصویر برنامه" style="--ps:${hasPoster ? ps : '0.75'};--pa:url('${esc(img)}');--art:url('${esc(cover)}')"><figure class="evp-pic-f"><img src="${esc(img)}" alt="${hasPoster ? 'پوستر' : 'تصویر'} ${esc(e.title)}"></figure><div class="evp-pic-facts panel"><div class="evp-facts is-pic"><div class="fact"><span class="fi">${ico('calendar')}</span><span><small>روز اجرا</small><b>${esc(w.wd)} ${esc(w.dm)}</b></span></div><div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(w.tm)} · ${fa(DUR[e.kind] || 100)} دقیقه</b></span></div><div class="fact"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${esc(h.name)}</b><em>${esc(h.addr)}</em></span></div></div></div></aside>`;
+  },
   missing(title, text, e, s) {
     return `<div class="evp-in bk"><section class="panel bk-miss evp-rise"><span class="bk-exp-ic">${ico('info')}</span><h1>${esc(title)}</h1><p>${esc(text)}</p><div class="evp-dlg-end">${e && s ? `<a class="buy" href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}انتخاب صندلی</a>` : ''}${e ? `<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">صفحه‌ی اجرا</a>` : ''}<a class="chip" href="#" data-home>همه‌ی برنامه‌ها</a></div></section></div>`;
+  },
+};
+/* ───── a ticket as a file (round Q): the image, the PDF, the calendar entry, the share ───── */
+const tkx = {
+  W: 1200, H: 520,
+  load(src) { return new Promise((ok) => { if (!src) return ok(null); const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = src; }); },
+  // the words of a ticket, as lines of at most `max` px, from the right (the text is Persian)
+  lines(x, text, max, n) {
+    const words = String(text).split(/\s+/), out = []; let cur = '';
+    for (const w of words) { const t = cur ? `${cur} ${w}` : w; if (cur && x.measureText(t).width > max) { out.push(cur); cur = w; } else cur = t; }
+    if (cur) out.push(cur);
+    if (out.length > n) { out.length = n; out[n - 1] = `${out[n - 1].replace(/\s*\S*$/, '')}…`; }
+    return out;
+  },
+  // one ticket on a canvas, at twice its size (a clear picture on a phone); with `bg`, on a plain page colour (for the PDF)
+  async draw(o, e, x, i, bg) {
+    const { W, H } = this, k = 2, cv = document.createElement('canvas'); cv.width = W * k; cv.height = H * k;
+    const c = cv.getContext('2d'); c.scale(k, k); c.direction = 'rtl';
+    try { await document.fonts.load('800 40px Vazirmatn'); await document.fonts.load('500 24px Vazirmatn'); } catch (err) { /* the fallback font is used */ }
+    const F = (w, s) => `${w} ${s}px Vazirmatn, Tahoma, system-ui, sans-serif`, w = whenOf({ t: o.t }), h = hallOf(e), pl = placeOf(e), { src } = artOf(e);
+    const poster = await this.load(src);
+    if (bg) { c.fillStyle = bg; c.fillRect(0, 0, W, H); }
+    // the card, with the half-circles cut out of the edge at the perforation
+    c.save(); c.beginPath(); c.roundRect(0, 0, W, H, 40); c.clip();
+    const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#1d1a29'); g.addColorStop(1, '#100e18'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    c.fillStyle = e.accent || '#8b5cf6'; c.fillRect(W - 16, 0, 16, H);
+    c.fillStyle = 'rgba(255,255,255,.05)'; c.fillRect(0, 0, 372, H);
+    c.restore();
+    c.save(); c.globalCompositeOperation = 'destination-out'; c.beginPath(); c.arc(372, 0, 24, 0, 6.2832); c.arc(372, H, 24, 0, 6.2832); c.fill(); c.restore();
+    if (bg) { c.fillStyle = bg; c.beginPath(); c.arc(372, 0, 24, 0, 6.2832); c.arc(372, H, 24, 0, 6.2832); c.fill(); }
+    c.strokeStyle = 'rgba(255,255,255,.28)'; c.lineWidth = 2; c.setLineDash([7, 9]); c.beginPath(); c.moveTo(372, 34); c.lineTo(372, H - 34); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = 'rgba(255,255,255,.12)'; c.lineWidth = 2; c.beginPath(); c.roundRect(1, 1, W - 2, H - 2, 39); c.stroke();
+    // the QR, white, with its quiet zone
+    const text = qrText(o.code, o.sid, x.key), q = typeof qrcode === 'function' ? qrcode(0, 'M') : null;
+    c.fillStyle = '#fff'; c.beginPath(); c.roundRect(46, 56, 280, 280, 22); c.fill();
+    if (q) { q.addData(text); q.make(); const n = q.getModuleCount(), s = 236 / n; c.fillStyle = '#0b0a10'; for (let r = 0; r < n; r++) for (let d = 0; d < n; d++) if (q.isDark(r, d)) c.fillRect(68 + d * s, 78 + r * s, s + 0.4, s + 0.4); }
+    c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,255,255,.92)'; c.font = F(700, 25); c.fillText(`${o.code}-${i + 1}`, 186, 386);
+    c.direction = 'rtl'; c.fillStyle = '#fff'; c.font = F(800, 36); c.fillText(`${money(x.price)} تومان`, 186, 446);
+    c.fillStyle = 'rgba(255,255,255,.6)'; c.font = F(500, 21); c.fillText('بلیت · blit', 186, 486);
+    // the words
+    c.textAlign = 'right'; let rx = W - 56, ty = 56;
+    if (poster && poster.naturalWidth) { const pw = 150, ph = Math.min(206, pw / (poster.naturalWidth / poster.naturalHeight)), py = 50; c.save(); c.beginPath(); c.roundRect(rx - pw, py, pw, ph, 16); c.clip(); const sc = Math.max(pw / poster.naturalWidth, ph / poster.naturalHeight); c.drawImage(poster, rx - pw + (pw - poster.naturalWidth * sc) / 2, py + (ph - poster.naturalHeight * sc) / 2, poster.naturalWidth * sc, poster.naturalHeight * sc); c.restore(); c.strokeStyle = 'rgba(255,255,255,.2)'; c.lineWidth = 2; c.beginPath(); c.roundRect(rx - pw, py, pw, ph, 16); c.stroke(); rx -= pw + 30; }
+    c.fillStyle = 'rgba(255,255,255,.7)'; c.font = F(500, 24); c.fillText(`${e.type} · بلیت ${fa(i + 1)} از ${fa(o.seats.length)}`, rx, ty + 8);
+    c.fillStyle = '#fff'; c.font = F(800, 42); const tl = this.lines(c, e.title, rx - 400, 2); tl.forEach((t, j) => c.fillText(t, rx, ty + 62 + j * 56));
+    c.fillStyle = e.accent || '#a78bfa'; c.font = F(700, 28); c.fillText(`${w.wd} ${w.dm} · ساعت ${w.tm}`, rx, ty + 62 + tl.length * 56 + 14);
+    c.strokeStyle = 'rgba(255,255,255,.16)'; c.lineWidth = 2; c.setLineDash([6, 8]); c.beginPath(); c.moveTo(W - 56, 300); c.lineTo(420, 300); c.stroke(); c.setLineDash([]);
+    const cells = x.ga ? [['بخش', x.zone], ['نوع', 'جای ایستاده'], ['شهر', pl.city || e.city]] : [['بخش', x.zone], [x.word || 'ردیف', fa(x.row)], ['صندلی', fa(x.n)], ['شهر', pl.city || e.city]];
+    let cx = W - 56; const cw = (W - 56 - 420) / 4;
+    cells.forEach(([lab, val]) => { c.fillStyle = 'rgba(255,255,255,.55)'; c.font = F(500, 20); c.fillText(lab, cx, 340); c.fillStyle = '#fff'; c.font = F(800, 32); c.fillText(String(val), cx, 382, cw - 14); cx -= cw; });
+    c.fillStyle = 'rgba(255,255,255,.55)'; c.font = F(500, 20); c.fillText('سالن', W - 56, 430); c.fillStyle = '#fff'; c.font = F(800, 30); c.fillText(h.name, W - 56, 466, W - 56 - 420);
+    c.fillStyle = 'rgba(255,255,255,.6)'; c.font = F(500, 21); c.fillText(h.addr || '', W - 56, 500, W - 56 - 420);
+    return cv;
+  },
+  toBlob(cv, type, q) { return new Promise((ok) => cv.toBlob(ok, type, q)); },
+  async png(o, e, i) { return this.toBlob(await this.draw(o, e, o.seats[i], i), 'image/png'); },
+  // every ticket of the order in one picture, one under the other
+  async pngAll(o, e) {
+    const cs = []; for (let i = 0; i < o.seats.length; i++) cs.push(await this.draw(o, e, o.seats[i], i));
+    const gap = 40, all = document.createElement('canvas'); all.width = cs[0].width; all.height = cs.length * cs[0].height + (cs.length - 1) * gap * 2;
+    const c = all.getContext('2d'); cs.forEach((cv, i) => c.drawImage(cv, 0, i * (cv.height + gap * 2)));
+    return this.toBlob(all, 'image/png');
+  },
+  // a PDF made here: an A4 page for each ticket, the ticket's picture on it (JPEG, so no library is needed)
+  async pdf(o, e, only) {
+    const idx = only == null ? o.seats.map((_, i) => i) : [only], pages = [];
+    for (const i of idx) {
+      const cv = await this.draw(o, e, o.seats[i], i, '#ffffff'), jb = await this.toBlob(cv, 'image/jpeg', 0.93);
+      pages.push({ w: cv.width, h: cv.height, jpg: new Uint8Array(await jb.arrayBuffer()) });
+    }
+    const enc = new TextEncoder(), chunks = [], offs = []; let len = 0;
+    const put = (b) => { const u = typeof b === 'string' ? enc.encode(b) : b; chunks.push(u); len += u.length; };
+    const obj = (n, body) => { offs[n] = len; put(`${n} 0 obj\n`); put(body); put('\nendobj\n'); };
+    put('%PDF-1.4\n'); put(new Uint8Array([37, 226, 227, 207, 211, 10]));
+    const N = pages.length, kids = pages.map((_, i) => `${3 + i * 3} 0 R`).join(' ');
+    obj(1, '<< /Type /Catalog /Pages 2 0 R >>'); obj(2, `<< /Type /Pages /Kids [${kids}] /Count ${N} >>`);
+    pages.forEach((p, i) => {
+      const pg = 3 + i * 3, ct = pg + 1, im = pg + 2, pw = 515, ph = Math.round(pw * p.h / p.w * 100) / 100, py = Math.round((842 - 70 - ph) * 100) / 100;
+      obj(pg, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ${im} 0 R >> >> /Contents ${ct} 0 R >>`);
+      const cs = `q ${pw} 0 0 ${ph} 40 ${py} cm /Im0 Do Q`; obj(ct, `<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`);
+      offs[im] = len; put(`${im} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`); put(p.jpg); put('\nendstream\nendobj\n');
+    });
+    const total = 3 + N * 3, xr = len; put(`xref\n0 ${total}\n0000000000 65535 f \n`);
+    for (let n = 1; n < total; n++) put(`${String(offs[n]).padStart(10, '0')} 00000 n \n`);
+    put(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`);
+    return new Blob(chunks, { type: 'application/pdf' });
+  },
+  // the calendar entry: the night, two hours' notice, the hall and the code
+  ics(o, e) {
+    const h = hallOf(e), d = new Date(o.t), z = (n) => String(n).padStart(2, '0'), f = (t) => `${t.getUTCFullYear()}${z(t.getUTCMonth() + 1)}${z(t.getUTCDate())}T${z(t.getUTCHours())}${z(t.getUTCMinutes())}00Z`;
+    const esc2 = (t) => String(t).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+    const seats = o.seats.map((x) => (x.ga ? `${x.zone} (ایستاده)` : `${x.zone}، ${x.word || 'ردیف'} ${fa(x.row)}، صندلی ${fa(x.n)}`)).join(' / ');
+    return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Blit//FA', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', `UID:${o.code}@blit`, `DTSTAMP:${f(new Date())}`, `DTSTART:${f(d)}`, `DTEND:${f(new Date(+d + (DUR[e.kind] || 100) * 6e4))}`,
+      `SUMMARY:${esc2(e.title)}`, `LOCATION:${esc2(`${h.name}، ${h.addr || e.city}`)}`, `DESCRIPTION:${esc2(`بلیت ${o.seats.length} نفره · ${seats} · کد پیگیری ${o.code}`)}`,
+      'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc2(`${e.title}: دو ساعت دیگه شروع می‌شه`)}`, 'TRIGGER:-PT2H', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  },
+  save(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); },
+  text(o, e) { const w = whenOf({ t: o.t }), h = hallOf(e); return `بلیت من: ${e.title} · ${w.wd} ${w.dm} ساعت ${w.tm} · ${h.name}، ${e.city} · کد پیگیری ${o.code}`; },
+  // the phone's own share sheet with the picture as a file; where there is none, a small menu
+  async share(o, e, i, anchor) {
+    const blob = i == null ? await this.pngAll(o, e) : await this.png(o, e, i), name = `blit-${o.code}${i == null ? '' : `-${i + 1}`}.png`, file = new File([blob], name, { type: 'image/png' }), data = { files: [file], title: e.title, text: this.text(o, e) };
+    if (navigator.canShare && navigator.canShare(data) && navigator.share) { try { await navigator.share(data); } catch (err) { /* closed by the buyer */ } return; }
+    const msg = this.text(o, e), url = `${location.href.split('#')[0]}#/ticket/${encodeURIComponent(o.code)}`;
+    const items = [{ t: 'ارسال در تلگرام', v: 'tg' }, { t: 'ارسال در واتس‌اپ', v: 'wa' }, { t: 'کپی متن بلیت', v: 'copy' }, { t: 'ذخیره‌ی تصویر برای ارسال', v: 'img' }];
+    menuPop(anchor, items, '', async (v) => {
+      if (v === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+      else if (v === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(`${msg}\n${url}`)}`, '_blank', 'noopener');
+      else if (v === 'copy') { try { await navigator.clipboard.writeText(`${msg}\n${url}`); toast('متن بلیت کپی شد.'); } catch (err) { toast(msg); } }
+      else { this.save(blob, name); toast('تصویر بلیت ذخیره شد.'); }
+    }, { label: 'اشتراک‌گذاری' });
   },
 };
 // «continue your purchase»: while a hold runs (the seats of a purchase that was left), a small pill on every other page says how long is left and goes back to the payment
@@ -7902,7 +8103,7 @@ const pages = {
         <h2>${ico('shield')}حریم شخصی</h2><p>شماره‌ی موبایلت فقط برای فرستادن بلیت، پیدا کردن خریدهات و خبر دادن تغییرهای برنامه به کار می‌ره.</p></section>`;
     } else if (v.name === 'about') {
       const all = LIST(), cities = new Set(all.map((e) => e.city)), halls = new Set(all.map((e) => hallOf(e).name));
-      body = `<section class="pg-stats evp-rise">${[[all.length, 'برنامه'], [cities.size, 'شهر'], [halls.size, 'سالن'], [0, 'صف انتظار پشت در']].map(([n, l]) => `<div class="panel"><b>${fa(n)}</b><span>${l}</span></div>`).join('')}</section>
+      body = `<section class="pg-stats evp-rise">${[[all.length, 'برنامه', 'ticket'], [cities.size, 'شهر', 'pin'], [halls.size, 'سالن', 'grid'], [0, 'صف انتظار پشت در', 'users']].map(([n, l, ic]) => `<div class="panel"><i class="st-ic" aria-hidden="true">${ico(ic)}</i><b>${fa(n)}</b><span>${l}</span></div>`).join('')}</section>
         <section class="panel pg-box evp-rise pg-doc"><h2>${ico('music')}برای کی ساخته شده</h2><p>برای کسی که می‌خواد بی‌دردسر بلیت کنسرت، تئاتر یا جُنگ بخره: صندلی رو روی نقشه‌ی زنده‌ی سالن ببینه، بدون ثبت‌نام پرداخت کنه و بلیتش همون لحظه بیاد. برای برگزارکننده‌ای که می‌خواد فروشش رو لحظه‌به‌لحظه ببینه، و برای کنترل‌چی‌ای که دم در فقط یه کد QR اسکن می‌کنه.</p>
         <h2>${ico('spark')}چی فرق داره</h2><ul class="pg-tips"><li>پلان واقعی هر سالن با بالکن، لژ، میز و جای ایستاده</li><li>شمارش معکوس شروع فروش و سایتی که زیر فشار همون لحظه هم سریع می‌مونه</li><li>تم تیره و روشن، روی گوشی و کامپیوتر</li></ul></section>`;
     } else if (v.name === 'map') {
@@ -10148,11 +10349,11 @@ const account = {
     }
     const pf = store.get('blit.profile', { name: '', sms: { remind: true, city: true, news: false }, city: geo.name() || 'تهران' });
     const os = store.get('blit.orders', []).filter((o) => o.phone === u.phone || !o.phone), up = os.filter((o) => o.t + 3 * HOUR > Date.now() && o.st !== 'refunded'), rem = store.get('blit.remind', []).map(showById).filter(Boolean);
-    const box = pages.wrap('pg-ac', `${pages.head('حساب من', 'users', `وارد شدی با ${maskPhone(u.phone)} · از ${ago(u.at)}`)}
-      <section class="pg-stats evp-rise">${[[up.length, 'بلیت پیش رو'], [os.length, 'خرید'], [rem.length, 'یادآوری'], [wallet.bal(), 'تومان تو کیف پول']].map(([n, l]) => `<div class="panel"><b>${n > 9999 ? short(n) : fa(n)}</b><span>${l}</span></div>`).join('')}</section>
+    const box = pages.wrap('pg-ac', `${pages.head('حساب من', 'users', `وارد شدی با ${maskPhone(u.phone)}${u.at ? ` · از ${ago(u.at)}` : ''}`, `<div class="pg-acts"><a class="chip" href="#/receipts">${ico('ticket')}همه‌ی خریدها</a><a class="chip" href="#" data-home>${ico('music')}برنامه‌ها</a></div>`)}
+      <section class="pg-stats evp-rise">${[[up.length, 'بلیت پیش رو', 'ticket'], [os.length, 'خرید', 'bag'], [rem.length, 'یادآوری', 'bell'], [wallet.bal(), 'تومان تو کیف پول', 'tag']].map(([n, l, ic]) => `<div class="panel"><i class="st-ic" aria-hidden="true">${ico(ic)}</i><b>${n > 9999 ? short(n) : fa(n)}</b><span>${l}</span></div>`).join('')}</section>
       <div class="evp-cols"><div class="evp-main">
         <section class="panel pg-box evp-rise"><h2>${ico('ticket')}بلیت‌های پیش رو<small><a href="#/receipts">همه‌ی خریدها</a></small></h2>${up.length ? `<div class="rc-grid">${up.map((o) => { const e = showById(o.eid); return e ? orderCardHTML(o, e) : ''; }).join('')}</div>` : '<p class="bk-lead">بلیت پیش رویی نداری. <a href="#" data-home>برنامه‌ها</a> رو ببین.</p>'}</section>
-        <section class="panel pg-box evp-rise"><h2>${ico('bell')}یادآوری‌ها</h2>${rem.length ? `<ul class="ac-rem">${rem.map((e) => `<li><a href="#/e/${esc(encodeURIComponent(e.id))}">${esc(e.title)}</a><small>${saleMs(e) > Date.now() ? `شروع فروش ${esc(saleWhen(e))}` : 'فروشش شروع شده'}</small><button type="button" class="chip gt-ic" data-rm="${esc(e.id)}" aria-label="برداشتن یادآوری ${esc(e.title)}">${ico('x')}</button></li>`).join('')}</ul>` : '<p class="bk-lead">تو بخش «به‌زودی» با «یادم بنداز»، ده دقیقه قبل از شروع فروش پیامک می‌گیری.</p>'}</section>
+        <section class="panel pg-box evp-rise"><h2>${ico('bell')}یادآوری‌ها</h2>${rem.length ? `<ul class="ac-rem">${rem.map((e) => `<li><a href="#/e/${esc(encodeURIComponent(e.id))}">${esc(e.title)}</a><small>${saleMs(e) > Date.now() ? `شروع فروش ${esc(saleWhen(e))}` : 'فروشش شروع شده'}</small><button type="button" class="chip gt-ic" data-rm="${esc(e.id)}" aria-label="برداشتن یادآوری ${esc(e.title)}">${ico('x')}</button></li>`).join('')}</ul>` : `<div class="ac-empty"><i aria-hidden="true">${ico('bell')}</i><p class="bk-lead">تو بخش «به‌زودی» با «یادم بنداز»، ده دقیقه قبل از شروع فروش پیامک می‌گیری.</p></div>`}</section>
       </div><aside class="evp-side">
         <section class="panel pg-box evp-rise"><h2>${ico('users')}مشخصات</h2><label class="bk-fld"><span>نام روی بلیت‌ها <small>(اختیاری)</small></span><input id="acName" value="${esc(pf.name)}" maxlength="40" autocomplete="name"></label><label class="bk-fld"><span>شماره‌ی موبایل</span><input value="${esc(maskPhone(u.phone))}" disabled dir="ltr"></label>
           <h2 class="ac-h">${ico('bell')}پیامک‌ها</h2>${[['remind', 'یادآوری شروع فروش و روز اجرا'], ['city', `برنامه‌های تازه‌ی ${esc(pf.city)}`], ['news', 'خبرنامه و تخفیف‌ها']].map(([k, t]) => `<label class="wz-sw"><input type="checkbox" data-sms="${k}"${pf.sms[k] ? ' checked' : ''}><span>${t}</span></label>`).join('')}
