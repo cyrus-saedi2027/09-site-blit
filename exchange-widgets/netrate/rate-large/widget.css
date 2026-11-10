@@ -4,6 +4,16 @@
 .n1-card { --dir: var(--up); --dirc: var(--up); }
 .n1-card.is-down { --dir: var(--down); --dirc: var(--down); }
 .n1-card.is-flat { --dir: var(--ink3); --dirc: var(--ink3); }
+/* the sample's own look (theme "sample"): indigo line and gradient under it, an indigo pill, light slips */
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-card { --dir: #1117B0; --dirc: #3c44d8; --area: #6067ee; --ao: .78; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-card.is-down { --dir: #B02A20; --dirc: #c4362b; --area: #e0675a; --ao: .72; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-card.is-flat { --dir: #55555d; --dirc: #55555d; --area: #9a9aa6; --ao: .5; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-card .is-up { --dirc: #3c44d8; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-card .is-down { --dirc: #c4362b; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-pill.is-up { background: linear-gradient(135deg, #3c44d8, #5a62ea); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-pill.is-down { background: linear-gradient(135deg, #b8302a, #cf4237); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-slip { --slip-a: #fafafb; --slip-b: #e2e2e4; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n1-line { stroke-width: 3.2; }
 .n1-card .is-up { --dirc: var(--up); }
 .n1-card .is-down { --dirc: var(--down); }
 .n1-card .is-flat { --dirc: var(--ink3); }

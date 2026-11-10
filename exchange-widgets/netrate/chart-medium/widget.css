@@ -9,6 +9,14 @@
 /* the light: a ramp and a pool from the start side, a rim on that edge, a sheen along the top (sample 02's blue light, in the app's own neutral) */
 .n2-glow { position: absolute; inset: 0; pointer-events: none; }
 .n2-glow i { position: absolute; display: block; will-change: transform; }
+/* the sample's own look (theme "sample"): charcoal ink and the royal-blue ramp from the left edge, as in the shot */
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n2-card { --ink-a: #2a2a2b; --ink-b: #111112; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .nrw-ink { background: linear-gradient(180deg, #2a2a2b 0%, #1d1d1e 16%, #161617 38%, #111112 74%, #141415 93%, #1b1b1c 100%); --oi2: #F5F7FF; --oi3: #EEF1FF; }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n2-glow .g-a { background: linear-gradient(to right, #5d92ff 0%, #4f78fb 2.2%, #3f61e0 5%, #3b58d6 16%, #3649c8 25%, #2d3da8 32%, rgba(42, 50, 135, .6) 38%, rgba(36, 42, 110, .2) 45%, rgba(36, 42, 110, 0) 52%); opacity: var(--gk, 1); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .nrw[dir="rtl"] .n2-glow .g-a { background: linear-gradient(to left, #5d92ff 0%, #4f78fb 2.2%, #3f61e0 5%, #3b58d6 16%, #3649c8 25%, #2d3da8 32%, rgba(42, 50, 135, .6) 38%, rgba(36, 42, 110, .2) 45%, rgba(36, 42, 110, 0) 52%); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n2-glow .g-b { background: radial-gradient(ellipse 38% 50% at 10% 58%, rgba(130, 216, 255, .34), rgba(112, 192, 255, .1) 46%, rgba(100, 170, 255, 0) 72%); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n2-glow .g-c { background: radial-gradient(closest-side, rgba(95, 140, 255, .55), rgba(51, 65, 200, .3) 62%, rgba(30, 36, 120, 0)); }
+.nrx[data-theme="sample"]:not([data-render="tinted"]) .n2-card { --home-dark: 1; }
 /* the light hugs the edge (no small text there) and only washes the rest, so every label keeps AA contrast */
 .n2-glow .g-a { inset: 0; background: linear-gradient(to right, rgba(var(--glow), .62), rgba(var(--glow), .22) 2.6%, rgba(var(--glow), .09) 9%, rgba(var(--glow), .06) 30%, rgba(var(--glow), .02) 44%, rgba(var(--glow), 0) 54%); }
 .nrw[dir="rtl"] .n2-glow .g-a { background: linear-gradient(to left, rgba(var(--glow), .62), rgba(var(--glow), .22) 2.6%, rgba(var(--glow), .09) 9%, rgba(var(--glow), .06) 30%, rgba(var(--glow), .02) 44%, rgba(var(--glow), 0) 54%); }
@@ -19,7 +27,7 @@
 .nrx[data-render="tinted"] .n2-glow { opacity: .55; }
 
 .n2-svg { position: absolute; inset: 0; width: 100%; height: 100%; direction: ltr; overflow: visible; pointer-events: none; }
-.n2-line { fill: none; stroke: #FBFCFF; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.n2-line { fill: none; stroke: #FBFCFF; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; }
 .n2-ctx { fill: none; stroke: rgba(255, 255, 255, .3); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
 .n2-comet { display: none; fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 60 940; stroke-dashoffset: 60; opacity: .0; filter: drop-shadow(0 0 3px rgba(255, 255, 255, .9)); }
 .n2-rule { stroke: rgba(255, 255, 255, .26); stroke-width: 1.5; stroke-dasharray: 5.4 2.6; }

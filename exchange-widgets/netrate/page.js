@@ -14,9 +14,9 @@
   const NR = window.NR;
   if (!NR) { console.warn('[netrate] kit.js missing'); return; }
 
-  const DEFAULTS = { lang: 'fa', theme: 'black', st: 'normal', render: 'color', platform: 'ios393', view: 'real', stress: 'calm', fx: true };
+  const DEFAULTS = { lang: 'fa', theme: 'sample', st: 'normal', render: 'color', platform: 'ios393', view: 'real', stress: 'calm', fx: true };
   const S = Object.assign({}, DEFAULTS);
-  const KEY = 'netrate-widgets-v1';
+  const KEY = 'netrate-widgets-v2';
   try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved) Object.keys(DEFAULTS).forEach(k => { if (saved[k] != null) S[k] = saved[k]; }); } catch (e) { /* storage blocked */ }
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } };
   // a URL can pin a control, e.g. ?lang=en&theme=white&st=closed (used by the tests)
@@ -25,12 +25,12 @@
 
   const CONTROLS = [
     { key: 'lang', label: 'زبان', opts: [['fa', 'فارسی'], ['en', 'English']] },
-    { key: 'theme', label: 'تم', opts: [['black', 'سیاه'], ['white', 'سفید'], ['dawn', 'شفق']] },
+    { key: 'theme', label: 'تم', opts: [['sample', 'طرح نمونه'], ['white', 'سفید'], ['black', 'سیاه'], ['dawn', 'شفق']] },
     { key: 'st', label: 'حالت', opts: [['normal', 'عادی'], ['not_posted', 'پیش از نرخ'], ['closed', 'یکشنبه'], ['expired', 'منقضی'], ['offline', 'آفلاین'], ['unset', 'تنظیم‌نشده'], ['gallery', 'پیش‌نمایش گالری']] },
     { key: 'render', label: 'رندر', opts: [['color', 'رنگی'], ['tinted', 'تک‌رنگ iOS ۱۸']] },
     { key: 'platform', label: 'پلتفرم', opts: [['ios393', 'iOS ۳۹۳'], ['ios390', 'iOS ۳۹۰'], ['android', 'Android']] },
     { key: 'view', label: 'نما', opts: [['real', 'اندازه‌ی واقعی'], ['phone', 'در قاب گوشی']] },
-    { key: 'stress', label: 'نمونه‌ی داده', opts: [['calm', 'روز آرام'], ['down', 'پرنوسان ↓'], ['up', 'پرنوسان ↑']] },
+    { key: 'stress', label: 'نمونه‌ی داده', opts: [['calm', 'نوسان طبیعی'], ['raw', 'فایل نمونه (هموار)'], ['down', 'پرنوسان ↓'], ['up', 'پرنوسان ↑']] },
   ];
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
@@ -144,7 +144,7 @@
   /* the frame around the widget: real size on the home-screen colour, or inside a phone */
   function layout(st) {
     const sc = st.scope;
-    sc.dataset.theme = S.theme; sc.dataset.render = S.render; sc.dataset.platform = S.platform.startsWith('ios') ? 'ios' : 'android'; sc.dataset.lang = S.lang; sc.dataset.view = S.view;
+    sc.dataset.theme = S.theme; sc.dataset.skin = st.def.id; sc.dataset.render = S.render; sc.dataset.platform = S.platform.startsWith('ios') ? 'ios' : 'android'; sc.dataset.lang = S.lang; sc.dataset.view = S.view;
     const size = sizeOf(st.def, S.platform), root = st.root;
     sc.textContent = '';
     if (S.view === 'phone' && size) {

@@ -18,7 +18,7 @@ const fs = require('fs');
   await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important} .nrc,.nr-toast{display:none!important}' });
   const idx = [];
   const states = (process.argv[4] || 'normal,not_posted,closed,expired,offline').split(',');
-  for (const lang of ['fa', 'en']) for (const theme of ['black', 'white', 'dawn']) for (const render of ['color', 'tinted']) for (const st of states) {
+  for (const lang of ['fa', 'en']) for (const theme of ['sample', 'black', 'white', 'dawn']) for (const render of ['color', 'tinted']) for (const st of states) {
     await page.evaluate(([l, t, r, s]) => { NR.setControl('lang', l); NR.setControl('theme', t); NR.setControl('render', r); NR.setControl('st', s); }, [lang, theme, render, st]);
     await page.waitForTimeout(120);
     for (const w of wids) {

@@ -155,7 +155,7 @@ function scan(sel, expect) {
   await setCtl('stress', 'calm');
   for (const w of W) await setDir(w, 'send');
   // sweep B: theme × render × platform (normal and not_posted)
-  if (!quick) for (const theme of ['black', 'white', 'dawn']) for (const render of ['color', 'tinted']) for (const platform of ['ios393', 'ios390', 'android']) {
+  if (!quick) for (const theme of ['sample', 'black', 'white', 'dawn']) for (const render of ['color', 'tinted']) for (const platform of ['ios393', 'ios390', 'android']) {
     await setCtl('theme', theme); await setCtl('render', render); await setCtl('platform', platform);
     for (const lang of ['fa', 'en']) { await setCtl('lang', lang);
       for (const st of ['normal', 'not_posted']) { await setCtl('st', st);
@@ -174,7 +174,7 @@ function scan(sel, expect) {
   const beh = await page.evaluate(async has => {
     const res = []; const txt = s => document.querySelector(s).textContent.replace(/\s+/g, ' ').trim();
     const click = async s => { document.querySelector(s).click(); await new Promise(r => setTimeout(r, 80)); };
-    const D = NR.data;
+    const D = NR.data, M = NR.model({ lang: 'fa', st: 'normal', stress: 'calm' }, { dir: 'send' });   // the numbers the widget is handed (natural wobble included)
     if (has.n01) {
     const before = txt('#n01 .js-num'), title0 = txt('#n01 .js-title');
     await click('#n01 .n1-segb[data-dir="recv"]');
@@ -184,16 +184,16 @@ function scan(sel, expect) {
     await click('#n01 .n1-segb[data-dir="send"]');
     res.push(['n01 back to send', txt('#n01 .js-num'), before]);
     await click('#n01 .n1-rng[data-range="1w"]');
-    res.push(['n01 range 1w pill', txt('#n01 .js-pillpct'), NR.pct(D.snapshot.series['1w'].best_change_pct, 'fa')]);
+    res.push(['n01 range 1w pill', txt('#n01 .js-pillpct'), NR.pct(M.series['1w'].best_change_pct, 'fa')]);
     res.push(['n01 range pressed', document.querySelector('#n01 .n1-rng[data-range="1w"]').getAttribute('aria-pressed'), 'true']);
     await click('#n01 .n1-rng[data-range="1y"]');
-    res.push(['n01 range 1y pill', txt('#n01 .js-pillpct'), NR.pct(D.snapshot.series['1y'].best_change_pct, 'fa')]);
+    res.push(['n01 range 1y pill', txt('#n01 .js-pillpct'), NR.pct(M.series['1y'].best_change_pct, 'fa')]);
     }
     // N02: the cycle button
     if (has.n02) {
     const order = []; for (let i = 0; i < 5; i++) { order.push(txt('#n02 .js-rangelabel')); await click('#n02 .js-cycle'); }
     res.push(['n02 cycle order', order.join('|'), ['1w', '1m', '3m', '1y', '1w'].map(r => NR.t('fa', 'range.' + r)).join('|')]);
-    res.push(['n02 pill after five taps (1m)', txt('#n02 .js-pillpct'), NR.pct(D.snapshot.series['1m'].average_change_pct, 'fa')]);
+    res.push(['n02 pill after five taps (1m)', txt('#n02 .js-pillpct'), NR.pct(M.series['1m'].average_change_pct, 'fa')]);
     document.querySelector('#n02 [data-cfg-dir="recv"]').click(); await new Promise(r => setTimeout(r, 80));
     res.push(['n02 recv average', txt('#n02 .js-num'), NR.int(D.snapshot_receive.market.average, 'fa')]);
     document.querySelector('#n02 [data-cfg-dir="send"]').click(); await new Promise(r => setTimeout(r, 80));

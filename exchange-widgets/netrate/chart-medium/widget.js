@@ -103,7 +103,7 @@
         <a class="n2-main" href="#" data-go="chart">
           <div class="n2-num nr-dimmable is-big"><span class="js-num"></span></div>
           <p class="n2-unit js-unit"></p>
-          <p class="n2-chg"><span class="n2-chgmain nr-dimmable js-chgmain"><span class="js-chgicon"></span><span class="js-chgpct"></span><span class="js-chgword"></span></span><span class="n2-vs js-vs"></span></p>
+          <p class="n2-chg"><span class="n2-chgmain js-chgmain"><span class="js-chgicon"></span><span class="js-chgpct"></span><span class="js-chgword"></span></span><span class="n2-vs js-vs"></span></p>
           <p class="n2-age"><span class="js-posted"></span><span class="nr-age js-age"></span></p>
         </a>
         <div class="n2-pill js-pill"><span class="js-pillicon"></span><span class="js-pillpct"></span></div>
@@ -132,7 +132,7 @@
       function drawChart(v, o) {
         const tStart = v.ctx ? v.ctx.ts[0] : v.win.ts[0], tEnd = v.win.ts[v.win.ts.length - 1], t0 = v.win.ts[0];
         const X = t => geo.x0 + (geo.x1 - geo.x0) * (t - tStart) / (tEnd - tStart);
-        const dom = NR.domain([...(v.ctx ? v.ctx.vs : []), ...v.win.vs], .016, .16), Y = a => G.top + (G.base - 4 - G.top) * (1 - (a - dom[0]) / (dom[1] - dom[0]));
+        const dom = NR.domain([...(v.ctx ? v.ctx.vs : []), ...v.win.vs], .011, .18), Y = a => G.top + (G.base - 4 - G.top) * (1 - (a - dom[0]) / (dom[1] - dom[0]));
         const sampleXY = (s, a, b, n) => { const vs = NR.sample(s, a, b, n); return { xs: vs.map((_, i) => X(a + (b - a) * i / (n - 1))), ys: vs.map(Y) }; };
         const nw = Math.max(18, Math.round(64 * (tEnd - t0) / (tEnd - tStart)));
         const w = sampleXY(v.win, t0, tEnd, nw), d = NR.smooth(w.xs, w.ys);

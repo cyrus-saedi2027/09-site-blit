@@ -83,7 +83,7 @@
       <div class="nrw-tilt js-tilt"><div class="nrw-card n1-card" role="group">
         <svg class="n1-svg nr-dimmable" viewBox="0 0 ${G.W} ${r(H)}" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <linearGradient id="n1g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--dir);stop-opacity:.34"/><stop offset=".72" style="stop-color:var(--dir);stop-opacity:.07"/><stop offset="1" style="stop-color:var(--dir);stop-opacity:0"/></linearGradient>
+            <linearGradient id="n1g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--area,var(--dir));stop-opacity:var(--ao,.34)"/><stop offset=".72" style="stop-color:var(--area,var(--dir));stop-opacity:calc(var(--ao,.34) * .22)"/><stop offset="1" style="stop-color:var(--area,var(--dir));stop-opacity:0"/></linearGradient>
             <linearGradient id="n1f${id}" gradientUnits="userSpaceOnUse" x1="${G.padX}" y1="0" x2="${G.padX + 90}" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient>
             <mask id="n1m${id}"><rect x="0" y="0" width="${G.W}" height="${r(H)}" fill="url(#n1f${id})"/></mask>
             <clipPath id="n1c${id}"><rect class="js-reveal" x="0" y="0" width="${G.W}" height="${r(H)}"/></clipPath>
@@ -147,7 +147,7 @@
       let ys = null, curRange = null, curDir = 0, endX = G.W - G.padX, tweenStop = null;
       const dotsMade = { done: false };
       function target(v) {
-        const dom = NR.domain(v.pts.vs, .02, .1), top = G.plotTop, h = base - top - 4;
+        const dom = NR.domain(v.pts.vs, .011, .18), top = G.plotTop, h = base - top - 4;
         const s = NR.sample(v.pts, v.pts.ts[0], v.pts.ts[v.pts.ts.length - 1], N);
         return s.map(x => top + 4 + h * (1 - (x - dom[0]) / (dom[1] - dom[0])));
       }

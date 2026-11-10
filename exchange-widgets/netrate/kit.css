@@ -18,7 +18,7 @@
   --sel: #F5F5F6; --on-sel: #0b0b0d; --ondir: #0a1020;
   --r: 22px;
 }
-.nrx[data-theme="white"] {
+.nrx[data-theme="white"], .nrx[data-theme="sample"] {
   --home: #F3F3F5; --card: #FFFFFF; --ink: #09090B; --ink2: #4A4A52; --ink3: #66666F;
   --edge: rgba(9, 9, 11, .10); --chip: #F2F2F4; --up: #1D54EC; --down: #C0392B; --amber: #8A5200; --accent: #09090B;
   --slip-a: #FBFBFC; --slip-b: #E8E8EC; --slip-edge: rgba(9, 9, 11, .08); --slip-shadow: rgba(20, 20, 40, .16);
@@ -98,8 +98,8 @@
 .nr-age.is-warn .nr-i { display: inline-block; }
 .nrw-ink .nr-age { color: var(--oi3); }
 .nrw-ink .nr-age.is-warn { color: var(--oamber); }
-.nrw.is-dim .nr-dimmable { opacity: var(--dim, .78); }
-.nrw.is-dim .nr-dimmable.is-big { --dim: .58; }   /* the big figure may fade more: large text needs only 3 : 1 */   /* only the figures fade; labels, units and ages stay at full strength (they must stay readable) */
+.nrw.is-dim .nr-dimmable { opacity: var(--dim, .9); }
+.nrw.is-dim .nr-dimmable.is-big { --dim: .86; }   /* the big figure may fade more: large text needs only 3 : 1 */   /* only the figures fade; labels, units and ages stay at full strength (they must stay readable) */
 .nr-ph { background: var(--edge); border-radius: calc(6 * var(--u)); }   /* grey placeholder (unset / gallery) */
 
 /* ── the phone mock ────────────────────────────────────────── */

@@ -247,11 +247,27 @@
     });
     const days = S.week.days; days[days.length - 1].this = money(num(days[days.length - 1].this) * k); fixWeek(S.week, vm.better === 'lower');
   }
+  /* demo: the sample file's history is a smooth uptrend. A real market goes up and down, so the preview adds
+     a seeded, day-aligned wobble (waves of 2 to 300 days plus a little daily jitter) to every point of every series.
+     Today's point is never touched (the headline and the end of the line stay equal); every change, high, low and
+     mean is recomputed. The server sends real days; "sample file (smooth)" in the controls shows the raw file. */
+  const WAVES = [[2.3, .9], [3.7, 1.7], [6.1, 2.6], [9.4, 4.1], [15, 5.3], [26, .8], [41, 2.2], [67, 4.0], [110, 1.1], [180, 3.5], [300, 5.0]];
+  const wob = u => WAVES.reduce((s, [T, ph]) => s + .0011 * Math.pow(T, .45) * Math.sin(2 * Math.PI * u / T + ph), 0);
+  const jit = n => { n = Math.imul(n ^ n >>> 15, 0x2c1b3c6d); n = Math.imul(n ^ n >>> 12, 0x297a2d39); return ((n ^ n >>> 15) >>> 0) / 4294967296 - .5; };
+  const dayMs = d => Date.parse(d + 'T12:00:00Z');
+  function natural(snap) {
+    const s = clone(snap), last = dayMs(s.series['1w'].points[s.series['1w'].points.length - 1].date), w0 = wob(0);
+    const f = (ms, shift = 0) => { const u = (last - ms) / 86400000 + shift; return u < .01 ? 0 : (wob(u) - w0) + jit(Math.round(ms / 86400000) + shift * 7) * .0019; };
+    Object.values(s.series).forEach(sr => { sr.points.forEach(p => { const k = 1 + f(dayMs(p.date)); ['average', 'best', 'low', 'high'].forEach(key => { p[key] = money(num(p[key]) * k); }); }); fixStats(sr); });
+    s.week.days.forEach(d => { const ms = dayMs(d.date); d.this = money(num(d.this) * (1 + f(ms))); d.last = money(num(d.last) * (1 + f(ms, 7) + .0007)); });
+    fixWeek(s.week, false);
+    return s;
+  }
   NR.model = (S, L) => {
     const lang = S.lang, st = S.st, dir = L.dir || 'send', recv = dir === 'recv';
     if (st === 'unset' || st === 'gallery') return { st, lang, dir, empty: true, banner: st === 'unset' ? 'unset' : null };
     let snap, now, shift = 0;
-    const sendFull = D.snapshot;
+    const sendFull = S.stress === 'raw' ? D.snapshot : (NR._nat || (NR._nat = natural(D.snapshot)));
     if (recv) { snap = clone(D.snapshot_receive); const x = synthRecv(sendFull, snap); snap.series = x.series; snap.week = x.week; }
     else snap = clone(sendFull);
     now = Date.parse(snap.generated_at);
@@ -264,7 +280,7 @@
     } else if (st === 'expired') now += 27 * 3600000;
     else if (st === 'offline') now += (2 * 60 + 10) * 60000;
     const vm = { st, lang, dir, now, snap, better: snap.better, market: snap.market, best: snap.best, series: snap.series, week: snap.week, synth: recv };
-    if (S.stress && S.stress !== 'calm') volatile(vm, S.stress);
+    if (S.stress === 'down' || S.stress === 'up') volatile(vm, S.stress);
     const top = vm.best[0];
     vm.top = top;
     const raw = NR.age(top.recorded_at, now, lang);
