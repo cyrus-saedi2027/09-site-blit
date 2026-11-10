@@ -10,7 +10,7 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, now at round P (the latest owner round, §10.10). History of v9:
+**Status:** v9, now at round Q (the latest owner round, §10.11). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
@@ -27,6 +27,7 @@
 - *Round N*: «the purchase page is bad again; the program card must stand still like the samples, with a buy button (a rectangle with soft corners), and the pocket in its corner is fuzzy; the banners' zoom-out ends much sooner than its seconds; the road to a ticket is still not liked, some frames are very long and stretched, remake it from the root: clearer, more compact, more professional; look for other problems». §10.8 (the framed card, the whole-time zoom, one centred column, the other problems found). **The hero's panels are pixel-identical** (only the zoom's timing changed, as asked).
 - *Round O*: «the pages inside a program still have too many empty places: put a dotted background like the picture but not in order, faded here and not there, in the black-and-white theme, changing very calmly and never hurting the speed; the poster is very small, make it seen much better; remove the search for an empty seat, the buyer chooses; the phone's check must not be a separate frame: a button in the number's own box, the number goes with an animation and squares for the code come, and a verified number signs the buyer in; **the home page is perfect, do not touch it**». §10.9.
 - *Round P*: «inside a program there used to be an ending, a footer, and now it is gone: give it an ending, do not just leave it; the emptiness is better but there is room to be more professional, smoother and fuller, so that even someone who does not understand sees the road to a ticket and how to choose the seats; do not keep writing «do this and that», make the road plain for the buyer». §10.10.
+- *Round Q*: «the programs' pages have too much empty space: bring the booking block toward the left and put the poster on its right; the footer the whole width and the row of other programs the full width; fill the next pages too and the customer's page, nothing stretched; the header's logo goes to the start of the home page; «add to calendar» and «print tickets» made right (download as an image and a PDF, keep on the phone, share); then say how much of the client's brief is built and what remains»; and: «make the panels much more professional in spacing and UI, curved shapes and small details». §10.11.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -879,6 +880,72 @@ No new setting. The footer follows the page's theme; `evpPlace`, `pageDots`, `do
 - **A page opened under a fixed bar on a phone** keeps 88 px under the footer; the footer's own links stay above it.
 - **The footer's two trust badges** («نماد اعتماد الکترونیکی», «نشان ساماندهی») are still places for the real badges (as on the home page).
 
+## 10.11 Round Q: the programs' pages filled without stretching, the logo goes home, the tickets leave the page as files, the panels finished
+
+**What the owner said**: *everything is almost fine and nothing should be stretched, but the programs' pages have too much empty space: on the show's page bring the block with the program, the map and the ticket choice a little toward the left, and put the poster on its right side, so the programs' pictures live there; make the footer longer so that it takes the whole site from left to right, and the row of sample programs above it (two more programs) fill the full width; fill the emptiness of the next pages too, in a fitting way, without stretching anything, and do the same for the customer's own page (more compact, nothing stretched, the empty places filled); the logo in the header goes to the start of the home page; «add to calendar» and «print tickets» made right: the buyer can download them and keep them on the phone, as an image and as a PDF, or share them on social media; then check how much of what the client wanted is built and exactly what remains*. And, in a second message: *make the panels much more professional in spacing, arrangement and UI; curved shapes and small details make the work professional*.
+
+**The home page was not touched** (Rule 0): every rule below is scoped to the pages inside a program (`.evp`) or to the fixed pages; its panels are pixel-identical to the approved version and its cards pass the same audit (§ «Checked» below).
+
+### The show's page on a wide window: a column for the picture
+
+On a wide window (`(min-width: 1600px) and (min-aspect-ratio: 5/4)`, the window the empty space was in) the page has **three columns** instead of two: the **picture** first (at the start of the line, the right), then the **words and the place**, then the **booking block** with the prices (moved toward the left, as drawn).
+
+- `.evp-pic` (`page.js`): a sticky column of `--pic: clamp(300px, 19.5u, 480px)`. A show with a poster: the poster, whole, in its frame (the frame's shape is the poster's own, `--ps`). A show with only a banner: the banner shown whole on a blurred copy of itself (`.is-banner`), never cropped. Under it a panel with the three facts (the day, the hour and the length, the hall with its address): the cover's own poster and facts are not shown on this window (they stay on narrower ones).
+- Nothing is stretched: the picture keeps its shape, the main column keeps its measure (`--fl: max(1180px, 74u + pic + gap)`), the booking block keeps its width.
+- **The row of other programs** (`.evp-more`) shows **six cards in one row** on this window (`--cols: 6`, the seventh and later are hidden), all of one size, filling the row; on narrower windows it is as it was.
+- **The footer** is as wide as the window (minus the page's side room) on every page inside a program (`.evp > .evp-ft`: `width: calc(100% - pad-l - pad-r)`), not as wide as the page's column. Its last line keeps clear of the «back to top» button.
+
+### The payment, the ticket and the customer's pages
+
+- **Payment** (`.bk-narrow.has-pic`) and **ticket** (`.evp-in.tkp.has-pic`) get the same picture column (`picAside(e, s)` in `buy.js`) on the wide window; the summary's own small poster is hidden there. The payment is three columns (picture, buyer and ways of paying, the bill); the ticket page has the picture beside the tickets and the «روز اجرا» panel. Narrower windows are as before.
+- **The fixed pages and the customer's page** (`.evp-in.pg`): the way back, the head and the stats were as wide as the window while the page's column was narrower, which read as stretched; they are now as wide as the column (`max-width: var(--fl)`). The stat tiles are **one row each** (a small icon chip, the number, the words) instead of tall boxes with air in them; the head has two quick links (all purchases, the programs) on its far side; the columns end where their own content ends (`align-items: start`: no panel is stretched to its neighbour's height); the empty reminders are a small dashed state with a bell instead of a bare line. «NaN days ago» (a sign-in with no date) is gone.
+
+### The logo
+
+From any page inside the site (a program, the seats, the rules, the account, a panel) the header's logo **closes the page and shows the start of the home page** (`header.js`: `page.close({ then: scrollTo top })`); on the home page it scrolls to the top, as before.
+
+### The tickets as files (`tkx` in `buy.js`)
+
+A ticket page has a row of actions and each ticket has three small buttons under its QR (an image, a PDF, share):
+
+| action | what it gives |
+|---|---|
+| **افزودن به تقویم** | a calendar file (`.ics`, `BEGIN:VCALENDAR` … `VEVENT` with the night as a UTC time, the hall and its address, the tracking code, and **an alarm two hours before**): opens in the phone's calendar |
+| **ذخیره‌ی PDF** | a PDF (1.4, hand built, no library) with **a page for each ticket** (the ticket drawn as a JPEG, a valid cross-reference table); a single ticket's own button gives a one-page PDF |
+| **ذخیره‌ی تصویر** | a PNG, 2400 px wide: one picture of all the tickets, or one ticket's own (2400 × 1040), drawn on a canvas (the card, the details, the QR in its white square, rounded transparent corners), so it keeps well on the phone and in the gallery |
+| **اشتراک‌گذاری** | the phone's own share sheet with the picture **as a file** and the words (Web Share, level 2); where there is none (a computer), a small menu: Telegram, WhatsApp (the address of the ticket's page and the words), copy the words, save the picture |
+| **چاپ** | as before (the page's print style; the new buttons are not printed) |
+
+Nothing leaves the buyer's device: the picture, the PDF and the calendar file are made in the page.
+
+### The panels' finish (inside a program only)
+
+The panels (`.evp .panel`, not the cover) have **a fine light on their top edge and a thin inner line**, and **a layered soft shadow** (a close one and a long one) instead of one flat shadow; a theme-aware variant for the light theme. The headings of the booking and the side panels carry **an icon chip** (a rounded square in the show's colour); the booking, bill, cart and buyer panels have **an accent hairline** on their top edge; the poster has a soft glow in the show's colour; an active buy button has a coloured shadow. No new setting; no new colours (everything takes the show's own colour, `--sc`).
+
+### The look: nothing new
+
+No new setting. `evpPlace`, `pageDots`, `dotsPow` (§11) are as in round O.
+
+### Checked (round Q)
+
+- all 26 test suites pass with no failure, one after another on the final build (the new `q-test` and `q-tk-test`, then round P's `p-test`, buy, m-flow, seatprice, smnav, map, salesmap, queue, pages, ui, poster, six, tour, look, o-dots, o-layout, o-cities, o-map, geo, search-places, admin-geo, integrity, halls and content); after the last small change (a refused share sheet falls back to the menu) `q-test` and `q-tk-test` were run again: both pass
+- `q-test.js` (26 checks: the poster column, three columns in the right order, the footer's width, six cards of one size in one row, the payment's and the ticket's picture column, the customer's page as a column, the panels' finish, the home page's panels without the finish, no sideways scroll at 2560, 1920, 1440, 1280, 1024, 768 and 390 px) and `q-tk-test.js` (16 checks: the logo from a show, a fixed page and the home page; the calendar file's contents and alarm; the PDF's pages and cross-reference table; the picture's size, its white QR square and transparent corners; a ticket's own picture and PDF; the phone's share sheet with a file; the menu where there is none, and where the sheet is refused)
+- axe finds nothing on 26 routes and 46 states, both themes, desktop and phone; the card audit finds 312 cards and 0 problems in the dark theme and in the light one
+- the QA crawl (every page, both themes, desktop and phone) finds no error, no overflow and no broken picture; 353 links checked, none to nowhere
+- the hero's panels are identical to the approved version (`d4cc53c`) at 1920×1080, 1920×862, 1536×730, 1366×768, 2560×1440 and 1440×900 (the banner's and the facts' differing pixels: 0, with the pill look on both sides); the home page was not touched
+- layout shift is 0 on the show pages (desktop and phone) and on the category page, 0 on the first load, 0.003 / 0.007 on the seats' page (the page change's own transition, as in round P); the list's scroll cost against the round P build, two runs each on one machine, is inside the same range (total blocking time on a fast scroll down 145–1068 ms against 261–926 ms: the home list was not changed)
+- the client's single file was rebuilt (6.2 MB, 52 pictures, 3 font files) and its own test passes (every picture and font inside the file, the theme kept after a reload, the page opens, no script error; the only outside request is the Google Maps frame, as before)
+
+### Honest notes (round Q)
+
+- **Two older checks had to change with the page, not the other way round**: o-layout-test measured the show's own cover poster and the payment's small poster, which are not shown on the wide window any more (it measures the picture column there); the pocket-corner and price-chip checks of round P stay as they were.
+- **The seats' page has no wide fill** yet: its map and its cart already take the page's width; a third column there would shrink the seats, which the owner has asked for big. If the owner still sees emptiness there, it is the next thing to look at.
+- **Downloads and sharing cannot be tried inside the private preview page** (the viewer's frame blocks downloads and the share sheet); they are tried on the site itself and in the client's single file. On an iPhone the PNG and the PDF go to «Files» / the share sheet (Safari does not save to the gallery by itself); the calendar file opens the Calendar app.
+- **A phone may refuse the share sheet** if the tap lapses while the picture is drawn (about a second); the buyer then gets the small menu (Telegram, WhatsApp, copy, save the picture), not a silence.
+- **The Google Maps frame** (round O) shows only on a real site; inside the test browser and the preview it is an empty tile.
+- **The first-time cue** on the seats' page (round P) was seen only in the tests; a real first-time buyer on a real phone is still to be seen on the real site.
+- **The ticket's PDF is a picture of the ticket** (not selectable text): its QR is as sharp as the picture (2400 px wide), which scans from a phone screen and from a print.
+
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.
@@ -1099,6 +1166,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **Round N:** the framed card keeps the same semantics as before (the whole card is one target, its picture link and its buy button are real controls, the tab and the pocket are `aria-hidden` copies of what the words already say, and the words are in the reading order with nothing hidden under the pointer); the seats' page's one bar is a `panel` with the way back (a named link), the show, the night's button (`aria-haspopup`) and the steps. Axe: see «Checked» in §10.8.
 - **Round O:** the dotted canvas is `aria-hidden` and takes no clicks; the phone's box is a group named by its label, the part that is not shown is `inert`, the line under it is a live region, the squares are named «رقم n کد» (the first has `autocomplete=one-time-code`); on a big window the information's two panes are one under the other with real headings and the tab bar is not shown (a tablet or a phone keeps the `tablist`); the seats' top row has the poster with its alt text, the overview as a named image and the guide as a named group; axe finds nothing (§10.9).
 - **Round P:** the footer is one `<footer>` landmark after the page's column (the list's own is hidden with the home page, so there is one); the seats' cue is a class on a seat (no new words, `aria-label` unchanged); the cart's place-holders are `aria-hidden` and one hidden line says nothing is chosen; the prices' legend is a group of toggle buttons (`aria-pressed`) with the free count in each; the hall's picture on the show's page is an image with a label (its prices are the list under it); the steps' second line is plain text; axe finds nothing on 26 routes and 46 states (§10.10).
+- **Round Q:** the poster column is an `<aside>` with a label (its picture has the program's name as its text; the facts under it are plain text); the ticket's new buttons are real `<button>`s with words («ذخیره‌ی PDF», «ذخیره‌ی تصویر», «اشتراک‌گذاری», «افزودن به تقویم»), a busy state (disabled and dimmed) while a file is made, and white-on-dark colours on the ticket's dark stub in both themes; the share menu is the site's own menu (`menuPop`, the one the nights' menu uses); the account's stat tiles keep their number and their words in one tile; the icon chips are `aria-hidden`; axe finds nothing on the routes and the states (§10.11).
 - The banner is a link labelled «… صفحه‌ی اجرا»; it can also be dragged, but nothing needs dragging. Focus rings follow the text colour. Under `prefers-reduced-motion` nothing moves (a 0.4 s fade, no zoom, no pin effect, no light, no lean), and auto-advance starts paused.
 
 ---
@@ -1125,6 +1193,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **Round N:** see «Checked» in §10.8 (layout shift, the list's scroll cost with the framed card, the seats' page).
 - **Round O (the dotted background):** a draw is 0.3–0.6 ms (about 740 dots in 12 paths), about three a second, nothing while the tab is hidden or after the page is left, once with reduced motion; no long task; the canvas is fixed and out of the flow, so layout shift stays 0.000 (§10.9).
 - **Round P (the footer, the price map):** the hall's picture on the show's page is drawn once, when the page is idle (`requestIdleCallback`), on a canvas in a box of a fixed shape (no layout shift), a resize redraws it; the seats' cue is two CSS animations on one seat; the legend's free counts are recounted with the cart and with the live changes (one pass over the plan's seats); the footer is a copy of the list's (no new request). Layout shift stays 0 on the show pages (§10.10).
+- **Round Q (the poster column, the files):** the picture column is one image (the one the poster already loaded; no new request), sticky with CSS only; the panels' finish is box-shadows and an inner line (no filters, no blur); the files are made **on demand** when a button is pressed (a canvas, `toBlob`, a hand-built PDF of JPEGs, a text file), never at page load, the pressed button is disabled and dimmed while a file is made (about a second on a phone, drawn on the page's thread); the file's address is released a few seconds after the save. Layout shift stays 0 on the show, payment and ticket pages (§10.11).
 
 ---
 
