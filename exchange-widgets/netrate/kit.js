@@ -259,7 +259,7 @@
     const s = clone(snap), last = dayMs(s.series['1w'].points[s.series['1w'].points.length - 1].date), w0 = wob(0);
     const f = (ms, shift = 0) => { const u = (last - ms) / 86400000 + shift; return u < .01 ? 0 : (wob(u) - w0) + jit(Math.round(ms / 86400000) + shift * 7) * .0019; };
     Object.values(s.series).forEach(sr => { sr.points.forEach(p => { const k = 1 + f(dayMs(p.date)); ['average', 'best', 'low', 'high'].forEach(key => { p[key] = money(num(p[key]) * k); }); }); fixStats(sr); });
-    s.week.days.forEach(d => { const ms = dayMs(d.date); d.this = money(num(d.this) * (1 + f(ms))); d.last = money(num(d.last) * (1 + f(ms, 7) + .0007)); });
+    s.week.days.forEach(d => { const ms = dayMs(d.date); d.this = money(num(d.this) * (1 + 1.5 * f(ms))); d.last = money(num(d.last) * (1 + 1.5 * f(ms, 7))); });   // six days only: a larger swing so the week reads as days, not a ramp
     fixWeek(s.week, false);
     return s;
   }
@@ -300,6 +300,33 @@
     android: { small: [160, 160], medium: [336, 160], large: [336, 340], strip: [336, 72] },
   };
   NR.register = def => NR.widgets.push(def);
+
+  /* ── helpers the later widgets share ── */
+  /* weekday names (data: 1 = Monday … 7 = Sunday) */
+  NR.weekday = (n, lang) => (lang === 'fa' ? ['', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه', 'یکشنبه'] : ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])[n];
+  /* round tick values inside [lo, hi]: about n of them, on a 1-2-5 step */
+  NR.ticks = (lo, hi, n = 3) => {
+    const raw = (hi - lo) / n, p = Math.pow(10, Math.floor(Math.log10(raw))), step = [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= raw) || raw;
+    const out = []; for (let v = Math.ceil(lo / step) * step; v <= hi + 1e-9; v += step) out.push(v);
+    return out;
+  };
+  /* a grey placeholder block in design units: s = start, e = end, t = top, b = bottom */
+  NR.ph = o => {
+    const u = n => `calc(${n} * var(--u))`, st = [];
+    if (o.s != null) st.push(`inset-inline-start:${u(o.s)}`); if (o.e != null) st.push(`inset-inline-end:${u(o.e)}`);
+    if (o.t != null) st.push(`top:${u(o.t)}`); if (o.b != null) st.push(`bottom:${u(o.b)}`);
+    if (o.w != null) st.push(`width:${u(o.w)}`); if (o.h != null) st.push(`height:${u(o.h)}`); if (o.r != null) st.push(`border-radius:${u(o.r)}`);
+    return `<i class="nr-ph" style="${st.join(';')}"></i>`;
+  };
+  /* an age node: clock + words; amber and with the clock only when the figure is getting old */
+  NR.setAge = (node, a) => {
+    const keep = node.className.split(' ').filter(c => c.startsWith('js-')).join(' ');
+    node.className = ('nr-age ' + keep + (a.tier !== 'fresh' ? ' is-warn' : '')).trim();
+    node.innerHTML = NR.icon.clock() + `<span>${a.text}</span>`;
+  };
+  NR.dirWord = (s, lang) => NR.text[lang].word[s > 0 ? 'up' : s < 0 ? 'down' : 'flat'];
+  /* a chevron for "this is a button with a choice" (not the two-arrows exchange symbol) */
+  NR.chevron = cls => `<svg class="nr-i ${cls || ''}" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M2.6 4.6 6 8l3.4-3.4"/></svg>`;
 
   /* ── small shared drawings ── */
   const svg = (d, o = {}) => `<svg class="nr-i${o.cls ? ' ' + o.cls : ''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;

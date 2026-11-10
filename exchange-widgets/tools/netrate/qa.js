@@ -1,4 +1,4 @@
-/* NetRate QA:  node tools/netrate/qa.js <page> [widgets=n01,n02] [quick]
+/* NetRate QA:  node tools/netrate/qa.js <page> [widgets=all or n01,n02,…] [quick]
    <page> is a built file (node tools/bundle.mjs dist; then file:///…/dist/netrate.html or …/dist/netrate/<widget>.html).
    Needs `playwright`. Every network request is blocked, so a page that passes also has no external resources.
    Checks the brief's hard rules on the rendered widgets, across language × state × direction × volatile day
@@ -11,7 +11,7 @@
    Prints the failures; exit code 1 if there are any. */
 const { chromium } = require('playwright');
 const url = process.argv[2];
-const wids = (process.argv[3] || 'n01,n02').split(',');
+const wids = (process.argv[3] || 'all').split(',');
 const quick = process.argv[4] === 'quick';
 const fs = require('fs');
 
@@ -121,20 +121,26 @@ function scan(sel, expect) {
   await page.goto(url + (url.includes('?') ? '&' : '?') + 'still&fx=0');
   await page.waitForTimeout(1800);
   const present = await page.evaluate(() => NR.widgets.map(w => w.no.toLowerCase()));
-  const W = wids.filter(w => present.includes(w));
+  const W = wids[0] === 'all' ? present : wids.filter(w => present.includes(w));
   console.log('widgets on the page:', present.join(','), '| testing', W.join(','));
   const fails = []; let combos = 0;
   const setCtl = (k, v) => page.evaluate(([k, v]) => NR.setControl(k, v), [k, v]);
   const setDir = (w, d) => page.evaluate(([w, d]) => { const st = NR.stages.find(s => s.def.no.toLowerCase() === w); st.L.dir = d; st.inst.update({ animate: false }); }, [w, d]);
-  const facts = (w, expectOverrides = {}) => page.evaluate(([sel, e]) => scanFn(sel, e), [`#${w} .nrw`, expectOverrides]);
+  const facts = (w, expectOverrides = {}) => page.evaluate(([sel, e]) => document.querySelector(sel) ? scanFn(sel, e) : null, [`#${w} .nrw`, expectOverrides]);
   await page.addScriptTag({ content: `window.scanFn = ${scan.toString()};` });
   await page.addStyleTag({ content: '.nrc{display:none!important}' });
 
   const exp = await page.evaluate(() => {   // the numbers the sentence must contain, per state and direction
-    const mk = (lang, st, dir, w) => { const vm = NR.model({ lang, st, stress: 'calm' }, { dir }); if (vm.empty) return { empty: true }; const n2 = w === 'n02'; return { number: n2 ? NR.int(vm.market.average, lang) : NR.int(vm.top.rate, lang), age: (n2 ? vm.mktAge : vm.topAge).text, banner: vm.banner ? NR.t(lang, 'state.' + vm.banner) : null }; };
-    const o = {}; for (const w of ['n01', 'n02']) for (const l of ['fa', 'en']) for (const s of ['normal', 'not_posted', 'closed', 'expired', 'offline', 'unset', 'gallery']) for (const d of ['send', 'recv']) o[`${w}|${l}|${s}|${d}`] = mk(l, s, d, w); return o;
+    const mk = (lang, st, dir, w) => {
+      const vm = NR.model({ lang, st, stress: 'calm' }, { dir }); if (vm.empty) return { empty: true };
+      const def = NR.widgets.find(x => x.no.toLowerCase() === w), banner = vm.banner ? NR.t(lang, 'state.' + vm.banner) : null;
+      if (def && def.qa) return Object.assign({ banner }, def.qa(vm, lang));   // a widget states what its sentence must contain
+      const n2 = w === 'n02'; return { number: n2 ? NR.int(vm.market.average, lang) : NR.int(vm.top.rate, lang), age: (n2 ? vm.mktAge : vm.topAge).text, banner };
+    };
+    const o = {}; for (const w of NR.widgets.map(x => x.no.toLowerCase())) for (const l of ['fa', 'en']) for (const s of ['normal', 'not_posted', 'closed', 'expired', 'offline', 'unset', 'gallery']) for (const d of ['send', 'recv']) o[`${w}|${l}|${s}|${d}`] = mk(l, s, d, w); return o;
   });
   const states = ['normal', 'not_posted', 'closed', 'expired', 'offline', 'unset', 'gallery'];
+  const sizes = await page.evaluate(() => { const o = {}; for (const p of Object.keys(NR.SIZES)) { o[p] = {}; NR.widgets.forEach(w => { o[p][w.no.toLowerCase()] = NR.SIZES[p][w.size] || null; }); } return o; });
   // sweep A: language × state × direction × volatile day (black theme, colour, iOS 393)
   await setCtl('theme', 'black'); await setCtl('render', 'color'); await setCtl('platform', 'ios393');
   for (const lang of ['fa', 'en']) {
@@ -146,7 +152,7 @@ function scan(sel, expect) {
           await setDir(w, dir);
           const e = Object.assign({ lang, hit: true }, exp[`${w}|${lang}|${st}|${dir}`] || {});
           if (stress !== 'calm') { delete e.number; }
-          const r = await facts(w, e); combos++;
+          const r = await facts(w, e); if (!r) continue; combos++;
           r.fails.forEach(f => fails.push(`[${w} ${lang} ${st} ${dir} ${stress}] ${f}`));
         }
       }
@@ -161,9 +167,9 @@ function scan(sel, expect) {
       for (const st of ['normal', 'not_posted']) { await setCtl('st', st);
         for (const w of W) {
           const e = Object.assign({ lang, hit: true }, exp[`${w}|${lang}|${st}|send`]);
-          const r = await facts(w, e); combos++;
+          const r = await facts(w, e); if (!r) continue; combos++;
           r.fails.forEach(f => fails.push(`[${w} ${theme}/${render}/${platform} ${lang} ${st}] ${f}`));
-          const want = { ios393: { n01: [364, 382], n02: [364, 170] }, ios390: { n01: [338, 354], n02: [338, 158] }, android: { n01: [336, 340], n02: [336, 160] } }[platform][w];
+          const want = sizes[platform][w];
           if (want && (Math.abs(r.size[0] - want[0]) > 1 || Math.abs(r.size[1] - want[1]) > 1)) fails.push(`[${w} ${platform}] size ${r.size} != ${want}`);
         }
       }
@@ -198,13 +204,26 @@ function scan(sel, expect) {
     res.push(['n02 recv average', txt('#n02 .js-num'), NR.int(D.snapshot_receive.market.average, 'fa')]);
     document.querySelector('#n02 [data-cfg-dir="send"]').click(); await new Promise(r => setTimeout(r, 80));
     }
+    // N03: direction and the compare switch
+    if (has.n03) {
+      const r1 = txt('#n03 .js-num'); await click('#n03 .js-dir');
+      const rv = NR.model({ lang: 'fa', st: 'normal', stress: 'calm' }, { dir: 'recv' });
+      res.push(['n03 recv average', txt('#n03 .js-num'), NR.int(rv.week.this_average, 'fa')]);
+      res.push(['n03 recv pct', txt('#n03 .js-bpct'), NR.pct(rv.week.change_pct, 'fa', { noSign: true }).replace(/^/, NR.sign(rv.week.change_pct) > 0 ? '+' : NR.sign(rv.week.change_pct) < 0 ? '−' : '')]);
+      await click('#n03 .js-dir'); res.push(['n03 back to send', txt('#n03 .js-num'), r1]);
+      const card = document.querySelector('#n03 .n3-card'), more = document.querySelector('#n03 .js-more');
+      res.push(['n03 compare on by default', card.classList.contains('no-compare') + '|' + more.getAttribute('aria-pressed'), 'false|true']);
+      await click('#n03 .js-more'); await new Promise(r => setTimeout(r, 450)); res.push(['n03 compare off', card.classList.contains('no-compare') + '|' + more.getAttribute('aria-pressed') + '|' + getComputedStyle(document.querySelector('#n03 .js-ghost')).opacity, 'true|false|0']);
+      await click('#n03 .js-more'); res.push(['n03 compare on again', card.classList.contains('no-compare'), 'false']);
+      res.push(['n03 day labels left to right', [...document.querySelectorAll('#n03 .js-xlab text')].map(t => t.textContent).join('|'), M.week.days.map(d => NR.weekday(d.weekday, 'fa')).join('|')]);
+    }
     // a tap that opens the app shows its link
     if (has.n01) {
     document.querySelector('#n01 .n1-slip[data-i="1"]').click(); await new Promise(r => setTimeout(r, 60));
     res.push(['n01 slip link', document.querySelector('.nr-toast').textContent.includes('netrate://office/pars?cur=gbp&type=cash&dir=send'), true]);
     }
     return res;
-  }, { n01: W.includes('n01'), n02: W.includes('n02') });
+  }, { n01: W.includes('n01'), n02: W.includes('n02'), n03: W.includes('n03') });
   beh.forEach(([name, got, want]) => { if (String(got) !== String(want)) fails.push(`[behaviour] ${name}: got "${got}", want "${want}"`); });
   // the three slips are one style (no featured office): compare computed styles
   const slipStyles = !W.includes('n01') ? ['x'] : await page.evaluate(() => { const g = i => { const e = document.querySelector(`#n01 .n1-slip[data-i="${i}"] .n1-slip-in`), c = getComputedStyle(e); return ['backgroundImage', 'boxShadow', 'borderRadius', 'opacity', 'filter', 'width', 'height', 'outline'].map(p => c[p]).join('|'); }; return [0, 1, 2].map(g); });
