@@ -109,7 +109,8 @@
       const on = btn.getAttribute('aria-pressed') !== 'true';
       btn.setAttribute('aria-pressed', String(on));
       Lab.timeScale = on ? .25 : 1;
-      gsap.globalTimeline.timeScale(Lab.timeScale);
+      if (window.gsap) gsap.globalTimeline.timeScale(Lab.timeScale);
+      document.dispatchEvent(new CustomEvent('lab:timescale', { detail: Lab.timeScale }));
     });
   }
 
@@ -221,7 +222,8 @@
   }
 
   function init() {
-    if (!window.gsap) { console.warn('[lab] GSAP did not load; showing final frames'); window.gsap = gsapShim(); Lab.still = true; }
+    // only pages that mount GSAP widgets need it (the NetRate page draws with its own tweens)
+    if (!window.gsap && document.querySelector('[data-mount]')) { console.warn('[lab] GSAP did not load; showing final frames'); window.gsap = gsapShim(); Lab.still = true; }
     setupTheme();
     setupSlowmo();
     setupBackground();

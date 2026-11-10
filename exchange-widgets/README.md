@@ -15,7 +15,7 @@ cd exchange-widgets && npx http-server -p 8000
 
 - Private preview (owner only): https://claude.ai/artifact/BTiquurgTiZ1PMPsitsU8i (widgets) · https://claude.ai/artifact/W5SxtGw9fLPSDXqFDxQVvu (backgrounds)
 - `index.html?still` shows the final frame with no motion (for screenshots).
-- Top bar: **ویجت‌ها / بک‌گراندها** switches between the two sections; **حرکت آهسته** slows every motion to a quarter of its speed; the sun/moon button switches the background between dark and light (widgets keep their own colours).
+- Top bar: **ویجت‌ها / بک‌گراندها / نت‌ریت** switches between the three sections; **حرکت آهسته** slows every motion to a quarter of its speed; the sun/moon button switches the background between dark and light (widgets keep their own colours).
 
 ## ویجت‌ها · Widgets
 
@@ -55,6 +55,19 @@ The backgrounds section, a page of its own. Each background is a live colour fie
 | 15 | دو شعله | Twin Flame | new · 06·1 and 06·2 together | **new** |
 | 16 | کسوف | Eclipse | new · 03's violet light behind a planet | **new** |
 
+## نت‌ریت · NetRate widgets
+
+بخش سوم: ویجت‌های موبایل پروژه‌ی نت‌ریت (مقایسه‌ی نرخ صرافی‌های بریتانیا برای فارسی‌زبان‌ها)، [`netrate/index.html`](netrate/). هر ویجت نت‌ریت از روی یکی از طرح‌های نمونه (ویجت‌های ۰۱ تا ۰۸) ساخته می‌شه: همون فرم، چیدمان، حال‌وهوا و ایده‌ی تعامل، با محتوای نرخ و پول. به ترتیب و دوتا‌دوتا.
+
+The NetRate section: home-screen widgets for the NetRate app (UK exchange-office rates for Persian speakers; WidgetKit and Glance), each built from one of the sample designs above with the same form, layout, mood and interaction idea. Every widget reads one answer object shaped like `netrate/data.js` (the sample data file) and computes nothing; its texts are in fa / en tables; a control bar switches language, theme (black / white / dawn), state (normal, not posted, Sunday, expired, offline, not set up, gallery preview), render (colour / iOS 18 tinted), platform (iOS 393 / 390, Android), real size or phone mock, a volatile day (±5 %), and the display-only (C) motion. Under each widget: build notes (WidgetKit / Glance), the A / B / C table, buttons and links, data and data requests, differences from the sample, the checklist.
+
+| # | ویجت | Widget | From | Folder | Status |
+|---|---|---|---|---|---|
+| N01 | نرخ امروز · بزرگ | `rate-large`: most toman today, the first three offices as slips, a chart with range and direction buttons | 01 Budget | [`netrate/rate-large`](netrate/rate-large/) | **new, waiting for feedback** |
+| N02 | نمودار بازار · متوسط | `chart-medium`: the market average, the move, a chart (the range in white, the period before it in grey) and a range button | 02 Market Size | [`netrate/chart-medium`](netrate/chart-medium/) | **new, waiting for feedback** |
+
+Each widget also builds to **one self-contained HTML file** (`node tools/bundle.mjs` → `dist/netrate/<name>.html`): the font is inlined, there is no network and no library. Checks: `tools/netrate/qa.js` (the brief's hard rules over ~300 combinations; blocks all network) and `tools/netrate/aa.js` + `aa.py` (contrast of every text box).
+
 ## ساختار · Structure
 
 ```
@@ -73,14 +86,20 @@ exchange-widgets/
   widgets/08-earnings/     the same three files (one card)
   backgrounds/          the backgrounds section: index.html, engine.js (every background and the
                         renderer), page.js (tiles, viewer, downloads), page.css, SPEC.md
-  tools/bundle.mjs      builds single-file copies of both pages into dist/ (one to send, one for a claude.ai Artifact)
+  netrate/              the NetRate section: index.html, data.js (the sample answer object), i18n.js (fa / en texts),
+                        kit.js (formatting, ages, the demo answer builder, drawing helpers), kit.css (themes, tinted,
+                        phone mock, page), page.js (controls and stages), fonts/ (Vazirmatn), and one folder per
+                        widget: widget.js, widget.css, SPEC.md
+  tools/bundle.mjs      builds single-file copies of the three pages into dist/ (one to send, one for a claude.ai Artifact;
+                        plus one file per NetRate widget)
+  tools/netrate/        the NetRate checks (qa.js, aa.js, aa.py)
 ```
 
 ```bash
 node tools/bundle.mjs
 ```
 
-It writes `widget-lab.html` and `backgrounds.html` (standalone; kept side by side they link to each other) and `artifact.html` and `backgrounds-artifact.html` (for Artifacts; `--link widgets=<url> --link backgrounds=<url>` points their section switch at the published pages).
+It writes `widget-lab.html`, `backgrounds.html` and `netrate.html` (standalone; kept side by side they link to each other), `artifact.html`, `backgrounds-artifact.html` and `netrate-artifact.html` (for Artifacts; `--link widgets=<url> --link backgrounds=<url> --link netrate=<url>` points their section switch at the published pages) and `netrate/<widget>.html` (one self-contained file per NetRate widget).
 
 ## اضافه کردن ویجت تازه · Adding a widget
 
@@ -96,4 +115,5 @@ It writes `widget-lab.html` and `backgrounds.html` (standalone; kept side by sid
 - Widgets are LTR and in English, like the references; the gallery around them is Persian and RTL.
 - The widget number uses Latin digits (it matches the folder); Persian text uses Persian digits.
 - Every number shown in a widget is sample data.
+- NetRate widgets: no green anywhere (blue = up, coral = down, amber = age), every direction also an arrow and a sign, every figure has its age, every exchange office is equal (no featured one), no flags / currency signs / emoji / personal data, "toman" never "rial", fa digits `۰۱۲۳۴۵۶۷۸۹ ٬ ٫ ٪`.
 - The model name of the AI is never written in the code, the files or the commit messages.

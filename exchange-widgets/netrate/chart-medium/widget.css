@@ -1,0 +1,106 @@
+/* N02 · chart-medium — design units (364 wide) scaled by --u; the card is always an "ink" card (dark in every theme) */
+.n2-card { --dirc: var(--oup); --ring: var(--oup); }
+.n2-card.is-down { --dirc: var(--odown); --ring: var(--odown); }
+.n2-card.is-flat { --dirc: var(--oi3); --ring: var(--oi3); }
+.n2-card .is-up { --dirc: var(--oup); }
+.n2-card .is-down { --dirc: var(--odown); }
+.n2-card .is-flat { --dirc: var(--oi3); }
+
+/* the light: a ramp and a pool from the start side, a rim on that edge, a sheen along the top (sample 02's blue light, in the app's own neutral) */
+.n2-glow { position: absolute; inset: 0; pointer-events: none; }
+.n2-glow i { position: absolute; display: block; will-change: transform; }
+/* the light hugs the edge (no small text there) and only washes the rest, so every label keeps AA contrast */
+.n2-glow .g-a { inset: 0; background: linear-gradient(to right, rgba(var(--glow), .62), rgba(var(--glow), .22) 2.6%, rgba(var(--glow), .09) 9%, rgba(var(--glow), .06) 30%, rgba(var(--glow), .02) 44%, rgba(var(--glow), 0) 54%); }
+.nrw[dir="rtl"] .n2-glow .g-a { background: linear-gradient(to left, rgba(var(--glow), .62), rgba(var(--glow), .22) 2.6%, rgba(var(--glow), .09) 9%, rgba(var(--glow), .06) 30%, rgba(var(--glow), .02) 44%, rgba(var(--glow), 0) 54%); }
+.n2-glow .g-b { inset-inline-start: calc(-34 * var(--u)); top: -12%; width: 34%; height: 124%; background: radial-gradient(ellipse 50% 50% at 24% 58%, rgba(var(--glow), .4), rgba(var(--glow), .1) 44%, rgba(var(--glow), 0) 72%); }
+.n2-glow .g-c { left: calc(-150 * var(--u)); top: calc(-34 * var(--u)); width: calc(330 * var(--u)); height: calc(220 * var(--u)); border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--glow), .1), rgba(var(--glow), .04) 55%, rgba(var(--glow), 0)); }
+.nrw[dir="rtl"] .n2-glow .g-c { left: auto; right: calc(-150 * var(--u)); }
+.n2-glow::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, 0) 24%); }
+.nrx[data-render="tinted"] .n2-glow { opacity: .55; }
+
+.n2-svg { position: absolute; inset: 0; width: 100%; height: 100%; direction: ltr; overflow: visible; pointer-events: none; }
+.n2-line { fill: none; stroke: #FBFCFF; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.n2-ctx { fill: none; stroke: rgba(255, 255, 255, .3); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.n2-comet { display: none; fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 60 940; stroke-dashoffset: 60; opacity: .0; filter: drop-shadow(0 0 3px rgba(255, 255, 255, .9)); }
+.n2-rule { stroke: rgba(255, 255, 255, .26); stroke-width: 1.5; stroke-dasharray: 5.4 2.6; }
+.n2-ring { fill: #08090d; stroke: var(--ring); stroke-width: 3.2; }
+.n2-core { fill: #08090d; }
+.n2-halo { display: none; fill: none; stroke: var(--ring); stroke-width: 1.4; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.n2-card .n2-svg [fill="#fff"] { }
+
+/* head: label (or a status chip) */
+.n2-row0 { position: absolute; z-index: 3; inset-inline-start: calc(18 * var(--u)); top: calc(13 * var(--u)); height: calc(24 * var(--u)); display: flex; align-items: center; gap: calc(9 * var(--u)); }
+.n2-label { font-size: calc(13.5 * var(--u)); font-weight: 500; color: var(--oi2); white-space: nowrap; }
+.n2-main { position: absolute; z-index: 2; inset-inline-start: calc(18 * var(--u)); top: calc(38 * var(--u)); width: calc(176 * var(--u)); display: block; color: inherit; }
+.n2-main p { margin: 0; }
+.n2-num { font-size: calc(45 * var(--u)); font-weight: 300; line-height: 1.1; letter-spacing: -.012em; color: var(--oi); }
+.n2-num .nr-roll { height: 1.1em; }
+.n2-unit { margin-top: calc(1 * var(--u)) !important; font-size: calc(11.5 * var(--u)); color: var(--oi3); line-height: 1.3; }
+.n2-chg { margin-top: calc(8 * var(--u)) !important; line-height: 1.35; }
+.n2-chgmain { display: flex; align-items: center; gap: calc(5 * var(--u)); font-size: calc(13.5 * var(--u)); font-weight: 600; color: var(--oi); }
+.n2-chgmain .nr-arrow { font-size: calc(12.5 * var(--u)); color: var(--dirc); }
+.n2-vs { display: block; font-size: calc(11.5 * var(--u)); color: var(--oi2); }
+.n2-age { display: flex; flex-wrap: nowrap; white-space: nowrap; align-items: center; gap: 0 calc(5 * var(--u)); margin-top: calc(7 * var(--u)) !important; font-size: calc(11.2 * var(--u)); color: var(--oi3); line-height: 1.35; }
+.n2-age .nr-age { font-size: calc(11.2 * var(--u)); }
+
+/* the pill on the marker: the change over the chosen range (sample 02's tooltip: dark fill, edge and text in the direction's colour) */
+.n2-pill {
+  position: absolute; z-index: 2; left: calc(var(--px, 280) * var(--u)); top: calc(var(--py, 20) * var(--u));
+  display: inline-flex; align-items: center; gap: calc(4 * var(--u)); height: calc(24 * var(--u)); padding-inline: calc(8 * var(--u));
+  border-radius: calc(6 * var(--u)); direction: ltr; white-space: nowrap; font-size: calc(12.5 * var(--u)); font-weight: 600; color: var(--dirc);
+  background: color-mix(in srgb, var(--dirc) 16%, #0b0b0d); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dirc) 42%, transparent);
+}
+.n2-pill .nr-arrow { font-size: calc(10.5 * var(--u)); stroke-width: 2.1; }
+.n2-pill::after { content: ""; position: absolute; top: 100%; left: calc(var(--nib, 30) * var(--u)); width: calc(9 * var(--u)); height: calc(5 * var(--u)); margin-left: calc(-4.5 * var(--u)); background: color-mix(in srgb, var(--dirc) 16%, #0b0b0d); clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.n2-pill[data-at="below"]::after { top: auto; bottom: 100%; clip-path: polygon(50% 0, 0 100%, 100% 100%); }
+.n2-pill[data-at="left"]::after { top: calc(var(--nib, 12) * var(--u)); left: 100%; margin: calc(-4.5 * var(--u)) 0 0; width: calc(5 * var(--u)); height: calc(9 * var(--u)); clip-path: polygon(0 0, 100% 50%, 0 100%); }
+
+/* the range button: one tap steps through 1W, 1M, 3M, 1Y (the sample's single menu control); a 48 x 152 hit area */
+.nrw .n2-cycle { position: absolute; z-index: 3; left: calc(194 * var(--u)); width: calc(152 * var(--u)); bottom: calc(3 * var(--u)); height: calc(48 * var(--u)); display: grid; place-items: center; direction: ltr; }
+.nrw[dir="rtl"] .n2-cycle { left: calc(18 * var(--u)); }
+.n2-cycle-in { display: inline-flex; align-items: center; gap: calc(9 * var(--u)); height: calc(28 * var(--u)); padding-inline: calc(13 * var(--u)); border-radius: 99px; background: var(--oi); color: #0b0b0d; font-size: calc(12.5 * var(--u)); transition: transform .25s cubic-bezier(.3, 1.6, .5, 1); }
+.nrw[dir="rtl"] .n2-cycle-in { direction: rtl; }
+.n2-cycle:active .n2-cycle-in { transform: scale(.94); }
+.n2-cycle b { font-weight: 600; white-space: nowrap; }
+.n2-dots { display: inline-flex; gap: calc(3.5 * var(--u)); font-style: normal; direction: ltr; }
+.n2-dots u { display: block; width: calc(5 * var(--u)); height: calc(5 * var(--u)); border-radius: 50%; background: currentColor; opacity: .28; text-decoration: none; }
+.n2-dots u.is-on { opacity: 1; }
+.nrx[data-render="tinted"] .n2-cycle-in { background: #fff; color: #15161d; }
+
+/* the pointer-lit rim (C) */
+.n2-rim { position: absolute; inset: 0; z-index: 4; border-radius: var(--r); padding: max(1px, calc(1.1 * var(--u))); opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  background: radial-gradient(calc(150 * var(--u)) circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .8), rgba(255, 255, 255, 0) 72%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.n2-card::after { content: ""; position: absolute; inset: 0; z-index: 4; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), inset 0 1px 0 rgba(255, 255, 255, .07); }
+
+.n2-card.is-empty > :not(.n2-empty):not(.n2-glow) { visibility: hidden; }
+.n2-empty { position: absolute; inset: 0; z-index: 5; background: linear-gradient(180deg, var(--ink-a), var(--ink-b)); }
+.n2-empty .nr-ph { position: absolute; display: block; background: rgba(255, 255, 255, .1); }
+.n2-emptytext { position: absolute; inset-inline: calc(30 * var(--u)); top: calc(52 * var(--u)); display: grid; justify-items: center; gap: calc(4 * var(--u)); padding: calc(10 * var(--u)) calc(14 * var(--u)); border-radius: calc(16 * var(--u)); background: rgba(14, 14, 16, .94); box-shadow: 0 0 0 1px rgba(255, 255, 255, .14); text-align: center; color: var(--oi); }
+.n2-emptytext p { margin: 0; font-size: calc(12 * var(--u)); color: var(--oi2); line-height: 1.55; }
+.n2-emptytext .nr-banner.is-lg { height: calc(28 * var(--u)); font-size: calc(14.5 * var(--u)); font-weight: 600; background: none; box-shadow: none; padding: 0; color: var(--oi); }
+.n2-emptytext .nr-banner.is-lg.is-gal b { font-size: calc(16 * var(--u)); font-weight: 700; }
+.n2-emptytext .nr-banner .nr-i { font-size: calc(14 * var(--u)); }
+
+/* ── C · display-only motion ── */
+.is-fx .n2-comet { display: block; animation: n2-comet calc(4.4s * var(--nr-ts, 1)) cubic-bezier(.4, 0, .6, 1) 1s infinite; }
+.is-fx .n2-rule { animation: n2-dash calc(1.4s * var(--nr-ts, 1)) linear infinite; }
+.is-fx .n2-halo { display: block; animation: n2-halo calc(2.6s * var(--nr-ts, 1)) ease-out infinite; }
+.is-fx .n2-glow .g-a { animation: n2-breathe calc(9s * var(--nr-ts, 1)) ease-in-out infinite alternate; }
+.is-fx .n2-glow .g-b { animation: n2-breathe calc(11s * var(--nr-ts, 1)) ease-in-out -3s infinite alternate; }
+@keyframes n2-comet { 0% { stroke-dashoffset: 60; opacity: 0; } 8% { opacity: .9; } 52% { stroke-dashoffset: -940; opacity: .9; } 58%, 100% { stroke-dashoffset: -940; opacity: 0; } }
+@keyframes n2-dash { to { stroke-dashoffset: -8; } }
+@keyframes n2-halo { 0% { opacity: .7; transform: scale(1); } 100% { opacity: 0; transform: scale(2.6); } }
+@keyframes n2-breathe { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(calc(5 * var(--u)), calc(3 * var(--u)), 0) scale(1.05); } }
+
+.is-intro .n2-comet, .is-intro .n2-halo { visibility: hidden; }
+.is-intro .n2-chgmain, .is-intro .n2-vs, .is-intro .n2-age { animation: n2-rise calc(.8s * var(--nr-ts, 1)) cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.5s * var(--nr-ts, 1)); }
+.is-intro .n2-vs { animation-delay: calc(.6s * var(--nr-ts, 1)); }
+.is-intro .n2-age { animation-delay: calc(.7s * var(--nr-ts, 1)); }
+.is-intro .n2-endmark, .is-intro .js-endg { animation: n2-pop calc(.8s * var(--nr-ts, 1)) cubic-bezier(.3, 1.7, .5, 1) both; animation-delay: calc(1.35s * var(--nr-ts, 1)); }
+.is-intro .n2-pill { animation: n2-drop calc(.8s * var(--nr-ts, 1)) cubic-bezier(.3, 1.6, .5, 1) both; animation-delay: calc(1.6s * var(--nr-ts, 1)); }
+.is-intro .n2-cycle-in { animation: n2-rise calc(.7s * var(--nr-ts, 1)) cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(.9s * var(--nr-ts, 1)); }
+@keyframes n2-rise { from { transform: translateY(calc(10 * var(--u))); opacity: 0; } }
+@keyframes n2-pop { from { opacity: 0; } }
+@keyframes n2-drop { from { transform: translateY(calc(-12 * var(--u))) scale(.7); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .is-fx .n2-comet, .is-fx .n2-rule, .is-fx .n2-halo, .is-fx .n2-glow i { animation: none; } }

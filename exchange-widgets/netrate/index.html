@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NetRate Widgets</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="ویجت‌های موبایل نت‌ریت، ساخته‌شده از روی طرح‌های نمونه: فارسی و English، سه تم، همه‌ی حالت‌ها، iOS و Android.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=Unbounded:wght@500..800&family=Vazirmatn:wght@100..900&display=swap">
+<!-- bundle:css -->
+<link rel="stylesheet" href="../lab/lab.css">
+<link rel="stylesheet" href="kit.css">
+<link rel="stylesheet" href="rate-large/widget.css">
+<link rel="stylesheet" href="chart-medium/widget.css">
+<!-- /bundle:css -->
+<!-- bundle:js -->
+<script defer src="../lab/lab.js"></script>
+<script defer src="data.js"></script>
+<script defer src="i18n.js"></script>
+<script defer src="kit.js"></script>
+<script defer src="rate-large/widget.js"></script>
+<script defer src="chart-medium/widget.js"></script>
+<script defer src="page.js"></script>
+<!-- /bundle:js -->
+</head>
+<body>
+<!-- bundle:body -->
+<div class="lab nr" dir="rtl" lang="fa">
+  <div class="bg" aria-hidden="true">
+    <div class="bg-aurora a1"></div>
+    <div class="bg-aurora a2"></div>
+    <div class="bg-aurora a3"></div>
+    <div class="bg-grid"></div>
+    <div class="bg-spot"></div>
+    <div class="bg-grain"></div>
+  </div>
+
+  <!-- solo:cut -->
+  <header class="top">
+    <a class="brand" href="#top" id="top">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
+        <rect class="bm-bar" x="7" y="21" width="6" height="12" rx="2"/>
+        <rect class="bm-bar b2" x="17" y="15" width="6" height="18" rx="2"/>
+        <rect class="bm-bar" x="27" y="9" width="6" height="24" rx="2"/>
+        <path class="bm-line" d="M5.5 17.5l9.5-6.5 7 4 12.5-9"/>
+      </svg>
+      <span class="brand-name"><b>Widget Lab</b><span>آزمایشگاه ویجت</span></span>
+    </a>
+    <nav class="sections" aria-label="بخش‌ها">
+      <a href="../index.html" data-section="widgets">ویجت‌ها</a>
+      <a href="../backgrounds/index.html" data-section="backgrounds">بک‌گراندها</a>
+      <a href="#top" data-section="netrate" aria-current="page">نت‌ریت</a>
+    </nav>
+    <div class="tools">
+      <button class="tool" type="button" data-tool="slow" aria-pressed="false" title="همه‌ی حرکت‌ها چهار برابر آهسته">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5l3.2-3.2"/><path d="M9.5 2.8h5"/><path d="M12 2.8v3.2"/></svg>
+        <span class="label">حرکت آهسته</span>
+      </button>
+      <button class="tool" type="button" data-tool="theme" aria-label="پس‌زمینه‌ی روشن">
+        <svg class="t-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+        <svg class="t-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6z"/></svg>
+        <span class="label">روشن</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="intro" aria-labelledby="nr-title">
+    <p class="eyebrow">نت‌ریت · ویجت‌های موبایل</p>
+    <h1 id="nr-title">ویجت‌های نت‌ریت، <span class="grad">از روی طرح‌های نمونه</span></h1>
+    <p class="lead">هر ویجت نت‌ریت از روی یکی از طرح‌های نمونه ساخته شده: همون فرم، چیدمان، حال‌وهوا و ایده‌ی تعامل، با محتوای نرخ و پول. همه‌ی عددها از یه شیء داده با شکل فایل نمونه میان و ویجت جز قالب‌بندی و مقیاس نقاشی هیچ محاسبه‌ای نمی‌کنه. از <b>نوار کنترل</b> زبان، تم، حالت، رندر و پلتفرم رو عوض کن. حرکت‌هایی که روی گوشی واقعی ساخته نمی‌شن جدا و با برچسب <b>ج</b> نشون داده می‌شن (می‌تونی خاموششون کنی).</p>
+    <nav class="index" id="nr-index" aria-label="فهرست ویجت‌ها"></nav>
+  </section>
+  <!-- /solo:cut -->
+
+  <div class="nrc" id="nr-controls" role="toolbar" aria-label="کنترل‌های پیش‌نمایش"></div>
+  <main class="nr-stages" id="nr-stages"></main>
+
+  <!-- solo:cut -->
+  <footer class="foot">
+    <p><b>NetRate Widgets</b> · کد هر ویجت در پوشه‌ی <bdi dir="ltr">netrate/&lt;name&gt;/</bdi></p>
+    <p>داده: <bdi dir="ltr">netrate/data.js</bdi> · متن‌ها: <bdi dir="ltr">netrate/i18n.js</bdi> · اندازه‌ها تقریبی‌ان و روی دستگاه واقعی تأیید می‌شن</p>
+  </footer>
+  <!-- /solo:cut -->
+
+  <p class="nr-toast" role="status" aria-live="polite"></p>
+</div>
+<!-- /bundle:body -->
+</body>
+</html>
