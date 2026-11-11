@@ -986,8 +986,8 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .is-page .evp { display: flex; flex-direction: column; min-height: 100svh; }   /* (the page's column, then the footer: a short page has the footer at the bottom of the window) */
 .evp-in { --sc: var(--sc-d); --fl: max(1180px, calc(var(--u) * 74)); display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); align-content: start; flex: 1 0 auto; min-height: 0; padding: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.8) var(--pad-r) calc(var(--gap) * 4) var(--pad-l); color: rgb(var(--fg)); }
 :root[data-mode="light"] .evp-in { --sc: var(--sc-l); }
-.evp-in.bk { --fl: max(1440px, calc(var(--u) * 86)); }
-.evp-in.tkp { --fl: min(1340px, 100%); }
+.evp-in.bk { --fl: min(100%, 2400px); }
+.evp-in.tkp { --fl: min(1440px, 100%); }
 .evp-in > :is(.tk-ok, .tk-grid, .tk-help) { width: 100%; max-width: var(--fl); justify-self: center; }
 /* every block of a purchase page is as wide as its content needs, and sits in the middle (round N): the window's whole width made frames of 1900 px with a line of words in them */
 .evp-in > :is(.evp-toprow, .evp-cols, .evp-more, .bk-hold, .bk-miss) { width: 100%; max-width: var(--fl); justify-self: center; }
@@ -1062,7 +1062,6 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 /* the body: the facts, the map, what it is and the prices on one side; the sessions on the other (they follow the page) */
 .evp-cols { display: grid; grid-template-columns: minmax(0, 1fr) clamp(360px, calc(var(--u) * 21.5), 440px); gap: var(--gap); align-items: start; }
 .evp-main { display: grid; gap: var(--gap); min-width: 0; }
-.evp-in:not(.bk) .evp-cols > .evp-main { align-self: stretch; grid-template-rows: auto 1fr; }   /* (the show's two columns end together: the information panel takes what the prices and the card leave) */
 .evp-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); display: grid; gap: var(--gap); min-width: 0; }
 @media (max-height: 800px) { .evp-side { position: static; } }   /* (the card and the prices are taller than a short window: they scroll with the page) */
 .evp-main > .panel, .evp-side > .panel, .evp-more { border-radius: calc(var(--r) * 1.3); }
@@ -1123,11 +1122,9 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-more, .evp-prices { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
 /* the program's picture in its own column (round Q): a wide window, landscape. The poster, or a banner shown whole on its own blurred copy; its three facts under it */
 .evp-pic { display: none; }
-@media (min-width: 1600px) and (min-aspect-ratio: 5/4) {
-  .evp-in.has-pic { --pic: clamp(300px, calc(var(--u) * 19.5), 480px); }
-  .evp-in.evp-show { --fl: max(1180px, calc(var(--u) * 74 + var(--pic) + var(--gap))); }
-  .evp-in.evp-show .evp-cols { grid-template-columns: var(--pic) minmax(0, 1fr) clamp(360px, calc(var(--u) * 21.5), 440px); }
-  .evp-pic { display: grid; align-content: start; gap: var(--gap); min-width: 0; position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); }
+@media (min-width: 1360px) and (min-aspect-ratio: 5/4) {
+  .evp-in.has-pic { --pic: clamp(280px, calc(var(--u) * 19.5), 480px); }
+  .evp-in.evp-show .evp-pic { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; align-self: stretch; position: static; }
   .evp-pic-f { position: relative; margin: 0; aspect-ratio: var(--ps, .75); border-radius: calc(var(--r) * 1.3); overflow: hidden; background: #0c0b11 var(--pa) center / cover no-repeat; box-shadow: 0 26px 50px -24px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .14); }
   .evp-pic-f img { position: relative; display: block; width: 100%; height: 100%; object-fit: cover; }
   .evp-pic.is-banner .evp-pic-f::before { content: ""; position: absolute; inset: -24px; background: var(--art) center / cover no-repeat; filter: blur(22px) saturate(1.2) brightness(.72); }
@@ -1139,21 +1136,26 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
   .evp-cover .evp-title { grid-column: 1; }
   .evp-facts.is-cover { display: none; }
   .evp-cover .evp-title > p { display: flex; }
+}
+@media (min-width: 1600px) and (min-aspect-ratio: 5/4) {
+  .evp-in:not(.evp-show) .evp-pic { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; align-self: stretch; position: static; }
+  .evp-in:not(.evp-show) .evp-pic > :last-child { flex: 1 1 auto; }
   /* the payment and the ticket: the same column, the same picture */
-  .bk-narrow.has-pic > :not(.bk-bar) { width: min(100%, calc(1200px + var(--pic) + var(--gap))); }
-  .bk-narrow.has-pic .evp-cols { grid-template-columns: var(--pic) minmax(0, 1.05fr) minmax(0, 1fr); }
+  .bk-narrow.has-pic > :not(.bk-bar) { width: min(100%, 2400px); }
+  .bk-narrow.has-pic .evp-cols { grid-template-columns: var(--pic) minmax(0, 1fr) clamp(460px, calc(var(--u) * 25), 600px); align-items: stretch; }
+  .bk-narrow.has-pic .evp-cols > .evp-side { align-self: start; }
   .bk-narrow.has-pic .bk-showline .bk-poster { display: none; }
-  .evp-in.tkp.has-pic { grid-template-columns: minmax(0, 1fr) var(--pic) minmax(0, min(1340px, 100%)) minmax(0, 1fr); }
+  .evp-in.tkp.has-pic { grid-template-columns: minmax(0, 1fr) var(--pic) minmax(0, min(1440px, 100%)) minmax(0, 1fr); }
   .evp-in.tkp.has-pic > .evp-toprow { grid-column: 2 / 4; max-width: none; }
-  .evp-in.tkp.has-pic > .evp-pic { grid-column: 2; grid-row: 2 / span 3; align-self: start; }
+  .evp-in.tkp.has-pic > .evp-pic { grid-column: 2; grid-row: 2 / span 3; align-self: stretch; }
   .evp-in.tkp.has-pic > :is(.tk-ok, .tk-grid, .tk-help) { grid-column: 3; }
 }
-@media (min-width: 1600px) and (min-aspect-ratio: 5/4) and (max-height: 800px) { .evp-pic { position: static; } }
+@media (min-width: 1600px) and (min-aspect-ratio: 5/4) and (max-height: 800px) { .evp-in:not(.evp-show) .evp-pic { position: static; } }
 .evp-pmap { position: relative; aspect-ratio: 16 / 9; margin: 0 0 calc(var(--u) * .9); border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .035); overflow: hidden; }   /* the hall in the colours of its prices (page.js: priceMap) */
 .evp-pmap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.evp-main h2, .evp-side h2, .evp-more h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
-.evp-main h2 svg.i, .evp-side h2 svg.i, .evp-more h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc); }
-.evp-main h2 small, .evp-side h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), max(.6, var(--dmin))); }
+.evp-main h2, .evp-side h2, .evp-more h2, .evp-pic h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
+.evp-main h2 svg.i, .evp-side h2 svg.i, .evp-more h2 svg.i, .evp-pic h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc); }
+.evp-main h2 small, .evp-side h2 small, .evp-pic h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), max(.6, var(--dmin))); }
 .evp-tags { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .4); margin-bottom: calc(var(--u) * .7); }
 .evp-tags span { display: inline-flex; align-items: baseline; gap: .5em; padding: .35em .95em; border-radius: calc(var(--r) * .45); font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); color: #fff; background: linear-gradient(to left, #8b5cf6, #ec4899); box-shadow: 0 8px 20px -12px #8b5cf6; }
 .evp-tags small { font-size: .82em; font-weight: var(--fwm); opacity: .85; }
@@ -1297,8 +1299,18 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
    before and without them; the pin is at the exact point either way. A hall with no position has no block at all. */
 .evp-map.loc-map { height: auto; display: grid; overflow: hidden; padding: 0; }
 .lm-view { position: relative; height: clamp(220px, 34svh, 360px); overflow: hidden; background: var(--map-bg); }
-.lm-g { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
-.lm-open { position: absolute; inset: 0; margin: auto; width: fit-content; height: fit-content; display: inline-flex; align-items: center; gap: .55em; padding: .75em 1.3em; border-radius: var(--rb); background: rgb(var(--fg)); color: var(--capsule); font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); text-decoration: none; box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .6); }
+.lm-g { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; display: block; }
+/* the card under the frame (round R): where Google's frame cannot load (the private preview, a blocked network) the block is this, not an empty box; where it loads, the map covers it */
+.lm-fb { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .45em; padding: 0 10% 16%; text-align: center; background: radial-gradient(60% 75% at 50% 38%, color-mix(in oklab, var(--sc, #8b5cf6) 24%, transparent), transparent 72%), repeating-linear-gradient(0deg, transparent 0 25px, rgba(var(--fg), .05) 25px 26px), repeating-linear-gradient(90deg, transparent 0 25px, rgba(var(--fg), .05) 25px 26px), var(--map-bg); }
+.lm-pin { position: relative; z-index: 1; display: grid; place-items: center; width: 3.1em; aspect-ratio: 1; border-radius: 50%; color: #fff; background: var(--sc, #8b5cf6); box-shadow: 0 10px 24px -8px color-mix(in oklab, var(--sc, #8b5cf6) 80%, #000), inset 0 0 0 2px rgba(255, 255, 255, .35); font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); }
+.lm-pin svg.i { width: 52%; height: 52%; }
+.lm-ring { position: absolute; z-index: 0; top: calc(38% - 1.55em - 4px); inset-inline: 0; margin-inline: auto; width: calc(3.1em + 8px); aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--sc, #8b5cf6); opacity: 0; animation: lm-ring 3.2s ease-out infinite; font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); }
+.lm-ring.r2 { animation-delay: 1.6s; }
+@keyframes lm-ring { from { transform: scale(.7); opacity: .6; } to { transform: scale(3.2); opacity: 0; } }
+.lm-fb b { position: relative; z-index: 1; margin-top: .4em; font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.5; }
+.lm-fb small { position: relative; z-index: 1; max-width: 34em; font-size: calc(max(12.5px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), max(.7, var(--dmin))); }
+@media (prefers-reduced-motion: reduce) { .lm-ring { animation: none; } }
+.lm-open { position: absolute; z-index: 2; inset: auto 0 11% 0; margin: 0 auto; width: fit-content; height: fit-content; display: inline-flex; align-items: center; gap: .55em; padding: .75em 1.3em; border-radius: var(--rb); background: rgb(var(--fg)); color: var(--capsule); font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); text-decoration: none; box-shadow: 0 10px 26px -12px rgba(0, 0, 0, .6); }
 .lm-open svg.i { width: 1.25em; height: 1.25em; }
 .lm-open:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
 @media (max-width: 760px) { .lm-view { height: clamp(200px, 30svh, 280px); } }
@@ -1315,6 +1327,161 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 /* the footer's last line keeps clear of the «back to top» button (the footer is as wide as the window now, so the line reaches the corner where the button stands) */
 .evp > .evp-ft .ft-end { padding-inline-start: calc(max(48px, var(--u) * 3) + 18px); }
 @media (max-width: 760px) { .evp > .evp-ft .ft-end { padding-inline-start: 0; } }
+
+
+/* ══ round R: the show's page uses the whole window; its columns end together; a living ticket stands under the booking card ══ */
+@media (min-width: 1100px) and (min-aspect-ratio: 5/4) {
+  .evp-in.evp-show { --fl: min(100%, 2600px); --side: clamp(340px, calc(var(--u) * 21.5), 460px); }
+  .evp-in.evp-show .evp-cols { grid-template-columns: minmax(0, 1fr) var(--side); align-items: stretch; }
+  .evp-in.evp-show .evp-main, .evp-in.evp-show .evp-side { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; align-self: stretch; position: static; }
+  .evp-in.evp-show .evp-main > .evp-info { flex: 1 1 auto; display: flex; flex-direction: column; }
+  .evp-in.evp-show .evp-info > .evp-tabp[data-p="place"] { flex: 1 1 auto; display: flex; flex-direction: column; }
+  .evp-in.evp-show .evp-info .evp-map.is-tab { flex: 1 1 auto; display: flex; flex-direction: column; }
+  .evp-in.evp-show .evp-info .evp-map.is-tab .lm-view { flex: 1 1 auto; height: auto; min-height: clamp(190px, 24svh, 280px); }
+  .evp-in.evp-show .evp-side > :last-child, .evp-in.evp-show .evp-pic > :last-child { flex: 1 1 auto; }
+  /* the prices stand wide in the main column: the hall in the colours of its prices beside the tiers */
+  .evp-in.evp-show .evp-main > .evp-prices { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); column-gap: calc(var(--u) * 1.6); align-content: start; }
+  .evp-in.evp-show .evp-main > .evp-prices > h2 { grid-column: 1 / -1; }
+  .evp-in.evp-show .evp-main > .evp-prices .evp-pmap { grid-column: 1; margin: 0; aspect-ratio: auto; align-self: stretch; min-height: 200px; }
+  .evp-in.evp-show .evp-main > .evp-prices .evp-plan { grid-column: 2; grid-template-columns: minmax(0, 1fr); align-content: start; }
+  .evp-in.evp-show .evp-main > .evp-prices:not(:has(.evp-pmap)) .evp-plan { grid-column: 1 / -1; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+}
+@media (min-width: 1360px) and (min-aspect-ratio: 5/4) {
+  .evp-in.evp-show .evp-cols { grid-template-columns: var(--pic) minmax(0, 1fr) var(--side); }
+}
+
+/* the living ticket (round R): the night chosen is on it; the rules accepted unlock its QR; a show that cannot be bought has it stamped */
+.evp-tk { container-type: inline-size; filter: drop-shadow(0 22px 26px color-mix(in oklab, var(--sc) 30%, transparent)) drop-shadow(0 2px 3px rgba(0, 0, 0, .35)); transition: filter .6s var(--ease); }
+.evp-tk[data-ready="1"][data-st="ok"] { filter: drop-shadow(0 0 14px rgba(74, 222, 128, .38)) drop-shadow(0 22px 26px color-mix(in oklab, var(--sc) 30%, transparent)) drop-shadow(0 2px 3px rgba(0, 0, 0, .35)); }
+.ltk { --notch: 31%; --rx: 0deg; --ry: 0deg; --gx: 50%; --gy: 40%; position: relative; display: grid; grid-template-columns: minmax(0, 1fr) var(--notch); aspect-ratio: 1.62 / 1; border-radius: 16px; overflow: hidden; isolation: isolate; color: #fff; background: #100e16; transform: perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)); transition: transform .45s var(--ease);
+  -webkit-mask: radial-gradient(circle 9px at var(--notch) 0, #0000 96%, #000) top / 100% 51% no-repeat, radial-gradient(circle 9px at var(--notch) 100%, #0000 96%, #000) bottom / 100% 51% no-repeat;
+  mask: radial-gradient(circle 9px at var(--notch) 0, #0000 96%, #000) top / 100% 51% no-repeat, radial-gradient(circle 9px at var(--notch) 100%, #0000 96%, #000) bottom / 100% 51% no-repeat; }
+.ltk.is-tilt { transition: transform .08s linear; }
+.ltk::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .1) 48%, transparent 58%) 160% 0 / 250% 100% no-repeat; animation: tk-sheen 7.5s ease-in-out 1.2s infinite; }
+@keyframes tk-sheen { 0%, 55% { background-position: 160% 0; } 100% { background-position: -70% 0; } }
+.ltk-main { position: relative; z-index: 0; display: grid; grid-template-rows: auto auto auto auto auto; align-content: space-between; gap: 1.6cqi; padding: 4.2cqi 4.8cqi 4cqi; background: linear-gradient(150deg, color-mix(in oklab, var(--sc) 60%, #0c0b12) 0%, #0c0b12 80%); overflow: hidden; }
+.ltk-main::before { content: ""; position: absolute; inset: -20px; z-index: -1; background: var(--art) center / cover; filter: blur(16px) saturate(1.35) brightness(.5); opacity: .55; }
+.ltk-top { display: flex; align-items: center; justify-content: space-between; gap: 2cqi; font-size: 3.3cqi; }
+.ltk-top span { display: inline-flex; align-items: center; gap: .45em; padding: .22em .75em; border-radius: 99px; background: rgba(255, 255, 255, .13); font-weight: 800; }
+.ltk-top svg.i { width: 1.15em; height: 1.15em; }
+.ltk-top em { font-style: normal; font-size: .92em; opacity: .72; letter-spacing: .02em; }
+.ltk-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; height: 3em; font-size: 4.7cqi; font-weight: 900; line-height: 1.5; }
+.ltk-when { display: flex; align-items: center; gap: 3cqi; transform-origin: 50% 100%; }
+.ltk-day { font-size: 11.5cqi; font-weight: 900; line-height: 1; }
+.ltk-md { display: grid; gap: .1em; line-height: 1.3; }
+.ltk-md b { font-size: 4.6cqi; font-weight: 900; }
+.ltk-md small { font-size: 3.3cqi; opacity: .8; }
+.ltk-tm { margin-inline-start: auto; display: inline-flex; align-items: center; gap: .4em; padding: .3em .8em; border-radius: 99px; background: rgba(255, 255, 255, .12); font-size: 4cqi; font-weight: 800; }
+.ltk-tm svg.i { width: 1.1em; height: 1.1em; }
+.ltk-hall { display: flex; align-items: center; gap: .5em; margin: 0; font-size: 3.4cqi; opacity: .88; min-width: 0; }
+.ltk-hall svg.i { flex: none; width: 1.15em; height: 1.15em; }
+.ltk-hall span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ltk-seat { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2cqi; }
+.ltk-seat span { display: grid; justify-items: center; gap: .05em; padding: .3em .4em; border-radius: 9px; border: 1px dashed rgba(255, 255, 255, .34); }
+.ltk-seat small { font-size: 2.8cqi; opacity: .7; }
+.ltk-seat b { font-size: 4cqi; font-weight: 800; opacity: .6; line-height: 1.3; }
+.ltk-stub { position: relative; display: grid; place-items: center; align-content: center; gap: 2.4cqi; padding: 3cqi; background: #16151b; border-inline-start: 2px dashed rgba(255, 255, 255, .22); }
+.ltk-qr { position: relative; width: 82%; aspect-ratio: 1; border-radius: 8px; overflow: hidden; background: #fff; filter: blur(2.4px); opacity: .5; transition: filter .8s var(--ease), opacity .8s var(--ease); }
+.ltk-qr svg { display: block; width: 100%; height: 100%; }
+.ltk-lock { position: absolute; inset: 0; margin: auto; width: 34%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; background: #16151b; color: #fff; box-shadow: 0 0 0 3px #fff; }
+.ltk-lock span { grid-area: 1 / 1; display: grid; place-items: center; width: 100%; height: 100%; transition: opacity .4s, transform .5s var(--ease); }
+.ltk-lock svg.i { width: 54%; height: 54%; }
+.ltk-lock .ck { opacity: 0; transform: scale(.4); color: #4ade80; }
+.ltk-stub small { font-size: 2.9cqi; color: rgba(255, 255, 255, .72); text-align: center; line-height: 1.5; }
+.ltk-glare { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(circle at var(--gx) var(--gy), rgba(255, 255, 255, .24), transparent 46%); mix-blend-mode: soft-light; opacity: 0; transition: opacity .3s; }
+.ltk.is-tilt .ltk-glare { opacity: 1; }
+.ltk-stamp { position: absolute; z-index: 4; top: 0; bottom: 0; left: var(--notch); right: 0; display: grid; place-items: center; pointer-events: none; }
+.ltk-stamp > span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: .4em; padding: .28em .95em; border: .55cqi solid currentColor; border-radius: 2cqi; background: rgba(8, 8, 12, .5); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); font-size: 5.6cqi; font-weight: 900; line-height: 1.5; opacity: 0; transform: rotate(-8deg) scale(1.7); transition: transform .55s cubic-bezier(.2, 1.7, .4, 1), opacity .25s; }
+.ltk-stamp svg.i { width: 1.1em; height: 1.1em; }
+.ltk-stamp .s-ok { color: #4ade80; }
+.ltk-stamp .s-off { color: #fb7185; }
+/* the rules accepted: the QR is clear, the lock is a tick, the stamp falls */
+.evp-tk[data-ready="1"] .ltk-qr { filter: none; opacity: 1; }
+.evp-tk[data-ready="1"] .ltk-lock .lk { opacity: 0; transform: scale(.4); }
+.evp-tk[data-ready="1"] .ltk-lock .ck { opacity: 1; transform: none; }
+.evp-tk[data-st="ok"][data-ready="1"] .s-ok, .evp-tk[data-st="off"] .s-off { opacity: 1; transform: rotate(-8deg) scale(1); }
+/* a show that cannot be bought: grey, the stamp across it */
+.evp-tk[data-st="off"] .ltk-main { background: linear-gradient(150deg, #3b3b45 0%, #0c0b12 80%); }
+.evp-tk[data-st="off"] .ltk-main::before { filter: grayscale(1) blur(16px) brightness(.45); }
+.evp-tk[data-st="off"] .ltk-qr { filter: blur(3px) grayscale(1); opacity: .32; }
+.evp-tk[data-st="off"] .ltk-lock .lk { opacity: 1; transform: none; }
+.evp-tk[data-st="off"] .ltk-lock .ck { opacity: 0; }
+.evp-tk.is-flip .ltk-when { animation: tk-flip .55s var(--ease) both; }
+@keyframes tk-flip { from { opacity: 0; transform: rotateX(80deg); } to { opacity: 1; transform: none; } }
+.m-w1 .evp-tk { width: 100%; max-width: 470px; margin-inline: auto; }
+@media (max-width: 760px) { .evp-tk { display: none; } }
+@media (prefers-reduced-motion: reduce) { .ltk, .ltk::after, .ltk-qr, .ltk-lock span, .ltk-stamp > span, .evp-tk, .evp-tk.is-flip .ltk-when { animation: none !important; transition: none !important; } }
+
+/* the share (round R): the places a program is sent to, and its nights in the calendar */
+.evp-share { padding: calc(var(--u) * 1.1) calc(var(--u) * 1.3) calc(var(--u) * 1.2); border-radius: calc(var(--r) * 1.3); }
+.evp-share h2 { margin-bottom: calc(var(--u) * .7); }
+.sh-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(68px, 1fr)); gap: calc(var(--u) * .55); }
+.sh-b { all: unset; box-sizing: border-box; cursor: pointer; display: grid; justify-items: center; gap: .5em; padding: .85em .3em .75em; border-radius: calc(var(--r) * .8); background: rgba(var(--fg), .045); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); font-size: calc(max(12px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); text-align: center; transition: transform .3s var(--ease), background-color .2s; }
+.sh-b i { display: grid; place-items: center; width: 2.7em; aspect-ratio: 1; border-radius: 50%; color: var(--c, var(--sc)); background: color-mix(in oklab, var(--c, var(--sc)) 17%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--sc)) 40%, transparent); }
+.sh-b svg.i { width: 52%; height: 52%; }
+.sh-b:hover { transform: translateY(-2px); background: rgba(var(--fg), .08); }
+.sh-b:active { transform: scale(.97); }
+.sh-b:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.sh-b[data-sh="tg"] { --c: #29a9ea; } .sh-b[data-sh="wa"] { --c: #22c55e; } .sh-b[data-sh="cal"] { --c: #f59e0b; }
+
+/* the hall at a glance (round R): its numbers, the way there, the other programs in it */
+.evp-hall { display: grid; gap: calc(var(--u) * .9); align-content: start; padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.3); }
+.evp-hall h2 { margin: 0; }
+.evp-hall h2 .evp-hl { color: inherit; text-decoration: none; }
+.evp-hall h2 .evp-hl:hover { text-decoration: underline; text-underline-offset: 4px; }
+.hl-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--u) * .5); }
+.hl-stats span { display: grid; justify-items: center; gap: .1em; padding: .7em .3em .6em; border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .045); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
+.hl-stats b { min-width: 3.4ch; text-align: center; font-size: calc(max(19px, calc(var(--u) * 1.3)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.hl-stats small { font-size: calc(max(11.5px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.66, var(--dmin))); }
+.hl-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.hl-acts .chip { display: inline-flex; align-items: center; gap: .45em; text-decoration: none; }
+.hl-acts .chip svg.i { width: 1.1em; height: 1.1em; }
+.hl-list { display: grid; gap: calc(var(--u) * .45); }
+.hl-list h3 { margin: 0 0 .25em; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); color: rgba(var(--fg), .8); }
+.hl-row { display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: .8em; padding: .5em; border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .04); color: inherit; text-decoration: none; transition: background-color .2s, transform .3s var(--ease); }
+.hl-row:hover { background: rgba(var(--fg), .08); transform: translateX(-2px); }
+.hl-row:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.hl-row img { width: 42px; height: 56px; object-fit: cover; border-radius: 8px; box-shadow: 0 0 0 1px rgba(var(--fg), .14); }
+.hl-row span { display: grid; gap: .12em; min-width: 0; }
+.hl-row span b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.hl-row span small { font-size: calc(max(11.5px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.66, var(--dmin))); }
+.hl-row em { display: grid; justify-items: end; font-style: normal; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: 800; white-space: nowrap; line-height: 1.3; }
+.hl-row em small { font-size: .72em; font-weight: 400; opacity: max(.7, var(--omin)); }
+/* the new panels' headings carry the same icon chip as the others */
+.evp :is(.evp-hall, .evp-share, .evp-same) h2 > svg.i:first-child { box-sizing: content-box; width: 1.05em; height: 1.05em; padding: .36em; border-radius: .62em; background: color-mix(in oklab, var(--sc) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 30%, transparent); }
+.evp-hall h2 small, .evp-share h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), max(.6, var(--dmin))); }
+
+/* the other programs of the hall (round R): the picture column's last panel takes what the other two columns leave, with as many rows as fit (what does not fit wraps out of sight and fitRows() takes it out of the keyboard's reach) */
+.evp-same { display: flex; flex-direction: column; gap: calc(var(--u) * .8); padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.3); }
+.evp-same h2 { margin: 0; }
+.evp-same .hl-list { flex: 1 1 0; min-height: 70px; display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start; gap: calc(var(--u) * .45); overflow: hidden; }
+.evp-same .hl-row { width: 100%; box-sizing: border-box; flex: none; }
+.m-w1 .evp-same .hl-list { flex: none; display: grid; overflow: visible; }
+.m-w1 .evp-same .hl-row:nth-child(n+4) { display: none; }
+/* a panel that ends a column and is stretched keeps its heading at the top and its row of buttons in the middle of what is left (no blank at its foot) */
+.evp-in.evp-show .evp-share { display: flex; flex-direction: column; }
+.evp-in.evp-show .evp-share .sh-row { margin-block: auto; }
+.ltk-stamp > span { font-size: 4.8cqi; }
+@media (max-width: 760px) { .evp-same { display: none; } }   /* (a phone keeps the row of cards under the page; the list of the hall's other programs is for the wide windows) */
+
+/* the ticket page's tips (round R): three tiles with an icon, not three lines in a wide panel */
+.tk-help h2 { margin-bottom: calc(var(--u) * .8); }
+.tk-tips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--u) * .7); margin: 0; padding: 0; list-style: none; }
+.tk-tips li { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: .9em; padding: .9em 1em; border-radius: calc(var(--r) * .8); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); line-height: 1.9; }
+.tk-tips li::marker { content: none; }
+.tk-tips i { display: grid; place-items: center; width: 2.6em; aspect-ratio: 1; border-radius: .9em; color: var(--sc); background: color-mix(in oklab, var(--sc) 15%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc) 32%, transparent); }
+.tk-tips svg.i { width: 52%; height: 52%; }
+@media (max-width: 900px) { .tk-tips { grid-template-columns: 1fr; } }
+.evp-in:not(.evp-show) .evp-same .hl-list { flex: 1 1 0; }
+
+/* the payment's two fields stand side by side on a wide window (a field a thousand pixels long is a stretched field); the ticket's seats pop when they change */
+@media (min-width: 1600px) and (min-aspect-ratio: 5/4) { .bk-narrow.has-pic .bk-duo { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: calc(var(--u) * 1.2); } }
+.ltk-seat.is-pop span { animation: ltk-pop .5s var(--ease) both; }
+.ltk-seat.is-pop span:nth-child(2) { animation-delay: .06s; } .ltk-seat.is-pop span:nth-child(3) { animation-delay: .12s; }
+@keyframes ltk-pop { from { transform: translateY(6px) scale(.92); opacity: .3; } to { transform: none; opacity: 1; } }
+.ltk-seat.is-on span { border-style: solid; border-color: rgba(255, 255, 255, .55); background: rgba(255, 255, 255, .1); }
+.ltk-seat.is-on b { opacity: 1; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .ltk-seat.is-pop span { animation: none; } }
 
 /* ── steps 2–4 of a purchase: the seats, the booking and payment, the tickets (buy.js); the same panels and themes ── */
 .steps li a { display: inline-flex; align-items: center; gap: .5em; color: inherit; text-decoration: none; }
@@ -1723,8 +1890,8 @@ a.buy, a.chip { text-decoration: none; }
 }
 @media (prefers-reduced-motion: reduce) { .seat, .bk-list li, .bk-live > i, .seat.is-pop, .seat.is-live, .tk-check.is-in circle, .tk-check.is-in path, .spin { animation: none !important; transition: none !important; } }
 /* the checkout (round M): a narrow, centred column; the phone and the name side by side; the discount code a link */
-.bk-narrow > :not(.bk-bar) { width: min(100%, 1200px); justify-self: center; }
-.bk-narrow .evp-cols { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
+.bk-narrow > :not(.bk-bar) { width: min(100%, 1480px); justify-self: center; }
+.bk-narrow .evp-cols { grid-template-columns: minmax(0, 1fr) clamp(420px, calc(var(--u) * 27), 560px); }
 .bk-duo { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 0; }   /* (a label that wraps in a half-width column no longer pushes its field lower than its neighbour) */
 .bk-who h2 { margin-bottom: calc(var(--u) * .7); }
 .bk-code-t { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: .45em; margin-bottom: calc(var(--u) * .6); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); color: var(--sc); text-decoration: underline dashed; text-underline-offset: .35em; text-decoration-thickness: 1.5px; }
@@ -3243,7 +3410,8 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
-  <symbol id="i-route" viewBox="0 0 24 24"><path d="M3 11 22 2l-9 19-2-8-8-2z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.6a8.6 8.6 0 0 1-12.7 7.5L3 20.6l1.6-5.1A8.6 8.6 0 1 1 21 11.6z"/><path d="M9 9.2c.2 2.3 2.4 4.7 5.2 5.4l1.2-1.4-1.9-1-.7.6c-.8-.3-1.5-1-1.8-1.8l.6-.7-1-1.9z"/></symbol>
+<symbol id="i-route" viewBox="0 0 24 24"><path d="M3 11 22 2l-9 19-2-8-8-2z"/></symbol>
   <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.2M12 19v2.2M2.8 12H5M19 12h2.2M5.5 5.5l1.6 1.6M16.9 16.9l1.6 1.6M18.5 5.5l-1.6 1.6M7.1 16.9l-1.6 1.6"/></symbol>
@@ -3897,7 +4065,7 @@ const gmapLink = (p) => `https://www.google.com/maps?q=${p.lat},${p.lng}`;
 function locBlockHTML(h, cls = '') {
   const p = hallLoc(h); if (!p) return '';
   return `<section class="evp-map panel loc-map evp-rise${cls ? ' ' + cls : ''}" data-hall="${esc(h.id)}" data-lat="${p.lat}" data-lng="${p.lng}" aria-label="موقعیت ${esc(h.name)}">
-    <div class="lm-view"><iframe class="lm-g" title="موقعیت ${esc(h.name)} روی گوگل مپ" data-src="${esc(gmapSrc(p))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><a class="lm-open" href="${esc(gmapLink(p))}" target="_blank" rel="noopener" hidden>${ico('pin')}<span>باز کردن در Google Maps</span></a></div>
+    <div class="lm-view"><div class="lm-fb" aria-hidden="true"><i class="lm-ring"></i><i class="lm-ring r2"></i><span class="lm-pin">${ico('pin')}</span><b>${esc(h.name)}</b>${h.addr ? `<small>${esc(h.addr)}</small>` : ''}</div><iframe class="lm-g" title="موقعیت ${esc(h.name)} روی گوگل مپ" data-src="${esc(gmapSrc(p))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><a class="lm-open" href="${esc(gmapLink(p))}" target="_blank" rel="noopener" hidden>${ico('pin')}<span>باز کردن در Google Maps</span></a></div>
   </section>`;
 }
 // a frame gets its address when its block is near the screen (the page does not ask Google for a map nobody scrolled to). Where the page may not frame Google (the preview's), the block
@@ -6418,6 +6586,58 @@ const hallOf = (e) => {
   const v = (e && e.venue) || '', c = (e && e.city) || '', name = c && v.startsWith(c) ? v.slice(c.length).replace(/^[،,\s]+/, '') : v;
   return { id: null, hall: null, name, addr: c, plan: 'fan-m', lat: null, lng: null, loc: null, city: (e && e.cs) || '', cityName: c };
 };
+// the living ticket (round R): a ticket drawn the way the real one is, standing for the one the buyer will have. On the show's page it carries the night that is chosen and unlocks its QR when
+// the rules are accepted; on the payment it carries the seats that were chosen; a show that cannot be bought has it stamped
+function liveTicketHTML(e, { s, seats, ok = true, ready = false }) {
+  const h = hallOf(e), st = statusOf(e), { src } = artOf(e), hasBanner = !!(e.banner && !e.banner.sample && e.banner.src && !e.banner.fake), cover = hasBanner ? e.banner.src : src, kindIcon = iconOfCat(e.kind);
+  const d = new Date(s ? s.t : Date.parse(e.startsAt)), w = { wd: F.week.format(d), day: F.day.format(d), mon: F.month.format(d), tm: F.time.format(d) };
+  const x = seats && seats[0], n = seats ? seats.length : 0;
+  const cells = x ? [['بخش', esc(x.zone)], ['ردیف', x.ga ? '—' : fa(x.row)], ['صندلی', x.ga ? 'ایستاده' : fa(x.n)]] : [['بخش', '—'], ['ردیف', '—'], ['صندلی', '—']];
+  const base = `نمونه‌ی بلیت تو: ${e.title}، ${w.wd} ${w.day} ${w.mon} ساعت ${w.tm}، ${h.name}.`, label = `${base} ${n ? `${fa(n)} صندلی انتخاب شده؛ QR بعد از پرداخت می‌آد.` : 'بخش و صندلی بعد از انتخاب صندلی‌ها معلوم می‌شه.'}`;
+  return `<section class="evp-tk evp-rise" data-st="${ok ? 'ok' : 'off'}" data-ready="${ready ? 1 : 0}" style="--art:url('${esc(cover)}')">
+          <div class="ltk" role="img" aria-label="${esc(label)}" data-base="${esc(base)}">
+            <div class="ltk-main" aria-hidden="true">
+              <div class="ltk-top"><span>${ico(kindIcon)}${esc(e.type)}</span><em>${n ? `${fa(n)} صندلی` : 'نمونه‌ی بلیت تو'}</em></div>
+              <b class="ltk-title">${esc(e.title)}</b>
+              <div class="ltk-when"><span class="ltk-day" data-tk="day">${esc(w.day)}</span><span class="ltk-md"><b data-tk="mon">${esc(w.mon)}</b><small data-tk="wd">${esc(w.wd)}</small></span><span class="ltk-tm">${ico('clock')}<b data-tk="tm">${esc(w.tm)}</b></span></div>
+              <p class="ltk-hall">${ico('pin')}<span>${esc(h.name)}</span></p>
+              <div class="ltk-seat${x ? ' is-on' : ''}">${cells.map(([k, v]) => `<span><small>${k}</small><b>${v}</b></span>`).join('')}</div>
+            </div>
+            <div class="ltk-stub" aria-hidden="true"><div class="ltk-qr">${qrSVG(`BLIT-SAMPLE-${e.id}`, 'qr')}<i class="ltk-lock"><span class="lk">${ico('shield')}</span><span class="ck">${ico('check')}</span></i></div><small>QR بعد از پرداخت</small></div>
+            <i class="ltk-glare" aria-hidden="true"></i>
+            <span class="ltk-stamp" aria-hidden="true"><span class="s-ok">${ico('check')}آماده‌ی رزرو</span><span class="s-off">${esc(st.label || 'فروش بسته‌ست')}</span></span>
+          </div>
+        </section>`;
+}
+// the seats chosen, on the ticket (the seats' page: it fills as the buyer chooses)
+function liveTicketSeats(root, items) {
+  const t = $('.evp-tk', root); if (!t) return;
+  const x = items[0], n = items.length, cells = x ? [x.zone, x.ga ? '—' : fa(x.row), x.ga ? 'ایستاده' : fa(x.n)] : ['—', '—', '—'], seat = $('.ltk-seat', t);
+  $$('b', seat).forEach((b, i) => { b.textContent = cells[i]; });
+  seat.classList.toggle('is-on', !!x); seat.classList.remove('is-pop'); void seat.offsetWidth; if (x) seat.classList.add('is-pop');
+  const em = $('.ltk-top em', t); if (em) em.textContent = n ? `${fa(n)} صندلی` : 'نمونه‌ی بلیت تو';
+  const card = $('.ltk', t); card.setAttribute('aria-label', `${card.dataset.base} ${n ? `${fa(n)} صندلی انتخاب شده؛ QR بعد از پرداخت می‌آد.` : 'بخش و صندلی بعد از انتخاب صندلی‌ها معلوم می‌شه.'}`);
+}
+// the other programs (the hall's own first, then the city's, then the kind's, the soonest first): the picture column's last panel, with as many rows as the column has room for
+function moreOfHallHTML(e) {
+  const h = hallOf(e), live = (x) => x !== e && !['held', 'cancelled'].includes(statusOf(x).key), inHall = (x) => h.id != null && x.hall === e.hall, rank = (x) => (inHall(x) ? 0 : x.city === e.city ? 1 : x.kind === e.kind ? 2 : 3);
+  const near = LIST().filter(live).sort((a, b) => rank(a) - rank(b) || Date.parse(a.startsAt) - Date.parse(b.startsAt)).slice(0, 8);
+  if (!near.length) return '';
+  const rows = near.map((x) => { const ax = artOf(x); return `<a class="hl-row" href="#/e/${esc(encodeURIComponent(x.id))}"><img src="${esc(ax.src)}" alt="" width="42" height="56" loading="lazy" decoding="async"><span><b>${esc(x.title)}</b><small>${esc(x.w.short)}${inHall(x) ? ' · همین سالن' : x.city !== e.city ? ` · ${esc(x.city)}` : ''}</small></span><em>${esc(dg(x.price))}<small>${esc(TXT.unit)}</small></em></a>`; }).join('');
+  return `<section class="evp-same panel evp-rise" aria-labelledby="evpSameH"><h2 id="evpSameH">${ico(iconOfCat(e.kind))}برنامه‌های دیگه</h2><div class="hl-list">${rows}</div></section>`;
+}
+// round R: the show's page has panels that stand in any column; a wide window puts them in three columns (the picture, the words and the place, the booking), a narrower one in two, a phone in one
+const SHOW_LAY = {
+  w3: { pic: ['poster', 'facts', 'same'], main: ['cover', 'info', 'prices'], side: ['book', 'tk', 'hall', 'share'] },
+  w2: { pic: ['poster', 'facts'], main: ['cover', 'info', 'prices'], side: ['book', 'tk', 'hall', 'share', 'same'] },
+  w1: { pic: ['poster', 'facts'], main: ['cover', 'info', 'hall', 'share', 'same'], side: ['book', 'tk', 'prices'] },
+};
+const SHOW_LAY_ALONE = {   // (a hall with no other program: the hall's panel is what ends the picture column)
+  w3: { pic: ['poster', 'facts', 'hall'], main: ['cover', 'info', 'prices'], side: ['book', 'tk', 'share'] },
+  w2: { pic: ['poster', 'facts'], main: ['cover', 'info', 'prices'], side: ['book', 'tk', 'hall', 'share'] },
+  w1: { pic: ['poster', 'facts'], main: ['cover', 'info', 'hall', 'share'], side: ['book', 'tk', 'prices'] },
+};
+const SHOW_SEL = { poster: '.evp-pic-f', facts: '.evp-pic-facts', cover: '.evp-cover', info: '.evp-info', book: '.evp-book', prices: '.evp-prices', tk: '.evp-tk', share: '.evp-share', hall: '.evp-hall', same: '.evp-same' };
 const TIER = { A: { k: 2.2, c: '#8b5cf6' }, B: { k: 1.6, c: '#ec4899' }, C: { k: 1.25, c: '#f97316' }, D: { k: 1, c: '#0ea5e9' }, E: { k: 0.85, c: '#14b8a6' }, F: { k: 0.72, c: '#a3e635' }, G: { k: 0.62, c: '#94a3b8' }, H: { k: 0.52, c: '#fb7185' }, V: { k: 3.2, c: '#eab308' } };
 // the price classes, dearest first (V = the special seats), and the one a zone of a real hall is in (X: outside the capacity, not for sale)
 const CLS_ORDER = 'VABCDEFGH';
@@ -6697,16 +6917,13 @@ const page = {
       <div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(e.w.time)} · ${fa(dur)} دقیقه</b></span></div>
       <div class="fact"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${h.hall ? `<a class="evp-hl" href="${hallHref(h.hall)}">${esc(h.name)}</a>` : esc(h.name)}</b><em>${esc(h.addr)}</em></span></div>
     </div>`;
-    this.el.innerHTML = `<div class="evp-in evp-show has-pic" style="--sc-d:${cd};--sc-l:${cl}">
-      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
-      ${stepsHTML(1, e, null)}</div>
-      <div class="evp-cols">
-        <aside class="evp-pic${hasPoster ? '' : ' is-banner'} evp-rise" aria-label="تصویر برنامه" style="--ps:${hasPoster ? ps : '0.75'};--pa:url('${esc(hasPoster ? src : cover)}');--art:url('${esc(cover)}')">
-          <figure class="evp-pic-f"><img src="${esc(hasPoster ? src : cover)}" alt="${hasPoster ? 'پوستر' : 'تصویر'} ${esc(e.title)}"></figure>
-          <div class="evp-pic-facts panel">${facts('pic')}</div>
-        </aside>
-        <div class="evp-main">
-          <section class="evp-cover panel${cover === src ? ' is-soft' : ''}${hasPoster ? '' : ' no-poster'}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
+    // round R: the panels that stand in any column (the ticket, the hall, the share, the prices) and where this window puts them (modeNow, place)
+    const mode = this.modeNow(), s0 = ses[pick] || ses[0] || null, okTk = open && anyOk;
+    const sameHTML = moreOfHallHTML(e);
+    const parts = {
+      poster: `<figure class="evp-pic-f"><img src="${esc(hasPoster ? src : cover)}" alt="${hasPoster ? 'پوستر' : 'تصویر'} ${esc(e.title)}"></figure>`,
+      facts: `<div class="evp-pic-facts panel">${facts('pic')}</div>`,
+      cover: `<section class="evp-cover panel${cover === src ? ' is-soft' : ''}${hasPoster ? '' : ' no-poster'}" style="--art:url('${esc(cover)}');--pa:url('${esc(src)}')">
             <div class="evp-bg" aria-hidden="true"></div><span class="evp-motes" aria-hidden="true">${Array.from({ length: 8 }, (_, i) => `<i style="--m:${i}"></i>`).join('')}</span>
             ${hasPoster ? `<figure class="evp-poster" style="--ps:${ps}"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure>` : ''}
             <div class="evp-title">
@@ -6716,8 +6933,8 @@ const page = {
               ${facts('cover')}
             </div>
             <div class="evp-tools"><button type="button" class="ev-ic" data-act="save" aria-pressed="false" aria-label="نشان کردن">${ico('heart')}</button><button type="button" class="ev-ic" data-act="share" aria-label="هم‌رسانی">${ico('share')}</button></div>
-          </section>
-          <section class="evp-info panel evp-rise" aria-label="اطلاعات اجرا">
+          </section>`,
+      info: `<section class="evp-info panel evp-rise" aria-label="اطلاعات اجرا">
             ${tabbed ? `<div class="evp-tabs" role="tablist" aria-label="اطلاعات اجرا">${tabs.map(([k, t, ic], i) => `<button type="button" role="tab" id="evpTab-${k}" aria-controls="evpTabP-${k}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-tab="${k}">${ico(ic)}${t}</button>`).join('')}</div>` : `<h2 class="evp-info-h">${ico('info')}درباره‌ی اجرا</h2>`}
             <div class="evp-tabp"${tabbed ? ' role="tabpanel" id="evpTabP-about" aria-labelledby="evpTab-about"' : ''} data-p="about">
               ${tabbed ? `<h2 class="evp-pane-h">${ico('info')}درباره‌ی اجرا</h2>` : ''}
@@ -6727,10 +6944,8 @@ const page = {
               <p class="evp-text">${esc(ab.text)}</p>
             </div>
             ${loc ? `<div class="evp-tabp" role="tabpanel" id="evpTabP-place" aria-labelledby="evpTab-place" data-p="place" hidden><h2 class="evp-pane-h">${ico('pin')}مکان</h2>${loc}</div>` : ''}
-          </section>
-        </div>
-        <aside class="evp-side">
-          <section class="evp-book panel evp-rise" id="evpBook" aria-labelledby="evpBookH">
+          </section>`,
+      book: `<section class="evp-book panel evp-rise" id="evpBook" aria-labelledby="evpBookH">
             <div class="evp-bh"><h2 id="evpBookH">${ico('ticket')}رزرو بلیت</h2><span class="evp-from">از <b>${esc(dg(e.price))}</b> ${esc(TXT.unit)}</span></div>
             ${timed ? `<div class="evp-sale"><span>شروع فروش · ${esc(saleWhen(e))}</span><div class="ptk-cd" data-sale-box="${esc(e.id)}"><span class="cd-b" aria-hidden="true">${unitHTML('d', 'روز', 0)}<em>:</em>${unitHTML('h', 'ساعت', 0)}<em>:</em>${unitHTML('m', 'دقیقه', 0)}<em>:</em>${unitHTML('s', 'ثانیه', 0)}</span></div></div>` : ''}
             <div class="ses-list" role="radiogroup" aria-label="سانس‌ها">${sesHTML}</div>
@@ -6739,9 +6954,31 @@ const page = {
               <button type="button" class="buy evp-go" data-go="map">${ico('grid')}<span>انتخاب صندلی روی نقشه</span></button>
             </div>` : ''}
             <p class="evp-note">${ico('shield')}<span>قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان${open && anyOk ? `؛ صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن` : ''}.</span></p>
-          </section>
-          <section class="evp-prices panel evp-rise" aria-labelledby="evpPriceH"><h2 id="evpPriceH">${ico('ticket')}قیمت‌ها<small>+ ۱۰٪ مالیات بر ارزش افزوده</small></h2>${ses.length ? `<div class="evp-pmap" role="img" aria-label="نقشه‌ی سالن؛ هر صندلی به رنگ قیمتش"><canvas></canvas></div>` : ''}<ul class="evp-plan">${plan}</ul></section>
-        </aside>
+          </section>`,
+      prices: `<section class="evp-prices panel evp-rise" aria-labelledby="evpPriceH"><h2 id="evpPriceH">${ico('ticket')}قیمت‌ها<small>+ ۱۰٪ مالیات بر ارزش افزوده</small></h2>${ses.length ? `<div class="evp-pmap" role="img" aria-label="نقشه‌ی سالن؛ هر صندلی به رنگ قیمتش"><canvas></canvas></div>` : ''}<ul class="evp-plan">${plan}</ul></section>`,
+      tk: liveTicketHTML(e, { s: s0, ok: okTk, ready: acc }),
+      share: `<section class="evp-share panel evp-rise" aria-labelledby="evpShareH"><h2 id="evpShareH">${ico('share')}هم‌رسانی</h2><div class="sh-row">
+          <button type="button" class="sh-b" data-sh="tg"><i>${ico('route')}</i><span>تلگرام</span></button>
+          <button type="button" class="sh-b" data-sh="wa"><i>${ico('chat')}</i><span>واتس‌اپ</span></button>
+          <button type="button" class="sh-b" data-sh="copy"><i>${ico('copy')}</i><span>کپی نشانی</span></button>
+          ${ses.length ? `<button type="button" class="sh-b" data-sh="cal"><i>${ico('calendar')}</i><span>تقویم</span></button>` : ''}
+        </div></section>`,
+      hall: `<section class="evp-hall panel evp-rise" aria-labelledby="evpHallH">
+          <h2 id="evpHallH">${ico('pin')}${h.hall ? `<a class="evp-hl" href="${hallHref(h.hall)}">${esc(h.name)}</a>` : esc(h.name)}<small>${esc(h.cityName)}</small></h2>
+          ${ses.length ? `<div class="hl-stats"><span><b data-hl="cap">—</b><small>صندلی</small></span><span><b data-hl="sec">—</b><small>بخش</small></span><span><b>${fa(tiers.length)}</b><small>رده‌ی قیمت</small></span></div>` : ''}
+          ${h.lat != null || h.hall ? `<div class="hl-acts">${h.lat != null ? `<a class="chip" href="https://www.google.com/maps/dir/?api=1&amp;destination=${h.lat},${h.lng}" target="_blank" rel="noopener">${ico('route')}مسیریابی تا سالن</a>` : ''}${h.hall ? `<a class="chip" href="${hallHref(h.hall)}">${ico('grid')}صفحه‌ی سالن</a>` : ''}</div>` : ''}
+        </section>`,
+      same: sameHTML,
+    };
+    const lay = this.lay = sameHTML ? SHOW_LAY : SHOW_LAY_ALONE;
+    const col = (k) => lay[mode][k].map((n) => parts[n]).join('');
+    this.el.innerHTML = `<div class="evp-in evp-show has-pic m-${mode}" style="--sc-d:${cd};--sc-l:${cl}">
+      <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
+      ${stepsHTML(1, e, null)}</div>
+      <div class="evp-cols">
+        <aside class="evp-pic${hasPoster ? '' : ' is-banner'} evp-rise" aria-label="تصویر برنامه" style="--ps:${hasPoster ? ps : '0.75'};--pa:url('${esc(hasPoster ? src : cover)}');--art:url('${esc(cover)}')">${col('pic')}</aside>
+        <div class="evp-main">${col('main')}</div>
+        <aside class="evp-side">${col('side')}</aside>
       </div>
       ${similar.length ? `<section class="evp-more panel evp-rise" aria-labelledby="evpMoreH"><h2 id="evpMoreH">${ico(kindIcon)}${esc({ concert: 'کنسرت‌های دیگه', theatre: 'نمایش‌های دیگه', comedy: 'جُنگ‌ها و کمدی‌های دیگه' }[e.kind] || 'برنامه‌های دیگه')}</h2><div class="tkt-grid"></div></section>` : ''}
       <div class="evp-cta" aria-hidden="false"><span>از <b>${esc(dg(e.price))}</b> ${esc(TXT.unit)}</span><button type="button" class="buy" data-act="book">${ico('calendar')}انتخاب سانس</button></div>
@@ -6749,6 +6986,7 @@ const page = {
     const grid = $('.evp-more .tkt-grid', this.el); if (grid) similar.forEach((x) => grid.appendChild(s2.card(x, false)));
     this.addFooter();
     this.priceMap(e, ses);
+    this.fitRows();
     $$('.evp-more .tkt', this.el).forEach((c) => c.classList.add('is-in'));
     this.wire(e, ses);
     mountLocMaps(this.el);
@@ -6785,13 +7023,22 @@ const page = {
       t.addEventListener('keydown', (ev) => { const d = { ArrowLeft: 1, ArrowRight: -1 }[ev.key]; if (!d) return; ev.preventDefault(); showTab(tabs[(i + d + tabs.length) % tabs.length].dataset.tab, true); });
     });
     syncPlace();
+    { const mq3 = matchMedia('(min-width: 1360px) and (min-aspect-ratio: 5/4)'), mq2 = matchMedia('(min-width: 1100px) and (min-aspect-ratio: 5/4)'), re = () => this.place(this.modeNow()); mq3.addEventListener('change', re); mq2.addEventListener('change', re); const before = this.leave; this.leave = () => { mq3.removeEventListener('change', re); mq2.removeEventListener('change', re); if (before) before(); }; }
     // the buy panel: a night (the first with seats is chosen already) and the button to the map, where the buyer chooses the seats. The rules come when they are
     // needed: a press on the button before they are accepted opens them, and «می‌پذیرم و ادامه» goes on with it
     const list = $('.ses-list', el), chk = $('#evpRules', el);
-    let pick = this.pick;
+    let pick = this.pick, shown = pick;
     const can = (c) => c && c.getAttribute('aria-disabled') !== 'true';
+    // the living ticket shows the night chosen (the date turns over)
+    const tk = $('.evp-tk', el), tkSet = (s) => {
+      if (!tk || !s) return; const d = new Date(s.t), w = { wd: F.week.format(d), day: F.day.format(d), mon: F.month.format(d), tm: F.time.format(d) };
+      Object.entries(w).forEach(([k, v]) => { const n = $(`[data-tk="${k}"]`, tk); if (n) n.textContent = v; });
+      const card = $('.ltk', tk); card.setAttribute('aria-label', `نمونه‌ی بلیت تو: ${e.title}، ${w.wd} ${w.day} ${w.mon} ساعت ${w.tm}، ${hallOf(e).name}. بخش و صندلی بعد از انتخاب صندلی‌ها معلوم می‌شه.`);
+      tk.classList.remove('is-flip'); void tk.offsetWidth; tk.classList.add('is-flip');
+    };
     const paint = () => {
       $$('.ses', list).forEach((c) => { const o = +c.dataset.i === pick && can(c); c.classList.toggle('is-picked', o); c.setAttribute('aria-checked', String(o)); c.tabIndex = o ? 0 : -1; });
+      if (pick !== shown) { shown = pick; tkSet(ses[pick]); }
     };
     list.addEventListener('click', (ev) => { const c = ev.target.closest('.ses'); if (!can(c)) return; pick = +c.dataset.i; paint(); });
     list.addEventListener('keydown', (ev) => {
@@ -6800,7 +7047,7 @@ const page = {
       const d = { ArrowDown: 1, ArrowLeft: 1, ArrowUp: -1, ArrowRight: -1 }[ev.key]; if (!d || !cs.length) return;
       ev.preventDefault(); const i = cs.indexOf(c), n = cs[(i + d + cs.length) % cs.length]; pick = +n.dataset.i; paint(); n.focus();
     });
-    const sync = () => { const ok = !!(chk && chk.checked); if (chk) chk.closest('.evp-rules').classList.toggle('is-on', ok); };
+    const sync = () => { const ok = !!(chk && chk.checked); if (chk) chk.closest('.evp-rules').classList.toggle('is-on', ok); if (tk) tk.dataset.ready = ok ? '1' : '0'; };
     if (chk) chk.addEventListener('change', () => { if (chk.checked) this.accepted.add(e.id); else this.accepted.delete(e.id); sync(); });
     const run = () => {
       const s = ses[pick]; if (!s || s.seats === 0) return;
@@ -6813,6 +7060,20 @@ const page = {
     // on a phone the bar at the bottom is only for when the panel is out of sight
     const bar = $('.evp-cta', el), book = $('#evpBook', el);
     if (bar && book && 'IntersectionObserver' in window) { const io = new IntersectionObserver(([en]) => bar.classList.toggle('is-hide', en.isIntersecting), { threshold: 0.35 }); io.observe(book); const prev = this.leave; this.leave = () => { io.disconnect(); if (prev) prev(); }; }
+    // the ticket leans toward the pointer and catches the light (a mouse only; not with reduced motion)
+    if (tk && !reduceMotion && matchMedia('(hover: hover)').matches) {
+      const card = $('.ltk', tk); let raf = 0;
+      tk.addEventListener('pointermove', (ev) => { const r = tk.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height; cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { card.style.setProperty('--ry', `${((x - 0.5) * -12).toFixed(2)}deg`); card.style.setProperty('--rx', `${((y - 0.5) * 9).toFixed(2)}deg`); card.style.setProperty('--gx', `${(x * 100).toFixed(1)}%`); card.style.setProperty('--gy', `${(y * 100).toFixed(1)}%`); card.classList.add('is-tilt'); }); });
+      tk.addEventListener('pointerleave', () => { cancelAnimationFrame(raf); ['--rx', '--ry'].forEach((k) => card.style.removeProperty(k)); card.classList.remove('is-tilt'); });
+    }
+    // the share: Telegram, WhatsApp, the address, the nights in the calendar
+    on('[data-sh]', (b) => {
+      const k = b.dataset.sh, url = location.href, txt = `${e.title} · ${e.w.short} · ${hallOf(e).name}`;
+      if (k === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(txt)}`, '_blank', 'noopener');
+      else if (k === 'wa') window.open(`https://wa.me/?text=${encodeURIComponent(`${txt}\n${url}`)}`, '_blank', 'noopener');
+      else if (k === 'copy') { (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject(new Error('no clipboard'))).then(() => toast('نشانی این صفحه کپی شد.'), () => toast(`نشانی این صفحه: ${url}`)); }
+      else if (k === 'cal') { tkx.save(new Blob([this.showICS(e, ses)], { type: 'text/calendar;charset=utf-8' }), `blit-${e.id}.ics`); toast('شب‌های اجرا به‌صورت فایل تقویم ذخیره شد.'); }
+    });
     // the map zooms round the hall
     let z = 1; const mp = $('.mp', el);
     if (mp) on('.mp-zoom [data-z]', (b) => { z = clamp(z + +b.dataset.z * 0.4, 1, 2.6); mp.style.transform = `scale(${z})`; });
@@ -6837,6 +7098,36 @@ const page = {
     gsap.from($$('.evp-dlg li', box), { x: -14 * k, opacity: 0, duration: 0.5, stagger: 0.035, ease: 'expo.out', delay: 0.1, clearProps: 'transform,opacity' });
     $('[data-ok]', box).focus();
   },
+  // the three windows of the show's page: a wide one (three columns), a middle one (two), a phone or a tall window (one)
+  modeNow() { return matchMedia('(min-width: 1360px) and (min-aspect-ratio: 5/4)').matches ? 'w3' : matchMedia('(min-width: 1100px) and (min-aspect-ratio: 5/4)').matches ? 'w2' : 'w1'; },
+  place(mode) {
+    const el = this.el, inn = $('.evp-in', el); if (!inn || inn.classList.contains(`m-${mode}`)) return;
+    const hosts = { pic: $('.evp-pic', el), main: $('.evp-main', el), side: $('.evp-side', el) };
+    ['m-w1', 'm-w2', 'm-w3'].forEach((c) => inn.classList.remove(c)); inn.classList.add(`m-${mode}`);
+    for (const k of ['pic', 'main', 'side']) (this.lay || SHOW_LAY)[mode][k].forEach((n) => { const x = $(SHOW_SEL[n], el); if (x && hosts[k]) hosts[k].appendChild(x); });
+    if (this.pm) this.priceMapDraw();   // (the prices' picture has another box now)
+    this.fitRows();
+  },
+  // the other programs of the hall: as many rows as the column has room for; the rest wrapped out of sight are also out of the keyboard's reach
+  fitRows() {
+    const list = $('.evp-same .hl-list', this.el); if (!list) return;
+    const go = () => { if (!list.isConnected) return; const lr = list.getBoundingClientRect(); $$('.hl-row', list).forEach((r) => { const q = r.getBoundingClientRect(), out = q.bottom > lr.bottom + 1 || q.left < lr.left - 1 || q.right > lr.right + 1; r.inert = out; r.setAttribute('aria-hidden', out ? 'true' : 'false'); if (!out) r.removeAttribute('aria-hidden'); }); };
+    requestAnimationFrame(go); if (document.fonts && document.fonts.ready) document.fonts.ready.then(go);
+    if (!this.fitOn) { this.fitOn = true; let t = 0; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { if (this.on) this.fitRows(); }, 150); }); }
+  },
+  // the calendar entries of a show's nights (the buyer's own ticket has its own, with the seats)
+  showICS(e, ses) {
+    const h = hallOf(e), z = (n) => String(n).padStart(2, '0'), f = (t) => `${t.getUTCFullYear()}${z(t.getUTCMonth() + 1)}${z(t.getUTCDate())}T${z(t.getUTCHours())}${z(t.getUTCMinutes())}00Z`;
+    const x = (t) => String(t).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'), url = `${location.href.split('#')[0]}#/e/${encodeURIComponent(e.id)}`;
+    const ev = ses.filter((s) => s.t > Date.now()).flatMap((s) => { const d = new Date(s.t); return ['BEGIN:VEVENT', `UID:${e.id}-${s.id}@blit`, `DTSTAMP:${f(new Date())}`, `DTSTART:${f(d)}`, `DTEND:${f(new Date(+d + (DUR[e.kind] || 100) * 6e4))}`, `SUMMARY:${x(e.title)}`, `LOCATION:${x(`${h.name}، ${h.addr || e.city}`)}`, `DESCRIPTION:${x(`خرید بلیت: ${url}`)}`, 'END:VEVENT']; });
+    return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Blit//FA', 'CALSCALE:GREGORIAN', ...ev, 'END:VCALENDAR'].join('\r\n');
+  },
+  // the hall's numbers (the seats it sells, its sections), from the same plan as the seats' page
+  hallStats(L) {
+    const c = $('[data-hl="cap"]', this.el), s = $('[data-hl="sec"]', this.el); if (!c || !L) return;
+    let cap = 0; L.secs.forEach((zz) => { cap += zz.sec.k === 'stand' ? (zz.sec.cap || 0) : zz.seats.filter((p) => !(p.cls === 'X' || (p.fl & 4))).length; });
+    c.textContent = money(cap); if (s) s.textContent = fa(L.secs.length);
+  },
   // the hall, small, every seat in the colour of its price (the colours of the list under it and of the seats' page): the buyer sees where the cheaper and the dearer seats are
   // before choosing. Drawn once, when the page is idle, in a box of a fixed shape (so nothing moves when it comes)
   priceMap(e, ses) {
@@ -6844,7 +7135,7 @@ const page = {
       const host = $('.evp-pmap', this.el), s = ses && (ses.find((x) => x.seats > 0) || ses[0]);
       if (!host || !s || !host.isConnected || !this.on || this.e !== e) return;
       let L; try { L = seatPlan(e, s); } catch (err) { host.remove(); return; }
-      this.pm = { e, L }; this.priceMapDraw();
+      this.pm = { e, L }; this.priceMapDraw(); this.hallStats(L);
     };
     if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 500);
     if (!this.pmOn) { this.pmOn = true; let t = 0; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => { if (this.on && this.pm && this.v && this.v.kind === 'show') this.priceMapDraw(); }, 200); }); }
@@ -7045,6 +7336,7 @@ const buy = {
             <h2 id="bkPrH">${ico('tag')}قیمت‌ها</h2>
             <div class="bk-prl" role="group" aria-label="فیلتر قیمت">${tiers.map((t) => `<button type="button" class="bk-pr" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i><span class="bk-pr-n">${esc(runName(t))}</span><b>${money(t.price)}</b><small data-free></small></button>`).join('')}</div>
           </section>
+          ${liveTicketHTML(e, { s, seats: [...this.cart.values()], ok: true })}
         </aside>
       </div>
       <div class="bk-bar" aria-hidden="false"><button type="button" class="bk-bar-l"><b class="bk-count2"></b><span class="bk-sum2"></span></button><button type="button" class="buy bk-go2" disabled>ادامه</button></div>
@@ -7145,6 +7437,7 @@ const buy = {
     $$('[data-ga-add]', list).forEach((b) => b.addEventListener('click', () => this.addGA(e, s, b.dataset.gaAdd, 1)));
     $$('[data-ga-rm]', list).forEach((b) => b.addEventListener('click', () => this.addGA(e, s, b.dataset.gaRm, -1)));
     $('.bk-count', el).textContent = `${fa(n)} از ${fa(MAX_SEATS)}`;
+    liveTicketSeats(el, items);
     $('.bk-sum', el).textContent = `${money(sum)} تومان`;
     $('.bk-count2', el).textContent = n ? `${fa(n)} صندلی` : 'صندلی انتخاب نشده';
     $('.bk-sum2', el).textContent = n ? `${money(sum)} تومان` : '';
@@ -7305,11 +7598,12 @@ const buy = {
             <button type="button" class="buy bk-pay" id="bkPay">${ico('shield-ok')}<span>پرداخت</span></button>
             <p class="bk-note">${ico('info')}<span>با پرداخت، <a href="#" data-act="rules">قوانین خرید</a> رو می‌پذیری. برای آزمایش کد <b dir="ltr">BLIT10</b> رو امتحان کن.</span></p>
           </section>
+          ${liveTicketHTML(e, { s, seats, ok: true, ready: false })}
         </aside>
       </div>
       <div class="bk-bar bk-paybar" aria-hidden="false"><button type="button" class="bk-bar-l"><b class="bk-count2">${fa(seats.length)} صندلی</b><span class="bk-sum2"></span></button><button type="button" class="buy bk-pay2">${ico('shield-ok')}پرداخت</button></div>
     </div>`;
-    this.invoice(); this.wirePay();
+    this.invoice(); this.wirePay(); page.fitRows();
   },
   invoice() {
     const st = this.payState, sum = st.seats.reduce((a, x) => a + x.price, 0), off = st.code ? CODES[st.code].of(sum) : 0, tax = Math.round((sum - off) * 0.1), total = sum - off + tax;
@@ -7501,8 +7795,9 @@ const buy = {
         <div class="tk-acts"><button type="button" class="chip" data-act="ics">${ico('calendar')}افزودن به تقویم</button><button type="button" class="chip" data-act="pdf">${ico('upload')}ذخیره‌ی PDF</button><button type="button" class="chip" data-act="img">${ico('upload')}ذخیره‌ی تصویر</button><button type="button" class="chip" data-act="share">${ico('share')}اشتراک‌گذاری</button><button type="button" class="chip" data-act="print">${ico('ticket')}چاپ</button><a class="chip" href="#/receipts">${ico('search')}پیگیری خرید</a></div>
       </section>
       <div class="tk-grid">${o.seats.map((x, i) => this.passHTML(o, e, x, i, { w, h, src, ps })).join('')}</div>
-      <section class="panel tk-help evp-rise"><h2>${ico('info')}روز اجرا</h2><ul><li>یک ساعت پیش از شروع در سالن باش؛ پس از شروع، ورود ممکن نیست.</li><li>کد QR هر بلیت رو دم در نشون بده (روی گوشی یا چاپی)؛ هر کد فقط یک بار باز می‌شه.</li><li>بلیت شخصیه؛ برای همراهانت هر کدوم یه بلیت جدا داره.</li></ul></section>
+      <section class="panel tk-help evp-rise"><h2>${ico('info')}روز اجرا</h2><ul class="tk-tips"><li><i aria-hidden="true">${ico('clock')}</i><span>یک ساعت پیش از شروع در سالن باش؛ پس از شروع، ورود ممکن نیست.</span></li><li><i aria-hidden="true">${ico('ticket')}</i><span>کد QR هر بلیت رو دم در نشون بده (روی گوشی یا چاپی)؛ هر کد فقط یک بار باز می‌شه.</span></li><li><i aria-hidden="true">${ico('users')}</i><span>بلیت شخصیه؛ برای همراهانت هر کدوم یه بلیت جدا داره.</span></li></ul></section>
     </div>`;
+    page.fitRows();
     const on = (sel, f) => $$(sel, el).forEach((x) => x.addEventListener('click', (ev) => { ev.preventDefault(); f(x); }));
     on('[data-act="copy"]', async () => { try { await navigator.clipboard.writeText(o.code); toast('کد پیگیری کپی شد.'); } catch (err) { toast(`کد پیگیری: ${o.code}`); } });
     on('[data-act="print"]', () => window.print());
@@ -7529,7 +7824,7 @@ const buy = {
   picAside(e, s) {
     const { a: art, src } = artOf(e), hasBanner = !!(e.banner && !e.banner.sample && e.banner.src && !e.banner.fake), cover = hasBanner ? e.banner.src : src, hasPoster = !!e.poster || !hasBanner;
     const ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4), w = whenOf(s), h = hallOf(e), img = hasPoster ? src : cover;
-    return `<aside class="evp-pic${hasPoster ? '' : ' is-banner'} evp-rise" aria-label="تصویر برنامه" style="--ps:${hasPoster ? ps : '0.75'};--pa:url('${esc(img)}');--art:url('${esc(cover)}')"><figure class="evp-pic-f"><img src="${esc(img)}" alt="${hasPoster ? 'پوستر' : 'تصویر'} ${esc(e.title)}"></figure><div class="evp-pic-facts panel"><div class="evp-facts is-pic"><div class="fact"><span class="fi">${ico('calendar')}</span><span><small>روز اجرا</small><b>${esc(w.wd)} ${esc(w.dm)}</b></span></div><div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(w.tm)} · ${fa(DUR[e.kind] || 100)} دقیقه</b></span></div><div class="fact"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${esc(h.name)}</b><em>${esc(h.addr)}</em></span></div></div></div></aside>`;
+    return `<aside class="evp-pic${hasPoster ? '' : ' is-banner'} evp-rise" aria-label="تصویر برنامه" style="--ps:${hasPoster ? ps : '0.75'};--pa:url('${esc(img)}');--art:url('${esc(cover)}')"><figure class="evp-pic-f"><img src="${esc(img)}" alt="${hasPoster ? 'پوستر' : 'تصویر'} ${esc(e.title)}"></figure><div class="evp-pic-facts panel"><div class="evp-facts is-pic"><div class="fact"><span class="fi">${ico('calendar')}</span><span><small>روز اجرا</small><b>${esc(w.wd)} ${esc(w.dm)}</b></span></div><div class="fact"><span class="fi">${ico('clock')}</span><span><small>ساعت</small><b>${esc(w.tm)} · ${fa(DUR[e.kind] || 100)} دقیقه</b></span></div><div class="fact"><span class="fi">${ico('pin')}</span><span><small>محل برگزاری</small><b>${esc(h.name)}</b><em>${esc(h.addr)}</em></span></div></div></div>${moreOfHallHTML(e)}</aside>`;
   },
   missing(title, text, e, s) {
     return `<div class="evp-in bk"><section class="panel bk-miss evp-rise"><span class="bk-exp-ic">${ico('info')}</span><h1>${esc(title)}</h1><p>${esc(text)}</p><div class="evp-dlg-end">${e && s ? `<a class="buy" href="#/e/${esc(encodeURIComponent(e.id))}/s/${esc(encodeURIComponent(s.id))}">${ico('arrow-r')}انتخاب صندلی</a>` : ''}${e ? `<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">صفحه‌ی اجرا</a>` : ''}<a class="chip" href="#" data-home>همه‌ی برنامه‌ها</a></div></section></div>`;
