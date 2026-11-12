@@ -3125,6 +3125,58 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
   .sd-handle { width: 46px; height: 46px; }
 }
 
+/* ── the desks' dashboards: boxes in one row end together; on a phone a tile never sits alone in a row; the gate's steps keep their order ── */
+.dk-cols { align-items: stretch; }
+.dk-cols > .dk-box { display: flex; flex-direction: column; }
+.dk-cols > .dk-box > .chip:last-child { margin-top: auto; align-self: flex-start; }
+.dk-tile > em:empty { display: none; }
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .dk-tiles:has(> .dk-hero:first-child) > .dk-tile:last-child:nth-child(even) { grid-column: 1 / -1; }
+  .gt-set .evp-side { order: 0; }
+}
+
+/* the codes' table: the show's name keeps a readable width */
+.cd-tbl td:nth-child(2) { min-width: 10em; }
+.cd-tbl td:nth-child(3), .cd-tbl td:nth-child(5) { white-space: nowrap; }
+@media (max-width: 760px) {
+  /* the desks' tables on a phone: each row a card, each cell with its heading as a small label */
+  .dk-tbl-w { overflow: visible; max-height: none; }
+  .dk-tbl, .dk-tbl tbody, .dk-tbl tfoot { display: block; }
+  .dk-tbl thead { display: none; }
+  .dk-tbl tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 14px; padding: 14px 4px; border-bottom: 1px solid rgba(var(--fg), .09); }
+  .dk-tbl tbody tr:last-child { border-bottom: 0; }
+  .dk-tbl td { display: block; min-width: 0; padding: 0; border: 0; }
+  .dk-tbl tbody tr:hover td { background: none; }
+  .dk-tbl td[data-th]::before { content: attr(data-th); display: block; margin-bottom: 2px; font-size: .84em; font-weight: var(--fwm); color: rgba(var(--fg), max(.55, var(--dmin))); }
+  .dk-tbl td:first-child { grid-column: 1 / -1; font-size: 1.08em; font-weight: var(--fwb); }
+  .dk-tbl td:first-child::before { display: none; }
+  .dk-tbl td:last-child:not([data-th]) { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; }
+  .dk-tbl td:empty { display: none; }
+  .dk-tbl tfoot td { border: 0; }
+  .cd-tbl td:nth-child(2) { min-width: 0; }
+}
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  /* the desk's tabs: one row that scrolls, fading at its scrolling edge */
+  .dk-tabs { -webkit-mask-image: linear-gradient(to left, transparent, #000 34px); mask-image: linear-gradient(to left, transparent, #000 34px); padding-inline-end: 26px; }
+}
+
+.dk-more { display: none; }
+@media (max-width: 760px) {
+  .dk-tbl:not(.is-all) tbody tr:nth-child(n + 13) { display: none; }
+  .dk-more { display: inline-flex; justify-self: center; align-self: center; margin-top: 8px; }
+}
+
+/* the fixed pages in one column (a phone, a tablet): the main column first, then the side (the help, the history, the details), each box the column's whole width */
+@media (max-width: 1099px), (max-aspect-ratio: 5/4) {
+  .evp-in.pg .evp-cols { align-items: stretch; }
+  .evp-in.pg .evp-side { order: 0; }
+}
+
+/* the seats' page in a tall window wider than a phone (a tablet held upright): the night's button keeps its own width (at 100% it pushed the bar 29px past the window),
+   and the hall's overview is a band of its own height, not a box as tall as the hall's shape (it was 570px on a 768 × 1024 tablet) */
+@media (min-width: 761px) and (max-aspect-ratio: 5/4) { .bk-top .bk-show .bk-ses { width: auto; flex: 0 1 auto; min-width: 0; } }
+@media (min-width: 761px) and (max-width: 1099px), (min-width: 761px) and (max-aspect-ratio: 5/4) { .bk-ov .sm-mini { aspect-ratio: auto; height: clamp(190px, 24svh, 300px); } }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -8961,12 +9013,18 @@ const desk = {
       </aside>
       <div class="dk-main" id="dkMain"></div></div>`;
     tab.render.call(D, $('#dkMain', page.el), v);
+    // every cell knows its column's heading (a phone shows a table's rows as cards, with these as small labels); tables drawn later are labelled too
+    const main = $('#dkMain', page.el), label = () => $$('.dk-tbl', main).forEach((t) => { const hs = $$('thead th', t).map((h) => h.textContent.trim()); if (!hs.length) return; $$('tbody tr', t).forEach((r) => { if (r.dataset.th) return; r.dataset.th = '1'; [...r.children].forEach((c, i) => { if (hs[i]) c.dataset.th = hs[i]; }); }); const n = t.tBodies[0] ? t.tBodies[0].rows.length : 0, w = t.closest('.dk-tbl-w'); if (n > 12 && w && !(w.nextElementSibling && w.nextElementSibling.classList.contains('dk-more'))) { const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'chip dk-more'; bt.innerHTML = `${ico('down')}همه‌ی ${fa(n)} ردیف`; bt.addEventListener('click', () => { t.classList.add('is-all'); bt.remove(); }); w.after(bt); } });
+    label(); const mo = new MutationObserver(label); mo.observe(main, { childList: true, subtree: true });
+    // on a phone the tabs are one row that scrolls; the open one is brought into view
+    const curT = $('.dk-tabs [aria-current]', page.el); if (curT && matchMedia('(max-width: 760px), (max-aspect-ratio: 5/4)').matches) { const row = curT.parentElement, q = curT.getBoundingClientRect(), rq = row.getBoundingClientRect(); row.scrollLeft += (q.left + q.width / 2) - (rq.left + rq.width / 2); }
+    const inner0 = page.leave; page.leave = () => { mo.disconnect(); if (inner0) inner0(); };
     const inner = page.leave; page.leave = () => { this.stop(); if (inner) inner(); };
   },
   head(t, lead, extra = '') { return `<header class="dk-head evp-rise"><div><h1>${esc(t)}</h1>${lead ? `<p>${lead}</p>` : ''}</div>${extra}</header>`; },
-  tile(label, value, delta, vals, good = true) {
+  tile(label, value, delta, vals, good = true, note = '') {
     const up = delta >= 0, tone = up === good ? 'good' : 'bad';
-    return `<div class="panel dk-tile evp-rise"><span>${esc(label)}</span><b>${value}</b>${delta == null ? '<em></em>' : `<em data-tone="${tone}">${up ? '▲' : '▼'} ${pct(Math.abs(delta))}<small>نسبت به دوره‌ی قبل</small></em>`}${vals ? viz.spark(vals) : ''}</div>`;
+    return `<div class="panel dk-tile evp-rise"><span>${esc(label)}</span><b>${value}</b>${delta == null ? `<em>${note}</em>` : `<em data-tone="${tone}">${up ? '▲' : '▼'} ${pct(Math.abs(delta))}<small>نسبت به دوره‌ی قبل</small></em>`}${vals ? viz.spark(vals) : ''}</div>`;
   },
   modal(cls, html, label) {
     const box = document.createElement('div'); box.className = 'evp-modal'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', label);
@@ -9008,6 +9066,7 @@ const org = {
     const sum30 = days.reduce((a, d) => a + d.sum, 0), today = days[days.length - 1], y0 = days[days.length - 2], yest = { sum: Math.round(y0.sum * days.part / 1e4) * 1e4, n: Math.max(1, Math.round(y0.n * days.part)) };
     const occ = up.length ? up.reduce((a, x) => a + x.sold / Math.max(1, x.cap), 0) / up.length : 0;
     const feed = [];
+    for (let k = 0, x0 = Date.now(); k < 6 && up.length; k++) { const x = up[(k * 7 + 3) % Math.min(up.length, 10)], tiers = tiersOf(x.e), t = tiers[(k * 5 + 1) % tiers.length], n = 1 + ((k * 5) % 3); x0 -= (70 + ((k * 97) % 160)) * 1000; feed.push({ at: x0, e: x.e, s: x.s, n, amt: n * t.price, z: runName(t) }); }
     const st = { today: today.sum, tn: today.n };
     const rank = shows.map((e) => ({ t: e.title, v: showStats(e).gross })).filter((r) => r.v > 0).sort((a, b) => b.v - a.v).slice(0, 6);
     el.innerHTML = `${desk.head(`سلام، ${ORG.who}`, `فروش برنامه‌های «${esc(ORG.name)}» همین لحظه. <span class="dk-live"><i></i>زنده</span>`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
@@ -9049,6 +9108,7 @@ const org = {
       ol.innerHTML = feed.slice(0, 7).map((f) => { const w = whenOf(f.s); return `<li><span class="dk-feed-n">${fa(f.n)}</span><span><b>${esc(f.e.title)}</b><small>${esc(f.z)} · ${esc(w.wd)} ${esc(w.tm)}</small></span><span class="dk-feed-v"><b>${money(f.amt)}</b><small data-at="${f.at}">${esc(ago(f.at))}</small></span></li>`; }).join('') || '<li class="dk-empty">منتظر خرید بعدی…</li>';
       if (MOTK() && ol.firstElementChild) gsap.from(ol.firstElementChild, { y: -14, opacity: 0, duration: 0.5, ease: 'expo.out', clearProps: 'transform,opacity' });
     };
+    paintFeed();
     desk.timers.push(setTimeout(sale, 900));
     desk.every(5000, () => $$('#dkFeed [data-at]', el).forEach((s) => { s.textContent = ago(+s.dataset.at); }));
   },
@@ -9746,13 +9806,15 @@ const admin = {
   others() { const done = store.get('blit.reviewed', []); return [{ id: 'x-1', title: 'کنسرت «نغمه‌های کویر»', org: 'مؤسسه‌ی فرهنگی سرو', city: 'یزد', venue: 'سالن آمفی‌تئاتر فرهنگسرای یزد', n: 3, low: 450000, pal: 'gold', sent: Date.now() - 3 * HOUR }, { id: 'x-2', title: 'نمایش «پنجره‌ی رو به باغ»', org: 'گروه تئاتر آینه', city: 'تهران', venue: 'تئاترشهر - سالن اصلی', n: 12, low: 380000, pal: 'teal', sent: Date.now() - 26 * HOUR }].filter((x) => !done.includes(x.id)); },
 
   home(el) {
-    const o = allOrders(), paid = o.filter((x) => x.st === 'paid'), byDay = Array.from({ length: 30 }, (_, k) => { const t0 = Date.now() - (29 - k) * DAY, d = TEHRAN_DAY.format(new Date(t0)); const l = paid.filter((x) => TEHRAN_DAY.format(new Date(x.at)) === d); return { v: l.reduce((a, x) => a + x.total, 0), x: dayOf(t0), tip: `${dayOf(t0)} · ${fa(l.length)} سفارش` }; });
+    const o = allOrders(), paid = o.filter((x) => x.st === 'paid'), byDay = Array.from({ length: 30 }, (_, k) => { const t0 = Date.now() - (29 - k) * DAY, d = TEHRAN_DAY.format(new Date(t0)); const l = paid.filter((x) => TEHRAN_DAY.format(new Date(x.at)) === d); return { v: l.reduce((a, x) => a + x.total, 0), n: l.length, x: dayOf(t0), tip: `${dayOf(t0)} · ${fa(l.length)} سفارش` }; });
+    const refd = o.filter((x) => x.st === 'refunded'), onSite = LIST().filter((e) => !['held', 'cancelled'].includes(statusOf(e).key));
+    const waitL = drafts.all().filter((d) => d.status === 'review').map((d) => ({ title: `${d.type} «${d.title}»`, org: ORG.name, sent: d.sent || d.at })).concat(this.others());
     const today = byDay[29].v, yest = byDay[28].v, q = drafts.all().filter((d) => d.status === 'review').length + this.others().length, log = store.get('blit.audit', []);
     el.innerHTML = `${desk.head('پیشخوان مدیر', 'کل سایت، همین لحظه.', `<span class="ad-head-a"><a class="buy" href="#/admin/shows">${ico('ticket')}صف تأیید${q ? ` (${fa(q)})` : ''}</a><a class="chip" href="#/admin/new">${ico('plus')}برنامه‌ی تازه</a><a class="chip" href="#/admin/halls/new">${ico('plus')}سالن تازه</a><a class="chip" href="#/admin/cities">${ico('pin')}شهرها</a></span>`)}
       <section class="dk-tiles"><div class="panel dk-tile dk-hero evp-rise"><span>فروش امروز (تومان)</span><b>${money(today)}</b><em data-tone="${today >= yest ? 'good' : 'bad'}">دیروز ${short(yest)}</em>${viz.spark(byDay.slice(-12).map((d) => d.v))}</div>
-        ${desk.tile('سفارش‌های ۳۰ روز', money(paid.length), 0.09, null)}${desk.tile('برگشت پول', money(o.filter((x) => x.st === 'refunded').length), null, null)}${desk.tile('برنامه‌های روی سایت', money(LIST().filter((e) => !['held', 'cancelled'].includes(statusOf(e).key)).length), null, null)}</section>
+        ${desk.tile('سفارش‌های ۳۰ روز', money(paid.length), 0.09, byDay.slice(-12).map((d) => d.n))}${desk.tile('برگشت پول', money(refd.length), null, null, true, refd.length ? `${short(refd.reduce((s, x) => s + x.total, 0))} تومان برگشت داده شد` : 'هیچ پولی برنگشته')}${desk.tile('برنامه‌های روی سایت', money(onSite.length), null, null, true, `${fa(onSite.filter((e) => statusOf(e).key === 'normal').length)} در حال فروش · ${fa(onSite.filter((e) => statusOf(e).key === 'soon').length)} پیش‌فروش`)}</section>
       <section class="panel dk-box evp-rise" aria-labelledby="adDayH"><h2 id="adDayH">${ico('award')}فروش ۳۰ روز گذشته<small>تومان، با مالیات</small></h2><div id="adDays"></div></section>
-      <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}در انتظار تأیید<small>${fa(q)}</small></h2>${q ? `<p class="bk-lead">${fa(q)} برنامه منتظر بررسیه.</p><a class="chip" href="#/admin/shows">${ico('arrow-l')}دیدن صف</a>` : '<p class="bk-lead">صف خالیه.</p>'}</section>
+      <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}در انتظار تأیید<small>${fa(q)}</small></h2>${q ? `<ol class="ad-log">${waitL.slice(0, 4).map((x) => `<li><b>${esc(x.title)}</b><small>${esc(x.org)} · فرستاده‌شده ${esc(ago(x.sent))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/shows">${ico('arrow-l')}دیدن صف</a>` : '<p class="bk-lead">صف خالیه.</p>'}</section>
         <section class="panel dk-box evp-rise"><h2>${ico('clock')}آخرین تغییرها</h2><ol class="ad-log">${(log.length ? log : [{ at: Date.now() - 4 * HOUR, what: 'قیمت سانس‌های «شب جاز تهران» تأیید شد', who: 'نگار رضایی (اپراتور)' }]).slice(0, 5).map((x) => `<li><b>${esc(x.what)}</b><small>${esc(x.who)} · ${esc(ago(x.at))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/log">همه‌ی تاریخچه</a></section></div>`;
     $('#adDays', el).innerHTML = viz.columns('adDaysC', byDay, { label: 'فروش هر روز در ۳۰ روز گذشته', xlab: 7, w: $('#adDays', el).clientWidth }) + viz.table(['روز', 'فروش (تومان)'], byDay.map((d) => [d.x, money(d.v)]));
     viz.wire('adDaysC', byDay);
