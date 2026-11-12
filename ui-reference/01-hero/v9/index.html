@@ -79,7 +79,8 @@
   --rail-cap: calc(var(--px) * var(--rail-max-n));
   --rail-nat: clamp(calc(var(--u) * 11), calc(var(--thumb-w) + 2 * var(--rail-pad) + 2 * var(--bw)), var(--rail-cap));
   --rail-w: var(--rail-nat);
-  --lock-r: 1.74;
+  --lock-r: 1.74;   /* the banner panel's shape at a 16 : 9 window (and the least it is ever) */
+  --lock-rmax: 2.1;   /* the most it is stretched in length: in a wider window the banner panel is longer, up to this shape */
   /* how far the page is scrolled over the hero (the second section slides over it) */
   --pin: var(--hero-h);
   color-scheme: dark;
@@ -142,7 +143,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .hero.rail-left, .hero.rail-left .scene { grid-template-columns: minmax(0, 1fr) var(--rail-w); grid-template-areas: "nav nav" "main rail"; }
 
 /* ── a locked banner panel ────────────────────────────────────────
-   The banner panel always has the same shape (--lock-r), so ONE banner size fits every window and always fills it.
+   The banner panel is at least --lock-r wide for its height (1.74 : 1 at a 16 : 9 window) and gets longer, up to --lock-rmax, in a wider window (round U); the rail is only as wide as its pictures.
    The panel is as tall as the window allows and as wide as that shape needs; the rail takes what is left of the width
    (up to its cap, --rail-max-n) and the page margins take any rest. On a window whose shape is the panel's own nothing
    changes; on a wider one (every browser window is wider than its screen) the cards get more room; on a taller one the
@@ -151,12 +152,12 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
   :root[data-frame="lock"] {
     --frame-h0: calc(var(--main-h) - var(--dock-h) - var(--gap));
     --lk-room: calc(100vw - 2 * var(--edge-min) - var(--gap));
-    --frame-w: min(calc(var(--frame-h0) * var(--lock-r)), calc(var(--lk-room) - var(--rail-nat)));
-    --rail-w: min(var(--rail-cap), calc(var(--lk-room) - var(--frame-w)));
+    --rail-w: var(--rail-nat);   /* (round U: the rail is as wide as its pictures; nothing is left empty beside them) */
+    --frame-w: min(calc(var(--frame-h0) * var(--lock-rmax)), calc(var(--lk-room) - var(--rail-w)));
     --edge-x: calc((100vw - var(--rail-w) - var(--gap) - var(--frame-w)) / 2);
   }
   :root[data-frame="lock"] .scene[data-mode="bar"] .tk { grid-template-rows: auto var(--dock-h); align-content: center; }
-  :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: var(--lock-r); }
+  :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: auto; height: min(var(--frame-h0), calc(var(--frame-w) / var(--lock-r))); }   /* (as tall as the window allows, as wide as the room; never narrower than --lock-r) */
 }
 
 /* scenes: one per show, stacked; the new one fades in over the old one */
@@ -3736,7 +3737,7 @@ html:not(.show-notes) .notes { display: none; }
       <div class="tablewrap">
         <table class="spec">
           <tbody>
-            <tr><th>اندازه و نسبت</th><td>کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: با پنجره‌ی ۱۹۲۰×۱۰۸۰ حدود <b>۱۵۵۳×۸۹۳</b> (نسبت ۱٫۷۴)، با ۱۹۲۰×۹۳۷ حدود ۱۶۰۳×۷۷۵، با ۱۹۲۰×۸۶۰ حدود ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. عدد دقیق پنجره‌ی خودت بالای تب «جایگاه» (تنظیمات) نوشته شده. اگه یه سایز ثابت برای همه‌ی پنجره‌ها می‌خوای: تنظیمات ← چیدمان ← «شکل کادر بنر» ← قفل (۱۷۴۰×۱۰۰۰)</td></tr>
+            <tr><th>اندازه و نسبت</th><td>کادر بنر بلندیش رو از پنجره می‌گیره و عرضش رو از جای خالی که می‌مونه؛ پس تو صفحه‌ی ۱۶ به ۹ (۱۹۲۰×۱۰۸۰) <b>۱۵۵۴×۸۹۳</b> (نسبت ۱٫۷۴) و تو پنجره‌ی معمولی مرورگر (۱۹۲۰×۹۳۷) <b>۱۶۰۳×۷۷۵</b> (نسبت ۲٫۰۷) می‌شه؛ بیشتر از ۲٫۱ کشیده نمی‌شه. کارت‌های کوچولوی کناریش فقط به اندازه‌ی خودشون جا می‌گیرن. یه فایل <b>۲۰۰۰×۱۰۰۰</b> (۲ به ۱) بساز و بخش مهمش (نوشته و چهره‌ها) رو وسط، تو <b>۱۷۴۰×۱۰۰۰</b>، بذار.</td></tr>
             <tr><th>متن تو بنر</th><td>هر جای بنر می‌تونه باشه، چون چیزی روش نمی‌افته. فقط اول هر اجرا عکس حدود ۵٪ زوم‌شده‌ست و تو ۷۰٪ وقت اجرا آروم زوم‌اوت می‌شه؛ بعدش بنر کامل و ثابت می‌ایسته. پس متن رو از لبه‌ها دست‌کم ۴٪ دور نگه دارن</td></tr>
             <tr><th>بنری با نسبت دورتر</th><td>می‌شه بذاری. نسبتش تا ۲٫۵٪ با کادر فرق داشته باشه کادر رو پر می‌کنه؛ بیشتر از اون بنر کامل و با نسبت خودش دیده می‌شه، و جای خالی دو طرفش یا بالا و پایینش سیاهه (یا لبه‌ی محوشده‌ی خود بنر؛ تو تنظیمات انتخاب می‌شه)</td></tr>
             <tr><th>پوستر عمودی</th><td>قبول نمی‌شه (پنل مدیریت رد می‌کنه). جای پوستر قفسه‌ی پوستره، نه این بخش</td></tr>
@@ -4349,7 +4350,7 @@ function libCheck() {
    ════════════════════════════════════════════════════════════════ */
 const LOOK_DEF = {
   // layout
-  frame: 'lock', ratio: 1.74, gap: 9, edgeX: 9, edgeT: 9, edgeB: 9, navH: 71, dockH: 80, railMax: 480, rail: 'left',
+  frame: 'lock', ratio: 1.74, ratioMax: 2.1, gap: 9, edgeX: 9, edgeT: 9, edgeB: 9, navH: 71, dockH: 80, railMax: 480, rail: 'left',
   fit: 'contain', fill: 'black', bg: 'black', bgColor: '#000000',
   caps: 'under', capDate: true, dim: 14, progress: 'bar',
   // style
@@ -4680,14 +4681,14 @@ const LIST = () => (LOOK.listFill ? EVENTS.concat(MORE) : EVENTS);
 // a hall or a city renamed by the admin: the shows in it say so
 lib.on(() => EVENTS.concat(MORE).forEach((e) => { if (e.hall != null) bindHall(e, e.hall, e.hallLay); }));
 /* ════════════════════════════════════════════════════════════════
-   round T: placing a picture in its fixed frame («چیدن تصویر»). Every picture has one fixed shape on the site (the poster 2 : 3, the desktop banner 1.74 : 1,
+   round T: placing a picture in its fixed frame («چیدن تصویر»). Every picture has one fixed shape on the site (the poster 2 : 3, the desktop banner 2 : 1,
    the mobile banner 3 : 4, upright) and always fills it; whoever adds a program drags the picture inside a big frame of that shape to choose what stays in view, and
    zooms with the slider (or the wheel, or + and −). The point (fx, fy, in %) and the zoom (fz ≥ 1) are saved with the picture and used everywhere the picture is shown.
    ════════════════════════════════════════════════════════════════ */
 // the fixed sizes of the site (width × height in pixels, and what they are for)
 const SIZES_FIXED = {
   poster: { w: 1000, h: 1500, r: 2 / 3, rt: '۲ به ۳', name: 'پوستر', use: 'همه‌ی برنامه‌ها: کارت‌ها، صفحه‌ی اجرا، بلیت' },
-  banner: { w: 1740, h: 1000, r: 1.74, rt: '۱٫۷۴ به ۱', name: 'بنر دسکتاپ', use: 'بالای صفحه‌ی اصلی، روی کامپیوتر' },
+  banner: { w: 2000, h: 1000, r: 2, rt: '۲ به ۱', name: 'بنر دسکتاپ', use: 'بالای صفحه‌ی اصلی، روی کامپیوتر؛ بخش مهمش رو وسط، تو ۱۷۴۰×۱۰۰۰ وسط، بذار' },
   mobile: { w: 1080, h: 1440, r: 0.75, rt: '۳ به ۴', name: 'بنر موبایل و تبلت', use: 'بالای صفحه‌ی اصلی، روی موبایل و تبلت' },
 };
 const framer = {
@@ -5192,7 +5193,7 @@ function digitsApply() {
 const num = (name, div = 1) => (v) => css(name, +(v / div).toFixed(4));
 // how each setting reaches the page (the ones that need the page to do something more are handled in look.set)
 const APPLY = {
-  frame: (v) => attr('data-frame', v), ratio: num('--lock-r'), gap: num('--gap-n'), edgeX: num('--edge-x-n'), edgeT: num('--edge-t-n'), edgeB: num('--edge-b-n'), navH: num('--nav-n'), dockH: num('--dock-n'), railMax: num('--rail-max-n'),
+  frame: (v) => attr('data-frame', v), ratio: num('--lock-r'), ratioMax: num('--lock-rmax'), gap: num('--gap-n'), edgeX: num('--edge-x-n'), edgeT: num('--edge-t-n'), edgeB: num('--edge-b-n'), navH: num('--nav-n'), dockH: num('--dock-n'), railMax: num('--rail-max-n'),
   rail: (v) => hero.classList.toggle('rail-left', v === 'left'),
   fit: (v) => attr('data-fit', v), fill: (v) => attr('data-fill', v), bg: bgApply, bgColor: bgApply,
   caps: (v) => { attr('data-caps', v); if (typeof railMode === 'function' && look.ready) railMode(); }, capDate: (v) => attr('data-capdate', v ? 'on' : 'off'), dim: num('--dim', 100), progress: (v) => { attr('data-progress', v); cards.paint(timer.p.v); },
@@ -5243,7 +5244,8 @@ const UI = {
   layout: [
     { h: 'شکل کادر بنر', n: 'قفل: کادر بنر تو هر پنجره‌ای همین نسبت رو داره، پس بنری با این نسبت همیشه کادرش رو کامل پر می‌کنه (یه سایز برای همه‌ی پنجره‌ها)؛ ستون کارت‌ها جای اضافیِ پنجره رو می‌گیره. آزاد: کادر هر چی جا می‌مونه رو می‌گیره و شکلش با پنجره عوض می‌شه.', c: [
       S('frame', 'کادر بنر', [['lock', 'قفل (یه سایز برای همه)'], ['free', 'آزاد (هر چی جا می‌مونه)']]),
-      R('ratio', 'نسبت کادر بنر (عرض ÷ ارتفاع)', 1.3, 2.6, 0.01, '')] },
+      R('ratio', 'نسبت کادر بنر (عرض ÷ ارتفاع)', 1.3, 2.6, 0.01, ''),
+      R('ratioMax', 'حداکثر کشیدگی بنر تو پنجره‌ی پهن‌تر', 1.3, 2.6, 0.01, '')] },
     { h: 'فاصله‌ها', n: 'عددها پیکسلِ طرحِ ۱۹۲۰ هستن و با اندازه‌ی پنجره متناسب کوچیک و بزرگ می‌شن.', c: [
       R('gap', 'فاصله‌ی بین کادرها', 0, 60, 1, 'px'),
       R('edgeX', 'فاصله‌ی کادرها تا لبه‌ی چپ و راست', 0, 140, 1, 'px'),
@@ -5553,7 +5555,7 @@ const look = {
         ${row('فایل', `${faP(bn.w)}×${faP(bn.h)}  ( نسبت ${faP((bn.w / bn.h).toFixed(2)).replace('.', '٫')} )`)}
         ${LOCK ? row('بنر برای همه‌ی پنجره‌ها', `${faP(mw)}×${faP(1000)}`) + row('همون برای کادرِ همین پنجره (تیز)', need) : row('بنر برای پر کردن کادرِ همین پنجره', need)}
       </div>
-      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>${LOCK ? `• بنر (چیدمان کادر پایین): <b>${fa1(mw)}×${fa1(1000)}</b> (نسبت ${fa1(rs)}؛ دو برابرش ${fa1(mw * 2)}×${fa1(2000)} برای صفحه‌های تیز). کادر بنر تو هر پنجره‌ای همین نسبت رو داره و بنر تمام کادر رو پر می‌کنه؛ فقط تو پنجره‌ی بزرگ‌تر بزرگ‌تر نشون داده می‌شه. بنری که تا ۲٫۵٪ با این نسبت فرق داشته باشه هم کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.` : `• بنر (چیدمان کادر پایین): کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: عدد بالا (<b>«بنر برای پر کردن کادرِ همین پنجره»</b>) برای پنجره‌ی الانه؛ با پنجره‌ی ۱۹۲۰×۱۰۸۰ و تنظیمات پیش‌فرض ≈ ۱۵۵۳×۸۹۳ (نسبت ۱٫۷۴) و با ۱۹۲۰×۸۶۰ ≈ ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.`}<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• پوستر (لیست‌ها و بخش‌های بعد از هیرو): عمودی، <b>${fa1(1000)}×${fa1(Math.round(1000 / LOOK.posterRatio / 10) * 10)}</b> (نسبت ${fa1(LOOK.posterRatio.toFixed(2)).replace('.', '٫')}؛ دو برابرش ${fa1(2000)}×${fa1(Math.round(2000 / LOOK.posterRatio / 10) * 10)} برای صفحه‌های تیز). پوستری با نسبت دیگه هم کامل دیده می‌شه و جای خالی کنارش با نسخه‌ی محوِ خودش پر می‌شه؛ بنر افقی به‌عنوان پوستر قبول نمی‌شه.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
+      <div class="rec"><b>اندازه‌ای که از برگزارکننده می‌خوایم:</b><br>${LOCK ? `• بنر دسکتاپ (چیدمان کادر پایین): <b>${fa1(2000)}×${fa1(1000)}</b> (نسبت ۲ به ۱؛ دو برابرش ${fa1(4000)}×${fa1(2000)} برای صفحه‌های تیز). کادر بنر تو صفحه‌ی ۱۶ به ۹ نسبت ${fa1(rs)} داره و تو پنجره‌ی پهن‌تر تا ۲٫۱ کشیده‌تر می‌شه؛ بنر همیشه تمام کادر رو پر می‌کنه. بخش مهم (نوشته و چهره‌ها) رو تو مرکز ${fa1(1740)}×${fa1(1000)} بذار.` : `• بنر (چیدمان کادر پایین): کادر بنر هر چی از پنجره می‌مونه رو می‌گیره، پس شکلش به ارتفاع پنجره بستگی داره: عدد بالا (<b>«بنر برای پر کردن کادرِ همین پنجره»</b>) برای پنجره‌ی الانه؛ با پنجره‌ی ۱۹۲۰×۱۰۸۰ و تنظیمات پیش‌فرض ≈ ۱۵۵۳×۸۹۳ (نسبت ۱٫۷۴) و با ۱۹۲۰×۸۶۰ ≈ ۱۶۳۰×۷۰۹ (نسبت ۲٫۳). بنری که تا ۲٫۵٪ با شکل کادر فرق داشته باشه کادر رو پر می‌کنه. متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارن، چون اول هر اجرا تصویر کمی زوم‌شده‌ست.`}<br>• عکس (چیدمان متن روی عکس): ۱۶:۹، <b>۲۵۶۰×۱۴۴۰</b> (دست‌کم ۱۹۲۰×۱۰۸۰)، بدون نوشته.<br>• پوستر (لیست‌ها و بخش‌های بعد از هیرو): عمودی، <b>${fa1(1000)}×${fa1(Math.round(1000 / LOOK.posterRatio / 10) * 10)}</b> (نسبت ${fa1(LOOK.posterRatio.toFixed(2)).replace('.', '٫')}؛ دو برابرش ${fa1(2000)}×${fa1(Math.round(2000 / LOOK.posterRatio / 10) * 10)} برای صفحه‌های تیز). پوستری با نسبت دیگه هم کامل دیده می‌شه و جای خالی کنارش با نسخه‌ی محوِ خودش پر می‌شه؛ بنر افقی به‌عنوان پوستر قبول نمی‌شه.<br>• بنری که شکلش از این دورتر باشه هم کامل دیده می‌شه، ولی جای خالی دو طرفش یا بالا و پایینش می‌مونه (سیاه یا لبه‌ی محو).<br>• سرور خودش اندازه‌های ۶۴۰ (کارت‌ها)، ۱۰۲۴ و ۱۶۷۲ (یا ۱۹۲۰) رو می‌سازه؛ برگزارکننده فقط یه فایل می‌ده.</div></div>
       <div class="pp-sec"><h4>بنر تو پنجره‌های رایج</h4><p>برای چیدمان فعلی (فاصله‌ها و ارتفاع‌های تنظیم‌شده). عدد اول کادر بنره، عدد دوم خودِ بنر تو کادرش.</p><div class="szt">${tbl}</div></div>
       <div class="pp-sec"><h4>نشون دادن اندازه‌ها روی صفحه</h4>
         <label class="sw2"><span>اندازه‌ی کادرها، فاصله‌ها و حاشیه‌ها رو روی صفحه بکش</span><input type="checkbox" role="switch" id="ppDims"${LOOK.dims ? ' checked' : ''}><i></i></label>
@@ -9439,7 +9441,7 @@ function draftEvent(d) {
     startsAt: new Date(ts[0] || Date.now() + 7 * DAY).toISOString(), endsAt: ts.length > 1 ? new Date(ts[ts.length - 1]).toISOString() : undefined, price: priceText(low < Infinity ? low : KIND_BASE[d.kind] || 500000),
     prices: d.prices, seatTier: d.seatTier, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
     poster: { src: d.poster || '', w: 2, h: 3, ...(d.posterFit || {}) }, ver: 0 };
-  if (d.banner) e.banner = { src: d.banner, thumb: d.banner, w: 1740, h: 1000, ...(d.bannerFit || {}), custom: true };
+  if (d.banner) e.banner = { src: d.banner, thumb: d.banner, w: 2000, h: 1000, ...(d.bannerFit || {}), custom: true };
   if (d.bannerM) e.bannerM = { src: d.bannerM, w: 1080, h: 1440, ...(d.bannerMFit || {}) };
   if (d.hall) bindHall(e, d.hall, d.hallLay);
   e.title = `${e.type} ${e.name}`;
@@ -9534,7 +9536,7 @@ const wizard = {
       <div class="wz-slots">${slot('poster', 'poster', false)}${slot('banner', 'banner', true)}${slot('mobile', 'bannerM', true)}</div>
       <h3 class="wz-h3">رنگ برنامه <small>(برای پوستر موقت و دکمه‌ها)</small></h3>
       <div class="wz-pal" role="radiogroup" aria-label="رنگ">${Object.entries(PALETTE).slice(0, 14).map(([k, p]) => `<button type="button" role="radio" data-pal="${k}" aria-checked="${d.pal === k}" style="--c:${p.accent}" aria-label="${esc(p.label)}"></button>`).join('')}</div>`;
-    const KEYS = { poster: ['poster', 'posterFit', 1000, 1500], banner: ['banner', 'bannerFit', 1280, 736], mobile: ['bannerM', 'bannerMFit', 800, 1067] };
+    const KEYS = { poster: ['poster', 'posterFit', 1000, 1500], banner: ['banner', 'bannerFit', 1280, 640], mobile: ['bannerM', 'bannerMFit', 800, 1067] };
     // a picture read from a file, made smaller (it is kept with the draft in the browser)
     const take = (kind, f) => {
       if (!f || !/^image\//.test(f.type)) { toast('یه فایل تصویری انتخاب کن.'); return; }
@@ -10098,7 +10100,7 @@ const admin = {
   // the home page's featured slots (the hero): each one's banner, layout, colour and label; editing opens the settings on the page
   content(el) {
     el.innerHTML = `${desk.head('محتوای صفحه‌ی اصلی', 'جایگاه ویژه‌ی بالای صفحه: شش اجرا، هر کدوم با بنر، چیدمان، رنگ و برچسب خودش. «ویرایش» پنجره‌ی تنظیمات همون جایگاه رو روی خود صفحه باز می‌کنه تا نتیجه رو همون لحظه ببینی (بنر تازه، رنگ، نوشته‌ها، شروع فروش).')}
-      <section class="panel dk-box evp-rise"><h2>${ico('sliders')}جایگاه‌ها<small>به ترتیب نمایش</small></h2><ol class="ad-slots">${EVENTS.map((e, i) => { const s = statusOf(e), b = e.banner || {}; return `<li><span class="ad-n">${fa(i + 1)}</span><figure class="ad-ban" style="--accent:${e.accent}"><img src="${esc(b.fake || b.thumb || b.src || '')}" alt="" loading="lazy"></figure><span class="dk-staff-t"><b>${esc(e.title)}</b><small>${esc(e.venue)} · ${esc(e.layout === 'text' ? 'عکس و متن' : 'بنر با نوشته')}</small><span>${s.label ? `<em class="st" data-tone="${s.tone}">${esc(s.label)}</em>` : '<em class="st" data-tone="good">در حال فروش</em>'}<i class="ad-sw" style="--c:${e.accent}" title="${esc((PALETTE[e.pal] || {}).label || '')}"></i></span></span><button type="button" class="chip" data-edit="${i}">${ico('sliders')}ویرایش</button></li>`; }).join('')}</ol><div class="ad-addslot"><label class="chip ad-up">${ico('plus')}جایگاه تازه از یه بنر<input type="file" accept="image/*" id="adNewSlot"></label><small>بنر دسکتاپ (${fa(1740)}×${fa(1000)}) رو بده؛ بعدش با «ویرایش» بنر موبایل و جای هر تصویر رو تنظیم کن.</small></div></section>`;
+      <section class="panel dk-box evp-rise"><h2>${ico('sliders')}جایگاه‌ها<small>به ترتیب نمایش</small></h2><ol class="ad-slots">${EVENTS.map((e, i) => { const s = statusOf(e), b = e.banner || {}; return `<li><span class="ad-n">${fa(i + 1)}</span><figure class="ad-ban" style="--accent:${e.accent}"><img src="${esc(b.fake || b.thumb || b.src || '')}" alt="" loading="lazy"></figure><span class="dk-staff-t"><b>${esc(e.title)}</b><small>${esc(e.venue)} · ${esc(e.layout === 'text' ? 'عکس و متن' : 'بنر با نوشته')}</small><span>${s.label ? `<em class="st" data-tone="${s.tone}">${esc(s.label)}</em>` : '<em class="st" data-tone="good">در حال فروش</em>'}<i class="ad-sw" style="--c:${e.accent}" title="${esc((PALETTE[e.pal] || {}).label || '')}"></i></span></span><button type="button" class="chip" data-edit="${i}">${ico('sliders')}ویرایش</button></li>`; }).join('')}</ol><div class="ad-addslot"><label class="chip ad-up">${ico('plus')}جایگاه تازه از یه بنر<input type="file" accept="image/*" id="adNewSlot"></label><small>بنر دسکتاپ (${fa(2000)}×${fa(1000)}) رو بده؛ بعدش با «ویرایش» بنر موبایل و جای هر تصویر رو تنظیم کن.</small></div></section>`;
     $('#adNewSlot', el).addEventListener('change', async (ev) => { const f = ev.target.files[0]; ev.target.value = ''; if (f) { await panel.addFile(f); this.content(el); toast('جایگاه تازه ساخته شد؛ آخر فهرسته.'); } });
     $$('.ad-ban img', el).forEach((im) => { im.onerror = () => { im.onerror = null; im.style.visibility = 'hidden'; }; });
     $$('[data-edit]', el).forEach((b) => b.addEventListener('click', () => { const i = +b.dataset.edit; page.close({ then: () => { go(i, 'user'); setTimeout(() => { panel.open(true); panel.tab('slot'); }, 350); } }); }));
@@ -11016,8 +11018,8 @@ function geom(W, H, L = LOOK) {
   let railW = railNat, edgeX2 = edgeX, colW = W - 2 * edgeX - railW - gap;
   if (lock) {
     // the banner's shape is fixed: the panel is as wide as that shape needs, the rail takes the rest (up to its cap), the margins the rest of that
-    const room = W - 2 * px * L.edgeX - gap, frameW = Math.min((mainH - dockH - gap) * L.ratio, room - railNat);
-    railW = Math.min(px * L.railMax, room - frameW); edgeX2 = (W - railW - gap - frameW) / 2; colW = frameW;
+    const room = W - 2 * px * L.edgeX - gap, frameW = Math.min((mainH - dockH - gap) * L.ratioMax, room - railNat);
+    railW = railNat; edgeX2 = (W - railW - gap - frameW) / 2; colW = frameW;
   }
   const textLayout = EVENTS[state.i].layout === 'text', frameH = textLayout ? mainH : lock ? Math.min(colW / L.ratio, mainH - dockH - gap) : mainH - dockH - gap;
   const iw = colW - 2 * bw, ih = frameH - 2 * bw, cover = L.fit === 'cover' || EVENTS[state.i].layout === 'text' || Math.abs(Math.log(iw / ih / ar)) < FILL_TOL;
@@ -11228,9 +11230,9 @@ const panel = {
       return;
     }
     if (LOOK.frame === 'lock' && s.mode === 'bar') {
-      // the shape is locked: one size for every window
-      const R = LOOK.ratio, mw = Math.round(R * 1000), rs = R.toFixed(2).replace('.', '٫'), g = stacked ? null : geom(1920, 1080);
-      box.innerHTML = `<span>اندازه‌ی بنر برای همه‌ی پنجره‌ها (کادر بنر همیشه همین شکل رو داره)</span><b class="big"><bdi dir="ltr">${fa(mw)}×${fa(1000)}</bdi></b><span>نسبت ${fa(rs)} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(mw * 2)}×${fa(2000)}</bdi>؛ هر اندازه‌ی بزرگ‌تر با همین نسبت هم خوبه</span><span class="sm">کادر الان تو این پنجره (${fa(innerWidth)}×${fa(innerHeight)}) <bdi dir="ltr">${fa(w)}×${fa(h)}</bdi>${g ? ` و تو پنجره‌ی ۱۹۲۰×۱۰۸۰ <bdi dir="ltr">${fa(Math.round(g.frame.w - 2 * bw))}×${fa(Math.round(g.frame.h - 2 * bw))}</bdi>` : ''}؛ بنر همیشه تمام کادر رو پر می‌کنه، فقط بزرگ و کوچیک می‌شه.</span>`;
+      // the panel is 1.74 : 1 on a 16 : 9 screen and longer (up to 2.1 : 1) in a wider window: one file, 2 : 1, its important part in the middle
+      const z = SIZES_FIXED.banner, rs = (w / h).toFixed(2).replace('.', '٫');
+      box.innerHTML = `<span>اندازه‌ی بنر دسکتاپ (یه فایل برای همه‌ی پنجره‌ها)</span><b class="big"><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi></b><span>نسبت ۲ به ۱ · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(z.w * 2)}×${fa(z.h * 2)}</bdi>. بخش مهم (نوشته و چهره‌ها) رو تو مرکز <bdi dir="ltr">${fa(1740)}×${fa(1000)}</bdi> بذار: تو صفحه‌ی ۱۶ به ۹ فقط دو طرف کمی بریده می‌شه و تو پنجره‌ی پهن‌تر (مرورگر معمولی) کل بنر دیده می‌شه.</span><span class="sm">کادر الان تو این پنجره (${fa(innerWidth)}×${fa(innerHeight)}) <bdi dir="ltr">${fa(w)}×${fa(h)}</bdi> با نسبت ${fa(rs)}؛ بنر همیشه تمام کادر رو پر می‌کنه.</span>`;
       return;
     }
     let big = '';
