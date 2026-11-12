@@ -3083,6 +3083,48 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 }
 @media (max-width: 760px) { .bk-ov .sm-mini { aspect-ratio: auto; height: 150px; } .evp-in.bk .bk-map { padding: 12px; } }
 
+/* ── the fixed pages: one frame for everything on a page (the head band was narrower than the body under it) ── */
+.evp-in.pg { --fl: min(100%, 1320px); }
+.evp-in.pg:is(.pg-ct, .pg-cy, .pg-ar, .pg-sr) { --fl: 100%; }   /* (the pages that are lists of programs take the window, like the home page's list) */
+.evp-in.pg > * { box-sizing: border-box; width: 100%; max-width: var(--fl); justify-self: center; }
+.pg-head { position: relative; isolation: isolate; overflow: hidden; gap: calc(var(--u) * 1.1); padding: calc(var(--u) * 1.4) calc(var(--u) * 1.7); border-radius: var(--lx-r); }
+.pg-head::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(60% 180% at 100% 0%, color-mix(in oklab, var(--sc, var(--ring)) 20%, transparent), transparent 64%); }
+.pg-head h1 { font-size: calc(max(21px, calc(var(--u) * 1.62)) * var(--tx) * var(--tx-main)); }
+.pg-head .sec-ic { width: max(44px, calc(var(--u) * 2.9)); border-radius: 30%; }
+.pg-box { border-radius: var(--lx-r); padding: calc(var(--u) * 1.45) calc(var(--u) * 1.6) calc(var(--u) * 1.55); }
+@media (max-width: 760px) { .pg-box { padding: 16px; } .pg-head { padding: 16px; } }
+
+/* ── the desks (the organiser's, the admin's): an app's shell ── */
+:root:has(#evp .dk) #links, :root:has(#evp .dk) #cityBtn { display: none; }   /* (inside a desk the site's categories and the city picker step aside) */
+.dk-nav { padding: calc(var(--u) * 1.1) calc(var(--u) * .85); border-radius: var(--lx-r); }
+.dk-tabs { gap: 3px; }
+.dk-tabs a, .dk-foot a { position: relative; padding: .72em .85em; border-radius: calc(var(--r) * .6); }
+.dk-tabs a[aria-current="page"] { color: rgb(var(--fg)); background: color-mix(in oklab, var(--viz-1) 17%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--viz-1) 42%, transparent); font-weight: var(--fwb); }
+.dk-tabs a[aria-current="page"]::before { content: ""; position: absolute; inset-block: 24%; inset-inline-start: 0; width: 3px; border-radius: 3px; background: var(--viz-1); }
+.dk-tabs a[aria-current="page"] svg.i { color: var(--viz-1); }
+.dk-head { padding: calc(var(--u) * .3) calc(var(--u) * .4) calc(var(--u) * .5); }
+.dk-tile { overflow: hidden; isolation: isolate; padding: calc(var(--u) * 1.15) calc(var(--u) * 1.3) calc(var(--u) * 1.2); border-radius: var(--lx-r); }
+.dk-tile::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(70% 120% at 100% 0%, color-mix(in oklab, var(--viz-1) 13%, transparent), transparent 70%); }
+.dk-tile > b { font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.dk-box { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.45) calc(var(--u) * 1.4); border-radius: var(--lx-r); }
+.dk-box h2 > svg.i:first-child { flex: none; box-sizing: content-box; width: 1.05em; height: 1.05em; padding: .38em; border-radius: .66em; color: var(--viz-1); background: color-mix(in oklab, var(--viz-1) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--viz-1) 30%, transparent); }
+.dk-tbl th { padding: .8em .85em; font-size: .94em; border-bottom: 1px solid rgba(var(--fg), .14); }
+.dk-tbl td { padding: .9em .85em; }
+.dk-tbl tbody tr:last-child td { border-bottom: 0; }
+.vz-cols { max-height: 320px; }
+.vz-grid text, .vz-x text { font-size: 11.5px; }
+
+/* ── phones and tall windows (the home page too): no black bands round the banner, a shorter footer, nothing floating over the buttons of a page ── */
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  :root:root { --hero-h: calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) * .5625 + 144px + 3 * var(--gap) + var(--rail-h) + var(--pad-b)); }   /* (it had a floor of 600px: on a phone that left empty bands above and under the banner) */
+  .is-page .totop { display: none; }   /* (the footer's own «back to top» is there; the round button covered words and buttons) */
+}
+@media (max-width: 760px) {
+  .ft-grid { grid-template-columns: 1fr 1fr; gap: 22px 16px; }
+  .ft-grid > .ft-brand, .ft-grid > .ft-col:last-child { grid-column: 1 / -1; }
+  .sd-handle { width: 46px; height: 46px; }
+}
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -8854,8 +8896,8 @@ const viz = {
     return `<svg class="vz-spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><polyline points="${pts}"/><circle cx="${x(vals.length - 1).toFixed(1)}" cy="${y(vals[vals.length - 1]).toFixed(1)}" r="4"/></svg>`;
   },
   // columns over time (oldest on the left, now on the right): ≤ 24 px thick, a rounded top, one baseline, clean ticks
-  columns(id, data, { label, fmt = money, tick = short, xlab } = {}) {
-    const W = 720, H = 210, L = 54, B = 26, T = 12, n = data.length, mx = Math.max(1, ...data.map((d) => d.v));
+  columns(id, data, { label, fmt = money, tick = short, xlab, w } = {}) {
+    const W = Math.round(clamp(w || 720, 420, 1700)), H = 230, L = 54, B = 26, T = 12, n = data.length, mx = Math.max(1, ...data.map((d) => d.v));
     const step = Math.pow(10, Math.floor(Math.log10(mx))), nice = [1, 2, 2.5, 5, 10].map((k) => k * step).find((k) => mx / k <= 4) || step * 10, top = Math.ceil(mx / nice) * nice;
     const bw = Math.min(24, ((W - L - 8) / n) * 0.62), gx = (W - L - 8) / n, x = (i) => L + 4 + i * gx + (gx - bw) / 2, y = (v) => T + (H - T - B) * (1 - v / top);
     const grid = Array.from({ length: Math.round(top / nice) + 1 }, (_, k) => k * nice).map((v) => `<line x1="${L}" x2="${W}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/><text x="${L - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${esc(tick(v))}</text>`).join('');
@@ -8986,7 +9028,7 @@ const org = {
       </div>`;
     const draw = () => {
       const data = slots.map((d) => ({ v: d.sum, x: F.time.format(new Date(d.t)), tip: `${F.time.format(new Date(d.t))} تا ${F.time.format(new Date(d.t + 3e5))}` }));
-      $('#dkSlots', el).innerHTML = viz.columns('dkSlotsC', data, { label: 'فروش هر ۵ دقیقه در دو ساعت گذشته' }) + viz.table(['از ساعت', 'فروش (تومان)'], data.map((d) => [d.x, money(d.v)]));
+      $('#dkSlots', el).innerHTML = viz.columns('dkSlotsC', data, { label: 'فروش هر ۵ دقیقه در دو ساعت گذشته', w: $('#dkSlots', el).clientWidth }) + viz.table(['از ساعت', 'فروش (تومان)'], data.map((d) => [d.x, money(d.v)]));
       viz.wire('dkSlotsC', data);
     };
     draw();
@@ -9712,7 +9754,7 @@ const admin = {
       <section class="panel dk-box evp-rise" aria-labelledby="adDayH"><h2 id="adDayH">${ico('award')}فروش ۳۰ روز گذشته<small>تومان، با مالیات</small></h2><div id="adDays"></div></section>
       <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}در انتظار تأیید<small>${fa(q)}</small></h2>${q ? `<p class="bk-lead">${fa(q)} برنامه منتظر بررسیه.</p><a class="chip" href="#/admin/shows">${ico('arrow-l')}دیدن صف</a>` : '<p class="bk-lead">صف خالیه.</p>'}</section>
         <section class="panel dk-box evp-rise"><h2>${ico('clock')}آخرین تغییرها</h2><ol class="ad-log">${(log.length ? log : [{ at: Date.now() - 4 * HOUR, what: 'قیمت سانس‌های «شب جاز تهران» تأیید شد', who: 'نگار رضایی (اپراتور)' }]).slice(0, 5).map((x) => `<li><b>${esc(x.what)}</b><small>${esc(x.who)} · ${esc(ago(x.at))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/log">همه‌ی تاریخچه</a></section></div>`;
-    $('#adDays', el).innerHTML = viz.columns('adDaysC', byDay, { label: 'فروش هر روز در ۳۰ روز گذشته', xlab: 7 }) + viz.table(['روز', 'فروش (تومان)'], byDay.map((d) => [d.x, money(d.v)]));
+    $('#adDays', el).innerHTML = viz.columns('adDaysC', byDay, { label: 'فروش هر روز در ۳۰ روز گذشته', xlab: 7, w: $('#adDays', el).clientWidth }) + viz.table(['روز', 'فروش (تومان)'], byDay.map((d) => [d.x, money(d.v)]));
     viz.wire('adDaysC', byDay);
   },
 
@@ -9825,7 +9867,7 @@ const admin = {
       const by = (k) => Object.entries(l.reduce((a, o) => { a[o[k]] = (a[o[k]] || 0) + o.total; return a; }, {})).map(([t, v]) => ({ t: k === 'kind' ? (KIND_T[t] || t) : t, v })).sort((a, b) => b.v - a.v);
       const nD = Math.min(f.days, 30), days = Array.from({ length: nD }, (_, k) => { const t = Date.now() - (nD - 1 - k) * DAY, d = TEHRAN_DAY.format(new Date(t)), s = l.filter((o) => TEHRAN_DAY.format(new Date(o.at)) === d); return { v: s.reduce((a, o) => a + o.total, 0), x: dayOf(t), tip: `${dayOf(t)} · ${fa(s.length)} سفارش` }; });
       $('#adRep', el).innerHTML = `<section class="dk-tiles">${desk.tile('فروش (با مالیات)', short(sum), null)}${desk.tile('سفارش', money(l.length), null)}${desk.tile('مالیات بر ارزش افزوده', short(vat), null)}${desk.tile('کارمزد سایت', short(fee), null)}</section>
-        <section class="panel dk-box"><h2>${ico('award')}فروش هر روز<small>تومان</small></h2>${viz.columns('adRepC', days, { label: 'فروش هر روز', xlab: Math.max(1, Math.round(nD / 5)) })}${viz.table(['روز', 'فروش (تومان)'], days.map((d) => [d.x, money(d.v)]))}</section>
+        <section class="panel dk-box"><h2>${ico('award')}فروش هر روز<small>تومان</small></h2>${viz.columns('adRepC', days, { label: 'فروش هر روز', xlab: Math.max(1, Math.round(nD / 5)), w: Math.max(420, (page.el.clientWidth || innerWidth) * 0.5) })}${viz.table(['روز', 'فروش (تومان)'], days.map((d) => [d.x, money(d.v)]))}</section>
         <div class="dk-cols"><section class="panel dk-box"><h2>${ico('grid')}به تفکیک نوع</h2>${viz.ranked(by('kind'))}</section><section class="panel dk-box"><h2>${ico('pin')}به تفکیک شهر</h2>${viz.ranked(by('city').slice(0, 8))}</section></div>`;
       viz.wire('adRepC', days);
       this.rows = l;
