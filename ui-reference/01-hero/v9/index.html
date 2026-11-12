@@ -51,6 +51,7 @@
   --mot: 1;
   /* the geometry */
   --hero-h: max(440px, 100svh);
+  --mr: 1;   /* the shape of the banner on a phone or a tablet (width ÷ height): a square */
   --edge-min: calc(var(--px) * var(--edge-x-n));
   --edge-x: max(var(--edge-min), calc((100vw - var(--hero-h) * 2.25) / 2));
   --pad-t: max(calc(var(--px) * var(--edge-t-n)), env(safe-area-inset-top, 0px));
@@ -180,7 +181,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .frame, .frame img { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
 /* the picture and its extension are one layer, so the zoom-out moves them together */
 .pic { position: absolute; inset: 0; transform-origin: var(--o, 50% 50%); will-change: transform; }
-.pic img.art { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: contain; }
+.pic img.art { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); transform: scale(var(--fz, 1)); }   /* round T: the banner always fills its frame, around the point the admin placed; nothing is left empty beside it */
 /* the banner is whole and centred. What is left of the panel (when its shape isn't the banner's) is black, or,
    as an option, the banner's own edge, mirrored and blurred, so the colours run on without a seam: two copies, one
    on each side (or above and below). The script gives the picture's size as --pw and --ph. */
@@ -196,7 +197,8 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .frame.is-v .ext .eb { top: calc(50% + var(--ph) / 2 - var(--bx)); }
 /* when the panel has the banner's own shape (to within 2.5 %, set in the script) the banner fills it, stretched by less
    than that; the look can also ask for the banner to fill the panel always (it is then cut) */
-.frame.is-fill .pic img.art { object-fit: fill; }
+.frame.is-fill .pic img.art { object-fit: cover; }
+.ext { display: none !important; }   /* (no black, blurred or mirrored fill at the sides any more) */
 :root[data-fit="cover"] .pic img.art { object-fit: cover; }
 :root[data-fit="cover"] .ext { display: none !important; }
 .frame-link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; cursor: pointer; }
@@ -715,20 +717,10 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .tkt-in { position: relative; display: grid; grid-template-rows: auto var(--notch); overflow: hidden; isolation: isolate; border-radius: calc(var(--r) * 1.3); padding: calc(var(--u) * .38) calc(var(--u) * .38) 0; background: var(--capsule); border: var(--bw) solid rgba(var(--fg), var(--bo));
   -webkit-mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat;
   mask: radial-gradient(circle var(--nr) at 0 calc(100% - var(--notch)), transparent 96%, #000 100%) left / 51% 100% no-repeat, radial-gradient(circle var(--nr) at 100% calc(100% - var(--notch)), transparent 96%, #000 100%) right / 51% 100% no-repeat; }
-/* the poster's frame (--pr: width ÷ height). The poster is shown whole: it fills the frame when its shape is the frame's, else the frame is filled by a soft copy of it */
-.tkt-pic { position: relative; display: block; aspect-ratio: var(--pr, .8); overflow: hidden; container-type: size; border-radius: calc(var(--r) * 1.3 - var(--u) * .38); background: #14121d; cursor: pointer; }
-.tkt-pic::before, .ptk-pic::before { content: ""; position: absolute; inset: -14%; background: var(--art) center / cover no-repeat; filter: blur(16px) brightness(.72) saturate(1.2); }
-.tkt.has-soft .tkt-pic::before, .ptk.has-soft .ptk-pic::before { background-image: var(--art-p); filter: none; }   /* the small, already-blurred copy: no live filter */
-.tkt-pic.is-fill::before, .ptk-pic.is-fill::before { display: none; }
-.tkt-pic img, .ptk-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transform: scale(1.001); transition: transform 1.3s var(--ease), filter .6s; }
-.tkt-pic.is-fill img, .ptk-pic.is-fill img { object-fit: fill; }
-.tkt:hover .tkt-pic img, .ptk:hover .ptk-pic img { transform: scale(1.04); }
-/* a picture a little off the frame's shape fills it, and the extra is cut (the upper part stays) */
-.tkt-pic.is-cover img, .ptk-pic.is-cover img { object-fit: cover; object-position: 50% var(--fy, 30%); }
-.tkt-pic.is-cover::before, .ptk-pic.is-cover::before { display: none; }
-/* a picture further off (a 2 : 3 poster, a wide banner) is shown whole at its own shape: rounded and lifted off the soft copy of itself; a wide one is a band across the frame */
-.tkt-pic.is-inset img, .ptk-pic.is-inset img { inset: 50% auto auto 50%; translate: -50% -50%; width: min(88cqw, calc(92cqh * var(--r, .67))); height: auto; aspect-ratio: var(--r, .67); object-fit: fill; border-radius: calc(var(--rt) * 1.7); box-shadow: 0 18px 34px -14px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .14); }
-.tkt-pic.is-inset.is-wide img, .ptk-pic.is-inset.is-wide img { width: 100cqw; border-radius: 0; box-shadow: 0 0 0 1px rgba(255, 255, 255, .1); }
+/* the poster's frame (--pr: width ÷ height, 2 : 3 for every program). The picture fills it (cover) around its focus point (--fx, --fy) and zoom (--fz), set when the picture was placed */
+.tkt-pic { position: relative; display: block; aspect-ratio: var(--pr, .6667); overflow: hidden; container-type: size; border-radius: calc(var(--r) * 1.3 - var(--u) * .38); background: #14121d; cursor: pointer; }
+.tkt-pic img, .ptk-pic img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); transform: scale(calc(var(--fz, 1) * var(--hz, 1.001))); transition: transform 1.3s var(--ease), filter .6s; }
+.tkt:hover .tkt-pic img, .ptk:hover .ptk-pic img { --hz: 1.04; }
 /* the foot of the poster melts into the words under it */
 .tkt-pic::after { content: ""; position: absolute; z-index: 1; inset: auto 0 0 0; height: 30%; background: linear-gradient(to top, rgba(8, 7, 12, .26), transparent); pointer-events: none; }
 .tkt-pic:focus-visible, .ptk-pic:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
@@ -2969,27 +2961,27 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 /* ── the show's page: a stage, then a row of information ── */
 .evp-in.lx { --fl: min(100%, 2400px); }
 .evp-in.lx > :is(.lx-stage, .lx-info) { width: 100%; max-width: var(--fl); justify-self: center; }
-.lx-stage { --bw: clamp(340px, calc(var(--u) * 23.5), 470px); position: relative; isolation: isolate; display: grid; grid-template-columns: auto minmax(0, 1fr) var(--bw); align-items: center; gap: calc(var(--u) * 2.4); min-height: clamp(380px, calc(var(--u) * 28), 640px); padding: calc(var(--u) * 1.7); border-radius: var(--lx-r); overflow: hidden; background: #0b0a10; color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 44px 80px -54px rgba(0, 0, 0, .95); }
-.lx-bg { position: absolute; inset: -90px; z-index: -2; background: var(--art) center / cover no-repeat; filter: blur(46px) saturate(1.5) brightness(.95); transform: scale(1.05); animation: evp-drift 26s ease-in-out infinite alternate; }
-.lx-stage::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to left, rgba(8, 7, 12, .22) 0%, rgba(8, 7, 12, .5) 45%, rgba(8, 7, 12, .8) 100%), linear-gradient(to top, rgba(8, 7, 12, .5), transparent 60%); }
-.lx-stage::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(60% 90% at 78% 0%, color-mix(in oklab, var(--sc) 30%, transparent), transparent 70%); mix-blend-mode: screen; opacity: .55; }
-.lx-poster { margin: 0; width: clamp(180px, calc(var(--u) * 16), 350px); aspect-ratio: var(--ps, .75); border-radius: calc(var(--r) * .95); overflow: hidden; background: #0c0b11 var(--pa) center / cover no-repeat; box-shadow: 0 34px 64px -26px rgba(0, 0, 0, .95), 0 0 0 1px rgba(255, 255, 255, .18), 0 46px 90px -46px color-mix(in oklab, var(--sc) 70%, transparent); }
-.lx-poster img { display: block; width: 100%; height: 100%; object-fit: cover; }
-.lx-poster.is-wide { width: clamp(280px, calc(var(--u) * 31), 680px); }
+.lx-stage { --bw: clamp(340px, calc(var(--u) * 23.5), 470px); --ph: clamp(360px, calc(var(--u) * 29), 590px); --sp: clamp(10px, calc(var(--u) * .9), 18px); position: relative; isolation: isolate; display: grid; grid-template-columns: auto minmax(0, 1fr) var(--bw); align-items: center; gap: calc(var(--u) * 2.4); min-height: calc(var(--ph) + 2 * var(--sp)); padding: var(--sp) calc(var(--u) * 1.7) var(--sp) var(--sp); border-radius: var(--lx-r); overflow: hidden; background: var(--capsule); color: rgb(var(--fg)); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+/* the fixed backdrop: the same for every program, so the poster is the only picture on the stage. Rows of a hall as dots, and two soft lights from the top corners */
+.lx-deco { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; color: rgba(var(--fg), .1); pointer-events: none; }
+.lx-stage::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(46% 130% at 12% -30%, rgba(var(--fg), .055), transparent 70%), radial-gradient(46% 130% at 88% -30%, rgba(var(--fg), .045), transparent 70%); }
+/* the poster: one size for every program (2 : 3), as tall as the stage allows, a thin gap to the frame round it */
+.lx-poster { margin: 0; height: var(--ph); aspect-ratio: 2 / 3; border-radius: calc(var(--r) * .9); overflow: hidden; background: #14121d; box-shadow: 0 0 0 1px rgba(var(--fg), .14), 0 22px 44px -26px rgba(0, 0, 0, .55); }
+.lx-poster img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); transform: scale(var(--fz, 1)); }
 .lx-title { display: grid; gap: calc(var(--u) * 1); align-content: center; min-width: 0; }
 .lx-top { display: flex; align-items: center; justify-content: space-between; gap: 1em; }
 .lx-acts { display: flex; gap: .55em; flex: none; }
-.lx-title h1 { margin: 0; max-width: 24ch; font-size: calc(max(25px, calc(var(--u) * 2.45)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.42; text-wrap: balance; text-shadow: 0 2px 26px rgba(0, 0, 0, .45); }
+.lx-title h1 { margin: 0; max-width: 24ch; font-size: calc(max(25px, calc(var(--u) * 2.45)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.42; text-wrap: balance; }
 .lx-title h1 .w { display: inline-block; }
-.lx-facts { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .8) calc(var(--u) * 1.9); padding-top: calc(var(--u) * 1.1); border-top: 1px solid rgba(255, 255, 255, .17); }
+.lx-facts { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .8) calc(var(--u) * 1.9); padding-top: calc(var(--u) * 1.1); border-top: 1px solid rgba(var(--fg), .12); }
 .lx-fact { display: flex; align-items: center; gap: .75em; min-width: 0; }
-.lx-fi { flex: none; display: grid; place-items: center; width: 2.6em; aspect-ratio: 1; border-radius: .85em; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); background: rgba(255, 255, 255, .11); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); }
+.lx-fi { flex: none; display: grid; place-items: center; width: 2.6em; aspect-ratio: 1; border-radius: .85em; font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), .14); }
 .lx-fi svg.i { width: 48%; height: 48%; }
-.lx-fact small { display: block; font-size: calc(max(11.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); line-height: 1.5; color: rgba(255, 255, 255, .74); }
+.lx-fact small { display: block; font-size: calc(max(11.5px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); line-height: 1.5; color: var(--lx-dim); }
 .lx-fact b { display: block; font-size: calc(max(14px, calc(var(--u) * .93)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.65; }
-.lx-fact .evp-hl { color: #fff; text-decoration: underline; text-underline-offset: .3em; text-decoration-thickness: 1.5px; }
+.lx-fact .evp-hl { color: inherit; text-decoration: underline; text-underline-offset: .3em; text-decoration-thickness: 1.5px; }
 /* the booking: a glass card on the stage (the theme's own surface, so both themes read) */
-.lx-book { align-self: center; gap: calc(var(--u) * .85); padding: calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); color: rgb(var(--fg)); background: color-mix(in oklab, var(--capsule) 82%, transparent); -webkit-backdrop-filter: blur(28px) saturate(1.5); backdrop-filter: blur(28px) saturate(1.5); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12), inset 0 1px 0 rgba(255, 255, 255, .14), 0 34px 70px -34px rgba(0, 0, 0, .85); }
+.lx-book { align-self: center; max-height: var(--ph); overflow: auto; gap: calc(var(--u) * .85); padding: calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); color: rgb(var(--fg)); background: var(--bg-panel, var(--capsule)); box-shadow: inset 0 0 0 1px rgba(var(--fg), .14), 0 18px 40px -30px rgba(0, 0, 0, .5); }
 .lx-book .lx-h { margin: 0; }
 .lx-book .ses-list { max-height: min(40vh, calc(var(--u) * 17)); }
 .lx-book::before { content: ""; position: absolute; top: 0; inset-inline: 14%; height: 2px; border-radius: 0 0 3px 3px; background: linear-gradient(90deg, transparent, var(--sc), transparent); opacity: .9; pointer-events: none; }
@@ -3025,8 +3017,8 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 /* a narrower window: the booking card under the picture and the name; the information one under the other */
 @media (max-width: 1099px) {
   .lx-book .ses-list { max-height: none; }
-  .lx-stage { grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: calc(var(--u) * 1.6) 18px; min-height: 0; padding: 18px; }
-  .lx-poster.is-wide { width: clamp(240px, 40vw, 420px); }
+  .lx-stage { --ph: clamp(300px, 46vw, 430px); grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: calc(var(--u) * 1.6) 18px; min-height: 0; padding: 14px; }
+  .lx-book { max-height: none; overflow: visible; }
   .lx-title { align-self: center; }
   .lx-book { grid-column: 1 / -1; align-self: stretch; grid-template-columns: minmax(0, 1fr); }
   .lx-book > * { grid-column: auto; grid-row: auto; }
@@ -3043,21 +3035,16 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 @media (max-width: 760px) {
   .lx-stage { padding: 14px; gap: 12px 14px; border-radius: calc(var(--r) * 1.1); grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto auto; }
   .lx-title { display: contents; }   /* (the name stands beside the poster, the facts under both) */
-  .lx-poster { grid-column: 1; grid-row: 1 / span 2; align-self: start; width: clamp(104px, 31vw, 150px); }
+  .lx-poster { grid-column: 1; grid-row: 1 / span 2; align-self: start; height: auto; width: clamp(132px, 39vw, 200px); }
   .lx-top { grid-column: 2; grid-row: 1; align-items: flex-start; flex-wrap: wrap; }
   .lx-title h1 { grid-column: 2; grid-row: 2; align-self: start; font-size: 20px; line-height: 1.5; max-width: none; }
   .lx-facts { grid-column: 1 / -1; grid-row: 3; flex-direction: column; gap: 10px; padding-top: 12px; }
   .lx-book { grid-column: 1 / -1; grid-row: 4; padding: 14px; }
-  /* a banner (no poster): the picture across the top, the name under it */
-  .lx-stage:has(.lx-poster.is-wide) { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
-  .lx-stage:has(.is-wide) :is(.lx-poster, .lx-top, .lx-title h1, .lx-facts, .lx-book) { grid-column: 1; grid-row: auto; }
-  .lx-poster.is-wide { width: 100%; }
   .lx-info > .panel, .evp-in.lx .evp-more { padding: 16px; }
   .lx-pr { grid-template-columns: minmax(0, 1fr); }
   .lx-ph { flex-wrap: wrap; }
   .lx-place .lm-view { min-height: 230px; }
 }
-@media (prefers-reduced-motion: reduce) { .lx-bg { animation: none; } }
 
 /* the headings of the purchase pages and the fixed pages carry the same icon chip */
 .evp :is(.bk-cart, .bk-ov, .bk-prices, .bk-who, .bk-way, .bk-next, .bk-sum, .tk-help, .pg-box) h2 { display: flex; align-items: center; gap: .6em; }
@@ -3119,7 +3106,7 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 
 /* ── phones and tall windows (the home page too): no black bands round the banner, a shorter footer, nothing floating over the buttons of a page ── */
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
-  :root:root { --hero-h: calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) * .5625 + 144px + 3 * var(--gap) + var(--rail-h) + var(--pad-b)); }   /* (it had a floor of 600px: on a phone that left empty bands above and under the banner) */
+  :root:root { --hero-h: calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) / var(--mr) + 144px + 3 * var(--gap) + var(--rail-h) + var(--pad-b)); }   /* (it had a floor of 600px: on a phone that left empty bands above and under the banner) */
   .is-page .totop { display: none; }   /* (the footer's own «back to top» is there; the round button covered words and buttons) */
 }
 @media (max-width: 760px) {
@@ -3185,6 +3172,41 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .dk-tile.dk-hero > b { font-size: min(calc(max(34px, calc(var(--u) * 2.4)) * var(--tx) * var(--tx-main)), 11.5cqi); white-space: nowrap; }
 .dk-tile > b { font-size: min(calc(max(24px, calc(var(--u) * 1.65)) * var(--tx) * var(--tx-main)), 15.5cqi); }
 
+/* ── round T: calm pages ── */
+/* the stage's round buttons (save, share): the theme's own colours */
+.lx-acts .ev-ic { color: rgb(var(--fg)); background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .18); }
+.lx-acts .ev-ic:hover { background: rgba(var(--fg), .1); }
+.lx-acts .ev-ic:focus-visible { outline-color: rgb(var(--fg)); }
+/* no coloured glow behind a page's head, a desk's tile or a card's corner: the page's colour stays in its small marks */
+.pg-head::before, .dk-tile::before { display: none; }
+
+/* ── the picture-placing tool: a big frame of the fixed shape, the picture inside it (drag to move, slider or wheel to zoom) ── */
+.fr { display: grid; gap: 10px; justify-items: start; }
+.fr[data-kind="poster"] { width: min(100%, 300px); }
+.fr[data-kind="banner"] { width: min(100%, 640px); }
+.fr[data-kind="mobile"] { width: min(100%, 380px); }
+.fr-box { position: relative; width: 100%; aspect-ratio: var(--frr, 1); overflow: hidden; border-radius: calc(var(--r) * .7); background: #14121d; box-shadow: 0 0 0 1px rgba(var(--fg), .22); cursor: grab; touch-action: none; }
+.fr-box.is-drag { cursor: grabbing; }
+.fr-box:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.fr-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; user-select: none; pointer-events: none; }
+.fr-grid { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, transparent 33.2%, rgba(255, 255, 255, .28) 33.3%, transparent 33.5%, transparent 66.5%, rgba(255, 255, 255, .28) 66.6%, transparent 66.8%), linear-gradient(to bottom, transparent 33.2%, rgba(255, 255, 255, .28) 33.3%, transparent 33.5%, transparent 66.5%, rgba(255, 255, 255, .28) 66.6%, transparent 66.8%); opacity: 0; transition: opacity .25s; }
+.fr-box:hover .fr-grid, .fr-box.is-drag .fr-grid, .fr-box:focus-visible .fr-grid { opacity: 1; }
+.fr-tip { position: absolute; inset-inline: 0; bottom: 8px; margin-inline: auto; width: max-content; max-width: 92%; padding: .25em .8em; border-radius: 999px; font-size: 12px; color: #fff; background: rgba(0, 0, 0, .6); pointer-events: none; transition: opacity .3s; }
+.fr-box.is-drag .fr-tip { opacity: 0; }
+.fr-bar { display: flex; align-items: center; gap: 12px; width: 100%; }
+.fr-bar label { flex: 1; display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--lx-dim); }
+.fr-bar input[type="range"] { flex: 1; accent-color: var(--ring); }
+.fr-note { color: var(--lx-dim); font-size: 12px; }
+.wz-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: calc(var(--u) * 1.4); align-items: start; margin-bottom: calc(var(--u) * 1); }
+.wz-slot { display: grid; gap: 10px; align-content: start; min-width: 0; padding: calc(var(--u) * 1) calc(var(--u) * 1.1) calc(var(--u) * 1.2); border-radius: calc(var(--r) * .9); background: rgba(var(--fg), .035); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
+.wz-slot .wz-h3 { margin: 0; }
+.wz-sz { margin: 0; font-size: 12.5px; color: var(--lx-dim); }
+.wz-sz b { color: rgb(var(--fg)); }
+.wz-slot-a { display: flex; gap: 8px; flex-wrap: wrap; }
+.wz-swap { position: relative; cursor: pointer; }
+.wz-swap input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.wz-drop-s { min-height: 150px; }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -3199,12 +3221,11 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
   }
   .hero, .hero.rail-left, .scene, .hero.rail-left .scene { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--nav-h) minmax(0, 1fr) var(--rail-h); grid-template-areas: "nav" "main" "rail"; }
   /* the hero is as tall as its pieces (not the whole screen), and the page just scrolls: no pinned hero here */
-  :root { --hero-h: max(600px, calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) * .5625 + 156px + 3 * var(--gap) + var(--rail-h) + var(--pad-b))); --pin: 0px; }
+  :root { --hero-h: max(600px, calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) / var(--mr) + 156px + 3 * var(--gap) + var(--rail-h) + var(--pad-b))); --pin: 0px; }
   .hero { position: relative; }
   .stage { align-items: center; }
   .tk { grid-template-rows: auto auto; align-content: center; }
-  .scene[data-mode="bar"] .frame { aspect-ratio: var(--ratio, 1.7778); }
-  :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: var(--lock-r); }
+  .scene[data-mode="bar"] .frame, :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: var(--mr); }   /* (round T: the phone's banner is a square, for every program) */
   .scene[data-mode="text"] .tk, .scene[data-mode="text"] .frame { height: 100%; }
   .rail { flex-direction: row; align-items: center; gap: 8px; padding: 6px; }
   .c-arrow:not(.c-pause), .c-foot .c-arrow:first-child { display: none; }
@@ -3373,6 +3394,30 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 .pp-io textarea { box-sizing: border-box; width: 100%; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--pp-line2); background: rgba(0, 0, 0, .35); color: #e9e6ff; font: 12px/1.6 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; direction: ltr; resize: vertical; }
 .pp-io textarea:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
 @media (prefers-reduced-motion: reduce) { .proto-panel, .proto-fab, .sw2 i::after { transition: none; } }
+
+/* ── round T: the settings belong to the admin ──
+   no floating button for visitors (the admin's «ویرایش» on his desk opens the panel); with ?dev or ?debug the button and every tab are there (the developer's tool).
+   The admin's editor has two tabs: the slot (its banners, poster, layout, colour, texts) and the sizes. */
+html:not([data-dev="1"]) .proto-fab { display: none !important; }
+html:not([data-dev="1"]) #ppTabs [data-tab="cmp"], html:not([data-dev="1"]) #ppTabs [data-tab="layout"], html:not([data-dev="1"]) #ppTabs [data-tab="style"], html:not([data-dev="1"]) #ppTabs [data-tab="text"], html:not([data-dev="1"]) #ppTabs [data-tab="motion"] { display: none; }
+
+/* round T: the pictures group of the live editor */
+.pp-pic { display: grid; gap: 8px; padding: 10px 0 14px; border-top: 1px solid var(--pp-line); }
+.pp-pic:first-child { border-top: 0; padding-top: 2px; }
+.pp-pic h4 { margin: 0; font-size: 13px; }
+.pp-pic h4 small { font-weight: 400; opacity: .7; }
+.pp-pic p { margin: 0; font-size: 12px; opacity: .75; line-height: 1.8; }
+.pp-pic-none { padding: 14px; border-radius: 10px; font-size: 12px; text-align: center; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--pp-line); }
+.pp-up { position: relative; cursor: pointer; display: inline-flex; align-items: center; gap: .4em; }
+.pp-up input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.proto-panel .fr { --lx-dim: rgba(255, 255, 255, .7); }
+.proto-panel .fr[data-kind="poster"] { width: min(100%, 220px); }
+.proto-panel .fr[data-kind="banner"] { width: 100%; }
+.proto-panel .fr[data-kind="mobile"] { width: min(100%, 250px); }
+.proto-panel .fr-bar label { color: var(--pp-ink2, #ddd); }
+.proto-panel .fr-note { color: var(--pp-ink2, #ddd); opacity: .8; }
+.proto-panel .fr .chip { color: var(--pp-ink, #fff); background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px var(--pp-line2); }
+html:not([data-dev="1"]) .pp-old { display: none; }
 .toast { position: fixed; z-index: 60; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; width: fit-content; max-width: min(92vw, 540px); margin-inline: auto; padding: 12px 20px; border-radius: var(--rb); background: #fff; color: #14111d; font-size: 14px; text-align: center; opacity: 0; pointer-events: none; font-family: var(--font-ui); }
 
 /* ── design notes under the hero (not part of the site) ────────── */
@@ -3408,6 +3453,9 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
 .notes .back { margin: 0; }
 .notes .back a { color: var(--ink-2); font-size: 13.5px; text-decoration: none; padding: 6px 14px; border: 1px solid rgba(255, 255, 255, .16); border-radius: 999px; }
 .notes .back a:hover { color: #fff; border-color: rgba(255, 255, 255, .4); }
+
+/* round T: the design notes under the footer show only with ?notes (or from the settings' link in the developer's panel) */
+html:not(.show-notes) .notes { display: none; }
 :root[data-theme="light"] { --bt-fill-a: .07; --bt-line-a: .34; --dmin: .64; --omin: 1; --t-ok: #166534; --t-warn: #92400e; --t-bad: #9f1239; --t-info: #075985; }
 :root[data-theme="light"] :is(.bk-fld input, .bk-fld select, .bk-fld textarea, .otp input, .wz-time input, .wz-in input, .pg-sort select, .ad-sel select, .ad-zt select, .evp-dlg select, .evp-dlg textarea, .evp-dlg input, .dk-form input, .dk-form select, .dk-form textarea, .wz-body input, .wz-body select, .wz-body textarea):not(:focus) { border-color: rgba(var(--fg), .4); }
 :root[data-theme="light"] .c-arrow { box-shadow: inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)); }
@@ -3660,7 +3708,8 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
       </section>
 
       <section class="pp-pane" data-pane="slot">
-        <div class="pp-group">
+        <div class="pp-group" id="ppPics"><span>تصویرها و جاشون تو کادر</span><div id="ppPicsBody"></div></div>
+        <div class="pp-group pp-old">
           <span>تصویر</span>
           <div class="need" id="ppNeed" role="status" aria-live="polite"></div>
           <label class="drop" id="drop"><input type="file" id="ppFile" accept="image/*" multiple><svg class="i"><use href="#i-upload"/></svg>بنر خودت رو اینجا بنداز یا انتخاب کن</label>
@@ -3670,7 +3719,7 @@ fieldset.pp-group { border: 0; padding: 0; margin: 0; min-width: 0; }
           <div class="pp-row"><button type="button" class="pill" id="ppPhoto">عکس نمونه، بدون نوشته</button><button type="button" class="pill" id="ppReset">بازگردانی این جایگاه</button></div>
         </div>
 
-        <div class="pp-group">
+        <div class="pp-group pp-old">
           <span>پوستر این اجرا (برای لیست‌ها و بخش‌های بعد از هیرو)</span>
           <div class="need" id="ppPNeed" role="status" aria-live="polite"></div>
           <label class="drop"><input type="file" id="ppPosterFile" accept="image/*"><svg class="i"><use href="#i-upload"/></svg>پوستر عمودی خودت رو انتخاب کن</label>
@@ -4233,7 +4282,7 @@ function libCheck() {
    ════════════════════════════════════════════════════════════════ */
 const LOOK_DEF = {
   // layout
-  frame: 'free', ratio: 1.74, gap: 9, edgeX: 9, edgeT: 9, edgeB: 9, navH: 71, dockH: 80, railMax: 480, rail: 'left',
+  frame: 'lock', ratio: 1.74, gap: 9, edgeX: 9, edgeT: 9, edgeB: 9, navH: 71, dockH: 80, railMax: 480, rail: 'left',
   fit: 'contain', fill: 'black', bg: 'black', bgColor: '#000000',
   caps: 'under', capDate: true, dim: 14, progress: 'bar',
   // style
@@ -4245,13 +4294,13 @@ const LOOK_DEF = {
   // motion
   mot: 'balanced', trans: 'fade', zoom: 'mid', zoomShare: 100, dur: 7, fade: 1.2, spot: true, magnet: true, magnetPow: 33, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
   // the list under the hero: the sample shows that fill it, the shape of a poster's frame (width ÷ height), the words under the poster or over it
-  listFill: true, posterRatio: 0.75, posterFit: 'smart', posterInfo: 'frame',
+  listFill: true, posterRatio: 0.6667, posterFit: 'smart', posterInfo: 'frame',
   // the pages of a program (the show, the seats, the payment, the tickets): the dotted background (on, its strength in %), the place and the map under the words on a big window or in a tab
-  pageDots: true, dotsPow: 100, evpPlace: 'inline',
+  pageDots: true, dotsPow: 7, evpPlace: 'inline',
   // how many rows of posters a section shows before «نمایش همه» (0: all), the presale's wide tickets, the cards' buy button (white as in the sample, or the show's colour), the columns on a wide window
   secRows: 2, presale: 'compact', buyStyle: 'white', listCols: 'auto',
   // the site's theme: dark (the approved one) or light (white); the light one keeps its own panel and page colours; the motion of the change
-  mode: 'dark', lightPanel: '#ffffff', lightBg: '#eceef3', themeFx: 'circle',
+  mode: 'light', lightPanel: '#ffffff', lightBg: '#eceef3', themeFx: 'circle',
   // tools
   dims: false,
 };
@@ -4261,6 +4310,10 @@ const TXT_DEF = {
   buy: 'خرید بلیت', priceLab: 'قیمت از', venueLab: 'مکان', unit: 'تومان',
 };
 const LOOK = { ...LOOK_DEF }, TXT = { ...TXT_DEF };
+// round T: the settings are the admin's. Nobody sees the floating button; ?dev (or ?debug) shows it with every tab (a developer's tool), ?notes shows the design notes under the footer
+const DEV = /[?&](dev|debug)\b/.test(location.search);
+document.documentElement.dataset.dev = DEV ? '1' : '';
+if (/[?&]notes\b/.test(location.search)) document.documentElement.classList.add('show-notes');
 const STK = matchMedia('(max-width: 760px), (max-aspect-ratio: 5/4)');   // the panels stack (phones, tall windows)
 const MOTK = () => (reduceMotion ? 0 : { soft: 0.6, balanced: 1, strong: 1.6 }[LOOK.mot] || 1);
 const dg = (s) => (LOOK.digits === 'en' ? String(s).replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)) : String(s));
@@ -4336,6 +4389,7 @@ function setPal(e, key, custom) {
    ════════════════════════════════════════════════════════════════ */
 const art = (slug, bw, bh) => ({
   banner: { src: `assets/events/${slug}-banner-1672.webp`, srcset: `assets/events/${slug}-banner-1024.webp 1024w, assets/events/${slug}-banner-1672.webp 1672w`, thumb: `assets/events/${slug}-banner-640.webp`, w: bw, h: bh },
+  bannerM: { src: `assets/events/${slug}-mobile-1080.webp`, w: 1080, h: 1080 },   // the banner for phones and tablets: a square
 });
 const HOUR = 36e5;
 const EVENTS = [
@@ -4386,7 +4440,7 @@ function when(e) {
   const wk = F.week.format(a);
   return { calDay: d1, calMonth: m1, top: wk, sub: `ساعت ${t}`, short: `${wk} ${d1} ${m1}`, tiny: `${d1} ${m1}`, time: t };
 }
-const origOf = (e) => JSON.parse(JSON.stringify({ hall: e.hall, hallLay: e.hallLay || 0, cs: e.cs, pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner, poster: e.poster || null, kind: e.kind, city: e.city, status: e.status || 'auto', saleAt: e.saleAt || null, seatsLeft: e.seatsLeft === undefined ? null : e.seatsLeft }));
+const origOf = (e) => JSON.parse(JSON.stringify({ hall: e.hall, hallLay: e.hallLay || 0, cs: e.cs, pal: e.pal, layout: e.layout, type: e.type, name: e.name, title: e.title, venue: e.venue, price: e.price, badge: e.badge, banner: e.banner, bannerM: e.bannerM, poster: e.poster || null, kind: e.kind, city: e.city, status: e.status || 'auto', saleAt: e.saleAt || null, seatsLeft: e.seatsLeft === undefined ? null : e.seatsLeft }));
 // the six shows of the hero are in halls of the library (a show finds its hall by the hall's id)
 const EVENT_HALL = { 'dokhtar-pesar': 103, 'hani-nazarian': 96, 'zendegi-shayad': 59, barfab: 86, 'do-daghighe': 69, aman: 60 };
 EVENTS.forEach((e) => { const v0 = e.venue; e.venueKeep = true; bindHall(e, EVENT_HALL[e.id]); e.venue = v0; setPal(e, e.pal); e.ver = 0; e.w = when(e); e.orig = origOf(e); });
@@ -4523,49 +4577,29 @@ const DAY = 24 * HOUR;
 const inDays = (d, hm = '20:00') => `${TEHRAN_DAY.format(new Date(Date.now() + d * DAY))}T${hm}:00+03:30`;
 const fpd = (v) => String(v).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
 const priceText = (n) => `${fpd(Math.round(n / 1000))} هزار`;
-const posterFile = (name) => ({ src: `assets/posters/${name}.webp`, w: 2, h: 3, nat: 0.75 });   // 2×3 only shapes the stand-in (a file that is missing); the sample photos themselves are 3 : 4, which is what the pages' frames start with (`nat`), so nothing moves when a photo comes
-// the owner's sample: kind, city, the word before the name, name, the hall's ID in the library (halls-data.js), colour, first day, last day (0 = one day), time, lowest price (toman), status, minutes until the sale, poster
+const posterFile = (name) => ({ src: `assets/posters/${name}.webp`, w: 2, h: 3, nat: 0.6667 });   // 2×3 only shapes the stand-in (a file that is missing); the sample photos themselves are 3 : 4, which is what the pages' frames start with (`nat`), so nothing moves when a photo comes
+// the owner's sample (ten of it): kind, city, the word before the name, name, the hall's ID in the library (halls-data.js), colour, first day, last day (0 = one day), time, lowest price (toman), status, minutes until the sale, poster, the number the program keeps (its id is s-N)
 const SAMPLE = [
-  ['concert', 'تهران', 'کنسرت', 'سپهر آریا', 36, 'green', 9, 10, '20:30', 980000, 'soon', 321, 'photo-pop-green'],
-  ['theatre', 'تهران', 'نمایش', 'آخرین پرده', 72, 'silver', 2, 30, '19:00', 650000, 'soon', 128, 'photo-theater-beam'],
-  ['concert', 'تهران', 'کنسرت', 'شب‌های بتهوون (ارکستر سمفونیک آوا)', 34, 'gold', 5, 6, '21:30', 700000, 'normal', 0, 'photo-orchestra-ornate'],
-  ['concert', 'تهران', 'کنسرت', 'گروه نوای مهر (ویژه بانوان)', 67, 'blue', 3, 0, '18:30', 1100000, 'normal', 0, 'photo-folk-singer-orchestra'],
-  ['concert', 'تهران', 'کنسرت', 'کوارتت زهی پارسه', 96, 'teal', 8, 9, '20:00', 700000, 'normal', 0, 'photo-persian-violin-arch'],
-  ['concert', 'تهران', 'کنسرت', 'رسیتال پیانو؛ شبی با شوپن', 41, 'gold', 12, 0, '19:30', 550000, 'normal', 0, 'photo-piano-dark'],
-  ['concert', 'تهران', 'کنسرت', 'شب جاز تهران', 63, 'blue', 15, 16, '21:00', 750000, 'normal', 0, 'photo-jazz-sax-blue'],
-  ['concert', 'تهران', 'کنسرت', 'گروه سایه', 36, 'crimson', 19, 0, '20:30', 900000, 'soldout', 0, 'photo-rock-guitar-crowd'],
-  ['concert', 'اصفهان', 'کنسرت', 'آرمان کیان', 80, 'orange', 2, 3, '19:00', 950000, 'soldout', 0, 'photo-pop-smoke'],
-  ['concert', 'مشهد', 'کنسرت', 'مهتاب (ویژه بانوان)', 110, 'orange', 4, 0, '17:00', 800000, 'normal', 0, 'photo-singer-warm'],
-  ['concert', 'کرمان', 'کنسرت', 'شب سه‌تار', 47, 'teal', 2, 0, '19:30', 480000, 'normal', 0, 'photo-persian-setar-man'],
-  ['concert', 'یزد', 'کنسرت', 'آوای کویر (ویژه بانوان)', 44, 'gold', 6, 0, '18:00', 550000, 'normal', 0, 'photo-persian-tar-woman'],
-  ['concert', 'رشت', 'کنسرت', 'بهراد', 17, 'pink', 3, 0, '20:00', 950000, 'soldout', 0, 'photo-pop-guitar-pink'],
-  ['concert', 'تبریز', 'کنسرت', 'سنتور و آواز', 38, 'orange', 7, 0, '19:00', 480000, 'normal', 0, 'photo-persian-santur'],
-  ['concert', 'شیراز', 'کنسرت', 'گروه شب‌تاب', 108, 'crimson', 5, 7, '20:00', 850000, 'extended', 0, 'photo-rock-red'],
-  ['concert', 'کرج', 'کنسرت', 'کیان نوری', 22, 'violet', 4, 0, '21:00', 900000, 'normal', 0, 'photo-pop-silhouette'],
-  ['concert', 'اراک', 'کنسرت', 'صدای باران (ویژه بانوان)', 121, 'blue', 9, 0, '18:30', 600000, 'normal', 0, 'photo-singer-spot-blue'],
-  ['concert', 'اهواز', 'کنسرت', 'ترانه‌های بهار (ویژه بانوان)', 191, 'violet', 11, 0, '19:00', 700000, 'normal', 0, 'photo-pop-woman-purple'],
-  ['theatre', 'تهران', 'نمایش', 'صندلی خالی', 59, 'gold', -21, 24, '18:30', 450000, 'normal', 0, 'photo-theater-chair'],
-  ['theatre', 'تهران', 'نمایش', 'مردی در تاریکی', 63, 'silver', -38, 12, '20:00', 500000, 'normal', 0, 'photo-theater-monologue'],
-  ['theatre', 'تهران', 'نمایش موزیکال', 'پردهٔ سرخ', 41, 'crimson', 1, 26, '19:30', 700000, 'normal', 0, 'photo-theater-curtain'],
-  ['theatre', 'تهران', 'نمایش', 'رقص سایه‌ها', 96, 'cyan', 3, 9, '19:00', 380000, 'normal', 0, 'photo-theater-modern'],
-  ['comedy', 'کرج', 'جُنگ', 'کودک «سیرک شادی»', 22, 'lime', 3, 4, '17:00', 300000, 'normal', 0, 'photo-kids-clown'],
-  ['comedy', 'تهران', 'نمایش کودک', 'پینوکیو', 59, 'crimson', 0, 18, '16:00', 280000, 'normal', 0, 'photo-kids-pinocchio'],
-  ['comedy', 'اصفهان', 'جُنگ', 'شب خنده (استندآپ کمدی)', 80, 'yellow', 8, 0, '20:00', 500000, 'normal', 0, 'photo-comedy-mic'],
-  ['comedy', 'اردبیل', 'جُنگ', 'کودک «عروسک‌های جادویی»', 97, 'orange', 2, 0, '16:30', 300000, 'normal', 0, 'photo-kids-marionette'],
+  ['concert', 'تهران', 'کنسرت', 'سپهر آریا', 36, 'green', 9, 10, '20:30', 980000, 'soon', 321, 'photo-pop-green', 1],
+  ['theatre', 'تهران', 'نمایش', 'آخرین پرده', 72, 'silver', 2, 30, '19:00', 650000, 'soon', 128, 'photo-theater-beam', 2],
+  ['concert', 'تهران', 'کنسرت', 'شب‌های بتهوون (ارکستر سمفونیک آوا)', 34, 'gold', 5, 6, '21:30', 700000, 'normal', 0, 'photo-orchestra-ornate', 3],
+  ['concert', 'تهران', 'کنسرت', 'کوارتت زهی پارسه', 96, 'teal', 8, 9, '20:00', 700000, 'normal', 0, 'photo-persian-violin-arch', 5],
+  ['concert', 'تهران', 'کنسرت', 'شب جاز تهران', 63, 'blue', 15, 16, '21:00', 750000, 'normal', 0, 'photo-jazz-sax-blue', 7],
+  ['concert', 'تهران', 'کنسرت', 'گروه سایه', 36, 'crimson', 19, 0, '20:30', 900000, 'soldout', 0, 'photo-rock-guitar-crowd', 8],
+  ['concert', 'اصفهان', 'کنسرت', 'آرمان کیان', 80, 'orange', 2, 3, '19:00', 950000, 'soldout', 0, 'photo-pop-smoke', 9],
+  ['theatre', 'تهران', 'نمایش موزیکال', 'پردهٔ سرخ', 41, 'crimson', 1, 26, '19:30', 700000, 'normal', 0, 'photo-theater-curtain', 21],
+  ['comedy', 'تهران', 'نمایش کودک', 'پینوکیو', 59, 'crimson', 0, 18, '16:00', 280000, 'normal', 0, 'photo-kids-pinocchio', 24],
+  ['comedy', 'اصفهان', 'جُنگ', 'شب خنده (استندآپ کمدی)', 80, 'yellow', 8, 0, '20:00', 500000, 'normal', 0, 'photo-comedy-mic', 25],
 ];
 // finished posters: what is printed on them is fixed (the day, the hall, the time)
 const FIXED = [
   { id: 'o-bitaarof', hall: 62, kind: 'comedy', city: 'تهران', type: 'استندآپ', name: 'بی‌تعارف', venue: 'تهران، پردیس تئاتر شهرزاد', pal: 'yellow', startsAt: '2026-11-03T21:00:00+03:30', price: '۲۲۰ هزار', status: 'normal', poster: 'orig-bitaarof' },
   { id: 'o-chaharmezrab', hall: 34, kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'چهار مضراب (ارکستر زهی باران)', venue: 'تهران، تالار وحدت', pal: 'teal', startsAt: '2026-11-28T19:00:00+03:30', price: '۶۰۰ هزار', status: 'normal', poster: 'orig-chaharmezrab' },
-  { id: 'o-frequency', hall: 24, kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'فرکانس (گروه نیمه‌شب)', venue: 'تهران، مجموعه ورزشی آزادی', pal: 'violet', startsAt: '2026-12-15T20:30:00+03:30', price: '۱۲۰۰ هزار', status: 'soon', saleMin: 14 * 60 + 41, poster: 'orig-frequency' },
-  { id: 'o-parvaz', hall: 67, kind: 'comedy', city: 'تهران', type: 'سیرک', name: 'پرواز (گروه آکروبات آسمان)', venue: 'تهران، فرهنگسرای نیاوران', pal: 'teal', startsAt: '2026-11-14T17:00:00+03:30', price: '۲۸۰ هزار', status: 'normal', poster: 'orig-parvaz' },
-  { id: 'o-spectrum', hall: 36, kind: 'concert', city: 'تهران', type: 'فستیوال', name: 'طیف (موسیقی الکترونیک)', venue: 'تهران، برج میلاد - سالن همایش‌ها', pal: 'indigo', startsAt: '2026-11-19T21:00:00+03:30', endsAt: '2026-11-20T21:00:00+03:30', price: '۹۰۰ هزار', status: 'normal', poster: 'orig-spectrum' },
-  { id: 'o-shadows', hall: 72, kind: 'theatre', city: 'تهران', type: 'تئاتر فیزیکال', name: 'سایه‌ها (گروه تئاتر آینه)', venue: 'تهران، تئاترشهر - تالار اصلی', pal: 'crimson', startsAt: '2026-11-07T19:30:00+03:30', price: '۳۵۰ هزار', status: 'normal', poster: 'orig-shadows' },
   // the real poster of a concert that is over: shows the label «برگزار شد» on a real poster
   { id: 'real-skykings', hall: 96, kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'SkyKings', venue: 'تهران، سالن پاسارگاد اریکه ایرانیان', pal: 'gold', startsAt: '2026-10-29T19:00:00+03:30', price: '۴۵۰ هزار', status: 'held', poster: 'real-skykings' },
 ];
-const MORE = SAMPLE.map(([kind, city, type, name, hall, pal, d1, d2, hm, price, st, saleMin, poster], k) => ({
-  id: `s-${k + 1}`, filler: true, pal, layout: 'bar', kind, city, type, name, title: `${type} ${name}`, desc: '', hall, venue: '',
+const MORE = SAMPLE.map(([kind, city, type, name, hall, pal, d1, d2, hm, price, st, saleMin, poster, num]) => ({
+  id: `s-${num}`, filler: true, pal, layout: 'bar', kind, city, type, name, title: `${type} ${name}`, desc: '', hall, venue: '',
   startsAt: inDays(d1, hm), endsAt: d2 ? inDays(d2, hm) : undefined, price: priceText(price), badge: '', status: st,
   seatsLeft: st === 'soldout' ? 0 : undefined, saleAt: saleMin ? new Date(Date.now() + saleMin * 6e4).toISOString() : undefined, poster: posterFile(poster), ver: 0,
 })).concat(FIXED.map((f) => ({
@@ -4577,6 +4611,57 @@ MORE.forEach((e) => { bindHall(e, e.hall); setPal(e, e.pal); e.w = when(e); });
 const LIST = () => (LOOK.listFill ? EVENTS.concat(MORE) : EVENTS);
 // a hall or a city renamed by the admin: the shows in it say so
 lib.on(() => EVENTS.concat(MORE).forEach((e) => { if (e.hall != null) bindHall(e, e.hall, e.hallLay); }));
+/* ════════════════════════════════════════════════════════════════
+   round T: placing a picture in its fixed frame («چیدن تصویر»). Every picture has one fixed shape on the site (the poster 2 : 3, the desktop banner 1.74 : 1,
+   the mobile banner 1 : 1) and always fills it; whoever adds a program drags the picture inside a big frame of that shape to choose what stays in view, and
+   zooms with the slider (or the wheel, or + and −). The point (fx, fy, in %) and the zoom (fz ≥ 1) are saved with the picture and used everywhere the picture is shown.
+   ════════════════════════════════════════════════════════════════ */
+// the fixed sizes of the site (width × height in pixels, and what they are for)
+const SIZES_FIXED = {
+  poster: { w: 1000, h: 1500, r: 2 / 3, name: 'پوستر', use: 'همه‌ی برنامه‌ها: کارت‌ها، صفحه‌ی اجرا، بلیت' },
+  banner: { w: 1740, h: 1000, r: 1.74, name: 'بنر دسکتاپ', use: 'بالای صفحه‌ی اصلی، روی کامپیوتر' },
+  mobile: { w: 1080, h: 1080, r: 1, name: 'بنر موبایل و تبلت', use: 'بالای صفحه‌ی اصلی، روی موبایل و تبلت' },
+};
+const framer = {
+  // the markup of one framer: a frame of the kind's shape, the picture in it, a zoom slider, a button to centre it
+  html(kind, id) {
+    const z = SIZES_FIXED[kind];
+    return `<div class="fr" data-fr="${esc(id)}" data-kind="${kind}" style="--frr:${z.r.toFixed(4)}"><div class="fr-box" tabindex="0" role="group" aria-label="جابه‌جا کردن ${esc(z.name)} تو کادرش (بکش، یا با کلیدهای جهت‌دار)"><img alt="" draggable="false"><i class="fr-grid" aria-hidden="true"></i><span class="fr-tip" aria-hidden="true">بکش تا جاش عوض بشه</span></div>
+      <div class="fr-bar"><label><span>بزرگ‌نمایی</span><input type="range" min="1" max="3" step="0.01" value="1" aria-label="بزرگ‌نمایی ${esc(z.name)}"></label><button type="button" class="chip" data-fr-c>وسط</button></div>
+      <small class="fr-note"><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi> · نسبت ${fa(z.r.toFixed(2)).replace('.', '٫')}</small></div>`;
+  },
+  // mounts the behaviour on a framer: src, the saved fit, and what to do when it changes ({ fx, fy, fz })
+  mount(root, { src, fx = 50, fy = 50, fz = 1, onChange }) {
+    const box = $('.fr-box', root), img = $('img', box), rng = $('input[type="range"]', root), st = { fx, fy, fz };
+    const paint = () => { img.style.objectPosition = `${st.fx}% ${st.fy}%`; img.style.transformOrigin = `${st.fx}% ${st.fy}%`; img.style.transform = `scale(${st.fz})`; rng.value = st.fz; };
+    const done = () => { paint(); if (onChange) onChange({ fx: +st.fx.toFixed(1), fy: +st.fy.toFixed(1), fz: +(+st.fz).toFixed(2) }); };
+    img.src = src; paint();
+    // how far the picture can move in the frame: its overflow on the long side (object-fit: cover); the pointer's move in pixels becomes a move of the point in %
+    let drag = null;
+    const span = () => { const bw = box.clientWidth, bh = box.clientHeight, ar = (img.naturalWidth || 1) / (img.naturalHeight || 1), br = bw / bh; return ar > br ? { x: Math.max(1, bh * ar - bw), y: 0 } : { x: 0, y: Math.max(1, bw / ar - bh) }; };
+    box.addEventListener('pointerdown', (ev) => { drag = { x: ev.clientX, y: ev.clientY, fx: st.fx, fy: st.fy, s: span() }; box.setPointerCapture(ev.pointerId); box.classList.add('is-drag'); });
+    box.addEventListener('pointermove', (ev) => {
+      if (!drag) return;
+      const dx = drag.s.x + box.clientWidth * (st.fz - 1), dy = drag.s.y + box.clientHeight * (st.fz - 1);   // (the room to move: what the picture overflows, and what the zoom adds)
+      st.fx = dx > 1 ? clamp(drag.fx - (ev.clientX - drag.x) / dx * 100, 0, 100) : 50;
+      st.fy = dy > 1 ? clamp(drag.fy - (ev.clientY - drag.y) / dy * 100, 0, 100) : 50;
+      paint();
+    });
+    const end = () => { if (!drag) return; drag = null; box.classList.remove('is-drag'); done(); };
+    box.addEventListener('pointerup', end); box.addEventListener('pointercancel', end);
+    box.addEventListener('wheel', (ev) => { ev.preventDefault(); st.fz = clamp(+st.fz - Math.sign(ev.deltaY) * 0.08, 1, 3); done(); }, { passive: false });
+    box.addEventListener('keydown', (ev) => {
+      const step = ev.shiftKey ? 8 : 2, k = { ArrowLeft: [step, 0], ArrowRight: [-step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] }[ev.key];
+      if (k) { ev.preventDefault(); st.fx = clamp(st.fx + k[0], 0, 100); st.fy = clamp(st.fy + k[1], 0, 100); done(); }
+      else if (ev.key === '+' || ev.key === '=') { ev.preventDefault(); st.fz = clamp(+st.fz + 0.1, 1, 3); done(); }
+      else if (ev.key === '-') { ev.preventDefault(); st.fz = clamp(+st.fz - 0.1, 1, 3); done(); }
+    });
+    rng.addEventListener('input', () => { st.fz = +rng.value; paint(); });
+    rng.addEventListener('change', done);
+    $('[data-fr-c]', root).addEventListener('click', () => { st.fx = 50; st.fy = 50; st.fz = 1; done(); });
+    return { set(src2, fit = {}) { st.fx = fit.fx != null ? fit.fx : 50; st.fy = fit.fy != null ? fit.fy : 50; st.fz = fit.fz || 1; img.src = src2; paint(); } };
+  },
+};
 
 /* ════════════════════════════════════════════════════════════════
    the colour a picture suggests: the strongest vivid hue, snapped to the nearest of the first eight palette
@@ -4740,7 +4825,7 @@ function paint(el, e) {
 // which size of the picture the browser picks: the banner's panel is about four fifths of the width
 const SIZES = '(min-width: 761px) 82vw, 100vw';
 async function buildScene(e) {
-  const mode = e.layout === 'text' ? 'text' : 'bar', pic = e.banner, ratio = mode === 'text' ? 16 / 9 : clamp(pic.w / pic.h, 1, 3.4);
+  const mode = e.layout === 'text' ? 'text' : 'bar', useM = mode === 'bar' && STK.matches && !!e.bannerM, pic = useM ? e.bannerM : e.banner, ratio = mode === 'text' ? 16 / 9 : clamp(pic.w / pic.h, 1, 3.4);
   const el = document.createElement('article');
   el.className = 'scene'; el.dataset.mode = mode; el.dataset.id = e.id; el.inert = true;
   el.setAttribute('aria-hidden', 'true'); el.setAttribute('role', 'group'); el.setAttribute('aria-roledescription', 'اجرا');
@@ -4748,6 +4833,7 @@ async function buildScene(e) {
   if (e.fp) { el.style.setProperty('--o', e.fp.o); el.style.setProperty('--op', e.fp.op); el.style.setProperty('--mop', e.fp.mop); }
   el.innerHTML = `<div class="amb" aria-hidden="true"></div>${MODES[mode](e)}`;
   const img = $('img.art', el);
+  if (mode === 'bar') $('.pic', el).setAttribute('style', fitVars(pic));   // where the admin placed the picture in its frame
   await loadArt(img, pic, e, SIZES);
   const amb = document.documentElement.dataset.bg === 'glow' ? ambientOf(img) : '';
   if (amb) el.style.setProperty('--amb', `url("${amb}")`);
@@ -5376,6 +5462,12 @@ const look = {
     const sizesList = [[1920, 1080], [1920, 937], [1920, 860], [1536, 864], [1440, 900], [1366, 768], [2560, 1440]];
     let tbl = '<div class="hd"><span>اندازه‌ی پنجره</span><span>کادر بنر · خودِ بنر</span></div>';
     sizesList.forEach(([w, h]) => { const g = geom(w, h); tbl += `<div><b>${faP(w)}×${faP(h)}</b><output>${g.stacked ? '—' : `${faP(Math.round(g.frame.w))}×${faP(Math.round(g.frame.h))}  /  ${faP(Math.round(g.pic.w))}×${faP(Math.round(g.pic.h))}`}</output></div>`; });
+    if (!DEV) {
+      host.innerHTML = `<div class="pp-sec"><h4>اندازه‌ی ثابت تصویرها</h4><p>هر تصویر یه اندازه‌ی ثابت داره و همیشه کادرش رو پر می‌کنه؛ هر نسبتی هم بدی، تو کادر جاش رو خودت تنظیم می‌کنی.</p><div class="szt">
+        ${Object.values(SIZES_FIXED).map((z) => `<div><b>${esc(z.name)}</b><output><bdi dir="ltr">${faP(z.w)}×${faP(z.h)}</bdi></output></div>`).join('')}</div>
+        <div class="rec"><b>برای صفحه‌های تیز:</b> دو برابر هر اندازه (پوستر ${faP(2000)}×${faP(3000)}، بنر دسکتاپ ${faP(3480)}×${faP(2000)}، بنر موبایل ${faP(2160)}×${faP(2160)}). فرمت WebP، JPG یا PNG؛ تا ${faP(500)} کیلوبایت برای هر تصویر خوبه.<br>متن و چهره‌ها رو دست‌کم ۴٪ از لبه‌ها دور نگه دار.</div></div>`;
+      return;
+    }
     host.innerHTML = `
       <div class="pp-sec"><h4>الان، تو همین پنجره</h4><div class="szt">
         ${row('پنجره', `${faP(innerWidth)}×${faP(innerHeight)}  ( ${faP(dpr)}x )`)}
@@ -6020,7 +6112,14 @@ const STATUS_ICON = { soon: 'clock', extended: 'check', held: 'check', cancelled
 // what a card says in place of the buy button when the show can't be bought
 const OFF_TEXT = { soldout: 'بلیت‌ها به اتمام رسید', held: 'این برنامه برگزار شده است', cancelled: 'این برنامه لغو شد', postponed: 'این برنامه به‌تعویق افتاد', soon: 'فروش به‌زودی شروع می‌شه' };
 const ico = (n) => `<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
-const artOf = (e) => { const a = e.poster || e.banner; return { a, src: a.fake || (e.poster ? a.src : a.thumb) || '' }; };
+// the picture of a program for every place that shows a poster: its poster (always 2 : 3), or, when it has none, a drawn stand-in with its name and colour (never a crop of its banner)
+const artOf = (e) => {
+  const a = e.poster || e.stand || (e.stand = { w: 2, h: 3, nat: 2 / 3, stand: true });
+  if (a.stand && !a.fake && document.fonts && document.fonts.check('900 24px Vazirmatn')) a.fake = fakeArt(e, a);
+  return { a, src: a.fake || a.src || '' };
+};
+// where a picture sits in its frame: the point (fx, fy in %) that stays in view, and the zoom (fz ≥ 1); the admin sets them when placing the picture
+const fitVars = (a) => `--fx:${a && a.fx != null ? a.fx : 50}%;--fy:${a && a.fy != null ? a.fy : 50}%;--fz:${a && a.fz ? a.fz : 1}`;
 // the days a list of shows covers: "۱۵ آبان تا ۲۴ آذر"
 function spanOf(list) {
   const t = list.map((e) => Date.parse(e.startsAt)), u = list.map((e) => Date.parse(e.endsAt || e.startsAt));
@@ -6170,8 +6269,9 @@ const s2 = {
     const im = $('img', c), { a: art } = artOf(e), pic = $(wide ? '.ptk-pic' : '.tkt-pic', c);
     // the soft copy of the picture behind it (it fills what the picture leaves) and behind the words
     const bg = (u) => { c.style.setProperty('--art', `url("${u}")`); softArt(u).then((s) => { if (!s || c.style.getPropertyValue('--art') !== `url("${u}")`) return; c.style.setProperty('--art-p', `url("${s.p}")`); c.style.setProperty('--art-b', `url("${s.b}")`); c.classList.add('has-soft'); }); };
-    const u0 = art.fake || (e.poster ? art.src : art.thumb); if (u0) bg(u0);
-    const size = e.poster ? { w: LOOK.posterRatio, h: 1 } : art;   // (a drawn stand-in has the frame's shape)
+    const u0 = art.fake || art.src; if (u0) bg(u0);
+    c.setAttribute('style', c.getAttribute('style') + ';' + fitVars(art));
+    const size = { w: 2, h: 3 };   // (a drawn stand-in has the frame's shape)
     // a file that isn't there is drawn by the page; and the picture is shown whole: it fills the frame if its shape is the frame's (to FILL_TOL), else the soft copy fills the rest
     im.onerror = () => { im.onerror = null; im.removeAttribute('srcset'); const u = art.fake = fakeArt(e, size); im.src = u; bg(u); };
     im.addEventListener('load', () => this.fit(pic, im));
@@ -6262,7 +6362,7 @@ const s2 = {
     // a stand-in picture is drawn only when its card comes near the screen, one at a time, and not while the page is making its entrance
     const fakes = $$('img[data-fake]', this.secs);
     if (fakes.length) {
-      const draw = (im) => { const e = showById(im.dataset.fake); if (!e || !im.isConnected) return; const u = e.banner.fake || (e.banner.fake = fakeArt(e, e.banner)); im.src = u; im.closest('.tkt, .ptk').style.setProperty('--art', `url("${u}")`); };
+      const draw = (im) => { const e = showById(im.dataset.fake); if (!e || !im.isConnected) return; const a = artOf(e).a, u = a.fake || (a.fake = fakeArt(e, a.stand ? a : { w: 2, h: 3 })); im.src = u; im.closest('.tkt, .ptk').style.setProperty('--art', `url("${u}")`); };
       const queue = [], pump = () => { if (this.pumping) return; this.pumping = true; const step = () => { if (state.intro) { setTimeout(step, 400); return; } const im = queue.shift(); if (!im) { this.pumping = false; return; } draw(im); setTimeout(step, 30); }; setTimeout(step, 60); };
       if ('IntersectionObserver' in window) {
         this.lazy = new IntersectionObserver((ens) => ens.forEach((en) => { if (en.isIntersecting) { this.lazy.unobserve(en.target); queue.push(en.target); pump(); } }), { rootMargin: '900px 0px' });
@@ -6271,13 +6371,10 @@ const s2 = {
     }
   },
   lazyOff() { if (this.lazy) { this.lazy.disconnect(); this.lazy = null; } },
-  // the picture whole in the poster's frame: its own shape (to FILL_TOL of the frame's) fills it, any other leaves the soft copy round it
+  // the picture fills the poster's frame (always 2 : 3, cover) around its focus point: nothing is blurred, nothing is letterboxed
   fit(pic, im) {
     if (!im.naturalWidth) return;
-    const fr = pic.clientWidth && pic.clientHeight ? pic.clientWidth / pic.clientHeight : LOOK.posterRatio, r = im.naturalWidth / im.naturalHeight, d = Math.abs(Math.log(r / fr)), mode = LOOK.posterFit || 'smart';
-    const fill = d < FILL_TOL, cover = !fill && (mode === 'fill' || (mode === 'smart' && d < COVER_TOL));
-    pic.classList.toggle('is-fill', fill); pic.classList.toggle('is-cover', cover); pic.classList.toggle('is-inset', !fill && !cover); pic.classList.toggle('is-wide', !fill && !cover && r > 1.05);
-    pic.style.setProperty('--r', r.toFixed(4));
+    pic.classList.add('is-cover'); pic.classList.remove('is-fill', 'is-inset', 'is-wide');
   },
   refit() { $$('.tkt-pic, .ptk-pic', this.secs).forEach((pic) => this.fit(pic, $('img', pic))); },
   later() { clearTimeout(this.lt); this.lt = setTimeout(() => this.refresh(), 160); },
@@ -6714,8 +6811,10 @@ const STEPS = ['انتخاب سانس', 'انتخاب صندلی', 'رزرو و 
    sizes (a jittered grid, a third of its places empty, a density that swells and thins), lit by four soft patches that wander and fade again, slowly (a lap of about 100 s). It
    costs almost nothing: about seven hundred dots drawn about three times a second (a fraction of a millisecond, a second apart when a frame is slow), not at all while the tab is
    hidden, once only with reduced motion; the dots are in the page's own colour (white on the dark theme, black on the light one) ───── */
+// the stage's fixed backdrop (the same for every program): the rows of a hall as arcs of dots, seen from the stage, and two soft lights; it is drawn in the theme's text colour at a low strength
+const DECO = `<svg class="lx-deco" aria-hidden="true" focusable="false" viewBox="0 0 1600 600" preserveAspectRatio="xMidYMax slice"><defs><linearGradient id="lxDf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".7" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff"/></linearGradient><mask id="lxDm"><rect width="1600" height="600" fill="url(#lxDf)"/></mask></defs><g mask="url(#lxDm)" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="7" stroke-dasharray="0.1 24">${[230, 300, 370, 440, 510, 580, 650, 720, 790, 860, 930, 1000].map((r) => `<circle cx="800" cy="780" r="${r}"/>`).join('')}</g></svg>`;
 const dots = {
-  cv: null, g: null, on: false, pts: [], W: 0, H: 0, dpr: 1, t0: 0, tm: 0, slow: 0, rz: 0, KINDS: ['show', 'seats', 'pay', 'ticket'],
+  cv: null, g: null, on: false, pts: [], W: 0, H: 0, dpr: 1, t0: 0, tm: 0, slow: 0, rz: 0, KINDS: ['show', 'seats', 'pay'],
   sync(kind) { const want = !!LOOK.pageDots && this.KINDS.includes(kind); root.classList.toggle('has-dots', want); if (want) this.start(); else this.stop(); },
   ensure() {
     if (this.cv) return;
@@ -6886,9 +6985,8 @@ const page = {
   },
   render(e) {
     const st = statusOf(e), h = hallOf(e), tiers = tiersOf(e), ses = sessionsOf(e), ab = aboutOf(e), dur = DUR[e.kind] || 100;
-    const { a: art, src } = artOf(e), hasBanner = !!(e.banner && !e.banner.sample && e.banner.src && !e.banner.fake), cover = hasBanner ? e.banner.src : src, hasPoster = !!e.poster || !hasBanner;
+    const { a: art, src } = artOf(e);
     const kindIcon = iconOfCat(e.kind), cat = catOf(e), [cd, cl] = secColor(cat);
-    const ps = clamp(art && (art.nat || (art.w && art.h && art.w / art.h)) || 0.75, 0.6, 1).toFixed(4);   // the poster's frame has its picture's shape from the first paint (a poster's size is in its data; the sample photos are 3 : 4), so nothing moves when it loads
     const words = esc(e.title).split(' ').map((w) => `<span class="w">${w}</span>`).join(' ');
     const open = !st.cta && st.key !== 'soon', timed = st.key === 'soon' && saleMs(e) > Date.now();
     const acc = this.accepted.has(e.id);
@@ -6914,9 +7012,9 @@ const page = {
     this.el.innerHTML = `<div class="evp-in evp-show lx" style="--sc-d:${cd};--sc-l:${cl}">
       <div class="evp-toprow evp-rise"><nav class="evp-crumb" aria-label="مسیر"><a href="#" data-back>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><a href="#" data-cat="${esc(cat)}">${esc(catName(cat))}</a><span aria-hidden="true">/</span><b>${esc(e.name)}</b></nav>
       ${stepsHTML(1, e, null)}</div>
-      <section class="lx-stage" style="--art:url('${esc(cover)}');--pa:url('${esc(hasPoster ? src : cover)}')" aria-label="${esc(e.title)}">
-        <div class="lx-bg" aria-hidden="true"></div>
-        <figure class="lx-poster${hasPoster ? '' : ' is-wide'}" style="--ps:${hasPoster ? ps : '1.7778'}"><img src="${esc(hasPoster ? src : cover)}" alt="${hasPoster ? 'پوستر' : 'تصویر'} ${esc(e.title)}"></figure>
+      <section class="lx-stage" style="${fitVars(art)}" aria-label="${esc(e.title)}">
+        ${DECO}
+        <figure class="lx-poster"><img src="${esc(src)}" alt="پوستر ${esc(e.title)}"></figure>
         <div class="lx-title">
           <div class="lx-top"><div class="evp-kind"><span>${ico(kindIcon)}${esc(e.type)}</span>${statusChip(e)}${e.badge ? `<em class="evp-badge">${esc(e.badge)}</em>` : ''}</div>
             <div class="lx-acts"><button type="button" class="ev-ic" data-act="save" aria-pressed="false" aria-label="نشان کردن">${ico('heart')}</button><button type="button" class="ev-ic" data-act="share" aria-haspopup="menu" aria-label="هم‌رسانی">${ico('share')}</button></div></div>
@@ -6963,10 +7061,8 @@ const page = {
   wire(e, ses) {
     const pim = $('.lx-poster img', this.el), { a: pa } = artOf(e);
     if (pim) {
-      pim.onerror = () => { pim.onerror = null; const u = pa.fake || (pa.fake = fakeArt(e, e.poster ? { w: LOOK.posterRatio, h: 1 } : pa)); pim.src = u; const fr = $('.lx-poster', this.el); if (fr && pa.nat) fr.style.setProperty('--ps', clamp(pa.w / pa.h, 0.6, 1).toFixed(4)); const cv = $('.lx-stage', this.el); cv.style.setProperty('--pa', `url('${u}')`); if (!e.banner || e.banner === pa) cv.style.setProperty('--art', `url('${u}')`); };
-      // the poster's frame has the poster's own shape (a 3:4 photo, a 2:3 poster): no bars round it
-      const shape = () => { if (pim.naturalWidth) { const f = $('.lx-poster', this.el); if (f) { const wide = f.classList.contains('is-wide'); f.style.setProperty('--ps', clamp(pim.naturalWidth / pim.naturalHeight, wide ? 1.2 : 0.6, wide ? 2.4 : 1).toFixed(4)); } } };
-      pim.addEventListener('load', shape); if (pim.complete) shape();
+      const stand = () => { pim.onerror = null; const u = pa.fake || (pa.fake = fakeArt(e, { w: 2, h: 3 })); pim.src = u; };
+      pim.onerror = stand; if (!pim.getAttribute('src')) stand();
     }
     const el = this.el, on = (sel, f) => $$(sel, el).forEach((x) => x.addEventListener('click', (ev) => { ev.preventDefault(); f(x, ev); }));
     on('[data-back]', () => this.close());
@@ -9272,7 +9368,9 @@ function draftEvent(d) {
   const e = { id: d.id, by: d.by || '', draft: true, filler: true, layout: 'bar', kind: d.kind, city: cityName(d.cs) || d.city || '', cs: d.cs, hall: d.hall || undefined, hallLay: d.hallLay | 0, type: d.type || KIND_T[d.kind], name: d.title || 'برنامه‌ی بی‌نام', desc: d.desc || '', venue: `${cityName(d.cs) || d.city || ''}، ${d.venue || '…'}`,
     startsAt: new Date(ts[0] || Date.now() + 7 * DAY).toISOString(), endsAt: ts.length > 1 ? new Date(ts[ts.length - 1]).toISOString() : undefined, price: priceText(low < Infinity ? low : KIND_BASE[d.kind] || 500000),
     prices: d.prices, seatTier: d.seatTier, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
-    poster: { src: d.poster || '', w: 2, h: 3 }, ver: 0 };
+    poster: { src: d.poster || '', w: 2, h: 3, ...(d.posterFit || {}) }, ver: 0 };
+  if (d.banner) e.banner = { src: d.banner, thumb: d.banner, w: 1740, h: 1000, ...(d.bannerFit || {}), custom: true };
+  if (d.bannerM) e.bannerM = { src: d.bannerM, w: 1080, h: 1080, ...(d.bannerMFit || {}) };
   if (d.hall) bindHall(e, d.hall, d.hallLay);
   e.title = `${e.type} ${e.name}`;
   setPal(e, d.pal || 'violet'); e.w = when(e);
@@ -9284,7 +9382,7 @@ drafts.all().filter((d) => d.status === 'live').forEach((d) => MORE.push(draftEv
 
 const wizard = {
   d: null, step: 0,
-  blank() { return { by: this.adm ? 'admin' : '', id: `d-${Date.now().toString(36)}`, title: '', kind: 'concert', type: 'کنسرت', city: 'تهران', cs: 'tehran', hall: '', hallLay: 0, venue: '', desc: '', dur: 120, age: 'همه', pal: 'violet', poster: '', days: [], times: ['20:30'], sale: 'now', saleAt: '', prices: {}, weekend: false, status: 'draft', at: Date.now() }; },
+  blank() { return { by: this.adm ? 'admin' : '', id: `d-${Date.now().toString(36)}`, title: '', kind: 'concert', type: 'کنسرت', city: 'تهران', cs: 'tehran', hall: '', hallLay: 0, venue: '', desc: '', dur: 120, age: 'همه', pal: 'violet', poster: '', posterFit: null, banner: '', bannerFit: null, bannerM: '', bannerMFit: null, days: [], times: ['20:30'], sale: 'now', saleAt: '', prices: {}, weekend: false, status: 'draft', at: Date.now() }; },
   render(el, v) {
     this.el = el; this.adm = v.kind === 'admin';
     // #/admin/new/hall:<id> starts a show in that hall
@@ -9357,26 +9455,36 @@ const wizard = {
     $('#wzTitle', b).focus({ preventScroll: true });
   },
 
-  /* 2. the poster */
+  /* 2. the pictures: the poster, and the two banners (options); each in a frame of its fixed shape, placed by hand */
   s1(b) {
     const d = this.d;
-    b.innerHTML = `<h2>${ico('upload')}پوستر</h2><p class="bk-lead">پوستر عمودی، به نسبت ۲ به ۳ (مثلاً ۱۰۰۰ × ۱۵۰۰ پیکسل). هر نسبت دیگه‌ای هم کامل دیده می‌شه و دورش با نسخه‌ی محوِ خودش پر می‌شه. بدون پوستر، یه پوستر موقت از اسم و رنگ ساخته می‌شه.</p>
-      <div class="wz-poster"><label class="wz-drop" id="wzDrop"><input type="file" accept="image/*" id="wzFile"><span class="sec-ic" aria-hidden="true">${ico('upload')}</span><b>پوستر رو اینجا بنداز</b><small>یا بزن تا انتخاب کنی · JPG، PNG یا WebP</small></label>
-        ${d.poster ? `<figure class="wz-pic"><img src="${esc(d.poster)}" alt="پوستر"><button type="button" class="chip" id="wzRm">${ico('x')}برداشتن</button></figure>` : ''}</div>
+    const slot = (kind, key, title, note, req) => {
+      const z = SIZES_FIXED[kind];
+      return `<section class="wz-slot" data-kind="${kind}"><h3 class="wz-h3">${esc(title)}${req ? '' : ' <small>(اختیاری)</small>'}</h3><p class="wz-sz"><b><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi></b> · ${esc(note)}</p>
+        ${d[key] ? `${framer.html(kind, kind)}<div class="wz-slot-a"><label class="chip wz-swap">${ico('upload')}عوض کردن<input type="file" accept="image/*" data-kind="${kind}"></label><button type="button" class="chip" data-rm="${kind}">${ico('x')}برداشتن</button></div>`
+        : `<label class="wz-drop wz-drop-s" data-drop="${kind}"><input type="file" accept="image/*" data-kind="${kind}"><span class="sec-ic" aria-hidden="true">${ico('upload')}</span><b>تصویر رو اینجا بنداز</b><small>یا بزن تا انتخاب کنی · JPG، PNG یا WebP</small></label>`}</section>`;
+    };
+    b.innerHTML = `<h2>${ico('upload')}تصویرها</h2><p class="bk-lead">هر تصویر یه اندازه‌ی ثابت داره و همیشه کادرش رو پر می‌کنه. تصویر رو که گذاشتی، تو کادر بزرگ بکشش تا همون بخشی که می‌خوای دیده بشه تو کادر بمونه؛ با نوار یا چرخ ماوس هم بزرگش کن. بدون پوستر، یه پوستر موقت از اسم و رنگ ساخته می‌شه.</p>
+      <div class="wz-slots">${slot('poster', 'poster', 'پوستر', 'برای کارت‌ها، صفحه‌ی اجرا و بلیت؛ عمودی، نسبت ۲ به ۳', true)}${slot('banner', 'banner', 'بنر دسکتاپ', 'برای بالای صفحه‌ی اصلی روی کامپیوتر؛ افقی، نسبت ۱٫۷۴')}${slot('mobile', 'bannerM', 'بنر موبایل و تبلت', 'برای بالای صفحه‌ی اصلی روی موبایل و تبلت؛ مربع')}</div>
       <h3 class="wz-h3">رنگ برنامه <small>(برای پوستر موقت و دکمه‌ها)</small></h3>
       <div class="wz-pal" role="radiogroup" aria-label="رنگ">${Object.entries(PALETTE).slice(0, 14).map(([k, p]) => `<button type="button" role="radio" data-pal="${k}" aria-checked="${d.pal === k}" style="--c:${p.accent}" aria-label="${esc(p.label)}"></button>`).join('')}</div>`;
-    const take = (f) => {
+    const KEYS = { poster: ['poster', 'posterFit', 1000, 1500], banner: ['banner', 'bannerFit', 1280, 736], mobile: ['bannerM', 'bannerMFit', 800, 800] };
+    // a picture read from a file, made smaller (it is kept with the draft in the browser)
+    const take = (kind, f) => {
       if (!f || !/^image\//.test(f.type)) { toast('یه فایل تصویری انتخاب کن.'); return; }
-      const im = new Image(), u = URL.createObjectURL(f);
-      im.onload = () => { const k = Math.min(1, 640 / im.naturalWidth, 1100 / im.naturalHeight), c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); d.poster = c.toDataURL('image/jpeg', 0.84); URL.revokeObjectURL(u); this.save(true); this.s1(b); this.preview(true); toast(`پوستر گذاشته شد (${fa(im.naturalWidth)} × ${fa(im.naturalHeight)}).`); };
+      const [key, fit, mw, mh] = KEYS[kind], im = new Image(), u = URL.createObjectURL(f);
+      im.onload = () => { const k = Math.min(1, mw / im.naturalWidth, mh / im.naturalHeight), c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); d[key] = c.toDataURL('image/jpeg', 0.84); d[fit] = null; URL.revokeObjectURL(u); this.save(true); this.s1(b); this.preview(true); toast('تصویر گذاشته شد؛ تو کادرش جاش رو تنظیم کن.'); };
       im.onerror = () => toast('این تصویر خونده نشد.'); im.src = u;
     };
-    $('#wzFile', b).addEventListener('change', (ev) => take(ev.target.files[0]));
-    const z = $('#wzDrop', b);
-    z.addEventListener('dragover', (ev) => { ev.preventDefault(); z.classList.add('is-over'); });
-    z.addEventListener('dragleave', () => z.classList.remove('is-over'));
-    z.addEventListener('drop', (ev) => { ev.preventDefault(); z.classList.remove('is-over'); take(ev.dataTransfer.files[0]); });
-    const rm = $('#wzRm', b); if (rm) rm.addEventListener('click', () => { d.poster = ''; this.save(true); this.s1(b); this.preview(true); });
+    $$('input[type="file"][data-kind]', b).forEach((x) => x.addEventListener('change', (ev) => take(x.dataset.kind, ev.target.files[0])));
+    $$('[data-drop]', b).forEach((z) => {
+      z.addEventListener('dragover', (ev) => { ev.preventDefault(); z.classList.add('is-over'); });
+      z.addEventListener('dragleave', () => z.classList.remove('is-over'));
+      z.addEventListener('drop', (ev) => { ev.preventDefault(); z.classList.remove('is-over'); take(z.dataset.drop, ev.dataTransfer.files[0]); });
+    });
+    $$('[data-rm]', b).forEach((x) => x.addEventListener('click', () => { const [key, fit] = KEYS[x.dataset.rm]; d[key] = ''; d[fit] = null; this.save(true); this.s1(b); this.preview(true); }));
+    // the frames: the picture where it was placed; every change is kept with the draft and shown in the card at once
+    $$('.fr', b).forEach((fr) => { const [key, fit] = KEYS[fr.dataset.kind], f = d[fit] || {}; framer.mount(fr, { src: d[key], fx: f.fx, fy: f.fy, fz: f.fz, onChange: (v) => { d[fit] = v; this.save(true); this.preview(true); } }); });
     $$('[data-pal]', b).forEach((x) => x.addEventListener('click', () => { d.pal = x.dataset.pal; $$('[data-pal]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); this.preview(true); }));
   },
 
@@ -9499,7 +9607,7 @@ const wizard = {
       ${d.status === 'rejected' ? `<p class="wz-msg is-bad">${ico('info')}مدیر این برنامه رو برگردوند: «${esc(d.note || 'بدون توضیح')}». درستش کن و دوباره بفرست.</p>` : d.status === 'review' ? `<p class="wz-msg">${ico('clock')}فرستاده شد ${esc(ago(d.sent || d.at))}؛ مدیر بررسیش می‌کنه. تا اون موقع روی سایت نیست.</p>` : d.status === 'live' ? `<p class="wz-msg is-ok">${ico('check')}مدیر تأیید کرد؛ برنامه روی سایته. <a href="#/e/${esc(encodeURIComponent(d.id))}">صفحه‌ی برنامه</a></p>` : ''}
       <dl class="wz-sum">
         ${row(0, 'برنامه', `${esc(d.type)} «${esc(d.title || '—')}» · ${esc(d.kind === 'comedy' ? 'جُنگ و کمدی' : KIND_T[d.kind])} · ${esc(cityName(d.cs) || d.city || '')} · ${fa(d.dur)} دقیقه · ${esc(d.age)}`)}
-        ${row(1, 'پوستر', d.poster ? 'گذاشته شد' : 'پوستر موقت (از اسم و رنگ)')}
+        ${row(1, 'تصویرها', `${d.poster ? 'پوستر گذاشته شد' : 'پوستر موقت (از اسم و رنگ)'} · ${d.banner ? 'بنر دسکتاپ' : 'بدون بنر دسکتاپ'} · ${d.bannerM ? 'بنر موبایل' : 'بدون بنر موبایل'}`)}
         ${row(2, 'سالن', h ? `${esc(h.name)} · ${esc(h.city)}${hall0.lay.length > 1 ? ` · ${esc(layName(hall0, d.hallLay | 0))}` : ''} · ${money(h.cap)} صندلی` : '<b class="neg">انتخاب نشده</b>')}
         ${row(3, 'سانس‌ها', n ? `${fa(n)} سانس، از ${esc(dayOf(atOf(d.days[0], d.times[0])))} تا ${esc(dayOf(atOf(d.days[d.days.length - 1], d.times[0])))} · ساعت ${d.times.map(fa).join('، ')}${d.sale === 'at' && d.saleAt ? ` · شروع فروش ${esc(dayOf(Date.parse(d.saleAt)))} ${esc(F.time.format(new Date(d.saleAt)))}` : ' · فروش بلافاصله بعد از تأیید'}` : '<b class="neg">هنوز سانسی نیست</b>')}
         ${row(4, 'قیمت‌ها', h ? tiersUsed(h.plan).map((t) => `<span class="wz-pt" style="--c:${TIER[t].c}"><i></i>${d.prices[t] ? money(d.prices[t]) : '—'}</span>`).join('') + (d.weekend ? ' · آخر هفته ۱۰٪ بیشتر' : '') + (() => { const v = Object.values(d.seatTier || {}), nV = v.filter((x) => x === 'V').length, nX = v.filter((x) => x === 'X').length; return nV || nX ? ` · ${fa(nV)} صندلی ویژه${d.prices.V ? ` (${money(d.prices.V)})` : ''}، ${fa(nX)} فروشی نیست` : ''; })() : '—')}
@@ -9866,7 +9974,8 @@ const admin = {
   // the home page's featured slots (the hero): each one's banner, layout, colour and label; editing opens the settings on the page
   content(el) {
     el.innerHTML = `${desk.head('محتوای صفحه‌ی اصلی', 'جایگاه ویژه‌ی بالای صفحه: شش اجرا، هر کدوم با بنر، چیدمان، رنگ و برچسب خودش. «ویرایش» پنجره‌ی تنظیمات همون جایگاه رو روی خود صفحه باز می‌کنه تا نتیجه رو همون لحظه ببینی (بنر تازه، رنگ، نوشته‌ها، شروع فروش).')}
-      <section class="panel dk-box evp-rise"><h2>${ico('sliders')}جایگاه‌ها<small>به ترتیب نمایش</small></h2><ol class="ad-slots">${EVENTS.map((e, i) => { const s = statusOf(e), b = e.banner || {}; return `<li><span class="ad-n">${fa(i + 1)}</span><figure class="ad-ban" style="--accent:${e.accent}"><img src="${esc(b.fake || b.thumb || b.src || '')}" alt="" loading="lazy"></figure><span class="dk-staff-t"><b>${esc(e.title)}</b><small>${esc(e.venue)} · ${esc(e.layout === 'text' ? 'عکس و متن' : 'بنر با نوشته')}</small><span>${s.label ? `<em class="st" data-tone="${s.tone}">${esc(s.label)}</em>` : '<em class="st" data-tone="good">در حال فروش</em>'}<i class="ad-sw" style="--c:${e.accent}" title="${esc((PALETTE[e.pal] || {}).label || '')}"></i></span></span><button type="button" class="chip" data-edit="${i}">${ico('sliders')}ویرایش</button></li>`; }).join('')}</ol></section>`;
+      <section class="panel dk-box evp-rise"><h2>${ico('sliders')}جایگاه‌ها<small>به ترتیب نمایش</small></h2><ol class="ad-slots">${EVENTS.map((e, i) => { const s = statusOf(e), b = e.banner || {}; return `<li><span class="ad-n">${fa(i + 1)}</span><figure class="ad-ban" style="--accent:${e.accent}"><img src="${esc(b.fake || b.thumb || b.src || '')}" alt="" loading="lazy"></figure><span class="dk-staff-t"><b>${esc(e.title)}</b><small>${esc(e.venue)} · ${esc(e.layout === 'text' ? 'عکس و متن' : 'بنر با نوشته')}</small><span>${s.label ? `<em class="st" data-tone="${s.tone}">${esc(s.label)}</em>` : '<em class="st" data-tone="good">در حال فروش</em>'}<i class="ad-sw" style="--c:${e.accent}" title="${esc((PALETTE[e.pal] || {}).label || '')}"></i></span></span><button type="button" class="chip" data-edit="${i}">${ico('sliders')}ویرایش</button></li>`; }).join('')}</ol><div class="ad-addslot"><label class="chip ad-up">${ico('plus')}جایگاه تازه از یه بنر<input type="file" accept="image/*" id="adNewSlot"></label><small>بنر دسکتاپ (${fa(1740)}×${fa(1000)}) رو بده؛ بعدش با «ویرایش» بنر موبایل و جای هر تصویر رو تنظیم کن.</small></div></section>`;
+    $('#adNewSlot', el).addEventListener('change', async (ev) => { const f = ev.target.files[0]; ev.target.value = ''; if (f) { await panel.addFile(f); this.content(el); toast('جایگاه تازه ساخته شد؛ آخر فهرسته.'); } });
     $$('.ad-ban img', el).forEach((im) => { im.onerror = () => { im.onerror = null; im.style.visibility = 'hidden'; }; });
     $$('[data-edit]', el).forEach((b) => b.addEventListener('click', () => { const i = +b.dataset.edit; page.close({ then: () => { go(i, 'user'); setTimeout(() => { panel.open(true); panel.tab('slot'); }, 350); } }); }));
   },
@@ -10773,7 +10882,7 @@ const cssClamp = (a, v, b) => Math.max(a, Math.min(v, b));
 function geom(W, H, L = LOOK) {
   const ar = (() => { const s = stage.top, b = EVENTS[state.i].banner; return s && s.img && s.img.naturalWidth ? s.img.naturalWidth / s.img.naturalHeight : b.w / b.h; })();
   const stacked = W <= 760 || W / H <= 1.25, u = clamp(Math.min(W / 100, (H * 1.7778) / 100), 8, 26), px = u / 19.2, bw = L.borderW;
-  if (stacked) { const w = W - 20, h = w / ar; return { stacked, u, px, frame: { w, h }, pic: { w, h } }; }
+  if (stacked) { const w = W - 20, h = w / 1; return { stacked, u, px, frame: { w, h }, pic: { w, h } }; }
   const heroH = Math.max(440, H), edgeX = Math.max(px * L.edgeX, (W - heroH * 2.25) / 2), padT = px * L.edgeT, padB = px * L.edgeB, gap = px * L.gap;
   const navH = Math.max(50, px * L.navH), dockH = Math.max(56, px * L.dockH), mainH = heroH - padT - padB - navH - gap;
   const n = Math.min(EVENTS.length, VIS), railPad = u * 0.75, arrow = Math.max(28, u * 1.85), cardGap = u * 0.6;
@@ -10846,6 +10955,7 @@ const panel = {
   init() {
     const sw = $('#ppSw');
     Object.entries(PALETTE).forEach(([k, p]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.v = k; b.title = p.label; b.setAttribute('aria-label', p.label); b.setAttribute('aria-pressed', 'false'); b.style.background = p.accent; sw.appendChild(b); });
+    if (!DEV) $('.pp-head b').textContent = 'ویرایش زنده';   // (the admin's editor: its slot, its banners, its sizes)
     this.fab.addEventListener('click', () => this.open(true));
     $('#protoClose').addEventListener('click', () => { this.open(false); this.fab.focus(); });
     this.el.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { ev.stopPropagation(); this.open(false); this.fab.focus(); } });
@@ -10864,7 +10974,7 @@ const panel = {
     $('#ppPReset').addEventListener('click', () => this.resetPoster());
     $('#ppPhoto').addEventListener('click', () => this.usePhoto());
     $('#ppReset').addEventListener('click', () => this.reset());
-    $('#ppNotes').addEventListener('click', (ev) => { ev.preventDefault(); this.open(false); $('#notes-h').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); });
+    $('#ppNotes').addEventListener('click', (ev) => { ev.preventDefault(); this.open(false); document.documentElement.classList.add('show-notes'); $('#notes-h').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); });
     const fields = { fTitle: 'title', fVenue: 'venue', fPrice: 'price', fType: 'type', fName: 'name', fBadge: 'badge' };
     Object.entries(fields).forEach(([id, key]) => $('#' + id).addEventListener('input', (ev) => { const e = EVENTS[state.i]; e[key] = ev.target.value; e.w = when(e); this.texts(); }));
     // the show's kind, city, status and sale start (what the categories, the labels and the countdown work from)
@@ -10900,7 +11010,7 @@ const panel = {
     set('fKind', e.kind || 'theatre'); set('fStatus', e.status || 'auto');
     set('fHall', e.hall != null ? String(e.hall) : '');
     const fs = $('#fSale'); set('fSale', saleMs(e) > Date.now() ? 'keep' : 'none'); fs.querySelector('[value="keep"]').hidden = !(saleMs(e) > Date.now());
-    this.stNote(e); this.posterNote();
+    this.stNote(e); this.posterNote(); this.renderPics();
     $('#ppNote').innerHTML = fitNote(e.banner.w, e.banner.h) + (e.banner.custom ? '' : ' · از فایل‌های نمونه');
     this.need();
     look.sizesTick();
@@ -10930,11 +11040,43 @@ const panel = {
   },
   // the poster of the active show (for the lists), from a file of the owner's
   async usePosterFile(file) {
-    const rd = await this.readImage(file, 'poster'); if (!rd) return;
+    const rd = await this.readImage(file); if (!rd) return;
     const e = EVENTS[state.i]; e.poster = { src: rd.url, w: rd.w, h: rd.h, custom: true };
-    s2.refresh(); this.posterNote();
+    s2.refresh(); this.posterNote(); this.renderPics();
   },
   resetPoster() { const e = EVENTS[state.i], o = e.orig; e.poster = o.poster || undefined; s2.refresh(); this.posterNote(); },
+  // the slot's three pictures, each in a frame of its fixed shape; the admin drags a picture to choose what stays in view and zooms it; the hero and the cards follow at once
+  renderPics() {
+    const host = $('#ppPicsBody'); if (!host) return;
+    const e = EVENTS[state.i], P = { banner: e.banner, mobile: e.bannerM, poster: e.poster };
+    const srcOf = (p) => (p && (p.fake || p.src || p.thumb)) || '';
+    const slot = (kind, extra) => { const z = SIZES_FIXED[kind], p = P[kind], has = !!srcOf(p);
+      return `<section class="pp-pic" data-kind="${kind}"><h4>${esc(z.name)} <small><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi></small></h4><p>${esc(z.use)}${extra || ''}</p>${has ? framer.html(kind, kind) : `<div class="pp-pic-none">${kind === 'mobile' ? 'هنوز بنر موبایل نداره؛ تو موبایل بنر دسکتاپش به شکل مربع بریده می‌شه.' : 'هنوز نداره.'}</div>`}
+        <div class="pp-row"><label class="pill pp-up">${ico('upload')}${has ? 'تصویر تازه' : 'گذاشتن تصویر'}<input type="file" accept="image/*" data-pk="${kind}"></label>${p && p.custom ? `<button type="button" class="pill" data-prm="${kind}">${ico('undo')}برگردوندن</button>` : ''}</div></section>`; };
+    host.innerHTML = slot('banner') + slot('mobile') + slot('poster');
+    const keyOf = { banner: 'banner', mobile: 'bannerM', poster: 'poster' };
+    $$('.fr', host).forEach((fr) => { const k = fr.dataset.kind, p = P[k]; framer.mount(fr, { src: srcOf(p), fx: p.fx, fy: p.fy, fz: p.fz, onChange: (v) => { Object.assign(EVENTS[state.i][keyOf[k]], v); this.fitChanged(k); } }); });
+    $$('input[data-pk]', host).forEach((inp) => inp.addEventListener('change', async (ev) => { const f = ev.target.files[0]; ev.target.value = ''; if (f) await this.usePic(inp.dataset.pk, f); }));
+    $$('[data-prm]', host).forEach((b) => b.addEventListener('click', () => this.resetPic(b.dataset.prm)));
+  },
+  // a picture of this slot from a file
+  async usePic(kind, file) {
+    const rd = await this.readImage(file); if (!rd) return;
+    const e = EVENTS[state.i], p = { src: rd.url, thumb: rd.url, w: rd.w, h: rd.h, custom: true };
+    if (kind === 'banner') { e.banner = p; e.suggested = suggestPalette(rd.im); setPal(e, e.suggested); } else if (kind === 'mobile') e.bannerM = p; else e.poster = p;
+    e.ver++; await rebuild(state.i); setAccent(e); s2.refresh(); this.sync();
+  },
+  async resetPic(kind) {
+    const e = EVENTS[state.i], o = e.orig;
+    if (kind === 'banner') e.banner = JSON.parse(JSON.stringify(o.banner)); else if (kind === 'mobile') e.bannerM = o.bannerM ? JSON.parse(JSON.stringify(o.bannerM)) : undefined; else e.poster = o.poster ? JSON.parse(JSON.stringify(o.poster)) : undefined;
+    e.ver++; await rebuild(state.i); s2.refresh(); this.sync();
+  },
+  // a picture's point or zoom changed: the picture on show moves at once (the other scenes of this slot are built again when they are next needed)
+  fitChanged(kind) {
+    const e = EVENTS[state.i], s = stage.top; e.ver++;
+    if (s && s.e === e && s.mode === 'bar' && ((kind === 'banner' && !STK.matches) || (kind === 'mobile' && STK.matches) || (kind === 'banner' && STK.matches && !e.bannerM))) { const pic = $('.pic', s.el); if (pic) pic.setAttribute('style', fitVars(kind === 'mobile' ? e.bannerM : e.banner)); s.ver = e.ver; }
+    if (kind === 'poster' || kind === 'banner') s2.refresh();
+  },
   // the size to ask for, and what the show's poster is now
   posterNote() {
     const e = EVENTS[state.i], r = LOOK.posterRatio, w = 1000, h = Math.round(w / r / 10) * 10, box = $('#ppPNeed'), note = $('#ppPNote'); if (!box) return;
@@ -10959,27 +11101,11 @@ const panel = {
     if (!stacked) { const g = geom(1920, 1080); big = ` · با پنجره‌ی ۱۹۲۰×۱۰۸۰ می‌شه <bdi dir="ltr">${fa(Math.round(g.frame.w - 2 * bw))}×${fa(Math.round(g.frame.h - 2 * bw))}</bdi>`; }
     box.innerHTML = `<span>اندازه‌ی بنری که کادر همین پنجره رو کامل پر می‌کنه</span><b class="big"><bdi dir="ltr">${fa(w)}×${fa(h)}</bdi></b><span>نسبت ${fa(r)} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(w * 2)}×${fa(h * 2)}</bdi></span><span class="sm">پنجره‌ی الان ${fa(innerWidth)}×${fa(innerHeight)}. کادر هر چی از پنجره می‌مونه رو می‌گیره، پس با ارتفاع پنجره عدد هم عوض می‌شه${big}.</span>`;
   },
-  // a picture read from a file; a tall one (a poster) is refused
-  async readImage(file, kind) {
+  // a picture read from a file (any shape: it fills its frame, and the admin places it in the frame)
+  async readImage(file) {
     const url = URL.createObjectURL(file), im = new Image(); im.src = url;
     try { await im.decode(); } catch (err) { URL.revokeObjectURL(url); toast('این فایل تصویر نیست یا خوانده نشد.'); return null; }
-    const w = im.naturalWidth, h = im.naturalHeight;
-    if (kind === 'poster') {
-      // a poster is tall: a wide banner belongs to the hero
-      if (w / h > 0.95) {
-        toast('این تصویر افقی یا مربعه (بنر). برای پوستر، عمودی لازمه.');
-        $('#ppPNote').innerHTML = `<b>پذیرفته نشد</b> · ${fa(w)}×${fa(h)} · بنر افقی جاش تو هیروئه؛ پوستر باید عمودی باشه`;
-        URL.revokeObjectURL(url); return null;
-      }
-      return { url, im, w, h };
-    }
-    if (w / h < 1.15) {
-      // a tall poster is not a background: the hero is wide
-      toast('این تصویر عمودی یا مربعه (پوستر). برای جایگاه ویژه بنر افقی لازمه.');
-      $('#ppNote').innerHTML = `<b>پذیرفته نشد</b> · ${fa(w)}×${fa(h)} · پوستر عمودی جای خودش رو تو قفسه‌ی پوستر داره، نه اینجا`;
-      URL.revokeObjectURL(url); return null;
-    }
-    return { url, im, w, h };
+    return { url, im, w: im.naturalWidth, h: im.naturalHeight };
   },
   // the files the owner dropped or picked: in the place of this show's banner, or each as a new show at the end of the list
   async take(files) {
@@ -11041,6 +11167,8 @@ setAccent(EVENTS[0]);
 cards.set(0);
 panel.init();
 look.init();
+// round T: a phone's banner and a desktop's are two files; when the window changes between the two layouts every scene is built again
+STK.addEventListener('change', () => { EVENTS.forEach((e) => { e.ver++; }); stage.show(state.i, { instant: true }).then((s) => { if (s) partsIn(s, 0); }); });
 hd.init();
 s2.init();
 sdock.init();
