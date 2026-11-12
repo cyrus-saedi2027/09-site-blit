@@ -10,7 +10,7 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, now at round R (the latest owner round, §10.12). History of v9:
+**Status:** v9, now at round S (the latest owner round, §10.13). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
@@ -29,6 +29,7 @@
 - *Round P*: «inside a program there used to be an ending, a footer, and now it is gone: give it an ending, do not just leave it; the emptiness is better but there is room to be more professional, smoother and fuller, so that even someone who does not understand sees the road to a ticket and how to choose the seats; do not keep writing «do this and that», make the road plain for the buyer». §10.10.
 - *Round Q*: «the programs' pages have too much empty space: bring the booking block toward the left and put the poster on its right; the footer the whole width and the row of other programs the full width; fill the next pages too and the customer's page, nothing stretched; the header's logo goes to the start of the home page; «add to calendar» and «print tickets» made right (download as an image and a PDF, keep on the phone, share); then say how much of the client's brief is built and what remains»; and: «make the panels much more professional in spacing and UI, curved shapes and small details». §10.11.
 - *Round R*: «the programs' pages are still empty at their sides, fill 75% of the emptiness; under the part where the rules are accepted and the next step is taken it is very empty: carry out a brilliant idea». §10.12.
+- *Round S*: «I do not like it at all, it feels messy; make it luxurious, professional and modern; reorganise the sub-pages; the sizing right everywhere, nothing stretched; put the Google map in; responsive is broken everywhere; the panels' UI is useless: fix everything». §10.13.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -1025,6 +1026,88 @@ No new setting. `evpPlace` (the place's tabs or inline), `pageDots`, `dotsPow` (
 - **The seats' page**: its left column (cart, prices, ticket) is taller than a window of 950 px; its sticky behaviour keeps the cart in view, the ticket below it shows when the page is scrolled to the end of the map. If the owner prefers the ticket above the prices, that is a one-line move.
 - **A real first-time buyer on a real phone** has still not been seen on the real site; the phone shows no ticket and no list of other programs (the page and the row of cards under it are as before).
 
+## 10.13 Round S: the pages inside the site rebuilt (luxury, tidy, nothing stretched), the desks as an app, every size checked
+
+**What the owner said** (one message): *I do not like it at all; it feels messy. I want it luxurious, professional and modern. Review everything once and, with professional, modern, new ideas, reorganise the sub-pages and make them stronger. The home page is about right (its frames, the banner part; only I do not know the right banner size); if needed make its small details more professional. Make the sizing right everywhere: not stretched, placed professionally. The main problem is the sub-pages: sizing, arrangement, stretching, crowding, untidiness. Except the home page every page needs work; in some places the structure and even the shapes should change. You did not put the map system in: can't Google Maps be shown locally? Responsive is broken everywhere, even the home page. The panels' UI is useless, and in some places they could be more complete. Sit down and fix everything.*
+
+**The home page's desktop was not touched** (Rule 0): its panels are pixel-identical to the approved version (§ «Checked»). Its phone and tablet layout changed (below).
+
+### One idea instead of many panels
+
+Rounds Q and R filled the program's page with more and more panels (a picture column, «بلیتِ تو», share, the hall at a glance, other programs, three layouts that moved panels between columns). The owner saw the result as crowded. Round S **removes all of that** and builds the page from two pieces:
+
+1. **The stage** (`.lx-stage`): a dark, cinematic band the width of the window (up to 2400 px). Behind it the show's own picture, blurred and drifting slowly, under two gradients and a soft glow in the show's colour. On it, from right to left: **the poster** (or the banner, wide), **the name** with its kind, three **facts** as chips (the nights, the time and length, the hall), two round buttons (**save**, **share**), and the **booking card**: a frosted glass card (`backdrop-filter`) with the price, the nights, the rules' tick and the one big button.
+2. **The information row** (`.lx-info`, a 12-column grid): **about** and **the prices** on the right (7 columns), **the place** on the left (5 columns, two rows): the hall, its address, its numbers, «مسیریابی», and Google's own map in a frame at the hall's point. A hall without a point has no place block; the row is then about and prices side by side (`no-place`).
+
+The share button opens the phone's own share sheet on a touch screen; elsewhere a small menu (`menuPop`): Telegram, WhatsApp, copy the address, the nights as a calendar file (`.ics`).
+
+| window | the stage | the booking card |
+|---|---|---|
+| ≥ 1100, landscape | poster · name and facts · card, in one row | 340–470 px, on the stage |
+| 761–1099 or upright | poster and name in one row | the whole row under them, two columns inside (nights · rules and button) |
+| ≤ 760 (phone) | poster beside the name, facts under them | the whole row, one column; a bar at the bottom when it is out of sight |
+
+### The seats' page
+
+- The show's card inside the map panel (a repeat of the bar above it) is gone. The legend is **one quiet line** beside the sections' tabs (four states: yours, being paid by others, sold, not for sale).
+- **The hall's overview is a panel of its own** (`.bk-ov`, «نمای کلی سالن», tap a section) beside the map, above the cart and the prices. In one column (a phone, a tablet, a tall window) the order is **overview → map → cart → prices**, and the overview is a band 150 px high on a phone and 190–300 px on a tablet (it was as tall as the hall's shape: 570 px on a 768 × 1024 tablet).
+- The page is the window's width (up to 2400 px); the side column is 320–410 px.
+
+### The payment and the ticket pages
+
+Back to calm, centred pages (the payment 1200 px, the ticket 1340 px): the picture column and the living ticket are gone; the buyer's details, the ways to pay and the bill side by side; on a phone the details first, then the bill and a pay bar at the bottom.
+
+### The fixed pages (account, wallet, receipts, rules, about, contact, halls, gate …)
+
+- **One frame for everything on a page** (`--fl: min(100%, 1320px)`; the pages that are lists of programs take the window like the home page's list). Before, the head band was narrower than the body under it.
+- The head band has a soft glow in the page's colour; every box's heading has the same **icon chip** as the purchase pages.
+- In one column (a phone, a tablet) **the main column comes first and the side second**, each box the column's whole width (the help box stood above the search on the receipts page, the history above the balance in the wallet, and the account's details box was 70% of the column).
+
+### The desks (organiser, admin)
+
+- **An app's shell**: inside a desk the site's categories and city picker step aside; the open tab has an accent background and a bar; tiles carry a soft glow; tables have calmer padding.
+- **Charts are drawn at the size of their box** (`viz.columns(…, { w })`): on a wide window their numbers were blown up.
+- **No half-empty boxes**: the organiser's «latest purchases» starts with the last seven sales, as many as it shows (it waited for the next live sale, empty); every admin tile has a second line (the refunds' sum, «N در حال فروش · M پیش‌فروش»); the admin's queue box lists who waits; boxes in one row end together.
+- **On a phone**: every table is a list of cards (each cell with its heading as a small label, taken from the table's head and kept up to date by a `MutationObserver`); a table longer than 12 rows shows 12 and a button «همه‌ی N ردیف» (the orders' 60 cards made a page 16 000 px long); the tab row scrolls, fades at its edge and brings the open tab into view; a tile never sits alone in a row.
+- **The gate**: its three steps keep their order on a phone (the third came first).
+
+### The home page on a phone and a tablet
+
+- The hero's old floor of 600 px is gone: on a phone the hero is the banner (16 : 9 of the width), the facts and the rail, nothing more (512 px on a 390 × 844 phone; the banner starts 18 px under the header, it was 64).
+- Inner pages have no floating «back to top» button on a phone (it covered the booking bar).
+- The footer is two columns on a phone (the brand and the last column take the whole row).
+
+### The map
+
+Google's map works **locally**, without a server of ours, whenever the computer has internet: the frame `https://www.google.com/maps?q=<lat>,<lng>&z=16&hl=fa&output=embed` was loaded through the real network (`tools/s-gmap.js`) both from the served page and from the client's single file opened from the disk (`file://`), and shows the real map at the hall's point. It is blocked **only inside the private preview page** (claude.ai's frame does not allow Google); there the block shows its wordless drawing and «باز کردن در Google Maps». Nothing has to wait for the server.
+
+### The banner's size (the owner's question)
+
+The banner's frame takes what the window leaves: about **1553 × 893** at 1920 × 1080 (1.74 : 1), 1603 × 775 at 1920 × 937, 1630 × 709 at 1920 × 860 (2.3 : 1). A banner within 2.5% of the frame's shape fills it exactly; otherwise it is cut a little at two sides. **Advice: design banners at 1740 × 1000 px (or 2560 × 1471 for big screens) and lock the frame's shape** (Settings → Layout → «شکل کادر بنر» → 1740 × 1000), so every window shows the whole banner; keep words and faces 4% from the edges (the slow zoom of 5%).
+
+### The look: nothing new
+
+No new setting. `evpPlace` (the place's tabs or inline) is gone with the old page.
+
+### Checked (round S)
+
+- `s-test.js` (new, 40 checks): the stage and the information row (about and prices level with the place at the top and the bottom); ten windows from 2560 × 1440 to 360 × 740 with nothing wider than the window (the stage in a row from 1100 px, stacked below); Google's frame at the hall's own point; the share menu; the road from the show to the seats, the payment and the ticket; the seats' page tidy (one legend line, the overview panel, no repeated card); a banner show and a sold-out show; seven fixed pages each in one frame; the desks' shell and charts drawn at their box's size (× 1.00); the phone's hero without the empty band (512 px, the banner 18 px under the header); no floating button on a phone's inner page; the footer in two columns; nine phone routes with nothing wider than the screen — ALL OK.
+- 26 test suites on the day's build (`tools/final-checks-s.sh`): 25 passed whole; `p-test` caught the prices' panel growing 5 px when the hall's numbers came (the numbers' line was hidden and appeared: now its line is kept from the start), and passed after the fix, with `s-test` and `m-flow-test` run again on the final build
+- axe finds nothing on 26 routes and 46 states, both themes, desktop and phone (its first run flagged one card under the show page in the light theme on a phone, caught in the middle of its entrance fade; its words are dark, and the run on the final build is clean); the card audit finds 312 cards and 0 problems in the dark theme and in the light one
+- the QA crawl (every page, both themes, desktop and phone) found one problem: the settlement's long number («۱۵٬۵۷۸٬۴۲۴٬۰۰۰») cut by its tile at 1366 and 1920; a tile's number now follows the tile's width when it is long, and a check of every desk tile at four windows finds them all inside; no error, no overflow, no broken picture; 353 links checked, none to nowhere
+- layout shift is 0 on the show pages (on sale, sold out) at 1920 and on a phone, 0.0028 at most on the presale one (a text node); the organiser's desk 0.001 (it was 0.008: its list of purchases grew by a row with the first live sale; it starts full now); the seats' page 0.004 (the page change's own transition, as before); 0 on the first load
+- the hero's panels are identical to the approved version (`d4cc53c`) at 1920×1080, 1920×862, 1536×730, 1366×768, 2560×1440 and 1440×900 (the banner's and the facts' differing pixels: 0, the pill look on both sides)
+- the client's single file was rebuilt (6.2 MB, 52 pictures, 3 font files) and its own test passes (every picture and font inside the file, the theme kept after a reload, the page opens, no script error; the only outside request is the Google Maps frame, which the test runs without internet)
+
+### Honest notes (round S)
+
+- **Much of rounds Q and R is gone on purpose**: the picture column, «بلیتِ تو», the share / hall / other-programs panels and the three layouts. The owner called the page crowded; the stage and one information row say the same with less. The share and the calendar file are still there (the round button on the stage); the hall's numbers are in the place block.
+- **Three older tests were retired, not bent**: `r-test`, `q-test` and `o-layout-test` measured the panels and layouts that were removed. Five others were changed with the page (`m-flow-test`, `ui-test`, `integrity-test`, `admin-geo-test`, `p-test`): they now look for the stage and the information row; nothing they guard (the road to a ticket, a hall's map never under another hall, the footer, the prices) was dropped.
+- **Google's map inside the private preview page** still shows only the drawing and the link: that page's frame blocks Google, not our code. On the site, on a server or in the client's single file opened on a computer with internet, the real map shows.
+- **The banner's size** depends on the window unless the frame's shape is locked; the advice above (1740 × 1000 and the lock) is the only way one banner fits every window exactly.
+- **A tablet held upright** gets the phone's hero (a 16 : 9 banner); a tablet held sideways gets the desktop's.
+- **A real first-time buyer on a real phone** has still not been seen on the real site.
+
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.
@@ -1055,7 +1138,7 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 | `bgColor` | پس‌زمینه‌ی صفحه · رنگ پس‌زمینه | رنگ | #000000 |
 | `pageDots` | صفحه‌های برنامه · پس‌زمینه‌ی نقطه‌ای | روشن / خاموش | روشن |
 | `dotsPow` | صفحه‌های برنامه · پررنگی نقطه‌ها | ۳۰–۱۵۰ ٪ | ۱۰۰ |
-| `evpPlace` | صفحه‌های برنامه · مکان و نقشه‌ی صفحه‌ی اجرا | inline (زیر توضیحات، بدون زبانه، پنجره‌ی بزرگ؛ تبلت و گوشی زبانه) / tabs (همیشه زبانه) | inline |
+| ~~`evpPlace`~~ | (از دور S حذف شد: صفحه‌ی اجرا دیگه زبانه نداره؛ مکان همیشه تو ردیف اطلاعاته؛ مقدار ذخیره‌شده اثری نداره) | — | — |
 | `caps` | کارت‌ها · نوشته‌ی کارت‌ها | under / over / off | under |
 | `capDate` | کارت‌ها · روز اجرا کنار اسم | روشن / خاموش | روشن |
 | `dim` | کارت‌ها · کم‌رنگ بودن کارت‌های غیرفعال | 0–60 ٪ | 14 |
@@ -1247,6 +1330,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **Round P:** the footer is one `<footer>` landmark after the page's column (the list's own is hidden with the home page, so there is one); the seats' cue is a class on a seat (no new words, `aria-label` unchanged); the cart's place-holders are `aria-hidden` and one hidden line says nothing is chosen; the prices' legend is a group of toggle buttons (`aria-pressed`) with the free count in each; the hall's picture on the show's page is an image with a label (its prices are the list under it); the steps' second line is plain text; axe finds nothing on 26 routes and 46 states (§10.10).
 - **Round Q:** the poster column is an `<aside>` with a label (its picture has the program's name as its text; the facts under it are plain text); the ticket's new buttons are real `<button>`s with words («ذخیره‌ی PDF», «ذخیره‌ی تصویر», «اشتراک‌گذاری», «افزودن به تقویم»), a busy state (disabled and dimmed) while a file is made, and white-on-dark colours on the ticket's dark stub in both themes; the share menu is the site's own menu (`menuPop`, the one the nights' menu uses); the account's stat tiles keep their number and their words in one tile; the icon chips are `aria-hidden`; axe finds nothing on the routes and the states (§10.11).
 - **Round R:** the living ticket is one labelled picture (`role="img"`, a sentence rewritten with every change; its drawing is `aria-hidden`); the stamp and the lock are decoration; the share panel's four controls are real `<button>`s with words; the hall panel's numbers are plain text, its directions a link; the other programs are links, and the rows that do not fit are `inert` and `aria-hidden` (out of the keyboard's and the reader's reach); the location card is `aria-hidden` (the block's own words are the one link); the ticket page's tips are a list of three; axe finds nothing on the routes and the states (§10.12).
+- **Round S:** the living ticket is gone. The stage's two round buttons have names («نشان کردن», «هم‌رسانی») and the save one says whether it is pressed (`aria-pressed`); the share menu is the site's own menu (`menuPop`: arrow keys, Esc, focus back on the button). The hall's overview on the seats' page is one labelled picture with its heading («نمای کلی سالن»). On a phone a desk's table is still a `<table>` (only its look changes), so a screen reader reads its headings; each cell's label is drawn with CSS from the cell's own heading.
 - The banner is a link labelled «… صفحه‌ی اجرا»; it can also be dragged, but nothing needs dragging. Focus rings follow the text colour. Under `prefers-reduced-motion` nothing moves (a 0.4 s fade, no zoom, no pin effect, no light, no lean), and auto-advance starts paused.
 
 ---
@@ -1275,6 +1359,7 @@ The switch «اندازه‌ی کادرها، فاصله‌ها و حاشیه‌
 - **Round P (the footer, the price map):** the hall's picture on the show's page is drawn once, when the page is idle (`requestIdleCallback`), on a canvas in a box of a fixed shape (no layout shift), a resize redraws it; the seats' cue is two CSS animations on one seat; the legend's free counts are recounted with the cart and with the live changes (one pass over the plan's seats); the footer is a copy of the list's (no new request). Layout shift stays 0 on the show pages (§10.10).
 - **Round Q (the poster column, the files):** the picture column is one image (the one the poster already loaded; no new request), sticky with CSS only; the panels' finish is box-shadows and an inner line (no filters, no blur); the files are made **on demand** when a button is pressed (a canvas, `toBlob`, a hand-built PDF of JPEGs, a text file), never at page load, the pressed button is disabled and dimmed while a file is made (about a second on a phone, drawn on the page's thread); the file's address is released a few seconds after the save. Layout shift stays 0 on the show, payment and ticket pages (§10.11).
 - **Round R (the columns, the ticket):** the panels move between the columns by `appendChild` when the window's mode changes (no redraw, no new request); the columns' heights are the grid's (one layout pass, no script measures them); the ticket's drawing is CSS and one inline SVG (a QR made once from a sample text), the tilt is one `requestAnimationFrame` on `pointermove` (a mouse only); the hall's numbers come from the plan the price map already draws (no second plan is made); `fitRows()` reads the rows' boxes once after layout and on a debounced resize. Layout shift stays under 0.001 on the show pages (§10.12).
+- **Round S (the stage, the desks):** the stage's blurred picture is the one the poster already loaded (no new request), drawn once under a CSS blur, and its slow drift is a transform (stopped with reduced motion). The three layouts of round R are gone, so a window's resize moves no panels. A desk's labels are written once per table row (a `MutationObserver` on the desk's body adds them to rows drawn later; it is let go when the page is left).
 
 ---
 
