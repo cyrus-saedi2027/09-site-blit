@@ -6,6 +6,12 @@ These files are **not committed** (the banners are other people's artwork: organ
 
 Only banners are used here. The hero's background is always a wide banner; tall posters belong to other sections (the poster shelf) and the admin panel refuses them.
 
+## دو بنر برای هر اجرا · Two banners for every program
+
+هر اجرا **دو بنر** داره: **بنر دسکتاپ ۱۷۴۰×۱۰۰۰** (برای صفحه‌ی اصلی روی کامپیوتر؛ دو برابرش ۳۴۸۰×۲۰۰۰) و **بنر موبایل و تبلت ۱۰۸۰×۱۴۴۰** (عمودی، نسبت ۳ به ۴؛ دو برابرش ۲۱۶۰×۲۸۸۰). کادر بنر تو هر پنجره همین شکل رو داره و بنر همیشه کادرش رو پر می‌کنه؛ هیچ نوار سیاه یا محوی کنارش نیست. اگه بنر موبایل نباشه، تو موبایل بنر دسکتاپ به شکل عمودی ۳ به ۴ بریده می‌شه. اسم فایل بنر موبایل: `<slug>-mobile-1080.webp`.
+
+Every program has **two banners**: the **desktop banner 1740×1000** (the top of the home page on a computer; 3480×2000 for sharp screens) and the **phone-and-tablet banner 1080×1440** (upright, 3 : 4; 2160×2880). The banner's frame has that shape in every window and the banner always fills it, with no black or blurred side beside it. Without a phone banner, a phone shows the desktop banner cut to the upright 3 : 4. The phone banner's file name: `<slug>-mobile-1080.webp` (the samples' are upright 3 : 4 cuts of the desktop banners, placeholders until the real ones are sent).
+
 ## اجرا روی سیستم خودت · Running locally with the real art
 
 Put the files here with exactly these names, in this order (the order of the rail). The size to make is **1740×1000** (ratio 1.74: the banner's panel is locked to that shape in every window; **3480×2000** for sharp screens). The samples here are **1672×960** (ratio 1.7417, the same shape to 0.1 %; a 16:9 banner works as well, it is stretched by 2 %), in three widths: 1672 (the source), 1024×588 and 640×368 (the rail cards). The owner's originals were 1649–1651 × 953–954 PNGs; they were resampled to these sizes (a stretch of under 1 %).

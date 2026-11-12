@@ -10,7 +10,7 @@
 >
 > `index.html` همین پوشه مرجع زنده‌ست.
 
-**Status:** v9, now at round S (the latest owner round, §10.13). History of v9:
+**Status:** v9, now at round T (the latest owner round, §10.14). History of v9:
 - *Round A* (v8 liked, «make 9 a copy and more professional, with the exact desktop size»): the panels tile the window; the rail's cards fill the rail with a line of words under the picture; a mirrored edge beside a banner whose shape differs.
 - *Round B* (this one): «make the blurred background black», «let me control the gaps between the panels and from the panels to the edges, to build exactly what I want», «write the banners' sizes», «all of it in the floating settings button», «let me control many things (texts, the roundness beside the panels …) so I can tell you which modes are best and make them the default», «more colours, white and black for example», «more professional, stronger interactions and motion», «remove the music completely, no music in the page and the header», «what else could the header have», «a modest second section to scroll to, in harmony», «the header should shrink, with a strong professional motion, as I scroll, stay centred and come down with the page».
 
@@ -30,6 +30,7 @@
 - *Round Q*: «the programs' pages have too much empty space: bring the booking block toward the left and put the poster on its right; the footer the whole width and the row of other programs the full width; fill the next pages too and the customer's page, nothing stretched; the header's logo goes to the start of the home page; «add to calendar» and «print tickets» made right (download as an image and a PDF, keep on the phone, share); then say how much of the client's brief is built and what remains»; and: «make the panels much more professional in spacing and UI, curved shapes and small details». §10.11.
 - *Round R*: «the programs' pages are still empty at their sides, fill 75% of the emptiness; under the part where the rules are accepted and the next step is taken it is very empty: carry out a brilliant idea». §10.12.
 - *Round S*: «I do not like it at all, it feels messy; make it luxurious, professional and modern; reorganise the sub-pages; the sizing right everywhere, nothing stretched; put the Google map in; responsive is broken everywhere; the panels' UI is useless: fix everything». §10.13.
+- *Round T*: «one fixed size for every banner and poster, no faded sides; a designed backdrop under the poster, not its blur; the background almost invisible; white by default; fewer programs; the settings for the admin only; two banners (desktop, phone and tablet); a full review before an approval; placing a picture in its frame». §10.14.
 
 The owner sent real shows, each with a banner with its words baked in. The sample data in `index.html` uses six **banners** (1649–1651 × 953–954 PNGs, resized by a hair to 1672×960, 1024×588, 640×368). They are other people's artwork and the repository is public, so the files are **not in git** (`assets/events/README.md`); the page draws a stand-in picture when a file is missing.
 
@@ -770,7 +771,7 @@ A fixed `<canvas>` (`z-index: -1`, inside `#app` before `#evp`, so no stacking c
 | **calm** | a second later the picture differs by 1 % of the range, four seconds later by 3 %, a minute later by 16–20 % |
 | **cheap** | the dots go into 12 alpha buckets, one path each: a draw takes **0.3–0.6 ms** (three a second are 0.12–0.17 % of the time); it is drawn about **3 times a second** (every 330 ms, a second when a draw averages more than 5 ms), **not at all while the tab is hidden**, not after the page is left, **once only with reduced motion**; no long task while it runs; it fades in over 1.6 s |
 
-`dotsPow` (30–150 %) makes the dots fainter or stronger and `pageDots` turns them off (§11).
+`dotsPow` (0–150 %; 7 since round T, it was 100) makes the dots fainter or stronger and `pageDots` turns them off (§11).
 
 ### The poster is seen
 
@@ -806,7 +807,7 @@ The visitor's lists (the header's city picker, the search window and the results
 
 ### The look: new choices (§11)
 
-`pageDots` (on), `dotsPow` (100 %), `evpPlace` (`inline`; `tabs` brings back the tabs on a big window): the panel's «چیدمان» tab, the group «صفحه‌های برنامه (اجرا، صندلی، پرداخت، بلیت)».
+`pageDots` (on), `dotsPow` (7 % since round T; it was 100 %), `evpPlace` (`inline`; `tabs` brings back the tabs on a big window): the panel's «چیدمان» tab, the group «صفحه‌های برنامه (اجرا، صندلی، پرداخت، بلیت)».
 
 ### Checked (round O)
 
@@ -1108,6 +1109,94 @@ No new setting. `evpPlace` (the place's tabs or inline) is gone with the old pag
 - **A tablet held upright** gets the phone's hero (a 16 : 9 banner); a tablet held sideways gets the desktop's.
 - **A real first-time buyer on a real phone** has still not been seen on the real site.
 
+## 10.14 Round T: one fixed size for every picture, a designed stage, a faint background, white by default, the settings for the admin only, a full review before an approval
+
+**What the owner said** (one message, shortened): *make the banners' and the posters' sizes fixed once and for all, so no different sizes and no faded sides: one size for every banner, one for every poster; on a program's page the poster sits in its frame at the top, bigger, with a very small gap to the frame under it; the frame under the poster must not be the blurred poster itself but a fixed, attractive, professional design related to our subject; the seats' page and the pages after it show their background far too much: it should be hardly seen at all (5% at most); the page that shows my tickets must be built so that no background shows; some posters do not sit right in their frames and show blurred empty places; the theme should be white by default; the client's HTML file must be the site only: no notes under the footer, no floating settings button; far too many programs: fewer, and tell me the sizes so I can send the programs, posters and banners; in the panels the posters must be easy to place in their frames, bigger, with the sizes told; the live settings are for the admin and are too many: fewer, and fixed sizes; the home page's banner needs two sizes: one for phones and tablets, one for the desktop; the admin must see everything a producer entered before he approves; keep the small rail's spacing; remind me to send the programs; make the panels simpler but with options.*
+
+**Rule 0 (the home page):** the hero's rail, the facts' panel and the header are as they were. What changed is the banner's frame (it is locked to one shape now, below) and the theme's default; the hero's panels are checked against the approved version in the dark theme, set explicitly (§ «Checked»).
+
+### The three fixed sizes
+
+| picture | size (px) | shape | used for |
+|---|---|---|---|
+| **poster** | 1000 × 1500 (2000 × 3000 for sharp screens) | 2 : 3 | every program's card, its page, its tickets, the seats' and the payment's small pictures |
+| **desktop banner** | 1740 × 1000 (3480 × 2000) | 1.74 : 1 | the top of the home page on a computer |
+| **phone and tablet banner** | 1080 × 1440 (2160 × 2880) | 3 : 4, upright | the top of the home page in a window that is taller than wide (a phone, a tablet standing up) |
+
+(`SIZES_FIXED` in `framer.js` is the one place that says them; the settings' «اندازه‌ها» tab and the review page read it.)
+
+- **Every frame has its kind's shape in every window** (the poster's `--pr: .6667`; the banner's frame is locked to 1.74 by default: `frame: 'lock'`; in a window taller than wide it is the upright 3 : 4, `--mr: .75`; a stacked window that is wider than tall (820 × 700, a phone lying down) keeps the desktop banner's 1.74). The window no longer decides a picture's shape.
+- **A picture always fills its frame** (`object-fit: cover`) around the point (`--fx`, `--fy`, in %) and the zoom (`--fz` ≥ 1) the admin chose when he placed it (below). Nothing is letterboxed, nothing is mirrored, nothing is blurred behind it: the soft copy behind the cards' pictures, the hero's «edge» fill (`.ext`) and the show page's blurred cover are gone. A file of any shape is accepted (it is cut to the frame; the admin places it).
+- **A program with no poster file** gets a drawn 2 : 3 poster (its name, its kind, its colour; `artOf()`), never a crop of its banner. The six real programs have banners; three of them have no poster yet (their posters are drawn until they are sent).
+- The poster-less cards, the show page, the seats', payment's and ticket's pictures, the gate's list and the admin's lists all read the same `artOf()`.
+
+### The show page's stage
+
+- **A fixed designed backdrop** (`DECO` in `page.js`, drawn once as an SVG): twelve arcs of dots (the rows of a hall seen from the stage) fading upward, and two soft lights from the top corners, in the theme's own colour at 10% (white theme: soft grey on white). It is the same for every program, so the poster is the only picture on the stage.
+- **The poster** is 2 : 3, as tall as the stage allows (`--ph: clamp(360px, 29u, 590px)`: 418 px at 1440, 557 at 1920) with a thin gap round it (`--sp: clamp(10px, .9u, 18px)`: 13 px at 1440, 17 at 1920). The booking card stands inside the same height (its nights scroll inside it when they are many).
+- On a phone the poster is bigger (39% of the width, 132–200 px) beside the name; on a tablet 300–430 px tall.
+
+### The background
+
+- **The dotted background** (`dotsPow`) is 7 (it was 100): the strongest dot is about 4% (10 of 255 on the seats' page; the test measures it). The **tickets' page has none** (`dots.KINDS` is the show, the seats and the payment); the coloured glows behind a fixed page's head and a desk's tiles are gone.
+- Everything else on those pages is the theme's flat panel colour.
+
+### White by default, fewer programs
+
+- `LOOK_DEF.mode` is `light`. A look saved by someone keeps only what differs from the default, so those who never changed the theme see white; the theme button still changes it.
+- **19 programs instead of 39**: the six real ones (their banners, three of their posters), ten of the owner's sample (`s-1 s-2 s-3 s-5 s-7 s-8 s-9 s-21 s-24 s-25`; the ids are kept) and three finished posters (`o-bitaarof`, `o-chaharmezrab`, `real-skykings`). 9 concerts, 7 plays, 3 comedy/kids; every state is still there (on sale, presale, sold out, extended, over). The rest was removed from `more.js`.
+
+### The settings belong to the admin
+
+- **No floating settings button for anyone.** `?dev` (or `?debug`, which the tests use) shows it with every tab (`data-dev="1"`); the design notes under the footer show only with `?notes`. The artifact's version page loads the site with `?dev` (the owner's own tool).
+- **The admin's live editor** («ویرایش زنده») opens from his desk: «محتوای صفحه‌ی اصلی» → a slot's «ویرایش». It has two tabs: **the slot** and **the sizes**. The slot has the three pictures (below), then four folds (the layout of the words on the banner, the colour, the words, the category / hall / status); the old drop zones, the presets, the copy and the developer's tabs are for `?dev`. «جایگاه تازه از یه بنر» on the desk's tab adds a slot from a file.
+- The sizes tab says the three fixed sizes (and the sharp ones); the measuring readout stays in `?dev`.
+
+### Two banners per slot
+
+A slot's banner is two files: the desktop banner (1740 × 1000) and the phone-and-tablet banner (**1080 × 1440, upright 3 : 4**, `e.bannerM`). The hero builds its scenes from the one that fits the window (`PORT`: a window taller than wide shows the upright one, everything else the desktop one), and builds them again when the window changes between the two. A slot with no phone banner shows its desktop banner cut to that shape. The six samples' phone banners are **upright 3 : 4 cuts of their desktop banners** (`*-mobile-1080.webp`, not in git like the other banners): they stand in until the real ones are sent (a 3 : 4 cut of a 16 : 9 banner shows 42% of its width). The owner first asked for a square, then for «4 : 5, a little bigger»: 3 : 4 is the next step up (the frame is 493 px high on a 390-px phone, it was 463 at 4 : 5 and 370 as a square), and it is a common art size (Instagram's 1080 × 1440).
+
+### The phone's hero is one screen (`style.css` → the stacked block, `--dock-m`)
+
+In a window taller than wide the hero is, top to bottom: the header, the banner (3 : 4, as wide as the screen), **one compact strip** of words (the title with its kind and status under it, the date and the price under them, the buy button at the end; 78 px, it was 122), then the small program cards with the bar of the time left (4 px thick, it fills, then the banner and the card move on), then the rest of the page. The hero's height is the exact sum of those pieces (no empty bands): 731 px on a 390 × 844 phone, so the first screen shows the whole hero and the top of the next section; on a phone with the browser's bars (about 750 px) it still fits. A tablet standing up shows the same 3 : 4 banner at full width (800 × 1067 on an 820 × 1180 tablet; its cards are a little below the fold).
+
+**For whoever draws the phone banner:** keep the words and faces in the middle; on a phone the banner is shown whole (3 : 4), but the same file is cut to other shapes when the admin zooms it in his editor, and its 4 % edges are the safe margin.
+
+### Placing a picture («چیدن تصویر», `framer.js`)
+
+Wherever a picture is added there is a **row**: the frame of its fixed shape and, beside it (under it in a narrow place), its name, its size, what it is for and its settings (zoom, «وسط», replace, remove); the rows are one under the other (the second step: poster, desktop banner, phone banner; the editor: desktop banner, phone banner, poster; the admin's review: the same three, read-only). An empty row has a drop place of the same shape. In a row the picture is in a big frame of its fixed shape, the picture in it: **drag it** to choose what stays in view, **zoom** with the slider, the wheel or + and −, the arrows nudge it (Shift: more), «وسط» centres it. The point and the zoom are saved with the picture (`fx`, `fy`, `fz`) and every place that shows it uses them. It is in: the new-program wizard's second step (now «تصویرها»: the poster, and the two banners as options), the live editor (the slot's three pictures; the hero and the cards follow at once), and the admin's review shows each picture in its frame as it will be seen.
+
+### The admin sees everything before he approves
+
+The queue's row has one button, «باز کردن و بررسی» (`#/admin/review/<id>`); there is no yes without opening. The review page shows what the organiser entered, field by field: the facts (name, kind, organiser, city, hall with its layout and seats, address, duration, age, sale start, the weekend price), the whole text, every night, every price per tier, the three pictures in their frames, the card as it will look, a checklist (poster, text, hall, nights, nights in the future, every price, banners) and **the yes and the no (with its reason) are there**. The two programs of other organisers in the demo are full drafts now (hall, nights, prices, text), so the review is never half-empty.
+
+### The panels, simpler
+
+The live editor went from seven tabs to two and its long pane folds; the wizard's picture step is one screen with three frames; the queue is one button; the price step already fills itself from the hall and the kind (the organiser only changes what he wants).
+
+### The look: nothing new for the owner
+
+`posterRatio`, `posterFit`, `fill` and the frame's «free» mode are still in `?dev`'s panel but the site no longer reads a window's shape into a picture. `evpPlace` is gone (round S).
+
+### Checked (round T, on the final build)
+
+- **The whole regression, 29 suites, 0 failures** (`tools/final-checks-t2.sh`; `six-test` and `o-dots-test`, whose expectations were out of date, were run again after they were brought to the new design and pass): the new `t-test` (sizes, backdrops, white, dots, 19 programs), `u-test` (the phone's hero and the picture rows, below), `t-wizard`, `t-editor`, `t-review`, and every older suite (`s-test`, `m-flow-test`, `seatprice-test`, `ui-test`, `six-test`, `look-test`, `o-dots-test`, `o-map-test`, the purchase, map, queue, hall, city and integrity suites). `poster-test` is retired (it tested the soft copy, the inset and the 3 : 4 frame that no longer exist); `six-test`, `ui-test`, `m-flow-test`, `s-test`, `look-test`, `o-dots-test` and `o-map-test` were brought to the new design (19 programs, 2 : 3 frames, white by default, faint dots, no black beside a banner).
+- **The phone's hero** (`u-test`, 390 × 844): the banner 370 × 493 = 3 : 4 from the 1080 × 1440 file; then the strip (78 px, the title not cut), the small cards (6) with a 4-px bar that fills (0.31 → 0.59 in two seconds) and the banner and card moving on by themselves; the gaps 10 · 10 · 10 px; the whole hero 731 px of an 844-px screen, the next section's top showing; a tablet standing up (820 × 1180) has the same banner (800 × 1067); a small window wider than tall (820 × 700) shows the desktop banner in its own shape.
+- **The picture rows** (`u-test`): the new program's second step, the editor and the review each list the pictures one under the other with the same width and left edge; every frame has the fixed shape (0.667 · 1.74 · 0.75) and is big (276 · 214 · 272 px high at 1440), its name, size, zoom, centre and buttons beside it (under it on a phone, and the page does not scroll sideways).
+- **axe** (WCAG 2.1 A and AA, both themes, desktop and phone, every route and every state): no violations. **Cards**: 152 cards in both themes, 0 problems. **CLS**: 0 on every page (0.010 once, in the seats' view transition). **Links**: 324 checked, none to nowhere.
+- **Parity with the approved hero** (`d4cc53c`, the pill look, dark set explicitly): at 1920 × 1080 the banner's panel is pixel-identical (0 pixels) and the facts' panel differs by 108 pixels (edge anti-aliasing of the locked frame; 0 with the free frame); at 2560 × 1440 the banner is identical, the facts 363 pixels. With the free frame the panels' rectangles are identical at all six window sizes; the banner's pixels differ at 1920 × 862, 1536 × 730 and 1440 × 900 because the banner now fills its panel (cut a little) where it used to sit whole with black beside it (the owner's request).
+
+### Honest notes (round T)
+
+- **The hero's frame is locked by default now** (the owner asked for one banner size). At 1920 × 1080 it is exactly what it was; in a window of another shape the frame no longer takes what is left (it keeps 1.74 and the other panels take the rest), so the hero's panels differ from the approved version there, by the owner's request; the parity is checked at 1920 × 1080 and, for the pixels of the panels, in the dark theme set explicitly.
+- **Three of the six real programs have no poster yet** (هانی نظریان، برفاب، امان): their cards and pages show a drawn poster with their name and colour. Posters in the 2 : 3 size will replace them with no change to the code.
+- **The phone banners of the six are placeholders** (upright 3 : 4 cuts of the desktop banners). Real phone banners at 1080 × 1440 will replace them.
+- **A poster of another shape is cut** (it is never shown with bars): the admin places it with the framer; a 3 : 4 photo loses 5.5% of its width on each side by default.
+- **The sample photos** (the owner's prototype) are 3 : 4 and are cut to 2 : 3 by their own focus (the centre).
+- **The admin's editor opens from his desk** and not from a button on the home page: that is how the client opens it in the single file too (the footer's «مدیر سایت»).
+- Opening the page inside the private preview, the version page's own floating menu (the comparison tool) is still there; it is the owner's, not the site's.
+- **A real first-time buyer on a real phone** has still not been seen on the real site.
+
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.
@@ -1137,7 +1226,7 @@ All the controls, with their ranges and defaults (the sizes are pixels of the 19
 | `bg` | پس‌زمینه‌ی صفحه · پس‌زمینه | black / color / glow | black |
 | `bgColor` | پس‌زمینه‌ی صفحه · رنگ پس‌زمینه | رنگ | #000000 |
 | `pageDots` | صفحه‌های برنامه · پس‌زمینه‌ی نقطه‌ای | روشن / خاموش | روشن |
-| `dotsPow` | صفحه‌های برنامه · پررنگی نقطه‌ها | ۳۰–۱۵۰ ٪ | ۱۰۰ |
+| `dotsPow` | صفحه‌های برنامه · پررنگی نقطه‌ها | ۰–۱۵۰ ٪ | ۷ (دور T؛ قبلاً ۱۰۰) |
 | ~~`evpPlace`~~ | (از دور S حذف شد: صفحه‌ی اجرا دیگه زبانه نداره؛ مکان همیشه تو ردیف اطلاعاته؛ مقدار ذخیره‌شده اثری نداره) | — | — |
 | `caps` | کارت‌ها · نوشته‌ی کارت‌ها | under / over / off | under |
 | `capDate` | کارت‌ها · روز اجرا کنار اسم | روشن / خاموش | روشن |

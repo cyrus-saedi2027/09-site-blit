@@ -6,9 +6,9 @@ The list under the hero (and every section after the hero) is made of **tall pos
 
 ## اندازه · The size to ask the organisers for
 
-**۱۰۰۰×۱۵۰۰ (نسبت ۲ به ۳)**، و برای صفحه‌ی تیز **۲۰۰۰×۳۰۰۰**. کادر پوستر تو سایت همین نسبته (`posterRatio`، پیش‌فرض ۰٫۶۶۷، تو تنظیمات قابل تغییره). پوستری با نسبت دیگه (۳:۴، ۹:۱۶، ۷:۱۰ …) هم **کامل و بدون برش** دیده می‌شه و جای خالی کنارش با نسخه‌ی محوِ خودش پر می‌شه. تا ۲٫۵٪ فرق با کادر رو چشم نمی‌بینه و پوستر کادر رو کامل پر می‌کنه. تصویر افقی به‌عنوان پوستر قبول نمی‌شه.
+**۱۰۰۰×۱۵۰۰ (نسبت ۲ به ۳)**، و برای صفحه‌ی تیز **۲۰۰۰×۳۰۰۰**. این **تنها اندازه‌ی پوستر** تو کل سایته: کارت‌ها، صفحه‌ی اجرا، بلیت‌ها، همه کادر ۲ به ۳ دارن و پوستر همیشه کادرش رو پر می‌کنه (بدون نوار، بدون نسخه‌ی محو). پوستری با نسبت دیگه (۳:۴، ۹:۱۶ …) هم قبول می‌شه؛ برش می‌خوره و مدیر تو «ویرایش زنده» یا تو قدم «تصویرها»ی برنامه‌ی تازه جاش رو تو کادر تنظیم می‌کنه (بکش و بزرگ کن). متن مهم رو دست‌کم ۴٪ از لبه‌ها دور نگه دارید.
 
-**1000×1500 (ratio 2 : 3)**, and **2000×3000** for sharp screens. The frame on the site has that shape (`posterRatio`, default 0.667, a setting). A poster of another shape (3:4, 9:16, 7:10 …) is shown **whole, never cut**, and what is left of the frame is filled with a soft copy of the poster; within 2.5 % of the frame's shape it fills the frame. A wide picture is not accepted as a poster.
+**1000×1500 (ratio 2 : 3)**, and **2000×3000** for sharp screens. This is **the one poster size** of the whole site: the cards, the program's page and the tickets all have a 2 : 3 frame, and a poster always fills it (no bars, no blurred copy). A poster of another shape (3:4, 9:16 …) is accepted; it is cut to the frame, and the admin places it in the frame («ویرایش زنده», or the «تصویرها» step of a new program: drag it, zoom it). Keep important words 4% from the edges. A program with no poster gets a drawn 2 : 3 poster (its name and colour).
 
 ## فایل‌ها · The files
 

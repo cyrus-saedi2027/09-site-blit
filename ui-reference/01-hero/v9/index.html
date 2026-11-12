@@ -5264,7 +5264,7 @@ const UI = {
       Cs('bgColor', 'رنگ پس‌زمینه', BG_SW)] },
     { h: 'صفحه‌های برنامه (اجرا، صندلی، پرداخت، بلیت)', n: 'پس‌زمینه‌ی نقطه‌ای فقط پشت همین چهار صفحه‌ست؛ صفحه‌ی اصلی بدون تغییر می‌مونه. نقطه‌ها پخش و نامرتب‌ان، به رنگ تم (سفید تو تیره، سیاه تو روشن)، بعضی کم‌رنگ و بعضی پررنگ، و خیلی آروم جابه‌جا می‌شن؛ حدود سه بار در ثانیه و فقط وقتی تب جلوی چشمه (هزینه‌اش تقریباً هیچه).', c: [
       W('pageDots', 'پس‌زمینه‌ی نقطه‌ای'),
-      R('dotsPow', 'پررنگی نقطه‌ها', 30, 150, 5, '٪'),
+      R('dotsPow', 'پررنگی نقطه‌ها', 0, 150, 1, '٪'),
       ] },
     { h: 'کارت‌ها', c: [
       S('caps', 'نوشته‌ی کارت‌ها', [['under', 'زیر تصویر'], ['over', 'روی تصویر'], ['off', 'بدون نوشته']]),
@@ -6926,7 +6926,7 @@ const dots = {
   draw(now) {
     const g = this.g, W = this.W, H = this.H, k = this.dpr, T = reduceMotion ? 40 : (now - this.t0) / 1000, M = Math.max(W, H);
     g.setTransform(k, 0, 0, k, 0, 0); g.clearRect(0, 0, W, H);
-    const fg = getComputedStyle(root).getPropertyValue('--fg').trim() || '255, 255, 255', light = root.dataset.mode === 'light' || root.dataset.theme === 'light', top = Math.min(1, (light ? 0.6 : 0.74) * (LOOK.dotsPow || 100) / 100);
+    const fg = getComputedStyle(root).getPropertyValue('--fg').trim() || '255, 255, 255', light = root.dataset.mode === 'light' || root.dataset.theme === 'light', top = Math.min(1, (light ? 0.6 : 0.74) * (LOOK.dotsPow ?? 100) / 100);
     // the light: four soft patches that wander (a lap of 80–130 s); a dot shines by the patches over it, on a faint floor
     const C = [[0.063, 0.049, 0.0, 1.0], [0.052, 0.071, 2.1, 1.6], [0.045, 0.058, 4.2, 2.3], [0.069, 0.041, 5.5, 3.1]].map(([sx, sy, p, q]) => [W * (0.5 + 0.5 * Math.sin(T * sx + p)), H * (0.5 + 0.5 * Math.cos(T * sy + q))]);
     const s2 = 2 * (M * 0.2) * (M * 0.2), N = 12, B = Array.from({ length: N }, () => []);
