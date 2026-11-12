@@ -3012,6 +3012,9 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .lx-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .1em .55em; margin: .25em 0 0; font-size: calc(max(12px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: var(--lx-dim); }
 .lx-meta b { color: rgb(var(--fg)); font-weight: var(--fwb); font-variant-numeric: tabular-nums; }
 .lx-meta i { font-style: normal; opacity: .6; }
+.lx-meta.is-wait { visibility: hidden; }   /* (its line is kept while the numbers are counted: nothing moves when they come) */
+.lx-meta { transition: opacity .4s var(--ease); }
+.lx-meta.is-wait { opacity: 0; }
 .lx-route { flex: none; display: inline-flex; align-items: center; gap: .45em; text-decoration: none; }
 .lx-route svg.i { width: 1.1em; height: 1.1em; }
 .lx-place .loc-map { flex: 1 1 auto; display: flex; flex-direction: column; margin-top: calc(var(--u) * 1.1); padding: 0; border: 0; border-radius: calc(var(--r) * .95); background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; overflow: hidden; }
@@ -3176,6 +3179,11 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
    and the hall's overview is a band of its own height, not a box as tall as the hall's shape (it was 570px on a 768 × 1024 tablet) */
 @media (min-width: 761px) and (max-aspect-ratio: 5/4) { .bk-top .bk-show .bk-ses { width: auto; flex: 0 1 auto; min-width: 0; } }
 @media (min-width: 761px) and (max-width: 1099px), (min-width: 761px) and (max-aspect-ratio: 5/4) { .bk-ov .sm-mini { aspect-ratio: auto; height: clamp(190px, 24svh, 300px); } }
+
+/* a tile's big number fits its tile (the settlement's «۱۵٬۵۷۸٬۴۲۴٬۰۰۰» was cut by its tile at 1366 and 1920): the type follows the tile's width when the number is long */
+.dk-tile { container-type: inline-size; }
+.dk-tile.dk-hero > b { font-size: min(calc(max(34px, calc(var(--u) * 2.4)) * var(--tx) * var(--tx-main)), 11.5cqi); white-space: nowrap; }
+.dk-tile > b { font-size: min(calc(max(24px, calc(var(--u) * 1.65)) * var(--tx) * var(--tx-main)), 12cqi); }
 
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -6936,7 +6944,7 @@ const page = {
           <div class="lx-pr"><ul class="evp-plan">${plan}</ul>${ses.length ? `<div class="evp-pmap" role="img" aria-label="نقشه‌ی سالن؛ هر صندلی به رنگ قیمتش"><canvas></canvas></div>` : ''}</div>
         </section>
         ${loc ? `<section class="panel lx-place evp-rise" aria-labelledby="lxPlaceH">
-          <div class="lx-ph"><div><h2 class="lx-h" id="lxPlaceH">${ico('pin')}<a class="evp-hl" href="${hallHref(h.hall)}">${esc(h.name)}</a></h2><p class="lx-addr">${esc(h.addr)}</p>${ses.length ? `<p class="lx-meta" hidden><b data-hl="cap"></b> صندلی<i aria-hidden="true">·</i><b data-hl="sec"></b> بخش<i aria-hidden="true">·</i><b>${fa(tiers.length)}</b> رده‌ی قیمت</p>` : ''}</div>
+          <div class="lx-ph"><div><h2 class="lx-h" id="lxPlaceH">${ico('pin')}<a class="evp-hl" href="${hallHref(h.hall)}">${esc(h.name)}</a></h2><p class="lx-addr">${esc(h.addr)}</p>${ses.length ? `<p class="lx-meta is-wait"><b data-hl="cap"></b> صندلی<i aria-hidden="true">·</i><b data-hl="sec"></b> بخش<i aria-hidden="true">·</i><b>${fa(tiers.length)}</b> رده‌ی قیمت</p>` : ''}</div>
             ${h.lat != null ? `<a class="chip lx-route" href="https://www.google.com/maps/dir/?api=1&amp;destination=${h.lat},${h.lng}" target="_blank" rel="noopener">${ico('route')}مسیریابی</a>` : ''}</div>
           ${loc}
         </section>` : ''}
@@ -7039,7 +7047,7 @@ const page = {
   hallStats(L) {
     const c = $('[data-hl="cap"]', this.el), s = $('[data-hl="sec"]', this.el); if (!c || !L) return;
     let cap = 0; L.secs.forEach((zz) => { cap += zz.sec.k === 'stand' ? (zz.sec.cap || 0) : zz.seats.filter((p) => !(p.cls === 'X' || (p.fl & 4))).length; });
-    c.textContent = money(cap); if (s) s.textContent = fa(L.secs.length); const line = c.closest('.lx-meta'); if (line) line.hidden = false;
+    c.textContent = money(cap); if (s) s.textContent = fa(L.secs.length); const line = c.closest('.lx-meta'); if (line) line.classList.remove('is-wait');
   },
   // the hall, small, every seat in the colour of its price (the colours of the list under it and of the seats' page): the buyer sees where the cheaper and the dearer seats are
   // before choosing. Drawn once, when the page is idle, in a box of a fixed shape (so nothing moves when it comes)
@@ -9066,7 +9074,7 @@ const org = {
     const sum30 = days.reduce((a, d) => a + d.sum, 0), today = days[days.length - 1], y0 = days[days.length - 2], yest = { sum: Math.round(y0.sum * days.part / 1e4) * 1e4, n: Math.max(1, Math.round(y0.n * days.part)) };
     const occ = up.length ? up.reduce((a, x) => a + x.sold / Math.max(1, x.cap), 0) / up.length : 0;
     const feed = [];
-    for (let k = 0, x0 = Date.now(); k < 6 && up.length; k++) { const x = up[(k * 7 + 3) % Math.min(up.length, 10)], tiers = tiersOf(x.e), t = tiers[(k * 5 + 1) % tiers.length], n = 1 + ((k * 5) % 3); x0 -= (70 + ((k * 97) % 160)) * 1000; feed.push({ at: x0, e: x.e, s: x.s, n, amt: n * t.price, z: runName(t) }); }
+    for (let k = 0, x0 = Date.now(); k < 7 && up.length; k++) { const x = up[(k * 7 + 3) % Math.min(up.length, 10)], tiers = tiersOf(x.e), t = tiers[(k * 5 + 1) % tiers.length], n = 1 + ((k * 5) % 3); x0 -= (70 + ((k * 97) % 160)) * 1000; feed.push({ at: x0, e: x.e, s: x.s, n, amt: n * t.price, z: runName(t) }); }
     const st = { today: today.sum, tn: today.n };
     const rank = shows.map((e) => ({ t: e.title, v: showStats(e).gross })).filter((r) => r.v > 0).sort((a, b) => b.v - a.v).slice(0, 6);
     el.innerHTML = `${desk.head(`سلام، ${ORG.who}`, `فروش برنامه‌های «${esc(ORG.name)}» همین لحظه. <span class="dk-live"><i></i>زنده</span>`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
