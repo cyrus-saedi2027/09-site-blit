@@ -51,7 +51,8 @@
   --mot: 1;
   /* the geometry */
   --hero-h: max(440px, 100svh);
-  --mr: 1;   /* the shape of the banner on a phone or a tablet (width ÷ height): a square */
+  --mr: var(--lock-r, 1.74);   /* the banner's shape in a stacked window that is wider than tall: the desktop banner's; in a standing window (a phone, a tablet) it is 4 : 5 (below) */
+  --dock-m: 78px;   /* the facts' panel under the banner in a stacked window: one compact height */
   --edge-min: calc(var(--px) * var(--edge-x-n));
   --edge-x: max(var(--edge-min), calc((100vw - var(--hero-h) * 2.25) / 2));
   --pad-t: max(calc(var(--px) * var(--edge-t-n)), env(safe-area-inset-top, 0px));
@@ -3106,7 +3107,7 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 
 /* ── phones and tall windows (the home page too): no black bands round the banner, a shorter footer, nothing floating over the buttons of a page ── */
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
-  :root:root { --hero-h: calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) / var(--mr) + 144px + 3 * var(--gap) + var(--rail-h) + var(--pad-b)); }   /* (it had a floor of 600px: on a phone that left empty bands above and under the banner) */
+  :root:root { --hero-h: calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) / var(--mr) + var(--dock-m) + 3 * var(--gap) + var(--rail-h) + var(--pad-b)); }   /* (it had a floor of 600px: on a phone that left empty bands above and under the banner) */
   .is-page .totop { display: none; }   /* (the footer's own «back to top» is there; the round button covered words and buttons) */
 }
 @media (max-width: 760px) {
@@ -3180,32 +3181,51 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 /* no coloured glow behind a page's head, a desk's tile or a card's corner: the page's colour stays in its small marks */
 .pg-head::before, .dk-tile::before { display: none; }
 
-/* ── the picture-placing tool: a big frame of the fixed shape, the picture inside it (drag to move, slider or wheel to zoom) ── */
-.fr { display: grid; gap: 10px; justify-items: start; }
-.fr[data-kind="poster"] { width: min(100%, 300px); }
-.fr[data-kind="banner"] { width: min(100%, 640px); }
-.fr[data-kind="mobile"] { width: min(100%, 380px); }
-.fr-box { position: relative; width: 100%; aspect-ratio: var(--frr, 1); overflow: hidden; border-radius: calc(var(--r) * .7); background: #14121d; box-shadow: 0 0 0 1px rgba(var(--fg), .22); cursor: grab; touch-action: none; }
+/* ── the picture rows (the new program's second step, the admin's editor): one under the other, each = a frame of the picture's fixed shape and, beside it
+   (under it, in a narrow place), its name, its size, what it is for and its settings. Drag the picture in its frame to choose what stays in view; the slider, the wheel, + and − zoom it. ── */
+.fr, .fr-e { container: fr / inline-size; width: 100%; --frw: 150px; }
+.fr[data-kind="mobile"], .fr-e[data-kind="mobile"] { --frw: 168px; }
+.fr[data-kind="banner"], .fr-e[data-kind="banner"] { --frw: 340px; }
+.fr-in { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "head" "box" "set"; gap: 12px; align-items: start; justify-items: start; }
+.fr-head { grid-area: head; }
+.fr-box { grid-area: box; }
+.fr-set { grid-area: set; }
+.fr-box { position: relative; width: min(100%, var(--frw)); aspect-ratio: var(--frr, 1); overflow: hidden; border-radius: calc(var(--r) * .7); background: #14121d; box-shadow: 0 0 0 1px rgba(var(--fg), .22); cursor: grab; touch-action: none; }
 .fr-box.is-drag { cursor: grabbing; }
 .fr-box:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
 .fr-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; user-select: none; pointer-events: none; }
 .fr-grid { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to right, transparent 33.2%, rgba(255, 255, 255, .28) 33.3%, transparent 33.5%, transparent 66.5%, rgba(255, 255, 255, .28) 66.6%, transparent 66.8%), linear-gradient(to bottom, transparent 33.2%, rgba(255, 255, 255, .28) 33.3%, transparent 33.5%, transparent 66.5%, rgba(255, 255, 255, .28) 66.6%, transparent 66.8%); opacity: 0; transition: opacity .25s; }
 .fr-box:hover .fr-grid, .fr-box.is-drag .fr-grid, .fr-box:focus-visible .fr-grid { opacity: 1; }
-.fr-tip { position: absolute; inset-inline: 0; bottom: 8px; margin-inline: auto; width: max-content; max-width: 92%; padding: .25em .8em; border-radius: 999px; font-size: 12px; color: #fff; background: rgba(0, 0, 0, .6); pointer-events: none; transition: opacity .3s; }
-.fr-box.is-drag .fr-tip { opacity: 0; }
-.fr-bar { display: flex; align-items: center; gap: 12px; width: 100%; }
-.fr-bar label { flex: 1; display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--lx-dim); }
-.fr-bar input[type="range"] { flex: 1; accent-color: var(--ring); }
-.fr-note { color: var(--lx-dim); font-size: 12px; }
-.wz-slots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: calc(var(--u) * 1.4); align-items: start; margin-bottom: calc(var(--u) * 1); }
-.wz-slot { display: grid; gap: 10px; align-content: start; min-width: 0; padding: calc(var(--u) * 1) calc(var(--u) * 1.1) calc(var(--u) * 1.2); border-radius: calc(var(--r) * .9); background: rgba(var(--fg), .035); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
-.wz-slot .wz-h3 { margin: 0; }
-.wz-sz { margin: 0; font-size: 12.5px; color: var(--lx-dim); }
-.wz-sz b { color: rgb(var(--fg)); }
-.wz-slot-a { display: flex; gap: 8px; flex-wrap: wrap; }
+.fr-drop { cursor: pointer; display: grid; place-content: center; justify-items: center; gap: .35em; padding: 10px; text-align: center; font-size: 12.5px; line-height: 1.6; background: rgba(var(--fg), .03); box-shadow: none; border: 1.5px dashed rgba(var(--fg), .3); transition: border-color .2s, background-color .2s; }
+.fr-drop:hover, .fr-drop.is-over, .fr-drop:focus-within { border-color: var(--viz-1); background: color-mix(in oklab, var(--viz-1) 8%, transparent); }
+.fr-drop input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.fr-drop b { font-size: 13px; }
+.fr-drop small { color: var(--lx-dim); font-size: 11.5px; }
+.fr-set { display: grid; gap: 12px; width: 100%; min-width: 0; align-content: start; }
+.fr-head { display: grid; gap: 3px; width: 100%; min-width: 0; }
+.fr-head h4 { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.6; }
+.fr-opt { font-style: normal; font-size: 11px; font-weight: 700; padding: .05em .75em; border-radius: 999px; color: var(--lx-dim); background: rgba(var(--fg), .08); }
+.fr-size { margin: 0; display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: 12.5px; color: var(--lx-dim); }
+.fr-size bdi { color: rgb(var(--fg)); font-weight: 700; }
+.fr-use { margin: 0; font-size: 12.5px; line-height: 1.9; color: var(--lx-dim); }
+.fr-ctl { display: flex; align-items: center; gap: 10px; }
+.fr-zoom { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--lx-dim); }
+.fr-zoom input { flex: 1; min-width: 50px; accent-color: var(--ring); }
+.fr-hint, .fr-none { margin: 0; font-size: 12px; line-height: 1.8; color: var(--lx-dim); }
+.fr-act { display: flex; flex-wrap: wrap; gap: 8px; }
+@container fr (min-width: 350px) {
+  .fr:not([data-kind="banner"]) .fr-in, .fr-e:not([data-kind="banner"]) .fr-in { grid-template-columns: var(--frw) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "box head" "box set"; column-gap: 16px; row-gap: 10px; }
+}
+@container fr (min-width: 580px) {
+  .fr[data-kind="banner"] .fr-in, .fr-e[data-kind="banner"] .fr-in { grid-template-columns: var(--frw) minmax(0, 1fr); grid-template-rows: auto 1fr; grid-template-areas: "box head" "box set"; column-gap: 18px; row-gap: 10px; }
+}
+.wz-slot .fr, .wz-slot .fr-e { --frw: 184px; }
+.wz-slot [data-kind="mobile"].fr, .wz-slot [data-kind="mobile"].fr-e { --frw: 204px; }
+.wz-slot [data-kind="banner"].fr, .wz-slot [data-kind="banner"].fr-e { --frw: 372px; }
+.wz-slots { display: grid; gap: calc(var(--u) * 1); margin-bottom: calc(var(--u) * 1.4); }
+.wz-slot { min-width: 0; padding: calc(var(--u) * 1.1) calc(var(--u) * 1.2); border-radius: calc(var(--r) * .9); background: rgba(var(--fg), .035); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
 .wz-swap { position: relative; cursor: pointer; }
 .wz-swap input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.wz-drop-s { min-height: 150px; }
 
 /* ── the admin's full review of a program that was sent ── */
 .rv-cols { align-items: start; }
@@ -3221,11 +3241,13 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .rv-prices { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .rv-prices li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: .6em .9em; border-radius: 12px; background: rgba(var(--fg), .04); font-size: 13px; }
 .rv-prices i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
-.rv-pics { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: 14px; align-items: start; }
-.rv-pic { margin: 0; display: grid; gap: 6px; min-width: 0; }
-.rv-pic[data-kind="banner"] { grid-column: 2; grid-row: 1; }
-.rv-pic[data-kind="mobile"] { grid-column: 2; grid-row: 2; width: 62%; }
-.rv-pic[data-kind="poster"] { grid-column: 1; grid-row: 1 / span 2; }
+.rv-pics { display: grid; gap: 14px; }
+.rv-pic { --frw: 130px; margin: 0; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 14px; align-items: center; min-width: 0; padding-bottom: 14px; border-bottom: 1px solid rgba(var(--fg), .08); }
+.rv-pic:last-child { padding-bottom: 0; border-bottom: 0; }
+.rv-pic[data-kind="mobile"] { --frw: 150px; }
+.rv-pic[data-kind="banner"] { --frw: 200px; }
+.rv-pic .rv-box { width: var(--frw); }
+@media (max-width: 520px) { .rv-pic { grid-template-columns: 150px minmax(0, 1fr); } .rv-pic[data-kind="banner"] { --frw: 150px; } }
 .rv-box { position: relative; aspect-ratio: var(--frr); overflow: hidden; border-radius: 12px; background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); display: grid; place-items: center; font-size: 12px; color: var(--lx-dim); text-align: center; padding: 6px; }
 .rv-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); transform: scale(var(--fz, 1)); }
 .rv-pic figcaption { display: grid; font-size: 12px; line-height: 1.6; }
@@ -3241,6 +3263,7 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 }
 /* ── phones and tall windows: the banner on top, the facts under it, the shows in a row ── */
 /* (a window taller than 4 : 5 has no room for a side rail, so the panels stack) */
+@media (max-aspect-ratio: 1/1) { :root { --mr: .75; } }   /* (round T: the phone and tablet banner is upright, 1080 × 1440, 3 : 4) */
 @media (max-width: 760px), (max-aspect-ratio: 5/4) {
   :root {
     --edge-x: 10px;
@@ -3249,11 +3272,11 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
   }
   .hero, .hero.rail-left, .scene, .hero.rail-left .scene { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--nav-h) minmax(0, 1fr) var(--rail-h); grid-template-areas: "nav" "main" "rail"; }
   /* the hero is as tall as its pieces (not the whole screen), and the page just scrolls: no pinned hero here */
-  :root { --hero-h: max(600px, calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) / var(--mr) + 156px + 3 * var(--gap) + var(--rail-h) + var(--pad-b))); --pin: 0px; }
+  :root { --hero-h: calc(var(--pad-t) + var(--nav-h) + (100vw - 20px) / var(--mr) + var(--dock-m) + 3 * var(--gap) + var(--rail-h) + var(--pad-b)); --pin: 0px; }
   .hero { position: relative; }
   .stage { align-items: center; }
   .tk { grid-template-rows: auto auto; align-content: center; }
-  .scene[data-mode="bar"] .frame, :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: var(--mr); }   /* (round T: the phone's banner is a square, for every program) */
+  .scene[data-mode="bar"] .frame, :root[data-frame="lock"] .scene[data-mode="bar"] .frame { aspect-ratio: var(--mr); }   /* (round T: the phone's banner is upright, 3 : 4, for every program) */
   .scene[data-mode="text"] .tk, .scene[data-mode="text"] .frame { height: 100%; }
   .rail { flex-direction: row; align-items: center; gap: 8px; padding: 6px; }
   .c-arrow:not(.c-pause), .c-foot .c-arrow:first-child { display: none; }
@@ -3263,12 +3286,20 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
   .c-thumb { height: 100%; aspect-ratio: auto; border-radius: 9px; }
   .c-cap { display: none !important; }
   .c-pause { width: 34px; height: 34px; }
-  .dock { height: auto; flex-wrap: wrap; gap: 10px 12px; padding: 14px 14px 14px; }
-  .d-main { flex: 1 1 100%; }
+  .dock { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; grid-template-rows: auto auto; align-content: center; align-items: center; column-gap: 0; row-gap: 3px; height: var(--dock-m); padding: 8px 14px; }
+  .d-main { grid-column: 1 / 4; grid-row: 1; display: flex; flex-direction: column-reverse; gap: 1px; }   /* (the title on top, its kind and label under it) */
+  .d-date { grid-column: 1; grid-row: 2; padding-inline-end: 11px; }
+  .d-price { grid-column: 2; grid-row: 2; display: flex; align-items: baseline; gap: .4em; padding-inline-start: 11px; border-inline-start: 1px solid rgba(var(--fg), .16); }
+  .dock .buy { grid-column: 4; grid-row: 1 / 3; align-self: center; margin-inline-start: 12px; height: 40px; min-width: 88px; padding-inline: 14px; font-size: 13.5px; }
+  .dock .kick { font-size: 11px; }
+  .dock .d-name { font-size: 13.5px; line-height: 1.5; }
+  .dock .cal, .dock .d-when span { display: none; }
+  .dock .d-when b { font-size: 12px; font-weight: 700; line-height: 1.5; }
+  .dock .d-lab { display: inline; font-size: 11px; line-height: 1.5; }
+  .dock .price b { font-size: 12px; line-height: 1.5; }
+  .dock .price small { font-size: 10.5px; }
+  .c-bar { height: 4px; background: rgba(255, 255, 255, .34); }   /* (the time left on the show: a bar that is easy to see on a small card) */
   .d-sep, .d-venue { display: none; }
-  .kv { display: inline; }
-  .d-date { flex: 1 1 auto; }
-  .dock .buy { margin-inline-start: auto; }
   .scene[data-mode="text"] .frame { align-items: flex-end; justify-content: stretch; padding: 14px; }
   .hero:not(.rail-left) .scene[data-mode="text"] .frame { justify-content: stretch; }
   .shade, .hero:not(.rail-left) .shade { background:
@@ -3285,6 +3316,8 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 @media (max-width: 400px) {
   .d-when span { display: none; }
   .buy { min-width: 104px; padding-inline: 14px; }
+  .dock .buy { min-width: 78px; padding-inline: 11px; margin-inline-start: 8px; font-size: 13px; }
+  .dock .d-name { font-size: 13px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .c-thumb img, .c-box, .buy, .login, .frame, .spot { transition: none; }
@@ -3430,21 +3463,18 @@ html:not([data-dev="1"]) .proto-fab { display: none !important; }
 html:not([data-dev="1"]) #ppTabs [data-tab="cmp"], html:not([data-dev="1"]) #ppTabs [data-tab="layout"], html:not([data-dev="1"]) #ppTabs [data-tab="style"], html:not([data-dev="1"]) #ppTabs [data-tab="text"], html:not([data-dev="1"]) #ppTabs [data-tab="motion"] { display: none; }
 
 /* round T: the pictures group of the live editor */
-.pp-pic { display: grid; gap: 8px; padding: 10px 0 14px; border-top: 1px solid var(--pp-line); }
+.pp-pic { padding: 14px 0; border-top: 1px solid var(--pp-line); }
 .pp-pic:first-child { border-top: 0; padding-top: 2px; }
-.pp-pic h4 { margin: 0; font-size: 13px; }
-.pp-pic h4 small { font-weight: 400; opacity: .7; }
-.pp-pic p { margin: 0; font-size: 12px; opacity: .75; line-height: 1.8; }
-.pp-pic-none { padding: 14px; border-radius: 10px; font-size: 12px; text-align: center; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--pp-line); }
 .pp-up { position: relative; cursor: pointer; display: inline-flex; align-items: center; gap: .4em; }
 .pp-up input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.proto-panel .fr { --lx-dim: rgba(255, 255, 255, .7); }
-.proto-panel .fr[data-kind="poster"] { width: min(100%, 220px); }
-.proto-panel .fr[data-kind="banner"] { width: 100%; }
-.proto-panel .fr[data-kind="mobile"] { width: min(100%, 250px); }
-.proto-panel .fr-bar label { color: var(--pp-ink2, #ddd); }
-.proto-panel .fr-note { color: var(--pp-ink2, #ddd); opacity: .8; }
-.proto-panel .fr .chip { color: var(--pp-ink, #fff); background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px var(--pp-line2); }
+.proto-panel .fr, .proto-panel .fr-e { --lx-dim: rgba(255, 255, 255, .7); --frw: 126px; }
+.proto-panel .fr[data-kind="mobile"], .proto-panel .fr-e[data-kind="mobile"] { --frw: 140px; }
+.proto-panel .fr[data-kind="banner"], .proto-panel .fr-e[data-kind="banner"] { --frw: 100%; }
+.proto-panel .fr-zoom, .proto-panel .fr-use, .proto-panel .fr-size, .proto-panel .fr-hint, .proto-panel .fr-none, .proto-panel .fr-drop small { color: var(--pp-ink2, #ddd); }
+.proto-panel .fr-size bdi, .proto-panel .fr-drop { color: var(--pp-ink, #fff); }
+.proto-panel .fr-opt { color: var(--pp-ink2, #ddd); background: rgba(255, 255, 255, .1); }
+.proto-panel .fr-drop { border-color: var(--pp-line2); background: rgba(255, 255, 255, .04); }
+.proto-panel .fr .chip, .proto-panel .fr-e .chip { color: var(--pp-ink, #fff); background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px var(--pp-line2); }
 html:not([data-dev="1"]) .pp-old { display: none; }
 
 /* the slot pane's folds */
@@ -4352,6 +4382,7 @@ const DEV = /[?&](dev|debug)\b/.test(location.search);
 document.documentElement.dataset.dev = DEV ? '1' : '';
 if (/[?&]notes\b/.test(location.search)) document.documentElement.classList.add('show-notes');
 const STK = matchMedia('(max-width: 760px), (max-aspect-ratio: 5/4)');   // the panels stack (phones, tall windows)
+const PORT = matchMedia('(max-aspect-ratio: 1/1)');   // a window that is taller than wide (a phone, a tablet standing up): the upright 4 : 5 banner
 const MOTK = () => (reduceMotion ? 0 : { soft: 0.6, balanced: 1, strong: 1.6 }[LOOK.mot] || 1);
 const dg = (s) => (LOOK.digits === 'en' ? String(s).replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)) : String(s));
 
@@ -4426,7 +4457,7 @@ function setPal(e, key, custom) {
    ════════════════════════════════════════════════════════════════ */
 const art = (slug, bw, bh) => ({
   banner: { src: `assets/events/${slug}-banner-1672.webp`, srcset: `assets/events/${slug}-banner-1024.webp 1024w, assets/events/${slug}-banner-1672.webp 1672w`, thumb: `assets/events/${slug}-banner-640.webp`, w: bw, h: bh },
-  bannerM: { src: `assets/events/${slug}-mobile-1080.webp`, w: 1080, h: 1080 },   // the banner for phones and tablets: a square
+  bannerM: { src: `assets/events/${slug}-mobile-1080.webp`, w: 1080, h: 1440 },   // the banner for phones and tablets: upright, 3 : 4
 });
 const HOUR = 36e5;
 const EVENTS = [
@@ -4650,22 +4681,24 @@ const LIST = () => (LOOK.listFill ? EVENTS.concat(MORE) : EVENTS);
 lib.on(() => EVENTS.concat(MORE).forEach((e) => { if (e.hall != null) bindHall(e, e.hall, e.hallLay); }));
 /* ════════════════════════════════════════════════════════════════
    round T: placing a picture in its fixed frame («چیدن تصویر»). Every picture has one fixed shape on the site (the poster 2 : 3, the desktop banner 1.74 : 1,
-   the mobile banner 1 : 1) and always fills it; whoever adds a program drags the picture inside a big frame of that shape to choose what stays in view, and
+   the mobile banner 3 : 4, upright) and always fills it; whoever adds a program drags the picture inside a big frame of that shape to choose what stays in view, and
    zooms with the slider (or the wheel, or + and −). The point (fx, fy, in %) and the zoom (fz ≥ 1) are saved with the picture and used everywhere the picture is shown.
    ════════════════════════════════════════════════════════════════ */
 // the fixed sizes of the site (width × height in pixels, and what they are for)
 const SIZES_FIXED = {
-  poster: { w: 1000, h: 1500, r: 2 / 3, name: 'پوستر', use: 'همه‌ی برنامه‌ها: کارت‌ها، صفحه‌ی اجرا، بلیت' },
-  banner: { w: 1740, h: 1000, r: 1.74, name: 'بنر دسکتاپ', use: 'بالای صفحه‌ی اصلی، روی کامپیوتر' },
-  mobile: { w: 1080, h: 1080, r: 1, name: 'بنر موبایل و تبلت', use: 'بالای صفحه‌ی اصلی، روی موبایل و تبلت' },
+  poster: { w: 1000, h: 1500, r: 2 / 3, rt: '۲ به ۳', name: 'پوستر', use: 'همه‌ی برنامه‌ها: کارت‌ها، صفحه‌ی اجرا، بلیت' },
+  banner: { w: 1740, h: 1000, r: 1.74, rt: '۱٫۷۴ به ۱', name: 'بنر دسکتاپ', use: 'بالای صفحه‌ی اصلی، روی کامپیوتر' },
+  mobile: { w: 1080, h: 1440, r: 0.75, rt: '۳ به ۴', name: 'بنر موبایل و تبلت', use: 'بالای صفحه‌ی اصلی، روی موبایل و تبلت' },
 };
 const framer = {
-  // the markup of one framer: a frame of the kind's shape, the picture in it, a zoom slider, a button to centre it
-  html(kind, id) {
+  // one picture's row: the frame (the picture in it, or an empty drop place of the same shape) and, beside it, its name, its size, what it is for, and its settings;
+  // o: { filled, opt (an «optional» tag), use, drop / input (attributes of the empty place), none (the words when empty), actions (buttons) }
+  row(kind, id, o = {}) {
     const z = SIZES_FIXED[kind];
-    return `<div class="fr" data-fr="${esc(id)}" data-kind="${kind}" style="--frr:${z.r.toFixed(4)}"><div class="fr-box" tabindex="0" role="group" aria-label="جابه‌جا کردن ${esc(z.name)} تو کادرش (بکش، یا با کلیدهای جهت‌دار)"><img alt="" draggable="false"><i class="fr-grid" aria-hidden="true"></i><span class="fr-tip" aria-hidden="true">بکش تا جاش عوض بشه</span></div>
-      <div class="fr-bar"><label><span>بزرگ‌نمایی</span><input type="range" min="1" max="3" step="0.01" value="1" aria-label="بزرگ‌نمایی ${esc(z.name)}"></label><button type="button" class="chip" data-fr-c>وسط</button></div>
-      <small class="fr-note"><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi> · نسبت ${fa(z.r.toFixed(2)).replace('.', '٫')}</small></div>`;
+    const head = `<header class="fr-head"><h4>${esc(z.name)}${o.opt ? '<em class="fr-opt">اختیاری</em>' : ''}</h4><p class="fr-size"><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi><span>نسبت ${z.rt}</span></p><p class="fr-use">${esc(o.use || z.use)}</p></header>`;
+    if (!o.filled) return `<div class="fr-e" data-kind="${kind}" style="--frr:${z.r.toFixed(4)}"><div class="fr-in">${head}<label class="fr-box fr-drop" ${o.drop || ''}><input type="file" accept="image/*" ${o.input || ''}><span class="sec-ic" aria-hidden="true">${ico('upload')}</span><b>تصویر رو اینجا بنداز</b><small>یا بزن تا انتخاب کنی · JPG، PNG یا WebP</small></label><div class="fr-set">${o.none ? `<p class="fr-none">${o.none}</p>` : ''}</div></div></div>`;
+    return `<div class="fr" data-fr="${esc(id)}" data-kind="${kind}" style="--frr:${z.r.toFixed(4)}"><div class="fr-in">${head}<div class="fr-box" tabindex="0" role="group" aria-label="جابه‌جا کردن ${esc(z.name)} تو کادرش (بکش، یا با کلیدهای جهت‌دار)"><img alt="" draggable="false"><i class="fr-grid" aria-hidden="true"></i></div>
+      <div class="fr-set"><div class="fr-ctl"><label class="fr-zoom"><span>بزرگ‌نمایی</span><input type="range" min="1" max="3" step="0.01" value="1" aria-label="بزرگ‌نمایی ${esc(z.name)}"></label><button type="button" class="chip" data-fr-c>وسط</button></div><p class="fr-hint">تصویر رو تو کادر بکش تا جاش عوض بشه.</p>${o.actions ? `<div class="fr-act">${o.actions}</div>` : ''}</div></div></div>`;
   },
   // mounts the behaviour on a framer: src, the saved fit, and what to do when it changes ({ fx, fy, fz })
   mount(root, { src, fx = 50, fy = 50, fz = 1, onChange }) {
@@ -4862,7 +4895,7 @@ function paint(el, e) {
 // which size of the picture the browser picks: the banner's panel is about four fifths of the width
 const SIZES = '(min-width: 761px) 82vw, 100vw';
 async function buildScene(e) {
-  const mode = e.layout === 'text' ? 'text' : 'bar', useM = mode === 'bar' && STK.matches && !!e.bannerM, pic = useM ? e.bannerM : e.banner, ratio = mode === 'text' ? 16 / 9 : clamp(pic.w / pic.h, 1, 3.4);
+  const mode = e.layout === 'text' ? 'text' : 'bar', useM = mode === 'bar' && PORT.matches && !!e.bannerM, pic = useM ? e.bannerM : e.banner, ratio = mode === 'text' ? 16 / 9 : clamp(pic.w / pic.h, 1, 3.4);
   const el = document.createElement('article');
   el.className = 'scene'; el.dataset.mode = mode; el.dataset.id = e.id; el.inert = true;
   el.setAttribute('aria-hidden', 'true'); el.setAttribute('role', 'group'); el.setAttribute('aria-roledescription', 'اجرا');
@@ -9407,7 +9440,7 @@ function draftEvent(d) {
     prices: d.prices, seatTier: d.seatTier, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
     poster: { src: d.poster || '', w: 2, h: 3, ...(d.posterFit || {}) }, ver: 0 };
   if (d.banner) e.banner = { src: d.banner, thumb: d.banner, w: 1740, h: 1000, ...(d.bannerFit || {}), custom: true };
-  if (d.bannerM) e.bannerM = { src: d.bannerM, w: 1080, h: 1080, ...(d.bannerMFit || {}) };
+  if (d.bannerM) e.bannerM = { src: d.bannerM, w: 1080, h: 1440, ...(d.bannerMFit || {}) };
   if (d.hall) bindHall(e, d.hall, d.hallLay);
   e.title = `${e.type} ${e.name}`;
   setPal(e, d.pal || 'violet'); e.w = when(e);
@@ -9495,17 +9528,13 @@ const wizard = {
   /* 2. the pictures: the poster, and the two banners (options); each in a frame of its fixed shape, placed by hand */
   s1(b) {
     const d = this.d;
-    const slot = (kind, key, title, note, req) => {
-      const z = SIZES_FIXED[kind];
-      return `<section class="wz-slot" data-kind="${kind}"><h3 class="wz-h3">${esc(title)}${req ? '' : ' <small>(اختیاری)</small>'}</h3><p class="wz-sz"><b><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi></b> · ${esc(note)}</p>
-        ${d[key] ? `${framer.html(kind, kind)}<div class="wz-slot-a"><label class="chip wz-swap">${ico('upload')}عوض کردن<input type="file" accept="image/*" data-kind="${kind}"></label><button type="button" class="chip" data-rm="${kind}">${ico('x')}برداشتن</button></div>`
-        : `<label class="wz-drop wz-drop-s" data-drop="${kind}"><input type="file" accept="image/*" data-kind="${kind}"><span class="sec-ic" aria-hidden="true">${ico('upload')}</span><b>تصویر رو اینجا بنداز</b><small>یا بزن تا انتخاب کنی · JPG، PNG یا WebP</small></label>`}</section>`;
-    };
-    b.innerHTML = `<h2>${ico('upload')}تصویرها</h2><p class="bk-lead">هر تصویر یه اندازه‌ی ثابت داره و همیشه کادرش رو پر می‌کنه. تصویر رو که گذاشتی، تو کادر بزرگ بکشش تا همون بخشی که می‌خوای دیده بشه تو کادر بمونه؛ با نوار یا چرخ ماوس هم بزرگش کن. بدون پوستر، یه پوستر موقت از اسم و رنگ ساخته می‌شه.</p>
-      <div class="wz-slots">${slot('poster', 'poster', 'پوستر', 'برای کارت‌ها، صفحه‌ی اجرا و بلیت؛ عمودی، نسبت ۲ به ۳', true)}${slot('banner', 'banner', 'بنر دسکتاپ', 'برای بالای صفحه‌ی اصلی روی کامپیوتر؛ افقی، نسبت ۱٫۷۴')}${slot('mobile', 'bannerM', 'بنر موبایل و تبلت', 'برای بالای صفحه‌ی اصلی روی موبایل و تبلت؛ مربع')}</div>
+    const NONE = { poster: 'بدون پوستر، یه پوستر موقت از اسم و رنگ برنامه کشیده می‌شه.', banner: 'بدون بنر دسکتاپ، برنامه تو بالای صفحه‌ی اصلی نمی‌آد.', mobile: 'بدون بنر موبایل، تو موبایل بنر دسکتاپش به شکل عمودی ۳ به ۴ بریده می‌شه.' };
+    const slot = (kind, key, opt) => `<section class="wz-slot" data-kind="${kind}">${framer.row(kind, kind, { filled: !!d[key], opt, drop: `data-drop="${kind}"`, input: `data-kind="${kind}"`, none: NONE[kind], actions: `<label class="chip wz-swap">${ico('upload')}عوض کردن<input type="file" accept="image/*" data-kind="${kind}"></label><button type="button" class="chip" data-rm="${kind}">${ico('x')}برداشتن</button>` })}</section>`;
+    b.innerHTML = `<h2>${ico('upload')}تصویرها</h2><p class="bk-lead">هر تصویر یه اندازه‌ی ثابت داره و کادرش رو پر می‌کنه. تصویر رو که گذاشتی، تو کادر بکشش تا همون بخشی که می‌خوای دیده بشه بمونه؛ با نوار یا چرخ ماوس هم بزرگش کن. بدون پوستر، یه پوستر موقت از اسم و رنگ ساخته می‌شه.</p>
+      <div class="wz-slots">${slot('poster', 'poster', false)}${slot('banner', 'banner', true)}${slot('mobile', 'bannerM', true)}</div>
       <h3 class="wz-h3">رنگ برنامه <small>(برای پوستر موقت و دکمه‌ها)</small></h3>
       <div class="wz-pal" role="radiogroup" aria-label="رنگ">${Object.entries(PALETTE).slice(0, 14).map(([k, p]) => `<button type="button" role="radio" data-pal="${k}" aria-checked="${d.pal === k}" style="--c:${p.accent}" aria-label="${esc(p.label)}"></button>`).join('')}</div>`;
-    const KEYS = { poster: ['poster', 'posterFit', 1000, 1500], banner: ['banner', 'bannerFit', 1280, 736], mobile: ['bannerM', 'bannerMFit', 800, 800] };
+    const KEYS = { poster: ['poster', 'posterFit', 1000, 1500], banner: ['banner', 'bannerFit', 1280, 736], mobile: ['bannerM', 'bannerMFit', 800, 1067] };
     // a picture read from a file, made smaller (it is kept with the draft in the browser)
     const take = (kind, f) => {
       if (!f || !/^image\//.test(f.type)) { toast('یه فایل تصویری انتخاب کن.'); return; }
@@ -10977,7 +11006,7 @@ const cssClamp = (a, v, b) => Math.max(a, Math.min(v, b));
 function geom(W, H, L = LOOK) {
   const ar = (() => { const s = stage.top, b = EVENTS[state.i].banner; return s && s.img && s.img.naturalWidth ? s.img.naturalWidth / s.img.naturalHeight : b.w / b.h; })();
   const stacked = W <= 760 || W / H <= 1.25, u = clamp(Math.min(W / 100, (H * 1.7778) / 100), 8, 26), px = u / 19.2, bw = L.borderW;
-  if (stacked) { const w = W - 20, h = w / 1; return { stacked, u, px, frame: { w, h }, pic: { w, h } }; }
+  if (stacked) { const w = W - 20, h = w / (W / H <= 1 ? 0.75 : L.ratio); return { stacked, u, px, frame: { w, h }, pic: { w, h } }; }
   const heroH = Math.max(440, H), edgeX = Math.max(px * L.edgeX, (W - heroH * 2.25) / 2), padT = px * L.edgeT, padB = px * L.edgeB, gap = px * L.gap;
   const navH = Math.max(50, px * L.navH), dockH = Math.max(56, px * L.dockH), mainH = heroH - padT - padB - navH - gap;
   const n = Math.min(EVENTS.length, VIS), railPad = u * 0.75, arrow = Math.max(28, u * 1.85), cardGap = u * 0.6;
@@ -11151,9 +11180,9 @@ const panel = {
     const host = $('#ppPicsBody'); if (!host) return;
     const e = EVENTS[state.i], P = { banner: e.banner, mobile: e.bannerM, poster: e.poster };
     const srcOf = (p) => (p && (p.fake || p.src || p.thumb)) || '';
-    const slot = (kind, extra) => { const z = SIZES_FIXED[kind], p = P[kind], has = !!srcOf(p);
-      return `<section class="pp-pic" data-kind="${kind}"><h4>${esc(z.name)} <small><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi></small></h4><p>${esc(z.use)}${extra || ''}</p>${has ? framer.html(kind, kind) : `<div class="pp-pic-none">${kind === 'mobile' ? 'هنوز بنر موبایل نداره؛ تو موبایل بنر دسکتاپش به شکل مربع بریده می‌شه.' : 'هنوز نداره.'}</div>`}
-        <div class="pp-row"><label class="pill pp-up">${ico('upload')}${has ? 'تصویر تازه' : 'گذاشتن تصویر'}<input type="file" accept="image/*" data-pk="${kind}"></label>${p && p.custom ? `<button type="button" class="pill" data-prm="${kind}">${ico('undo')}برگردوندن</button>` : ''}</div></section>`; };
+    const NONE = { banner: 'بدون بنر، برنامه تو بالای صفحه‌ی اصلی نمی‌آد.', mobile: 'بدون بنر موبایل، تو موبایل بنر دسکتاپش به شکل عمودی ۳ به ۴ بریده می‌شه.', poster: 'بدون پوستر، یه پوستر موقت از اسم و رنگ برنامه کشیده می‌شه.' };
+    const slot = (kind) => { const p = P[kind], has = !!srcOf(p);
+      return `<section class="pp-pic" data-kind="${kind}">${framer.row(kind, kind, { filled: has, input: `data-pk="${kind}"`, none: NONE[kind], actions: `<label class="pill pp-up">${ico('upload')}تصویر تازه<input type="file" accept="image/*" data-pk="${kind}"></label>${p && p.custom ? `<button type="button" class="pill" data-prm="${kind}">${ico('undo')}برگردوندن</button>` : ''}` })}</section>`; };
     host.innerHTML = slot('banner') + slot('mobile') + slot('poster');
     const keyOf = { banner: 'banner', mobile: 'bannerM', poster: 'poster' };
     $$('.fr', host).forEach((fr) => { const k = fr.dataset.kind, p = P[k]; framer.mount(fr, { src: srcOf(p), fx: p.fx, fy: p.fy, fz: p.fz, onChange: (v) => { Object.assign(EVENTS[state.i][keyOf[k]], v); this.fitChanged(k); } }); });
@@ -11175,7 +11204,7 @@ const panel = {
   // a picture's point or zoom changed: the picture on show moves at once (the other scenes of this slot are built again when they are next needed)
   fitChanged(kind) {
     const e = EVENTS[state.i], s = stage.top; e.ver++;
-    if (s && s.e === e && s.mode === 'bar' && ((kind === 'banner' && !STK.matches) || (kind === 'mobile' && STK.matches) || (kind === 'banner' && STK.matches && !e.bannerM))) { const pic = $('.pic', s.el); if (pic) pic.setAttribute('style', fitVars(kind === 'mobile' ? e.bannerM : e.banner)); s.ver = e.ver; }
+    if (s && s.e === e && s.mode === 'bar' && ((kind === 'banner' && !PORT.matches) || (kind === 'mobile' && PORT.matches) || (kind === 'banner' && PORT.matches && !e.bannerM))) { const pic = $('.pic', s.el); if (pic) pic.setAttribute('style', fitVars(kind === 'mobile' ? e.bannerM : e.banner)); s.ver = e.ver; }
     if (kind === 'poster' || kind === 'banner') s2.refresh();
   },
   // the size to ask for, and what the show's poster is now
@@ -11192,6 +11221,12 @@ const panel = {
     const box = $('#ppNeed'), s = stage.top; if (!box || !s) return;
     const f = s.frame, w = f.clientWidth, h = f.clientHeight; if (!w || !h) return;
     const stacked = STK.matches, bw = Math.max(parseFloat(getComputedStyle(f).borderTopWidth) || 0, 0), r = (w / h).toFixed(2).replace('.', '٫');
+    if (PORT.matches && s.mode === 'bar') {
+      // a window that stands up: the phone and tablet banner, one fixed size
+      const z = SIZES_FIXED.mobile;
+      box.innerHTML = `<span>اندازه‌ی بنر موبایل و تبلت (کادر تو پنجره‌ی بلند همیشه همین شکل رو داره)</span><b class="big"><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi></b><span>نسبت ۳ به ۴، عمودی · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(z.w * 2)}×${fa(z.h * 2)}</bdi>؛ هر اندازه‌ی بزرگ‌تر با همین نسبت هم خوبه</span><span class="sm">کادر الان تو این پنجره (${fa(innerWidth)}×${fa(innerHeight)}) <bdi dir="ltr">${fa(w)}×${fa(h)}</bdi>؛ بنر همیشه تمام کادر رو پر می‌کنه، فقط بزرگ و کوچیک می‌شه.</span>`;
+      return;
+    }
     if (LOOK.frame === 'lock' && s.mode === 'bar') {
       // the shape is locked: one size for every window
       const R = LOOK.ratio, mw = Math.round(R * 1000), rs = R.toFixed(2).replace('.', '٫'), g = stacked ? null : geom(1920, 1080);
@@ -11269,7 +11304,7 @@ cards.set(0);
 panel.init();
 look.init();
 // round T: a phone's banner and a desktop's are two files; when the window changes between the two layouts every scene is built again
-STK.addEventListener('change', () => { EVENTS.forEach((e) => { e.ver++; }); stage.show(state.i, { instant: true }).then((s) => { if (s) partsIn(s, 0); }); });
+PORT.addEventListener('change', () => { EVENTS.forEach((e) => { e.ver++; }); stage.show(state.i, { instant: true }).then((s) => { if (s) partsIn(s, 0); }); });
 hd.init();
 s2.init();
 sdock.init();
