@@ -1434,7 +1434,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .tk-sv button svg.i { width: 1.1em; height: 1.1em; }
 .tk-sv button:hover { background: rgba(var(--fg), .16); }
 .tk-sv button:focus-visible, .tk-acts .chip:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
-.tk-sv button.is-busy, .tk-acts .chip.is-busy { opacity: .55; cursor: progress; }
+.tk-sv button.is-busy, .tk-acts .chip.is-busy, .tk-acts .tk-dl.is-busy { opacity: .55; cursor: progress; }
 .tk-acts [data-act="pdf"] svg.i, .tk-acts [data-act="img"] svg.i, .tk-sv [data-sv="img"] svg.i, .tk-sv [data-sv="pdf"] svg.i { transform: rotate(180deg); }   /* (the sprite's «upload» arrow, turned down: a download) */
 /* the dark stub of a wide ticket: its buttons are white on dark (they took the page's text colour, which is dark in the light theme) */
 .tk-stub .tk-sv button { background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .34); color: #fff; }
@@ -1778,6 +1778,21 @@ a.buy, a.chip { text-decoration: none; }
 .bk-showline.in .bk-what { align-self: center; gap: .3em; }
 .bk-showline.in .bk-what b { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; white-space: normal; font-size: calc(max(17px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); line-height: 1.55; }
 .bk-showline.in .bk-what span { white-space: normal; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); }
+
+/* round U: the two downloads are the main buttons of the success panel; the window that shows a saved file where a download is blocked (a page in a frame) */
+.tk-acts .tk-dl { height: 44px; min-width: 0; padding-inline: calc(var(--u) * 1.5); font-size: 14px; gap: .5em; }
+.tk-acts .tk-dl.is-alt { background: transparent; color: rgb(var(--fg)); box-shadow: inset 0 0 0 1.5px var(--accent); }
+.tk-acts .tk-dl.is-alt:hover { background: color-mix(in oklab, var(--accent) 14%, transparent); filter: none; }
+.tk-acts .tk-dl svg.i { transform: rotate(180deg); }
+.tk-save { width: min(92vw, 560px); display: grid; gap: 12px; }
+.tk-save h2 { margin: 0; display: flex; align-items: center; gap: .5em; font-size: 16px; }
+.tk-save h2 svg.i { transform: rotate(180deg); }
+.ts-say, .ts-tip { margin: 0; font-size: 13px; line-height: 1.9; color: rgba(var(--fg), max(.7, var(--dmin))); }
+.ts-img { width: 100%; max-height: 52svh; object-fit: contain; border-radius: 14px; background: rgba(var(--fg), .06); }
+.ts-pdf { display: grid; place-items: center; gap: 4px; padding: 28px 12px; border-radius: 14px; background: rgba(var(--fg), .06); }
+.ts-pdf svg.i { width: 40px; height: 40px; }
+.ts-pdf b { font-size: 22px; }
+.ts-pdf small { color: rgba(var(--fg), .6); }
 
 /* ── the seat map (seatmap.js): the overview, the best seats, one section big; light on the browser (no per-seat transforms
    that change, no custom properties animated, one composited container) ── */
@@ -7875,7 +7890,7 @@ const buy = {
         <span class="tk-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27.5l7.2 7.2L38 18.8"/></svg></span>
         <div class="tk-say"><h1>پرداخت موفق بود؛ بلیت‌هات آماده‌ست</h1><p>بلیت‌ها به ${esc(maskPhone(o.phone))} پیامک شد. هر وقت خواستی با «پیگیری خرید» و همین شماره دوباره پیداشون کن.</p></div>
         <div class="tk-code"><small>کد پیگیری</small><b dir="ltr">${esc(o.code)}</b><button type="button" class="chip" data-act="copy">${ico('copy')}کپی</button></div>
-        <div class="tk-acts"><button type="button" class="chip" data-act="ics">${ico('calendar')}افزودن به تقویم</button><button type="button" class="chip" data-act="pdf">${ico('upload')}ذخیره‌ی PDF</button><button type="button" class="chip" data-act="img">${ico('upload')}ذخیره‌ی تصویر</button><button type="button" class="chip" data-act="share">${ico('share')}اشتراک‌گذاری</button><button type="button" class="chip" data-act="print">${ico('ticket')}چاپ</button><a class="chip" href="#/receipts">${ico('search')}پیگیری خرید</a></div>
+        <div class="tk-acts"><button type="button" class="buy tk-dl" data-act="pdf">${ico('upload')}دانلود PDF${o.seats.length > 1 ? ' همه‌ی بلیت‌ها' : ''}</button><button type="button" class="buy tk-dl is-alt" data-act="img">${ico('upload')}دانلود تصویر${o.seats.length > 1 ? ' همه‌ی بلیت‌ها' : ''}</button><button type="button" class="chip" data-act="ics">${ico('calendar')}افزودن به تقویم</button><button type="button" class="chip" data-act="share">${ico('share')}اشتراک‌گذاری</button><button type="button" class="chip" data-act="print">${ico('ticket')}چاپ</button><a class="chip" href="#/receipts">${ico('search')}پیگیری خرید</a></div>
       </section>
       <div class="tk-grid">${o.seats.map((x, i) => this.passHTML(o, e, x, i, { w, h, src, ps })).join('')}</div>
       <section class="panel tk-help evp-rise"><h2>${ico('info')}روز اجرا</h2><ul class="tk-tips"><li><i aria-hidden="true">${ico('clock')}</i><span>یک ساعت پیش از شروع در سالن باش؛ پس از شروع، ورود ممکن نیست.</span></li><li><i aria-hidden="true">${ico('ticket')}</i><span>کد QR هر بلیت رو دم در نشون بده (روی گوشی یا چاپی)؛ هر کد فقط یک بار باز می‌شه.</span></li><li><i aria-hidden="true">${ico('users')}</i><span>بلیت شخصیه؛ برای همراهانت هر کدوم یه بلیت جدا داره.</span></li></ul></section>
@@ -7999,7 +8014,20 @@ const tkx = {
       `SUMMARY:${esc2(e.title)}`, `LOCATION:${esc2(`${h.name}، ${h.addr || e.city}`)}`, `DESCRIPTION:${esc2(`بلیت ${o.seats.length} نفره · ${seats} · کد پیگیری ${o.code}`)}`,
       'BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${esc2(`${e.title}: دو ساعت دیگه شروع می‌شه`)}`, 'TRIGGER:-PT2H', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
   },
-  save(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); },
+  // the file is saved (a real download). Inside a frame (the page shown in a preview) a browser blocks a download without a word, so there the file is also shown in a window: the picture to touch and hold, a save link, a link to open it in a tab
+  save(blob, name) {
+    const url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    let framed = false; try { framed = window.top !== window.self; } catch (err) { framed = true; }
+    if (framed) this.window(url, name); else setTimeout(() => URL.revokeObjectURL(url), 120000);
+  },
+  window(url, name) {
+    const png = /\.png$/i.test(name), m = desk.modal('tk-save', `<h2>${ico('upload')}ذخیره‌ی ${png ? 'تصویر' : 'PDF'} بلیت</h2>
+      <p class="ts-say">اگه دانلود خودش شروع نشد (تو پیش‌نمایش آنلاین بسته‌ست)، از همین‌جا ذخیره کن.</p>
+      ${png ? `<img class="ts-img" src="${url}" alt="بلیت">` : `<div class="ts-pdf" aria-hidden="true">${ico('ticket')}<b>PDF</b><small dir="ltr">${esc(name)}</small></div>`}
+      <div class="evp-dlg-end"><a class="buy" href="${url}" download="${esc(name)}">${ico('upload')}ذخیره‌ی فایل</a><a class="chip" href="${url}" target="_blank" rel="noopener">باز کردن تو تب تازه</a></div>
+      ${png ? '<p class="ts-tip">رو گوشی: انگشتت رو روی تصویر نگه دار و «ذخیره‌ی تصویر» رو بزن.</p>' : ''}`, 'ذخیره‌ی بلیت');
+    return m;
+  },
   text(o, e) { const w = whenOf({ t: o.t }), h = hallOf(e); return `بلیت من: ${e.title} · ${w.wd} ${w.dm} ساعت ${w.tm} · ${h.name}، ${e.city} · کد پیگیری ${o.code}`; },
   // the phone's own share sheet with the picture as a file; where there is none, a small menu
   async share(o, e, i, anchor) {
