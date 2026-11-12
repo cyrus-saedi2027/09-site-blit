@@ -181,7 +181,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .frame, .frame img { user-select: none; -webkit-user-select: none; -webkit-user-drag: none; }
 /* the picture and its extension are one layer, so the zoom-out moves them together */
 .pic { position: absolute; inset: 0; transform-origin: var(--o, 50% 50%); will-change: transform; }
-.pic img.art { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); transform: scale(var(--fz, 1)); }   /* round T: the banner always fills its frame, around the point the admin placed; nothing is left empty beside it */
+.pic img.art { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); transform: scale(var(--fz)); }   /* round T: the banner always fills its frame, around the point the admin placed; nothing is left empty beside it */
 /* the banner is whole and centred. What is left of the panel (when its shape isn't the banner's) is black, or,
    as an option, the banner's own edge, mirrored and blurred, so the colours run on without a seam: two copies, one
    on each side (or above and below). The script gives the picture's size as --pw and --ph. */
@@ -197,7 +197,7 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .frame.is-v .ext .eb { top: calc(50% + var(--ph) / 2 - var(--bx)); }
 /* when the panel has the banner's own shape (to within 2.5 %, set in the script) the banner fills it, stretched by less
    than that; the look can also ask for the banner to fill the panel always (it is then cut) */
-.frame.is-fill .pic img.art { object-fit: cover; }
+.frame.is-fill .pic img.art { object-fit: fill; }   /* (a frame of the banner's own shape, to FILL_TOL: the banner fills it as it always did) */
 .ext { display: none !important; }   /* (no black, blurred or mirrored fill at the sides any more) */
 :root[data-fit="cover"] .pic img.art { object-fit: cover; }
 :root[data-fit="cover"] .ext { display: none !important; }
@@ -6156,7 +6156,7 @@ const artOf = (e) => {
   return { a, src: a.fake || a.src || '' };
 };
 // where a picture sits in its frame: the point (fx, fy in %) that stays in view, and the zoom (fz ≥ 1); the admin sets them when placing the picture
-const fitVars = (a) => `--fx:${a && a.fx != null ? a.fx : 50}%;--fy:${a && a.fy != null ? a.fy : 50}%;--fz:${a && a.fz ? a.fz : 1}`;
+const fitVars = (a) => `--fx:${a && a.fx != null ? a.fx : 50}%;--fy:${a && a.fy != null ? a.fy : 50}%${a && a.fz && a.fz !== 1 ? `;--fz:${a.fz}` : ''}`;
 // the days a list of shows covers: "۱۵ آبان تا ۲۴ آذر"
 function spanOf(list) {
   const t = list.map((e) => Date.parse(e.startsAt)), u = list.map((e) => Date.parse(e.endsAt || e.startsAt));
@@ -11043,7 +11043,7 @@ function fitNote(w, h) {
   const f = stage.top && stage.top.mode === 'bar' ? stage.top.frame : null, T = f && f.clientHeight ? f.clientWidth / f.clientHeight : 16 / 9;
   const r = w / h, size = `${fa(w)}×${fa(h)}`, rs = fa(r.toFixed(2)).replace('.', '٫'), ts = LOOK.frame === 'lock' && f ? `${fa(Math.round(LOOK.ratio * 1000))}×${fa(1000)}` : f && f.clientWidth ? `${fa(f.clientWidth)}×${fa(f.clientHeight)}` : '';
   if (Math.abs(Math.log(r / T)) < FILL_TOL) return `<b>نسبت ${rs} به ۱</b> · ${size} · کادر رو کامل پر می‌کنه و چیزی ازش بریده نمی‌شه`;
-  return `<b>نسبت ${rs} به ۱</b> · ${size} · کامل دیده می‌شه، ولی ${r > T ? 'بالا و پایینش' : 'دو طرفش'} خالی می‌مونه (${LOOK.fill === 'edge' ? 'با لبه‌ی محوشده‌ی خودش پر می‌شه' : 'سیاهه'})${ts ? `. برای اینکه کادر رو پر کنه <bdi dir="ltr">${ts}</bdi> بساز` : ''}`;
+  return `<b>نسبت ${rs} به ۱</b> · ${size} · کادر رو پر می‌کنه و ${r > T ? 'از دو طرفش' : 'از بالا و پایینش'} بریده می‌شه (هیچ نوار سیاه یا محوی نیست)${ts ? `. اندازه‌ی ثابت: <bdi dir="ltr">${ts}</bdi>؛ جاش رو تو کادر تنظیم کن` : ''}`;
 }
 const panel = {
   fab: $('#protoFab'), el: $('#protoPanel'), where: 'replace', needRaf: 0,
@@ -11181,11 +11181,11 @@ const panel = {
   // the size to ask for, and what the show's poster is now
   posterNote() {
     const e = EVENTS[state.i], r = LOOK.posterRatio, w = 1000, h = Math.round(w / r / 10) * 10, box = $('#ppPNeed'), note = $('#ppPNote'); if (!box) return;
-    box.innerHTML = `<span>اندازه‌ی پوستر برای لیست‌ها (همه‌ی بخش‌ها جز هیرو)</span><b class="big"><bdi dir="ltr">${fa(w)}×${fa(h)}</bdi></b><span>نسبت ${fa(r.toFixed(2)).replace('.', '٫')} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(w * 2)}×${fa(h * 2)}</bdi>. پوستر با نسبت دیگه هم کامل دیده می‌شه و جای خالی کنارش با نسخه‌ی محوِ خودش پر می‌شه.</span>`;
+    box.innerHTML = `<span>اندازه‌ی پوستر برای لیست‌ها (همه‌ی بخش‌ها جز هیرو)</span><b class="big"><bdi dir="ltr">${fa(w)}×${fa(h)}</bdi></b><span>نسبت ${fa(r.toFixed(2)).replace('.', '٫')} · برای صفحه‌ی تیزتر (دو برابر) <bdi dir="ltr">${fa(w * 2)}×${fa(h * 2)}</bdi>. پوستر با نسبت دیگه هم قبول می‌شه؛ برش می‌خوره و جاش رو تو کادر خودت تنظیم می‌کنی.</span>`;
     const p = e.poster;
-    if (!p) { note.innerHTML = 'این اجرا پوستر نداره؛ تو لیست‌ها بنرش کامل (بدون برش) تو کادر پوستر نشون داده می‌شه.'; return; }
+    if (!p) { note.innerHTML = 'این اجرا پوستر نداره؛ یه پوستر ۲ به ۳ از اسم و رنگش کشیده می‌شه.'; return; }
     const ar = p.w / p.h, fit = Math.abs(Math.log(ar / r)) < FILL_TOL;
-    note.innerHTML = `<b>نسبت ${fa(ar.toFixed(2)).replace('.', '٫')} به ۱</b> · ${fa(p.w)}×${fa(p.h)} · ${fit ? 'کادر رو کامل پر می‌کنه' : 'کامل دیده می‌شه، ولی ' + (ar > r ? 'بالا و پایینش' : 'دو طرفش') + ' با نسخه‌ی محوِ خودش پر می‌شه'}${p.custom ? '' : ' · از فایل‌های نمونه'}`;
+    note.innerHTML = `<b>نسبت ${fa(ar.toFixed(2)).replace('.', '٫')} به ۱</b> · ${fa(p.w)}×${fa(p.h)} · ${fit ? 'کادر رو کامل پر می‌کنه' : 'کادر رو پر می‌کنه و ' + (ar > r ? 'از دو طرفش' : 'از بالا و پایینش') + ' بریده می‌شه؛ جاش رو تو کادر تنظیم کن'}${p.custom ? '' : ' · از فایل‌های نمونه'}`;
   },
   // the size that fills the banner's panel in this window (what to make), and in a 1920×1080 one
   need() {
