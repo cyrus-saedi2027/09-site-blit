@@ -3207,6 +3207,34 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .wz-swap input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .wz-drop-s { min-height: 150px; }
 
+/* ── the admin's full review of a program that was sent ── */
+.rv-cols { align-items: start; }
+.rv-main, .rv-side { display: grid; gap: var(--gap); min-width: 0; align-content: start; }
+.rv-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 14px 22px; margin: 0; }
+.rv-facts > div { display: grid; gap: 2px; min-width: 0; padding-bottom: 12px; border-bottom: 1px solid rgba(var(--fg), .08); }
+.rv-facts dt { font-size: 12px; color: var(--lx-dim); }
+.rv-facts dd { margin: 0; font-weight: var(--fwb); line-height: 1.8; overflow-wrap: anywhere; }
+.rv-facts a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .25em; }
+.rv-text p { margin: 0 0 .7em; line-height: 2; max-width: 74ch; }
+.rv-nights { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 8px; }
+.rv-nights li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: .6em .9em; border-radius: 12px; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .07); font-size: 13px; }
+.rv-prices { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.rv-prices li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: .6em .9em; border-radius: 12px; background: rgba(var(--fg), .04); font-size: 13px; }
+.rv-prices i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
+.rv-pics { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: 14px; align-items: start; }
+.rv-pic { margin: 0; display: grid; gap: 6px; min-width: 0; }
+.rv-pic[data-kind="banner"] { grid-column: 2; grid-row: 1; }
+.rv-pic[data-kind="mobile"] { grid-column: 2; grid-row: 2; width: 62%; }
+.rv-pic[data-kind="poster"] { grid-column: 1; grid-row: 1 / span 2; }
+.rv-box { position: relative; aspect-ratio: var(--frr); overflow: hidden; border-radius: 12px; background: rgba(var(--fg), .06); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); display: grid; place-items: center; font-size: 12px; color: var(--lx-dim); text-align: center; padding: 6px; }
+.rv-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--fx, 50%) var(--fy, 50%); transform-origin: var(--fx, 50%) var(--fy, 50%); transform: scale(var(--fz, 1)); }
+.rv-pic figcaption { display: grid; font-size: 12px; line-height: 1.6; }
+.rv-pic figcaption small { color: var(--lx-dim); }
+.rv-checks li.is-no { color: var(--t-bad); }
+.rv-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.rv-btns .buy { flex: 1 1 auto; }
+@media (min-width: 1181px) { .rv-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); } }
+
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
   .links { display: none; }
@@ -3418,6 +3446,15 @@ html:not([data-dev="1"]) #ppTabs [data-tab="cmp"], html:not([data-dev="1"]) #ppT
 .proto-panel .fr-note { color: var(--pp-ink2, #ddd); opacity: .8; }
 .proto-panel .fr .chip { color: var(--pp-ink, #fff); background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px var(--pp-line2); }
 html:not([data-dev="1"]) .pp-old { display: none; }
+
+/* the slot pane's folds */
+.pp-fold { border-top: 1px solid var(--pp-line); }
+.pp-fold > summary { cursor: pointer; padding: 12px 2px; font-size: 13px; font-weight: 700; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+.pp-fold > summary::-webkit-details-marker { display: none; }
+.pp-fold > summary::after { content: "+"; font-size: 18px; opacity: .7; }
+.pp-fold[open] > summary::after { content: "−"; }
+.pp-fold > .pp-group { padding-top: 0; border-top: 0; }
+html:not([data-dev="1"]) .pp-group:has(> #ppNotes) { display: none; }
 .toast { position: fixed; z-index: 60; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); left: 0; right: 0; width: fit-content; max-width: min(92vw, 540px); margin-inline: auto; padding: 12px 20px; border-radius: var(--rb); background: #fff; color: #14111d; font-size: 14px; text-align: center; opacity: 0; pointer-events: none; font-family: var(--font-ui); }
 
 /* ── design notes under the hero (not part of the site) ────────── */
@@ -9912,6 +9949,7 @@ const admin = {
       { id: 'halls', t: 'سالن‌ها', icon: 'ruler', render: (el, v) => adminGeo.halls(el, v) },
       { id: 'site', t: 'دسته‌ها و تنظیمات', icon: 'grid', render: this.site },
       { id: 'new', t: 'برنامه‌ی تازه', icon: 'plus', parent: 'shows', render: (el, v) => wizard.render(el, v) },
+      { id: 'review', t: 'بررسی کامل', icon: 'search', parent: 'shows', render: (el, v) => admin.review(el, v) },
       { id: 'reports', t: 'گزارش‌ها', icon: 'award', render: this.reports },
       { id: 'gifts', t: 'کیف پول و کد هدیه', icon: 'tag', render: this.gifts },
       { id: 'sms', t: 'پیامک‌ها', icon: 'bell', render: (el) => this.sms(el) },
@@ -9919,12 +9957,79 @@ const admin = {
     ];
   },
   // two waiting requests from other organisers, so the queue is never empty in the demo
-  others() { const done = store.get('blit.reviewed', []); return [{ id: 'x-1', title: 'کنسرت «نغمه‌های کویر»', org: 'مؤسسه‌ی فرهنگی سرو', city: 'یزد', venue: 'سالن آمفی‌تئاتر فرهنگسرای یزد', n: 3, low: 450000, pal: 'gold', sent: Date.now() - 3 * HOUR }, { id: 'x-2', title: 'نمایش «پنجره‌ی رو به باغ»', org: 'گروه تئاتر آینه', city: 'تهران', venue: 'تئاترشهر - سالن اصلی', n: 12, low: 380000, pal: 'teal', sent: Date.now() - 26 * HOUR }].filter((x) => !done.includes(x.id)); },
+  others() {
+    const done = store.get('blit.reviewed', []), dayKey = (n) => TEHRAN_DAY.format(new Date(Date.now() + n * DAY));
+    const prices = (hall, base) => { const h = hall && hallById(hall); return h ? Object.fromEntries(tiersUsed(planKeyOf(h, 0)).map((t, k) => [t, base + k * 150000])) : {}; };
+    const yz = hallsOfCity('yazd')[0], yzId = yz ? yz.id : '';
+    return [
+      { id: 'x-1', by: 'org2', status: 'review', title: 'نغمه‌های کویر', kind: 'concert', type: 'کنسرت', org: 'مؤسسه‌ی فرهنگی سرو', city: 'یزد', cs: 'yazd', hall: yzId, hallLay: 0, venue: 'سالن آمفی‌تئاتر فرهنگسرای یزد', dur: 100, age: 'همه', pal: 'gold', poster: '',
+        desc: 'شبی با موسیقی کویری ایران: آوازهایی از یزد و کرمان و بیرجند، با سه‌تار و نی و دف.\nگروه ده نفره‌ی «سرو» برای اولین بار روی صحنه‌ی یزد می‌آید. مدت اجرا یک ساعت و چهل دقیقه، بدون میان‌پرده. ورود بعد از شروع اجرا ممکن نیست.',
+        days: [dayKey(14), dayKey(15), dayKey(16)], times: ['20:00'], sale: 'now', saleAt: '', prices: prices(yzId, 450000), weekend: false, sent: Date.now() - 3 * HOUR, at: Date.now() - 3 * HOUR, n: 3, low: 450000 },
+      { id: 'x-2', by: 'org3', status: 'review', title: 'پنجره‌ی رو به باغ', kind: 'theatre', type: 'نمایش', org: 'گروه تئاتر آینه', city: 'تهران', cs: 'tehran', hall: 72, hallLay: 0, venue: 'تئاترشهر - سالن اصلی', dur: 85, age: '۱۲ سال به بالا', pal: 'teal', poster: 'assets/posters/photo-theater-curtain.webp',
+        desc: 'نمایشی درباره‌ی دو خواهر و خانه‌ای که قرار است فروخته شود. نویسنده و کارگردان: لیلا ساعدی. بازیگران: مریم آقایی، نیلوفر رضوی، هومن کیانی.\nاین اجرا برای بزرگسالان و نوجوانان بالای ۱۲ سال مناسب است.',
+        days: [dayKey(20), dayKey(21), dayKey(22), dayKey(23)], times: ['19:00', '21:15'], sale: 'at', saleAt: new Date(Date.now() + 5 * DAY).toISOString(), prices: prices(72, 380000), weekend: true, sent: Date.now() - 26 * HOUR, at: Date.now() - 26 * HOUR, n: 8, low: 380000 },
+    ].filter((x) => !done.includes(x.id));
+  },
+  // the queue's yes and no (from the review page)
+  approve(id) {
+    const d = drafts.get(id), x = this.others().find((o) => o.id === id);
+    if (d) { d.status = 'live'; d.ok = Date.now(); drafts.put(d); MORE.push(draftEvent(d)); auditLog(`برنامه‌ی «${d.title}» تأیید و منتشر شد`); }
+    else { store.set('blit.reviewed', store.get('blit.reviewed', []).concat(id)); MORE.push(draftEvent({ ...x, status: 'live' })); auditLog(`برنامه‌ی «${x ? x.title : id}» تأیید و منتشر شد`); }
+    toast('تأیید شد؛ برنامه روی سایته و برگزارکننده پیامک گرفت.'); location.hash = '#/admin/shows';
+  },
+  reject(id) {
+    const m = desk.modal('ad-no', `<h2>${ico('undo')}برگردوندن به برگزارکننده</h2><p class="bk-lead">دلیلش رو بنویس؛ برگزارکننده همین رو می‌بینه و درستش می‌کنه.</p><label class="bk-fld"><span>دلیل</span><textarea rows="3" id="adWhy">پوستر کیفیت کافی نداره؛ لطفاً نسخه‌ی بزرگ‌تر بفرستید.</textarea></label><div class="evp-dlg-end"><button type="button" class="buy" id="adNoGo">${ico('undo')}برگردوندن</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'برگردوندن');
+    $('#adNoGo', m.box).addEventListener('click', () => { const why = $('#adWhy', m.box).value.trim() || 'بدون توضیح', d = drafts.get(id); if (d) { d.status = 'rejected'; d.note = why; drafts.put(d); } else store.set('blit.reviewed', store.get('blit.reviewed', []).concat(id)); auditLog(`برنامه برگردونده شد: ${why}`); m.shut(); toast('برگردونده شد؛ دلیلش برای برگزارکننده رفت.'); location.hash = '#/admin/shows'; });
+  },
+  // the whole of a program that was sent: what the organiser entered, field by field; the yes and the no are here
+  review(el, v) {
+    const id = v.arg, d = drafts.get(id) || this.others().find((x) => x.id === id);
+    if (!d) { el.innerHTML = `${desk.head('بررسی برنامه', 'این برنامه پیدا نشد؛ شاید قبلاً بررسی شده.', `<a class="chip" href="#/admin/shows">${ico('arrow-r')}برگشت به صف</a>`)}`; return; }
+    const e = draftEvent(d), hall0 = d.hall && hallById(d.hall), h = hall0 ? hallInfo(hall0, d.hallLay | 0) : null, nights = d.days.flatMap((day) => d.times.map((hm) => atOf(day, hm))).sort((x, y) => x - y);
+    const tiers = h ? tiersOf(e) : [], art = artOf(e), org = d.org || ORG.name;
+    const row = (k, val) => `<div><dt>${esc(k)}</dt><dd>${val}</dd></div>`;
+    const pic = (kind, a, none) => { const z = SIZES_FIXED[kind], s = a && (a.fake || a.src || a.thumb); return `<figure class="rv-pic" data-kind="${kind}"><div class="rv-box" style="--frr:${z.r.toFixed(4)};${fitVars(a)}">${s ? `<img src="${esc(s)}" alt="${esc(z.name)}">` : `<span>${esc(none)}</span>`}</div><figcaption><b>${esc(z.name)}</b><small><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi>${a && a.w && a.h && !(a.stand || a.fake) ? ` · فایل ${fa(a.w)}×${fa(a.h)}` : ''}</small></figcaption></figure>`; };
+    const sendTxt = d.sale === 'at' && d.saleAt ? `از ${esc(dayOf(Date.parse(d.saleAt)))}` : 'همین که تأیید شد';
+    // the checks the admin would make by eye
+    const checks = [
+      [!!(d.poster), 'پوستر گذاشته شده', 'پوستر ندارد؛ یه پوستر موقت از اسم و رنگ ساخته می‌شه'],
+      [(d.desc || '').trim().length >= 60, 'توضیح کافی نوشته شده', 'توضیح خیلی کوتاهه'],
+      [!!(hall0), 'سالن انتخاب شده', 'سالن انتخاب نشده'],
+      [nights.length > 0, `${fa(nights.length)} سانس`, 'سانسی نداره'],
+      [nights.length > 0 && nights[0] > Date.now(), 'همه‌ی سانس‌ها بعد از امروزن', 'سانس گذشته داره'],
+      [!!h && tiers.length > 0 && tiers.every((t) => t.price > 0), 'برای همه‌ی رده‌ها قیمت هست', 'قیمت بعضی رده‌ها نیست'],
+      [!!(d.banner || d.bannerM), 'بنر هم فرستاده (برای بالای صفحه‌ی اصلی)', 'بنر نفرستاده؛ جایی تو بالای صفحه‌ی اصلی نمی‌گیره'],
+    ];
+    const bad = checks.filter((c) => !c[0] && !/بنر|پوستر/.test(c[2])).length;
+    el.innerHTML = `${desk.head(`بررسی «${esc(d.title)}»`, `فرستاده‌شده توسط ${esc(org)} · ${esc(ago(d.sent || d.at))}. همه‌ی چیزهایی که برگزارکننده وارد کرده این‌جاست؛ بعد از دیدنش تأیید کن یا با دلیل برگردون.`, `<a class="chip" href="#/admin/shows">${ico('arrow-r')}برگشت به صف</a>`)}
+      <div class="dk-cols dk-cols-r rv-cols">
+        <div class="rv-main">
+          <section class="panel dk-box evp-rise"><h2>${ico('info')}اطلاعات برنامه</h2><dl class="rv-facts">
+            ${row('اسم', esc(d.title))}${row('نوع', esc(`${d.type} · ${d.kind === 'comedy' ? 'جُنگ و کمدی' : KIND_T[d.kind] || ''}`))}${row('برگزارکننده', esc(org))}
+            ${row('شهر', esc(cityName(d.cs) || d.city || '—'))}${row('سالن', h ? `<a href="${hallHref(hall0)}">${esc(h.name)}</a>${hall0.lay.length > 1 ? ` · ${esc(layName(hall0, d.hallLay | 0))}` : ''} · ${money(h.cap)} صندلی` : '<b class="neg">انتخاب نشده</b>')}
+            ${row('آدرس', esc(h ? h.addr : d.venue || '—'))}${row('مدت', `${fa(d.dur)} دقیقه`)}${row('رده‌ی سنی', esc(d.age || 'همه'))}${row('شروع فروش', sendTxt)}${row('آخر هفته', d.weekend ? 'قیمت ۱۰٪ بیشتر' : 'قیمت یکسان')}
+          </dl></section>
+          <section class="panel dk-box evp-rise"><h2>${ico('clock')}متن برنامه<small>همون‌طور که تو صفحه می‌آد</small></h2><div class="rv-text">${esc(d.desc || '—').split('\n').map((x) => `<p>${x}</p>`).join('')}</div></section>
+          <section class="panel dk-box evp-rise"><h2>${ico('calendar')}سانس‌ها<small>${fa(nights.length)} سانس</small></h2>${nights.length ? `<ol class="rv-nights">${nights.map((t) => { const w = whenOf({ t }); return `<li><b>${esc(w.wd)} ${esc(w.dm)}</b><span>ساعت ${esc(w.tm)}</span></li>`; }).join('')}</ol>` : '<p class="bk-lead">سانسی نداره.</p>'}</section>
+          <section class="panel dk-box evp-rise"><h2>${ico('tag')}قیمت‌ها<small>به تومان، بدون مالیات</small></h2>${tiers.length ? `<ul class="rv-prices">${tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(runName(t))}</span><b>${t.price > 0 ? money(t.price) : '—'}</b></li>`).join('')}</ul>` : '<p class="bk-lead">سالن انتخاب نشده؛ قیمتی نیست.</p>'}</section>
+        </div>
+        <aside class="rv-side">
+          <section class="panel dk-box evp-rise"><h2>${ico('upload')}تصویرها<small>تو کادر ثابت خودشون</small></h2><div class="rv-pics">${pic('poster', d.poster ? e.poster : art.a, 'پوستر موقت')}${pic('banner', e.banner, 'بنر دسکتاپ نفرستاده')}${pic('mobile', e.bannerM, 'بنر موبایل نفرستاده')}</div></section>
+          <section class="panel dk-box evp-rise"><h2>${ico('ticket')}تو لیست این‌طوری دیده می‌شه</h2><div class="wz-card" id="rvCard"></div></section>
+          <section class="panel dk-box evp-rise rv-act"><h2>${ico('check')}بررسی<small>${bad ? `${fa(bad)} مورد مهم` : 'همه‌چیز سر جاشه'}</small></h2><ul class="wz-check rv-checks">${checks.map(([ok, y, n]) => `<li class="${ok ? 'is-ok' : 'is-no'}">${ico(ok ? 'check' : 'info')}${esc(ok ? y : n)}</li>`).join('')}</ul>
+            <div class="rv-btns"><button type="button" class="buy" id="rvYes"${h && nights.length ? '' : ' disabled'}>${ico('check')}تأیید و انتشار</button><button type="button" class="chip" id="rvNo">${ico('undo')}برگردوندن با دلیل</button></div></section>
+        </aside>
+      </div>`;
+    const c = $('#rvCard', el); c.appendChild(s2.card(e, false)); const t = $('.tkt', c); if (t) t.classList.add('is-in');
+    $$('a[href]', c).forEach((x) => { x.removeAttribute('href'); x.removeAttribute('aria-label'); x.setAttribute('role', 'presentation'); x.tabIndex = -1; });
+    $('#rvYes', el).addEventListener('click', () => this.approve(id));
+    $('#rvNo', el).addEventListener('click', () => this.reject(id));
+  },
 
   home(el) {
     const o = allOrders(), paid = o.filter((x) => x.st === 'paid'), byDay = Array.from({ length: 30 }, (_, k) => { const t0 = Date.now() - (29 - k) * DAY, d = TEHRAN_DAY.format(new Date(t0)); const l = paid.filter((x) => TEHRAN_DAY.format(new Date(x.at)) === d); return { v: l.reduce((a, x) => a + x.total, 0), n: l.length, x: dayOf(t0), tip: `${dayOf(t0)} · ${fa(l.length)} سفارش` }; });
     const refd = o.filter((x) => x.st === 'refunded'), onSite = LIST().filter((e) => !['held', 'cancelled'].includes(statusOf(e).key));
-    const waitL = drafts.all().filter((d) => d.status === 'review').map((d) => ({ title: `${d.type} «${d.title}»`, org: ORG.name, sent: d.sent || d.at })).concat(this.others());
+    const waitL = drafts.all().filter((d) => d.status === 'review').map((d) => ({ title: `${d.type} «${d.title}»`, org: ORG.name, sent: d.sent || d.at })).concat(this.others().map((x) => ({ title: `${x.type} «${x.title}»`, org: x.org, sent: x.sent })));
     const today = byDay[29].v, yest = byDay[28].v, q = drafts.all().filter((d) => d.status === 'review').length + this.others().length, log = store.get('blit.audit', []);
     el.innerHTML = `${desk.head('پیشخوان مدیر', 'کل سایت، همین لحظه.', `<span class="ad-head-a"><a class="buy" href="#/admin/shows">${ico('ticket')}صف تأیید${q ? ` (${fa(q)})` : ''}</a><a class="chip" href="#/admin/new">${ico('plus')}برنامه‌ی تازه</a><a class="chip" href="#/admin/halls/new">${ico('plus')}سالن تازه</a><a class="chip" href="#/admin/cities">${ico('pin')}شهرها</a></span>`)}
       <section class="dk-tiles"><div class="panel dk-tile dk-hero evp-rise"><span>فروش امروز (تومان)</span><b>${money(today)}</b><em data-tone="${today >= yest ? 'good' : 'bad'}">دیروز ${short(yest)}</em>${viz.spark(byDay.slice(-12).map((d) => d.v))}</div>
@@ -9941,24 +10046,14 @@ const admin = {
     const mine = drafts.all().filter((d) => d.status === 'review'), others = this.others();
     const item = (x) => `<article class="panel dk-show ad-q evp-rise" data-id="${esc(x.id)}"><figure class="bk-poster${x.poster ? '' : ' is-none'}" style="--c:${(PALETTE[x.pal] || PALETTE.violet).accent}">${x.poster ? `<img src="${esc(x.poster)}" alt="">` : ''}</figure>
       <div class="dk-show-t"><b>${esc(x.title)}</b><small>${esc(x.org)} · ${esc(x.city)} · ${esc(x.venue)}</small><small>${fa(x.n)} سانس · از ${money(x.low)} تومان · فرستاده‌شده ${esc(ago(x.sent))}</small></div>
-      <div class="dk-show-a"><button type="button" class="buy" data-yes="${esc(x.id)}">${ico('check')}تأیید و انتشار</button><button type="button" class="chip" data-no="${esc(x.id)}">${ico('undo')}برگردوندن</button></div></article>`;
-    const q = mine.map((d) => { const n = d.days.length * d.times.length, low = Math.min(...Object.values(d.prices).filter((v) => v > 0)); return { id: d.id, title: `${d.type} «${d.title}»`, org: ORG.name, city: d.city, venue: d.venue, n, low: Number.isFinite(low) ? low : 0, pal: d.pal, poster: d.poster, sent: d.sent || d.at }; }).concat(others);
+      <div class="dk-show-a"><a class="buy" href="#/admin/review/${esc(x.id)}">${ico('search')}باز کردن و بررسی</a></div></article>`;
+    const q = mine.map((d) => { const n = d.days.length * d.times.length, low = Math.min(...Object.values(d.prices).filter((v) => v > 0)); return { id: d.id, title: `${d.type} «${d.title}»`, org: ORG.name, city: d.city, venue: d.venue, n, low: Number.isFinite(low) ? low : 0, pal: d.pal, poster: d.poster, sent: d.sent || d.at }; }).concat(others.map((x) => ({ id: x.id, title: `${x.type} «${x.title}»`, org: x.org, city: x.city, venue: x.venue, n: x.n, low: x.low, pal: x.pal, poster: x.poster, sent: x.sent })));
     const live = LIST().filter((e) => !['held'].includes(statusOf(e).key)).slice(0, 40);
     el.innerHTML = `${desk.head('برنامه‌ها و تأیید', 'هیچ برنامه‌ای (و هیچ تغییری) از برگزارکننده‌ها بدون تأیید روی سایت نمی‌آد. با لغو یه برنامه، پول همه‌ی خریدارهاش برمی‌گرده. خودت هم می‌تونی برای هر سالنی تو هر شهری برنامه‌ی کنسرت یا تئاتر بسازی؛ همون لحظه روی سایته.', `<span class="ad-head-a"><a class="buy" href="#/admin/new">${ico('plus')}برنامه‌ی تازه</a></span>`)}
       <h2 class="dk-sub evp-rise">در انتظار تأیید <small>${fa(q.length)}</small></h2>${q.length ? `<div class="dk-shows">${q.map(item).join('')}</div>` : '<p class="bk-lead evp-rise">صف خالیه.</p>'}
       ${changes.pending().length ? `<h2 class="dk-sub evp-rise">درخواست‌های تغییر <small>${fa(changes.pending().length)}</small></h2><div class="dk-shows">${changes.pending().map((c) => { const e = showById(c.eid); return `<article class="panel dk-show ad-q ad-ch evp-rise"><span class="sec-ic" aria-hidden="true">${ico(c.kind === 'cancel' ? 'x' : c.kind === 'prices' ? 'tag' : 'info')}</span><div class="dk-show-t"><b>${esc(changes.KIND[c.kind])} · ${esc(e ? e.title : c.eid)}</b><small>${esc(c.what)}</small><small>${esc(ORG.name)} · ${esc(ago(c.at))}${c.note ? ` · «${esc(c.note)}»` : ''}</small></div><div></div><div class="dk-show-a"><button type="button" class="buy" data-cyes="${esc(c.id)}">${ico('check')}تأیید</button><button type="button" class="chip" data-cno="${esc(c.id)}">${ico('undo')}رد</button></div></article>`; }).join('')}</div>` : ''}
       <h2 class="dk-sub evp-rise">روی سایت <small>${fa(live.length)}</small></h2>
       <div class="panel dk-box evp-rise"><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>برنامه</th><th>شهر</th><th>وضعیت</th><th></th></tr></thead><tbody>${live.map((e) => { const s = statusOf(e); return `<tr><td><a href="#/e/${esc(encodeURIComponent(e.id))}">${esc(e.title)}</a></td><td>${esc(e.city)}</td><td><em class="st" data-tone="${esc(s.label ? s.tone : 'good')}">${esc(s.label || 'در حال فروش')}</em></td><td>${s.key === 'cancelled' ? '' : `<button type="button" class="chip" data-cancel="${esc(e.id)}">${ico('x')}لغو برنامه</button>`}</td></tr>`; }).join('')}</tbody></table></div></div>`;
-    $$('[data-yes]', el).forEach((b) => b.addEventListener('click', () => {
-      const id = b.dataset.yes, d = drafts.get(id);
-      if (d) { d.status = 'live'; d.ok = Date.now(); drafts.put(d); MORE.push(draftEvent(d)); auditLog(`برنامه‌ی «${d.title}» تأیید و منتشر شد`); }
-      else { store.set('blit.reviewed', store.get('blit.reviewed', []).concat(id)); auditLog(`برنامه‌ی «${(others.find((x) => x.id === id) || {}).title}» تأیید و منتشر شد`); }
-      toast('تأیید شد؛ برنامه روی سایته و برگزارکننده پیامک گرفت.'); this.shows(el);
-    }));
-    $$('[data-no]', el).forEach((b) => b.addEventListener('click', () => {
-      const m = desk.modal('ad-no', `<h2>${ico('undo')}برگردوندن به برگزارکننده</h2><p class="bk-lead">دلیلش رو بنویس؛ برگزارکننده همین رو می‌بینه و درستش می‌کنه.</p><label class="bk-fld"><span>دلیل</span><textarea rows="3" id="adWhy">پوستر کیفیت کافی نداره؛ لطفاً نسخه‌ی بزرگ‌تر بفرستید.</textarea></label><div class="evp-dlg-end"><button type="button" class="buy" id="adNoGo">${ico('undo')}برگردوندن</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'برگردوندن');
-      $('#adNoGo', m.box).addEventListener('click', () => { const why = $('#adWhy', m.box).value.trim() || 'بدون توضیح', d = drafts.get(b.dataset.no); if (d) { d.status = 'rejected'; d.note = why; drafts.put(d); } else store.set('blit.reviewed', store.get('blit.reviewed', []).concat(b.dataset.no)); auditLog(`برنامه برگردونده شد: ${why}`); m.shut(); toast('برگردونده شد؛ دلیلش برای برگزارکننده رفت.'); this.shows(el); });
-    }));
     $$('[data-cyes]', el).forEach((b) => b.addEventListener('click', () => { changes.yes(b.dataset.cyes); toast('تأیید شد؛ تغییر همین الان روی سایته.'); this.shows(el); }));
     $$('[data-cno]', el).forEach((b) => b.addEventListener('click', () => { const why = 'با سیاست قیمت‌گذاری سایت هم‌خوان نیست.'; changes.no(b.dataset.cno, why); toast('رد شد؛ دلیلش برای برگزارکننده رفت.'); this.shows(el); }));
     $$('[data-cancel]', el).forEach((b) => b.addEventListener('click', () => {
@@ -10955,7 +11050,13 @@ const panel = {
   init() {
     const sw = $('#ppSw');
     Object.entries(PALETTE).forEach(([k, p]) => { const b = document.createElement('button'); b.type = 'button'; b.dataset.v = k; b.title = p.label; b.setAttribute('aria-label', p.label); b.setAttribute('aria-pressed', 'false'); b.style.background = p.accent; sw.appendChild(b); });
-    if (!DEV) $('.pp-head b').textContent = 'ویرایش زنده';   // (the admin's editor: its slot, its banners, its sizes)
+    if (!DEV) $('.pp-head b').textContent = 'ویرایش زنده';
+    // the slot pane: the pictures first; the rest folds away, each under its own title (open in ?dev)
+    [['#ppLay', 'چیدمان اطلاعات روی بنر'], ['#ppSw', 'رنگ این جایگاه'], ['#fTitle', 'نوشته‌های این جایگاه'], ['#fKind', 'دسته، سالن و وضعیت']].forEach(([sel, title]) => {
+      const g = $(sel)?.closest('.pp-group'); if (!g || g.closest('details')) return;
+      const d = document.createElement('details'); d.className = 'pp-fold'; if (DEV) d.open = true;
+      const s = document.createElement('summary'); s.textContent = title; g.replaceWith(d); d.append(s, g);
+    });   // (the admin's editor: its slot, its banners, its sizes)
     this.fab.addEventListener('click', () => this.open(true));
     $('#protoClose').addEventListener('click', () => { this.open(false); this.fab.focus(); });
     this.el.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { ev.stopPropagation(); this.open(false); this.fab.focus(); } });
