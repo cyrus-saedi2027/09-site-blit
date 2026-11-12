@@ -4389,9 +4389,9 @@ const dg = (s) => (LOOK.digits === 'en' ? String(s).replace(/[۰-۹]/g, (d) => '
 // zoom: how far a picture starts, per layout (a banner with words in it gets a gentler zoom than a
 // photo, so its words aren't cut at the start); dur: seconds per show; fade: seconds of the fade into
 // the next
-const ZOOM = { bar: { low: 1.02, mid: 1.05, high: 1.09 }, text: { low: 1.08, mid: 1.15, high: 1.24 } };
-// a banner zooms out the whole time it is on (as a photo does; the owner: «the zoom must last all those seconds»), linearly, so the
-// motion is seen to the end and the banner is within 1 % of whole for its last second. `zoomShare` in the look can make it
+const ZOOM = { bar: { low: 1.015, mid: 1.035, high: 1.06 }, text: { low: 1.08, mid: 1.15, high: 1.24 } };
+// a banner zooms out the whole time it is on (the owner: «the zoom must last all those seconds»), linearly, and is WHOLE (scale 1) at the very second its time is up
+// (round U: it starts 3.5 % closer, it was 5 %, and it no longer runs on through the fade into the next show), so nothing is left zoomed. `zoomShare` in the look can make it
 // stop earlier (85 or 70 %: then it stands still, whole, for the rest of its time).
 // how many cards the rail shows at once (its width is worked out for this many); more shows scroll inside it
 const VIS = 4;
@@ -4856,11 +4856,11 @@ function dockHTML(e) {
   const w = e.w;
   return `
     <div class="d-cell d-main" data-part><span class="kick"><i class="dot"></i>${esc(e.type)}${statusChip(e)}${e.badge ? `<em class="badge">${esc(e.badge)}</em>` : ''}<span class="kv">· ${esc(e.venue)}</span></span><b class="d-name" title="${esc(e.title)}">${esc(e.title)}</b></div>
-    <i class="d-sep" aria-hidden="true"></i>
+    <i class="d-sep" aria-hidden="true" data-part></i>
     <div class="d-cell d-date" data-part><span class="cal" aria-hidden="true"><em>${esc(w.calMonth)}</em><b>${esc(w.calDay)}</b></span><span class="d-when"><b>${esc(w.top)}</b><span>${esc(w.sub.replace(w.time, ''))}<bdi dir="ltr">${esc(w.time)}</bdi></span></span></div>
-    <i class="d-sep" aria-hidden="true"></i>
+    <i class="d-sep" aria-hidden="true" data-part></i>
     <div class="d-cell d-venue" data-part><span class="d-lab">${esc(TXT.venueLab)}</span><b title="${esc(e.venue)}">${esc(e.venue)}</b></div>
-    <i class="d-sep" aria-hidden="true"></i>
+    <i class="d-sep" aria-hidden="true" data-part></i>
     <div class="d-cell d-price price" data-part><span class="d-lab">${esc(TXT.priceLab)}</span><b>${esc(dg(e.price))}<small>${esc(TXT.unit)}</small></b></div>
     ${buyHTML(e, 'data-part')}`;
 }
@@ -4931,8 +4931,8 @@ async function buildScene(e) {
   }
   return s;
 }
-const partsOut = (s) => { if (s) gsap.to(s.parts, { opacity: 0, y: -8 * MOTK(), duration: 0.35, ease: 'power2.in', stagger: 0.03, overwrite: true }); };
-const partsIn = (s, delay = 0) => { if (s) gsap.fromTo(s.parts, { opacity: 0, y: 14 * MOTK() }, { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', stagger: 0.07, delay, overwrite: true, clearProps: 'transform' }); };
+const partsOut = (s) => { if (s) gsap.to(s.parts, { opacity: 0, y: -8 * MOTK(), duration: 0.24, ease: 'power2.in', stagger: 0.02, overwrite: true }); };
+const partsIn = (s, delay = 0) => { if (s) gsap.fromTo(s.parts, { opacity: 0, y: 14 * MOTK() }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.05, delay, overwrite: true, clearProps: 'transform' }); };
 
 const stage = {
   el: $('#scenes'), pool: [], z: 0, token: 0, top: null,
@@ -4964,7 +4964,7 @@ const stage = {
     const k = MOTK(), fade = reduceMotion ? 0.4 : LOOK.fade, from = reduceMotion ? 1 : 1 + (ZOOM[s.mode][LOOK.zoom] - 1) * (0.6 + 0.4 * k);
     const still = s.mode === 'bar' && !reduceMotion;   // a banner finishes its zoom (and then stands still, whole) before its time is up
     const share = clamp(+LOOK.zoomShare || 100, 40, 100) / 100, early = still && share < 1;   // (a banner whose zoom is set to stop early stands still, whole, after it)
-    s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: early ? LOOK.dur * share : LOOK.dur + fade, ease: early ? 'sine.out' : 'none', paused: !timer.running() && !instant && !state.intro });
+    s.zoomTw = gsap.fromTo(s.zoomEl, { scale: from }, { scale: 1, duration: early ? LOOK.dur * share : still ? LOOK.dur : LOOK.dur + fade, ease: early ? 'sine.out' : 'none', paused: !timer.running() && !instant && !state.intro });
     const done = () => { this.pool.slice().forEach((o) => { if (o !== s && o.busy && +o.el.style.zIndex < +s.el.style.zIndex) this.release(o); }); };
     if (instant) { gsap.set(s.el, { opacity: 1 }); done(); return s; }
     const T = reduceMotion ? 'fade' : style || LOOK.trans, old = prev && prev !== s && prev.art ? prev.art : null;
@@ -4984,7 +4984,7 @@ const stage = {
       if (old) gsap.to(old, { opacity: 0, duration: fade * 0.32, ease: 'sine.out', overwrite: true });
       if (s.art) gsap.fromTo(s.art, { opacity: 0 }, { opacity: 1, duration: fade * 0.7, delay: fade * 0.3, ease: 'power2.out', overwrite: true });
     }
-    s.fadeTw = gsap.fromTo(s.el, { opacity: 0 }, { opacity: 1, duration: fade, ease: 'sine.inOut', onComplete: done });
+    s.fadeTw = gsap.fromTo(s.el, { opacity: 0 }, { opacity: 1, duration: fade, ease: 'power2.out', onComplete: done });
     return s;
   },
 };
@@ -5099,7 +5099,7 @@ function go(i, source = 'user') {
   state.i = i; cards.set(i);
   if (source !== 'auto') live.textContent = `${label(e)}، ${e.venue}، ${e.w.short}${statusOf(e).label ? `، ${statusOf(e).label}` : ''}`;
   partsOut(stage.top);
-  stage.show(i, { dir }).then((s) => { if (s && stage.top === s) partsIn(s, 0.42); });
+  stage.show(i, { dir }).then((s) => { if (s && stage.top === s) partsIn(s, 0.2); });
   timer.start();
   if (swapCall) swapCall.kill();
   swapCall = gsap.delayedCall(0.4, () => { swapCall = null; setAccent(e); });
@@ -5258,7 +5258,7 @@ const UI = {
       S('fit', 'نمایش بنر', [['contain', 'کامل، بدون برش'], ['cover', 'پر کردن کادر (برش می‌خوره)']]),
       S('fill', 'جای خالی کنار بنر', [['black', 'سیاه'], ['edge', 'لبه‌ی محوشده‌ی خود بنر']]),
       S('zoom', 'زوم اول تصویر', [['low', 'کم'], ['mid', 'متوسط'], ['high', 'زیاد']]),
-      S('zoomShare', 'مدت زوم‌اوت بنر', [[100, 'تا آخر زمان هر اجرا (یکنواخت)'], [85, '۸۵٪ زمان؛ بعدش کامل و ثابت می‌ایسته'], [70, '۷۰٪ زمان؛ بعدش کامل و ثابت (حالت قبلی)']])] },
+      S('zoomShare', 'مدت زوم‌اوت بنر', [[100, 'تا آخر زمان هر اجرا؛ تو همون ثانیه‌ی آخر کامل می‌شه (یکنواخت)'], [85, '۸۵٪ زمان؛ بعدش کامل و ثابت می‌ایسته'], [70, '۷۰٪ زمان؛ بعدش کامل و ثابت (حالت قبلی)']])] },
     { h: 'پس‌زمینه‌ی صفحه', c: [
       S('bg', 'پس‌زمینه', [['black', 'سیاه'], ['color', 'رنگ دلخواه'], ['glow', 'درخشش محو بنر']]),
       Cs('bgColor', 'رنگ پس‌زمینه', BG_SW)] },
