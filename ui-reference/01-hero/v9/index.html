@@ -266,6 +266,15 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 .bw-l { font-size: calc(max(10.5px, calc(var(--u) * .6)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); line-height: 1.3; opacity: .72; }
 .bw-t { font-size: calc(max(13.5px, calc(var(--u) * .88)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.3; font-variant-numeric: tabular-nums; }
 
+/* round V: every show's dock has its cells at the same places. The cells were as wide as their words, so from one show to the next the date's tile, the dividers,
+   the price and the buy button moved by tens of pixels (what the owner saw as a jump beside the date). dockFix() measures the widest of each of those cells over all the
+   shows and every dock gives its cell that width. (Phones stack the dock in a grid and keep their own sizes.) */
+@media (min-width: 761px) and (min-aspect-ratio: 5/4) {
+  .dock .cal { width: var(--dkw-cal, auto); box-sizing: border-box; }
+  .dock .d-date { width: var(--dkw-date, auto); box-sizing: border-box; }
+  .dock .d-price { width: var(--dkw-price, auto); box-sizing: border-box; }
+  .dock .buy { min-width: var(--dkw-buy, 0px); box-sizing: border-box; }
+}
 /* when the panel is narrow it drops its least useful parts */
 @container dock (max-width: 800px) { .d-when span { display: none; } }
 @container dock (max-width: 660px) { .d-venue, .d-sep:nth-of-type(2) { display: none; } }
@@ -1947,7 +1956,7 @@ a.buy, a.chip { text-decoration: none; }
 .rc-row .buy, .rc-row .chip { flex: none; height: max(46px, calc(var(--u) * 2.9)); }
 .rc-row .buy { gap: .45em; min-width: 0; padding-inline: 1.4em; }
 .pg .otp { margin: .9em 0 .2em; }
-.pg-tips { margin: 0; padding-inline-start: 1.2em; display: grid; gap: .45em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), .76); }
+.pg-tips { margin: 0; padding-inline-start: 0; list-style: none; display: grid; gap: .45em; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); line-height: 1.9; color: rgba(var(--fg), .76); }
 .rc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr)); gap: calc(var(--u) * 1); }
 .rc-card { display: flex; align-items: center; gap: .9em; padding: .7em .9em; border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); color: inherit; text-decoration: none; transition: background-color .3s, transform .4s var(--ease); }
 .rc-card:hover { background: rgba(var(--fg), .08); transform: translateY(-2px); }
@@ -2135,6 +2144,8 @@ a.buy, a.chip { text-decoration: none; }
 .ac-empty > i { flex: none; display: grid; place-items: center; width: 2.6em; aspect-ratio: 1; border-radius: 50%; color: var(--ring); background: color-mix(in oklab, var(--ring) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ring) 30%, transparent); }
 .ac-empty > i svg.i { width: 48%; height: 48%; }
 .ac-empty p { margin: 0; }
+.pg-tips li { position: relative; padding-inline-start: 1.15em; }
+.pg-tips li::before { content: ""; position: absolute; inset-inline-start: .1em; top: .95em; width: 5px; height: 5px; border-radius: 50%; background: rgba(var(--fg), .45); }
 
 /* ── the entry control (gate.js): the start (session, door, code) and the scanning (camera, the answer, the numbers, the log) ── */
 .gt { --ok: #22c55e; --bad: #f43f5e; --warn: #f59e0b; }
@@ -3140,13 +3151,18 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 /* ───── round U10: a desk has no site header; the bezel is the whole window and stays; only the page inside it scrolls ───── */
 .dk { --dk-out: 6px; }
 html.is-desk, html.is-desk body { overflow: hidden; }
+/* round V: the few pixels round the bezel are the bezel's own black in both themes (in the white theme they showed the page's light ground) */
+html.is-desk, html.is-desk body, html.is-desk .evp { background: #050506; }
+/* round V: no scroll bar anywhere in a desk (the wheel, the touch and the keys still scroll) */
+html.is-desk * { scrollbar-width: none; }
+html.is-desk *::-webkit-scrollbar { display: none; width: 0; height: 0; }
 html.is-desk #nav, html.is-desk .totop { display: none !important; }
 html.is-desk .evp { display: block; height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
 html.is-desk .evp-in.dk { display: block; height: 100%; padding: var(--dk-out); box-sizing: border-box; }
 html.is-desk .dk-bz { height: 100%; min-height: 0; box-sizing: border-box; grid-template-rows: minmax(0, 1fr); box-shadow: none; }
 html.is-desk .dk-nav { position: static; top: auto; height: 100%; max-height: none; min-height: 0; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; }
 html.is-desk .dk-nav::-webkit-scrollbar { display: none; }
-html.is-desk .dk-main { box-sizing: border-box; height: 100%; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(var(--fg), .22) transparent; align-content: start; }
+html.is-desk .dk-main { box-sizing: border-box; height: 100%; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; align-content: start; }
 html.is-desk .dk-main .wz-side { top: 0; }
 @media (min-width: 1181px) { html.is-desk .dk-main .rv-side { top: 0; } }
 @media (max-height: 820px) {
@@ -3161,6 +3177,225 @@ html.is-desk .dk-main .wz-side { top: 0; }
 }
 /* a table's box scrolls sideways only: the wheel must pass on to the page inside the frame (a «contain» on it stopped the wheel there) */
 html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
+
+/* ───── round V: the rail's tabs scroll inside it (the logo and the foot stay where they are, so every button of the foot is always in reach) ───── */
+@media (min-width: 761px) and (min-aspect-ratio: 5/4) {
+  html.is-desk .dk-nav { overflow: hidden; }
+  html.is-desk .dk-tabs { flex: 0 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+  html.is-desk .dk-logo, html.is-desk .dk-foot { flex: none; }
+  html.is-desk .dk-tabs a:focus-visible { outline-offset: -3px; }
+}
+.dk-who { cursor: pointer; border-radius: 23px; transition: background .2s; }
+.dk-who:hover { background: rgba(255, 255, 255, .07); }
+.dk-who:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* ───── round V: signing in to a desk, the admin's choice of a panel, the «you are looking as…» strip ───── */
+.evp-in.da { justify-items: center; align-content: start; }
+.da .da-card { margin-top: calc(var(--u) * 2); }
+.da-card { width: min(460px, 100%); display: grid; gap: 14px; padding: calc(var(--u) * 1.8) calc(var(--u) * 1.8); box-sizing: border-box; }
+.da-card.da-wide { width: min(640px, 100%); }
+.da-card h1 { margin: 0; font-size: calc(max(20px, calc(var(--u) * 1.5)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.5; }
+.da-card .bk-lead { margin: 0; }
+.da-mark { display: inline-flex; align-items: center; gap: 4px; height: 34px; }
+.da-mark i { display: block; width: 5px; height: var(--h, 40%); border-radius: 3px; background: rgb(var(--fg)); animation: da-eq 1.6s ease-in-out infinite; animation-delay: calc(var(--d, 0) * 1s); }
+.da-mark i:nth-child(1) { --h: 45%; --d: 0; } .da-mark i:nth-child(2) { --h: 85%; --d: -.3; } .da-mark i:nth-child(3) { --h: 100%; --d: -.6; } .da-mark i:nth-child(4) { --h: 70%; --d: -.9; } .da-mark i:nth-child(5) { --h: 50%; --d: -1.2; }
+@keyframes da-eq { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(.55); } }
+.da-form { display: grid; gap: 12px; }
+.da-pw { position: relative; }
+.da-pw input { padding-inline-end: 46px; }
+.da-eye { position: absolute; inset-inline-end: 6px; bottom: 6px; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 10px; background: none; color: rgba(var(--fg), .7); cursor: pointer; transition: background .2s, color .2s; }
+.da-eye:hover { background: rgba(var(--fg), .08); color: rgb(var(--fg)); }
+.da-eye svg.i { width: 18px; height: 18px; }
+.da-keep { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(var(--fg), .8); cursor: pointer; }
+.da-keep input { accent-color: var(--viz-1); width: 16px; height: 16px; }
+.da-demo { border-top: 1px solid rgba(var(--fg), .1); padding-top: 10px; }
+.da-demo summary { display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none; font-size: 13px; font-weight: 700; color: rgba(var(--fg), .75); }
+.da-demo summary::-webkit-details-marker { display: none; }
+.da-demo summary small { margin-inline-start: auto; font-weight: 500; color: rgba(var(--fg), .55); }
+.da-demo ul { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.da-demo li { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px; border-radius: 12px; background: rgba(var(--fg), .05); }
+.da-demo li > span { display: grid; min-width: 0; }
+.da-demo li small { font-size: 12px; color: rgba(var(--fg), .65); text-align: start; }
+.da-back { justify-self: start; }
+.da-list { display: grid; gap: 8px; }
+.da-pick { display: flex; align-items: center; gap: 12px; width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid rgba(var(--fg), .12); border-radius: 16px; background: rgba(var(--fg), .04); color: inherit; font: inherit; text-align: start; cursor: pointer; transition: transform .35s var(--dk-sp, ease), background .2s, border-color .2s; }
+.da-pick > span:nth-child(2) { display: grid; flex: 1; min-width: 0; }
+.da-pick small { color: rgba(var(--fg), .65); font-size: 12px; }
+.da-pick:hover { transform: translateY(-2px); background: rgba(var(--fg), .08); border-color: rgba(var(--fg), .28); }
+.da-pick svg.i { width: 18px; height: 18px; flex: none; opacity: .6; }
+.da-as { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 0 0 14px; padding: 10px 14px; border-radius: 16px; background: color-mix(in oklab, var(--viz-4) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--viz-4) 42%, transparent); font-size: 13px; font-weight: 600; }
+.da-as svg.i { width: 18px; height: 18px; flex: none; }
+.da-as .chip { margin-inline-start: auto; }
+.da-acct, .og-cred, .og-edit { width: min(620px, 94vw); }
+.og-edit { max-height: 88vh; overflow-y: auto; }
+
+/* ───── round V: the admin's page of organisers ───── */
+.og-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 10px; }
+.og-card { display: grid; gap: 14px; padding: 16px; align-content: start; transition: opacity .3s, transform .35s var(--dk-sp, ease); }
+.og-card:hover { transform: translateY(-2px); }
+.og-card.is-off { opacity: .72; }
+.og-card header { display: flex; align-items: center; gap: 12px; }
+.og-card header > div { display: grid; flex: 1; min-width: 0; }
+.og-card header b { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.og-card header small { color: rgba(var(--fg), .65); font-size: 12px; }
+.og-st { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; margin: 0; }
+.og-st dt { font-size: 11.5px; color: rgba(var(--fg), .6); }
+.og-st dd { margin: 2px 0 0; font-weight: 800; font-size: 14px; }
+.og-st dd small { font-weight: 500; color: rgba(var(--fg), .6); }
+.og-st code, .og-cr code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; padding: 2px 7px; border-radius: 8px; background: rgba(var(--fg), .08); direction: ltr; unicode-bidi: isolate; }
+.og-rights { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+.og-rights .chip { cursor: default; padding-block: 3px; font-size: 12px; }
+.og-rights .chip.is-no { opacity: .5; }
+.og-rights .chip svg.i { width: 13px; height: 13px; }
+.og-card footer { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 12px; border-top: 1px solid rgba(var(--fg), .09); }
+.og-cr { display: grid; gap: 10px; margin: 0 0 12px; }
+.og-cr > div { display: grid; grid-template-columns: 8.5em minmax(0, 1fr); align-items: center; gap: 10px; }
+.og-cr dt { font-size: 12.5px; color: rgba(var(--fg), .65); }
+.og-cr dd { display: flex; align-items: center; gap: 8px; margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.og-form { display: grid; gap: 14px; }
+.og-sh { display: grid; gap: 4px; max-height: 210px; overflow-y: auto; padding: 2px; }
+.og-sh label { display: flex; align-items: center; gap: 10px; padding: 7px 9px; border-radius: 10px; cursor: pointer; }
+.og-sh label:hover { background: rgba(var(--fg), .05); }
+.og-sh small { display: block; color: rgba(var(--fg), .6); font-size: 11.5px; }
+.og-pwn p { margin: 0; font-size: 12.5px; color: rgba(var(--fg), .65); line-height: 1.8; }
+.og-q { min-width: min(260px, 100%); }
+.wz-ask { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; padding: 12px 14px; border-radius: 16px; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .14); cursor: pointer; font-weight: 700; font-size: 13.5px; line-height: 1.7; }
+.wz-ask input { margin-top: 4px; accent-color: var(--viz-1); width: 16px; height: 16px; flex: none; }
+.wz-ask small { display: block; margin-top: 2px; font-weight: 500; font-size: 12px; color: rgba(var(--fg), .65); line-height: 1.8; }
+
+/* ───── round V: the cell-column trend (columns made of cells; the KPI tiles are tabs that flip the board) ───── */
+.cct { --cct-accent: var(--viz-1); --h: clamp(170px, 20vw, 250px); position: relative; }
+.cct-chart { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 10px; padding: 6px 2px 8px; direction: ltr; }
+.cct-y { position: relative; height: var(--h); }
+.cct-y > span { position: absolute; right: 0; transform: translateY(-50%); font-size: 11px; line-height: 1; color: rgba(var(--fg), .6); white-space: nowrap; direction: rtl; animation: cct-tick .6s var(--cct-sp) both; }
+.cct { --cct-sp: linear(0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163, 1.161, 1.154 29.9%, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1); }
+.cct-plot { position: relative; height: var(--h); outline: none; border-radius: 6px; }
+.cct-plot:focus-visible { box-shadow: 0 0 0 2px var(--cct-accent); outline-offset: 4px; }
+.cct-plot::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0 calc(25% - 1px), rgba(var(--fg), .14) calc(25% - 1px) 25%); pointer-events: none; mask: repeating-linear-gradient(90deg, #000 0 3px, transparent 3px 7px); -webkit-mask: repeating-linear-gradient(90deg, #000 0 3px, transparent 3px 7px); }
+.cct-cols { position: absolute; inset: 0; display: flex; gap: 3px; }
+.cct-col { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column-reverse; gap: 3px; cursor: crosshair; transition: opacity .25s; }
+.cct-cell { flex: 1; min-height: 0; border-radius: 3px; background: rgba(var(--fg), .07); transform-origin: 50% 100%; animation: var(--flip, cct-a) .55s var(--cct-sp) both; animation-delay: calc(var(--c, 0) * 11ms + var(--r, 0) * 16ms); transition: background .25s; }
+.cct-on { background: color-mix(in oklab, var(--cct-accent) 82%, rgb(var(--fg)) 6%); }
+.cct-cap1 { background: color-mix(in oklab, var(--cct-accent) 48%, transparent); }
+.cct-hot .cct-col { opacity: .38; }
+.cct-hot .cct-col.cct-act { opacity: 1; }
+.cct-act .cct-on { background: var(--cct-accent); }
+.cct-act .cct-cell:not(.cct-on) { background: color-mix(in oklab, var(--cct-accent) 14%, transparent); }
+.cct-line { position: absolute; top: -6px; bottom: -6px; width: 0; border-left: 1px dashed rgba(var(--fg), .6); pointer-events: none; opacity: 0; transition: left .4s var(--cct-sp), opacity .2s; }
+.cct-hot .cct-line { opacity: 1; }
+.cct-tip { position: absolute; z-index: 2; pointer-events: none; opacity: 0; direction: rtl; text-align: right; transform: translate(14px, -50%) scale(.92); transform-origin: 0 50%; transition: left .4s var(--cct-sp), top .4s var(--cct-sp), opacity .2s, transform .35s var(--cct-sp); background: var(--capsule); color: rgb(var(--fg)); border-radius: 12px; padding: 8px 12px; white-space: nowrap; box-shadow: 0 0 0 1px rgba(var(--fg), .16), 0 14px 30px -10px rgba(0, 0, 0, .6); }
+.cct-tip.cct-flipx { transform: translate(calc(-100% - 14px), -50%) scale(.92); transform-origin: 100% 50%; }
+.cct-hot .cct-tip { opacity: 1; transform: translate(14px, -50%) scale(1); }
+.cct-hot .cct-tip.cct-flipx { transform: translate(calc(-100% - 14px), -50%) scale(1); }
+.cct-tip-d { font-size: 11.5px; color: rgba(var(--fg), .65); }
+.cct-tip-v { display: flex; align-items: center; gap: 6px; margin-top: 3px; font-size: 15px; font-weight: 800; }
+.cct-tip-v i { width: 8px; height: 8px; border-radius: 2px; background: var(--cct-accent); }
+.cct-x { position: relative; height: 30px; grid-column: 2; }
+.cct-x > span { position: absolute; top: 9px; transform: translateX(-50%); font-size: 11px; color: rgba(var(--fg), .6); white-space: nowrap; direction: rtl; }
+.cct-x > .cct-pin { top: 4px; opacity: 0; transform: translateX(-50%) scale(.8); padding: 5px 9px; border-radius: 999px; background: rgb(var(--fg)); color: var(--capsule); font-size: 11px; font-weight: 800; transition: left .4s var(--cct-sp), opacity .2s, transform .3s var(--cct-sp); z-index: 1; }
+.cct-hot .cct-x > .cct-pin { opacity: 1; transform: translateX(-50%) scale(1); }
+.cct-tabs { position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); border-top: 1px solid rgba(var(--fg), .1); direction: rtl; }
+.cct-ind { position: absolute; top: -1px; inset-inline-start: 0; height: 2px; width: calc(100% / var(--n)); background: rgb(var(--fg)); transform: translateX(calc(var(--k) * -100%)); transition: transform .5s var(--cct-sp); }
+.cct-tab { appearance: none; border: 0; background: transparent; text-align: start; cursor: pointer; padding: 14px 16px 16px; font: inherit; color: inherit; position: relative; transition: background .2s; min-width: 0; }
+.cct-tab + .cct-tab { box-shadow: 1px 0 0 rgba(var(--fg), .1); }
+.cct-tab:hover { background: rgba(var(--fg), .04); }
+.cct-tab:focus-visible { outline: 2px solid var(--cct-accent); outline-offset: -2px; }
+.cct-tl { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: rgba(var(--fg), .7); font-weight: 600; }
+.cct-ic { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: rgba(var(--fg), .08); color: rgba(var(--fg), .7); transition: background .3s, color .3s; flex: none; }
+.cct-tab[aria-selected="true"] .cct-ic { background: rgb(var(--fg)); color: var(--capsule); }
+.cct-tv { display: block; margin-top: 10px; font-size: 22px; font-weight: 900; letter-spacing: -.02em; line-height: 1.2; color: rgba(var(--fg), .55); transition: color .3s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cct-tab[aria-selected="true"] .cct-tv { color: rgb(var(--fg)); }
+.cct-td { display: block; margin-top: 6px; font-size: 11.5px; color: rgba(var(--fg), .6); }
+.cct-good { color: #16a34a; font-weight: 800; } .cct-bad { color: #dc2626; font-weight: 800; }
+:root[data-mode="dark"] .cct-good { color: #4ade80; } :root[data-mode="dark"] .cct-bad { color: #fb7185; }
+@keyframes cct-a { 0% { transform: scaleY(.15) rotateX(80deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes cct-b { 0% { transform: scaleY(.15) rotateX(-80deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes cct-tick { 0% { transform: translateY(0); opacity: 0; } 100% { transform: translateY(-50%); opacity: 1; } }
+@media (max-width: 760px) { .cct-chart { grid-template-columns: 40px minmax(0, 1fr); gap: 0 6px; } .cct-cols { gap: 2px; } .cct-col { gap: 2px; } .cct-cell { border-radius: 2px; } .cct-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cct-ind { display: none; } .cct-tab { padding: 12px 12px; } .cct-tab[aria-selected="true"] { box-shadow: inset 0 2px 0 rgb(var(--fg)); } .cct-tab:nth-child(n+3) { border-top: 1px solid rgba(var(--fg), .1); } .cct-tv { font-size: 18px; } }
+@media (prefers-reduced-motion: reduce) { .cct *, .lc * { animation: none !important; transition: none !important; } }
+.an-none { margin: 0; }
+
+/* ───── round V: the line chart, the weekday × hour heat map, the funnel, the page of analytics ───── */
+.lc { position: relative; direction: ltr; }
+.lc-svg { display: block; width: 100%; overflow: visible; touch-action: pan-y; }
+.lc-g { stroke: rgba(var(--fg), .13); stroke-dasharray: 3 4; }
+.lc-t { fill: rgba(var(--fg), .62); font-size: 11px; font-family: inherit; }
+.lc-cross { stroke: rgba(var(--fg), .35); stroke-dasharray: 3 3; }
+.lc-dotbg { fill: var(--capsule); }
+.lc-pulse { transform-box: fill-box; transform-origin: center; animation: lc-p 1.8s ease-out infinite; }
+@keyframes lc-p { 0% { transform: scale(1); opacity: .4; } 100% { transform: scale(2.4); opacity: 0; } }
+.lc-pt { stroke: var(--capsule); stroke-width: 2.5; }
+.lc-tip { position: absolute; z-index: 2; pointer-events: none; direction: rtl; display: grid; gap: 3px; min-width: 130px; padding: 8px 12px; border-radius: 12px; background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 0 0 1px rgba(var(--fg), .16), 0 14px 30px -10px rgba(0, 0, 0, .6); font-size: 12px; transition: left .12s, top .12s; }
+.lc-td { color: rgba(var(--fg), .65); font-size: 11.5px; }
+.lc-tr { display: flex; align-items: center; gap: 7px; } .lc-tr i { width: 8px; height: 8px; border-radius: 2px; flex: none; } .lc-tr b { margin-inline-start: auto; font-weight: 800; padding-inline-start: 10px; }
+.lc-leg { margin-top: 10px; }
+.lc-lb { all: unset; display: inline-flex; align-items: center; gap: .5em; cursor: pointer; font-size: 12.5px; padding: 3px 6px; border-radius: 8px; }
+.lc-lb:hover { background: rgba(var(--fg), .07); } .lc-lb:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 1px; }
+.lc-lb i { width: 14px; height: 4px; border-radius: 2px; background: var(--c); }
+.lc-lb[aria-pressed="false"] { opacity: .45; text-decoration: line-through; }
+.an-f { align-items: end; }
+.an-cmp { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer; padding-bottom: 12px; }
+.an-cmp input { accent-color: var(--viz-1); width: 16px; height: 16px; }
+.an-i { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.an-i li { position: relative; padding-inline-start: 20px; line-height: 1.95; font-size: 13.5px; }
+.an-i li::before { content: ""; position: absolute; inset-inline-start: 2px; top: .8em; width: 8px; height: 8px; border-radius: 3px; background: var(--viz-1); transform: rotate(45deg); }
+.an-att { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.an-att li { display: grid; grid-template-columns: minmax(0, 1fr) 110px 44px auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: rgba(var(--fg), .04); }
+.an-att li > span:first-child { display: grid; min-width: 0; } .an-att small { color: rgba(var(--fg), .65); font-size: 12px; }
+.an-site { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.an-site li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 11px 0; border-bottom: 1px solid rgba(var(--fg), .09); font-size: 13.5px; } .an-site li:last-child { border: 0; } .an-site b { font-weight: 900; font-size: 15px; white-space: nowrap; }
+.an-empty { text-align: center; justify-items: center; display: grid; gap: 10px; padding-block: 28px; }
+.hm { display: grid; gap: 10px; }
+.hm-g { display: grid; grid-template-columns: 5.4em repeat(12, minmax(0, 1fr)); gap: 3px; align-items: center; direction: ltr; }
+.hm-r { font-size: 11.5px; color: rgba(var(--fg), .7); text-align: end; padding-inline-end: 8px; font-weight: 600; direction: rtl; white-space: nowrap; }
+.hm-c { display: block; aspect-ratio: 1.45; border-radius: 4px; background: color-mix(in oklab, var(--viz-1) calc(var(--v) * 100%), rgba(var(--fg), .07)); transition: transform .2s var(--dk-sp, ease); }
+.hm-c:hover { transform: scale(1.22); position: relative; z-index: 1; box-shadow: 0 0 0 1.5px rgb(var(--fg)); }
+.hm-h { font-style: normal; font-size: 10.5px; text-align: center; color: rgba(var(--fg), .6); }
+.hm-k { display: flex; align-items: center; gap: 8px; font-size: 11px; color: rgba(var(--fg), .65); justify-content: flex-end; } .hm-k i { width: 90px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, rgba(var(--fg), .07), var(--viz-1)); }
+.fn { list-style: none; margin: 0 0 10px; padding: 0; display: grid; gap: 14px; }
+.fn li { display: grid; grid-template-columns: minmax(0, 9.5em) minmax(0, 1fr) auto; grid-template-areas: "l b v" ". s s"; align-items: center; gap: 2px 12px; }
+.fn li > span { grid-area: l; font-size: 13px; font-weight: 700; }
+.fn li > i { grid-area: b; display: block; height: 16px; width: calc(var(--p) * 100%); min-width: 6px; border-radius: 8px; background: linear-gradient(90deg, color-mix(in oklab, var(--viz-1) 55%, transparent), var(--viz-1)); transform-origin: right; animation: fn-in .9s var(--dk-sp, ease) both; }
+.fn li > b { grid-area: v; font-weight: 900; font-size: 14px; } .fn li > small { grid-area: s; color: rgba(var(--fg), .6); font-size: 11.5px; }
+@keyframes fn-in { from { transform: scaleX(0); } to { transform: none; } }
+@media (max-width: 760px) { .an-att li { grid-template-columns: minmax(0, 1fr) auto; } .an-att li .dk-meter { display: none; } .hm-g { grid-template-columns: 4.4em repeat(12, minmax(0, 1fr)); gap: 2px; } }
+
+.lc-leg { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+/* ───── round V: the dressed select (selui.js): a button for the choice, a list with the groups, a search box, a check; a sheet from the bottom on a phone ───── */
+.su-native { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; overflow: hidden !important; clip: rect(0 0 0 0) !important; opacity: 0 !important; pointer-events: none !important; }
+.su-b { box-sizing: border-box; display: flex; align-items: center; gap: 10px; width: 100%; height: max(46px, calc(var(--u) * 2.9)); padding: 0 1em; border-radius: calc(var(--r) * .55); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 calc(max(13.5px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)) var(--font); text-align: start; cursor: pointer; outline: none; transition: border-color .25s, box-shadow .25s, background .25s; }
+.su-b:hover { background: rgba(var(--fg), .07); border-color: rgba(var(--fg), .3); }
+.su-b:focus-visible, .su-b.is-open { border-color: var(--sc, var(--viz-1)); box-shadow: 0 0 0 3px color-mix(in oklab, var(--sc, var(--viz-1)) 25%, transparent); }
+.su-b:disabled { opacity: .55; cursor: not-allowed; }
+.su-b .su-v { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.su-b.is-ph .su-v { color: rgba(var(--fg), .55); }
+.su-b svg.i { flex: none; width: 16px; height: 16px; opacity: .65; transition: transform .3s var(--dk-sp, ease); }
+.su-b.is-open svg.i { transform: rotate(180deg); }
+.ad-role .su-b { height: 36px; width: auto; min-width: 9em; padding: 0 .7em; font-size: 12.5px; }
+.ad-zt .su-b { max-width: 220px; }
+.su-pop { position: fixed; z-index: 100000; display: grid; grid-template-rows: auto minmax(0, 1fr); border-radius: 18px; background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 0 0 1px rgba(var(--fg), .16), 0 28px 70px -22px rgba(0, 0, 0, .75); overflow: hidden; direction: rtl; will-change: transform, opacity; }
+.su-s { display: flex; align-items: center; gap: 8px; margin: 8px 8px 0; padding: 0 10px; height: 38px; border-radius: 12px; background: rgba(var(--fg), .07); }
+.su-s svg.i { width: 15px; height: 15px; opacity: .6; flex: none; }
+.su-s input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: none; color: inherit; font: 500 13.5px var(--font); }
+.su-s input::-webkit-search-cancel-button { display: none; }
+.su-l { overflow-y: auto; overscroll-behavior: contain; padding: 6px; display: grid; gap: 2px; align-content: start; scrollbar-width: none; outline: none; }
+.su-l::-webkit-scrollbar { display: none; }
+.su-g { position: sticky; top: -6px; z-index: 1; padding: 9px 12px 5px; background: var(--capsule); font-size: 11.5px; font-weight: 800; letter-spacing: .02em; color: rgba(var(--fg), .55); }
+.su-o { all: unset; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 11px; cursor: pointer; font: 600 13.5px/1.6 var(--font); transition: background .15s; }
+.su-o > span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.su-o.is-act { background: rgba(var(--fg), .1); }
+.su-o[aria-selected="true"] { color: var(--viz-1); font-weight: 800; }
+:root[data-mode="dark"] .su-o[aria-selected="true"] { color: color-mix(in oklab, var(--viz-1) 72%, #fff); }
+.su-o svg.i { width: 16px; height: 16px; flex: none; }
+.su-o:disabled { opacity: .4; cursor: not-allowed; }
+.su-none { margin: 0; padding: 16px 12px; text-align: center; font-size: 13px; color: rgba(var(--fg), .6); }
+@media (max-width: 760px) {
+  .su-pop.is-sheet { left: 0; right: 0; bottom: 0; top: auto; width: auto !important; border-radius: 22px 22px 0 0; max-height: 62vh; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .su-pop.is-sheet .su-l { max-height: calc(62vh - 64px) !important; }
+  .su-o { padding-block: 12px; }
+}
+.og-rights .chip { pointer-events: none; }
 
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
@@ -3797,6 +4032,11 @@ html:not(.show-notes) .notes { display: none; }
   <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3.2c.5 3.1 4.7 5 4.7 9.3A4.7 4.7 0 0 1 12 17.2a4.7 4.7 0 0 1-4.7-4.7c0-1.6.7-2.8 1.6-3.8.5 1.3 1.3 2 2.2 2.2-.4-2.4-.1-5.2.9-7.7Z"/><path d="M8.6 18.4A6 6 0 0 0 12 20.8a6 6 0 0 0 3.4-2.4"/></symbol>
   <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
   <symbol id="i-shield-ok" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.2"/><path d="m11 12 8.5-8.5M16 6.5l2.5 2.5M14 8.5l2 2"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.6 5.1A9.9 9.9 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.1 3.9M6.6 6.6A16.6 16.6 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M16 16l4-4-4-4M20 12H9"/></symbol>
 </svg>
 
 <div class="app" id="app">
@@ -4578,8 +4818,8 @@ const LOOK_DEF = {
   pageDots: true, dotsPow: 7, evpPlace: 'inline',
   // how many rows of posters a section shows before «نمایش همه» (0: all), the presale's wide tickets, the cards' buy button (white as in the sample, or the show's colour), the columns on a wide window
   secRows: 2, presale: 'compact', buyStyle: 'white', listCols: 'auto',
-  // the site's theme: dark (the approved one) or light (white); the light one keeps its own panel and page colours; the motion of the change
-  mode: 'light', lightPanel: '#ffffff', lightBg: '#eceef3', themeFx: 'circle',
+  // the site's theme: dark (the default everywhere again, round V) or light (white); the light one keeps its own panel and page colours; the motion of the change
+  mode: 'dark', lightPanel: '#ffffff', lightBg: '#eceef3', themeFx: 'circle',
   // tools
   dims: false,
 };
@@ -5143,8 +5383,8 @@ async function buildScene(e) {
   }
   return s;
 }
-const partsOut = (s) => { if (s) gsap.to(s.parts, { opacity: 0, y: -8 * MOTK(), duration: 0.24, ease: 'power2.in', stagger: 0.02, overwrite: true }); };
-const partsIn = (s, delay = 0) => { if (s) gsap.fromTo(s.parts, { opacity: 0, y: 14 * MOTK() }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.05, delay, overwrite: true, clearProps: 'transform' }); };
+const partsOut = (s) => { if (s) gsap.to(s.parts, { opacity: 0, y: -5 * MOTK(), duration: 0.2, ease: 'power1.in', stagger: 0, overwrite: true }); };
+const partsIn = (s, delay = 0) => { if (s) gsap.fromTo(s.parts, { opacity: 0, y: 9 * MOTK() }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.035, delay: delay + 0.1, overwrite: true, clearProps: 'transform' }); };
 
 const stage = {
   el: $('#scenes'), pool: [], z: 0, token: 0, top: null,
@@ -5153,7 +5393,7 @@ const stage = {
     const free = this.pool.find((x) => x.e === e && x.ver === e.ver && !x.busy);
     if (free) { free.busy = true; return free; }
     const s = await buildScene(e);
-    s.busy = true; this.el.appendChild(s.el); this.pool.push(s); return s;
+    s.busy = true; this.el.appendChild(s.el); this.pool.push(s); dockFix.soon(); return s;
   },
   release(s) {
     if (s.fadeTw) s.fadeTw.kill(); if (s.zoomTw) s.zoomTw.kill(); s.fadeTw = s.zoomTw = null;
@@ -5200,6 +5440,29 @@ const stage = {
     return s;
   },
 };
+
+/* round V: the dock's cells keep their places from show to show (see the CSS «--dkw-»): the widest of each varying cell over all the shows is measured in a hidden dock of
+   the same width, and each dock gives its cell that width. It is measured again when the window, the fonts, the words or the look change. */
+const dockFix = {
+  raf: 0, names: ['cal', 'date', 'price', 'buy'],
+  soon() { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = 0; try { this.run(); } catch (err) { /* the docks keep their own widths */ } }); },
+  run() {
+    const host = stage.el, sc = [...host.children].find((x) => $('.dock', x)), dock = sc && $('.dock', sc);
+    const clear = () => this.names.forEach((k) => host.style.removeProperty('--dkw-' + k));
+    if (!dock || STK.matches || !EVENTS.length) { clear(); return; }
+    const W = dock.getBoundingClientRect().width; if (!W) return;
+    const g = document.createElement('div'); g.className = 'dock'; g.inert = true; g.setAttribute('aria-hidden', 'true');
+    g.style.cssText = `position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;width:${W}px;height:auto;padding-block:0`;
+    clear(); sc.appendChild(g);
+    const widest = (sel) => { let m = 0; for (const e of EVENTS) { g.innerHTML = dockHTML(e); const x = $(sel, g); if (x) m = Math.max(m, x.getBoundingClientRect().width); } return Math.ceil(m); };
+    const set = (k, v) => host.style.setProperty('--dkw-' + k, v + 'px');
+    set('cal', widest('.cal'));   // (the tile first: the date's cell is a tile and its words)
+    set('date', widest('.d-date')); set('price', widest('.d-price')); set('buy', widest('.buy'));
+    g.remove();
+  },
+};
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => dockFix.soon());
+addEventListener('resize', () => dockFix.soon());
 
 /* ════════════════════════════════════════════════════════════════
    the rail: a card per show, with the time left on the active one
@@ -5566,6 +5829,8 @@ const look = {
       this.take(j);
       // a width saved before the rail could grow (480 was the slider's end, 326 the old default) isn't a choice
       if (!j.rev && (LOOK.railMax === 480 || LOOK.railMax === 326)) LOOK.railMax = LOOK_DEF.railMax;
+      // round V: what was saved before this round does not keep the white theme or a freed banner frame: dark and the locked (fixed-size) layout are the defaults for everyone; they can be changed again
+      if ((j.rev | 0) < 4) { for (const k of ['mode', 'frame', 'ratio', 'ratioMax', 'fit', 'fill', 'posterFit', 'posterRatio']) LOOK[k] = LOOK_DEF[k]; }
     } catch (err) { /* private window: nothing saved */ }
   },
   // take values from a {look, texts} object into lk and tx, checking each one's kind; says how many it took
@@ -5581,7 +5846,7 @@ const look = {
     const l = {}, t = {};
     for (const k of Object.keys(LOOK_DEF)) if (LOOK[k] !== LOOK_DEF[k]) l[k] = LOOK[k];
     for (const k of Object.keys(TXT_DEF)) if (TXT[k] !== TXT_DEF[k]) t[k] = TXT[k];
-    return { version: 9, rev: 3, look: l, texts: t };
+    return { version: 9, rev: 4, look: l, texts: t };
   },
   applyAll() { for (const k of Object.keys(LOOK_DEF)) { try { if (APPLY[k]) APPLY[k](LOOK[k]); } catch (err) { /* a setting never stops the page */ } } this.applyTexts(true); },
   /* one value changes */
@@ -5591,7 +5856,7 @@ const look = {
     if (id === 'rail') panel.setRail(v === 'left'); else if (APPLY[id]) APPLY[id](v);
     if (id === 'zoom') rebuild(state.i); else if (id === 'dur') timer.start(); else if (id === 'fade') next('user');
     if (['gap', 'edgeX', 'edgeT', 'edgeB', 'navH', 'dockH', 'railMax', 'radius', 'borderW', 'caps', 'tx', 'txMain', 'txSmall', 'txCap'].includes(id)) scrollFx.apply(true);
-    this.save(); this.sizesTick(); dims.queue();
+    this.save(); this.sizesTick(); dims.queue(); dockFix.soon();
   },
   setText(id, v) { TXT[id] = v; this.applyTexts(); this.save(); },
   /* the fixed texts reach every place they are written */
@@ -8987,7 +9252,7 @@ const gate = {
       b.addEventListener('keydown', (ev) => { if (ev.key === 'Backspace' && !b.value && boxes[i - 1]) boxes[i - 1].focus(); if (ev.key === 'Enter' && !go.disabled) go.click(); });
     });
     go.addEventListener('click', () => {
-      if (pin !== GATE_PIN && !org.staffList().some((k) => k.pin === pin)) { pst.className = 'bk-otp-st bad'; pst.textContent = 'کد درست نیست؛ از برگزارکننده بپرس.'; boxes.forEach((x) => { x.value = ''; }); pin = ''; boxes[0].focus(); ready(); return; }
+      if (pin !== GATE_PIN && !org.staffAll().some((k) => k.pin === pin)) { pst.className = 'bk-otp-st bad'; pst.textContent = 'کد درست نیست؛ از برگزارکننده بپرس.'; boxes.forEach((x) => { x.value = ''; }); pin = ''; boxes[0].focus(); ready(); return; }
       const x = sesById(sid); if (!x) return;
       go.disabled = true; const dl = $('#gtDl', box), bar = $('i', dl), tx = $('span', dl); dl.hidden = false;
       const n = gateTickets(x.e, x.s).T.size, t0 = performance.now(), D = reduceMotion ? 200 : 1300;
@@ -9289,6 +9554,424 @@ const gate = {
 };
 
 /* ════════════════════════════════════════════════════════════════
+   round V: the selects of the desks. A native select opens the browser's own grey list (the province menu, the city menu, the filters…) which has none of the
+   site's look. Every select on a desk (and in its windows) is dressed: a button that shows the choice, and a list that opens with a soft motion, with
+   the groups' headings (the provinces), a search box when the list is long, the arrow keys, the first letters, a check on the chosen one, and a
+   sheet from the bottom on a phone. The real select stays in the page (hidden) and gets the same value and the same `change`, so nothing that reads it changes.
+   ════════════════════════════════════════════════════════════════ */
+const selUI = {
+  mo: null, raf: 0, pop: null, sel: null, act: -1, items: [], typed: '', typedT: 0,
+  start() { const app = $('#app'); if (this.mo || !app) return; this.mo = new MutationObserver(() => this.soon()); this.mo.observe(app, { childList: true, subtree: true }); this.run(); },
+  stop() { if (this.mo) { this.mo.disconnect(); this.mo = null; } this.close(true); },
+  soon() { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = 0; this.run(); }); },
+  run() { $$('select', $('#app')).forEach((s) => { if (!s.dataset.su && !s.multiple && !s.closest('#protoPanel') && !s.hasAttribute('data-plain')) this.wrap(s); }); },
+  wrap(s) {
+    s.dataset.su = '1';
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'su-b'; b.setAttribute('aria-haspopup', 'listbox'); b.setAttribute('aria-expanded', 'false');
+    b.innerHTML = `<span class="su-v"></span>${ico('down')}`;
+    const lab = s.closest('label'), sp = lab && $(':scope > span', lab), id = `su${Math.random().toString(36).slice(2, 7)}`;
+    if (sp) { if (!sp.id) sp.id = `${id}l`; b.setAttribute('aria-labelledby', `${sp.id} ${id}v`); } else if (s.getAttribute('aria-label')) b.setAttribute('aria-label', s.getAttribute('aria-label'));
+    $('.su-v', b).id = `${id}v`;
+    s.after(b); s.classList.add('su-native'); s.tabIndex = -1; s.setAttribute('aria-hidden', 'true');
+    const paint = () => { const o = s.options[s.selectedIndex]; $('.su-v', b).textContent = o ? o.textContent.trim() : ''; b.disabled = s.disabled; b.classList.toggle('is-ph', !!o && o.value === ''); };
+    for (const k of ['value', 'selectedIndex']) { const d = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, k); Object.defineProperty(s, k, { get() { return d.get.call(this); }, set(v) { d.set.call(this, v); paint(); }, configurable: true }); }
+    new MutationObserver(paint).observe(s, { childList: true, subtree: true, attributes: true, attributeFilter: ['disabled', 'selected'] });
+    s.addEventListener('change', paint); s.focus = () => b.focus();
+    b.addEventListener('click', () => { if (this.sel === s) this.close(); else this.open(s, b); });
+    b.addEventListener('keydown', (ev) => { if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(ev.key)) { ev.preventDefault(); this.open(s, b); } else if (ev.key.length === 1 && !ev.ctrlKey && !ev.metaKey) { this.open(s, b, ev.key); } });
+    paint();
+  },
+  // the list of a select: its groups and options, as items {t, v, i (option index), g (group heading), off}
+  read(s) {
+    const out = []; let g = '';
+    for (const n of s.children) {
+      if (n.tagName === 'OPTGROUP') { out.push({ g: n.label }); for (const o of n.children) out.push({ t: o.textContent.trim(), v: o.value, i: o.index, off: o.disabled || n.disabled }); } else if (n.tagName === 'OPTION') { if (g) { g = ''; } out.push({ t: n.textContent.trim(), v: n.value, i: n.index, off: n.disabled }); }
+    }
+    return out;
+  },
+  open(s, b, first) {
+    this.close(true);
+    const items = this.read(s), n = items.filter((x) => x.i != null).length;
+    const pop = document.createElement('div'); pop.className = 'su-pop'; pop.dataset.theme = root.dataset.theme || '';
+    const search = n > 9;
+    pop.innerHTML = `${search ? `<div class="su-s">${ico('search')}<input type="search" placeholder="جستجو…" autocomplete="off" aria-label="جستجو تو فهرست"></div>` : ''}<div class="su-l" role="listbox" tabindex="-1"></div>`;
+    $('#app').appendChild(pop);
+    this.pop = pop; this.sel = s; this.btn = b; this.items = items; this.q = '';
+    b.setAttribute('aria-expanded', 'true'); b.classList.add('is-open');
+    const list = $('.su-l', pop);
+    const draw = () => {
+      const q = lnorm(this.q); let k = 0, any = false, head = null;
+      list.innerHTML = '';
+      this.view = [];
+      for (const x of items) {
+        if (x.g != null) { head = x; continue; }
+        if (q && !lnorm(x.t).includes(q)) continue;
+        if (head) { const h = document.createElement('div'); h.className = 'su-g'; h.textContent = head.g; h.setAttribute('role', 'presentation'); list.appendChild(h); head = null; }
+        const o = document.createElement('button'); o.type = 'button'; o.className = 'su-o'; o.setAttribute('role', 'option'); o.id = `suo${k}`; o.tabIndex = -1; o.dataset.k = k;
+        o.setAttribute('aria-selected', String(x.i === s.selectedIndex)); if (x.off) o.disabled = true;
+        o.innerHTML = `<span>${esc(x.t) || '—'}</span>${x.i === s.selectedIndex ? ico('check') : ''}`;
+        list.appendChild(o); this.view.push({ x, el: o }); k++; any = true;
+      }
+      if (!any) list.innerHTML = '<p class="su-none">چیزی پیدا نشد.</p>';
+      this.act = Math.max(0, this.view.findIndex((v) => v.x.i === s.selectedIndex)); this.mark(true);
+    };
+    draw();
+    // where: under the button (over it when the room below is short); a phone gets a sheet from the bottom
+    const sheet = matchMedia('(max-width: 760px)').matches;
+    const place = () => {
+      if (sheet) { pop.classList.add('is-sheet'); return; }
+      const r = b.getBoundingClientRect(), vw = innerWidth, vh = innerHeight, w = Math.min(Math.max(r.width, 220), Math.min(vw - 16, 420)), nat = Math.min(list.scrollHeight + (search ? 52 : 0) + 12, 360);
+      const below = vh - r.bottom - 12, up = r.top - 12, goUp = below < Math.min(nat, 220) && up > below, hmax = Math.max(120, Math.min(360, goUp ? up : below));
+      pop.style.width = `${w}px`; pop.style.left = `${clamp(r.left + r.width / 2 - w / 2, 8, vw - w - 8)}px`;
+      list.style.maxHeight = `${hmax - (search ? 52 : 0) - 12}px`;
+      if (goUp) { pop.style.bottom = `${vh - r.top + 6}px`; pop.style.top = 'auto'; pop.style.transformOrigin = 'bottom'; pop.classList.add('is-up'); } else { pop.style.top = `${r.bottom + 6}px`; pop.style.bottom = 'auto'; pop.style.transformOrigin = 'top'; }
+    };
+    place();
+    if (first) { const inp = $('input', pop); if (inp) { inp.value = first; this.q = first; draw(); place(); } }
+    const sc = $('.su-l', pop); const cur = $('[aria-selected="true"]', pop); if (cur) sc.scrollTop = Math.max(0, cur.offsetTop - sc.clientHeight / 2 + cur.offsetHeight / 2);
+    const inp = $('input', pop); (inp || list).focus({ preventScroll: true });
+    this.on = {
+      down: (ev) => { if (!pop.contains(ev.target) && !b.contains(ev.target)) this.close(); },
+      key: (ev) => this.key(ev),
+      resize: () => place(),
+      scroll: (ev) => { if (!pop.contains(ev.target) && !sheet) this.close(); },
+    };
+    document.addEventListener('pointerdown', this.on.down, true); document.addEventListener('keydown', this.on.key, true); addEventListener('resize', this.on.resize); document.addEventListener('scroll', this.on.scroll, true);
+    list.addEventListener('click', (ev) => { const o = ev.target.closest('.su-o'); if (o) this.pick(+o.dataset.k); });
+    list.addEventListener('pointermove', (ev) => { const o = ev.target.closest('.su-o'); if (o && +o.dataset.k !== this.act) { this.act = +o.dataset.k; this.mark(false); } });
+    if (inp) inp.addEventListener('input', () => { this.q = inp.value; draw(); place(); });
+    if (MOTK()) gsap.from(pop, { opacity: 0, y: sheet ? 60 : -8, scale: sheet ? 1 : 0.97, duration: 0.28, ease: 'expo.out', clearProps: 'transform,opacity' });
+  },
+  mark(scroll) {
+    this.view.forEach((v, i) => { v.el.classList.toggle('is-act', i === this.act); });
+    const v = this.view[this.act]; const list = $('.su-l', this.pop);
+    if (v) { list.setAttribute('aria-activedescendant', v.el.id); if (scroll !== false) { const t = v.el.offsetTop, h = v.el.offsetHeight; if (t < list.scrollTop) list.scrollTop = t - 6; else if (t + h > list.scrollTop + list.clientHeight) list.scrollTop = t + h - list.clientHeight + 6; } }
+  },
+  key(ev) {
+    if (!this.pop) return;
+    const n = this.view.length, step = (d) => { let i = this.act; for (let k = 0; k < n; k++) { i = (i + d + n) % n; if (!this.view[i].x.off) break; } this.act = i; this.mark(true); };
+    if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); this.close(); return; }
+    if (ev.key === 'ArrowDown') { ev.preventDefault(); step(1); } else if (ev.key === 'ArrowUp') { ev.preventDefault(); step(-1); }
+    else if (ev.key === 'Home') { ev.preventDefault(); this.act = 0; this.mark(true); } else if (ev.key === 'End') { ev.preventDefault(); this.act = n - 1; this.mark(true); }
+    else if (ev.key === 'Enter' || (ev.key === ' ' && !$('input', this.pop))) { ev.preventDefault(); ev.stopPropagation(); this.pick(this.act); }
+    else if (ev.key === 'Tab') { this.close(); }
+    else if (ev.key.length === 1 && !ev.ctrlKey && !ev.metaKey && !$('input', this.pop)) {   // the first letters of an option, without a search box
+      clearTimeout(this.typedT); this.typed += ev.key; this.typedT = setTimeout(() => { this.typed = ''; }, 700);
+      const i = this.view.findIndex((v) => lnorm(v.x.t).startsWith(lnorm(this.typed))); if (i >= 0) { this.act = i; this.mark(true); }
+    }
+  },
+  pick(k) {
+    const v = this.view && this.view[k]; if (!v || v.x.off) return;
+    const s = this.sel, was = s.selectedIndex; s.selectedIndex = v.x.i;
+    if (was !== v.x.i) { s.dispatchEvent(new Event('input', { bubbles: true })); s.dispatchEvent(new Event('change', { bubbles: true })); }
+    this.close();
+  },
+  close(quick) {
+    const pop = this.pop; if (!pop) return;
+    document.removeEventListener('pointerdown', this.on.down, true); document.removeEventListener('keydown', this.on.key, true); removeEventListener('resize', this.on.resize); document.removeEventListener('scroll', this.on.scroll, true);
+    const b = this.btn; this.pop = null; this.sel = null; this.view = [];
+    if (b) { b.setAttribute('aria-expanded', 'false'); b.classList.remove('is-open'); if (!quick && b.isConnected) b.focus({ preventScroll: true }); }
+    if (quick || !MOTK()) pop.remove(); else { pop.classList.add('is-out'); gsap.to(pop, { opacity: 0, y: -6, duration: 0.14, ease: 'power2.in', onComplete: () => pop.remove() }); }
+  },
+};
+/* ════════════════════════════════════════════════════════════════
+   round V: the desks have accounts. The admin makes an organiser's panel and gives them a user name and a password (#/admin/orgs);
+   the organiser signs in at #/org and sees only their own shows and numbers, and can do only what the admin allowed. The admin can
+   look at any organiser's panel as that organiser sees it. All of it is kept in this browser (a demo: a real site checks the password
+   on a server that hashes it slowly and sets a session cookie); the password is kept only as a salted SHA-256 here.
+   ?debug opens the desks without a sign-in (the tests); ?debug&gate keeps the sign-in.
+   ════════════════════════════════════════════════════════════════ */
+const GATE_ON = /[?&]gate\b/.test(location.search), DESK_OPEN = DEV && !GATE_ON;
+
+// SHA-256 (the digits of the primes' roots, so no table to type); the text is taken as UTF-8
+const sha256 = (() => {
+  const K = [], H0 = [];
+  for (let n = 2, c = 0; c < 64; n++) {
+    let p = true; for (let d = 2; d * d <= n; d++) if (n % d === 0) { p = false; break; }
+    if (p) { if (c < 8) H0[c] = (Math.pow(n, 1 / 2) % 1) * 4294967296 | 0; K[c++] = (Math.pow(n, 1 / 3) % 1) * 4294967296 | 0; }
+  }
+  const rotr = (x, k) => (x >>> k) | (x << (32 - k));
+  return (str) => {
+    const b = new TextEncoder().encode(str), l = b.length, total = (((l + 8) >> 6) + 1) << 4, W = new Array(total).fill(0), H = H0.slice();
+    for (let i = 0; i < l; i++) W[i >> 2] |= b[i] << (24 - (i & 3) * 8);
+    W[l >> 2] |= 0x80 << (24 - (l & 3) * 8); W[total - 1] = l * 8;
+    for (let j = 0; j < total; j += 16) {
+      const w = W.slice(j, j + 16);
+      for (let t = 16; t < 64; t++) { const a = w[t - 15], c = w[t - 2]; w[t] = (w[t - 16] + (rotr(a, 7) ^ rotr(a, 18) ^ (a >>> 3)) + w[t - 7] + (rotr(c, 17) ^ rotr(c, 19) ^ (c >>> 10))) | 0; }
+      let [a, b2, c, d, e, f, g, h] = H;
+      for (let t = 0; t < 64; t++) {
+        const t1 = (h + (rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25)) + ((e & f) ^ (~e & g)) + K[t] + w[t]) | 0, t2 = ((rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22)) + ((a & b2) ^ (a & c) ^ (b2 & c))) | 0;
+        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b2; b2 = a; a = (t1 + t2) | 0;
+      }
+      [a, b2, c, d, e, f, g, h].forEach((x, i) => { H[i] = (H[i] + x) | 0; });
+    }
+    return H.map((x) => (x >>> 0).toString(16).padStart(8, '0')).join('');
+  };
+})();
+const pw = {
+  hash: (salt, p) => sha256(`${salt}:${p}`),
+  salt: () => Array.from(crypto.getRandomValues(new Uint8Array(8)), (x) => x.toString(16).padStart(2, '0')).join(''),
+  gen(n = 10) { const A = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from(crypto.getRandomValues(new Uint32Array(n)), (x) => A[x % A.length]).join(''); },
+  ok(acc, p) { return !!acc && acc.hash === this.hash(acc.salt, String(p)); },
+  set(acc, p) { acc.salt = this.salt(); acc.hash = this.hash(acc.salt, String(p)); delete acc.demo; return acc; },
+  bad(p, user) { p = String(p); if (p.length < 8) return 'رمز دست‌کم ۸ نویسه باشه.'; if (/^\d+$/.test(p)) return 'رمز فقط عدد نباشه.'; if (user && p.toLowerCase() === String(user).toLowerCase()) return 'رمز با نام کاربری یکی نباشه.'; return ''; },
+};
+const mkAcc = (s) => { const salt = `seed-${s.id}`; return { ...s, salt, hash: pw.hash(salt, s.demo), active: true, rights: { codes: true, staff: true, money: true, ana: true } }; };
+
+// what an organiser may be given besides the basics (their dashboard, their shows, a new show sent to the admin): the admin ticks these per organiser
+const ORG_RIGHTS = [['codes', 'کد تخفیف'], ['staff', 'کنترل‌چی‌ها'], ['money', 'فروش و تسویه (پول)'], ['ana', 'تحلیل و نمودارها']];
+
+const admins = {
+  KEY: 'blit.admins',
+  all() { let l = store.get(this.KEY, null); if (!l) { l = [mkAcc({ id: 'a1', user: 'admin', who: 'مدیر سایت', demo: 'blit-admin', at: Date.now() - 400 * DAY })]; store.set(this.KEY, l); } return l; },
+  get(id) { return this.all().find((x) => x.id === id) || null; },
+  byUser(u) { return this.all().find((x) => x.user === u) || null; },
+  put(a) { const l = this.all(), i = l.findIndex((x) => x.id === a.id); if (i >= 0) l[i] = a; else l.push(a); store.set(this.KEY, l); },
+};
+const ORG_SEED = [
+  { id: 'org1', name: 'گروه هنری آوای نو', who: 'سارا محمدی', user: 'avaye-no', demo: 'avaye-1404', phone: '09121110001', email: '', since: 'از ۱۴۰۱ با بلیت', iban: 'IR•• •••• •••• •••• ۴۲۷۱', k: 400 },
+  { id: 'org2', name: 'مؤسسه‌ی فرهنگی سرو', who: 'حمید رستمی', user: 'sarv', demo: 'sarv-1404', phone: '09131110002', email: '', since: 'از ۱۴۰۲ با بلیت', iban: 'IR•• •••• •••• •••• ۱۱۰۸', k: 260 },
+  { id: 'org3', name: 'گروه تئاتر آینه', who: 'نیلوفر کیانی', user: 'ayeneh', demo: 'ayeneh-1404', phone: '09351110003', email: '', since: 'از ۱۴۰۳ با بلیت', iban: 'IR•• •••• •••• •••• ۷۷۳۰', k: 120 },
+];
+const orgs = {
+  KEY: 'blit.orgs',
+  all() { let l = store.get(this.KEY, null); if (!l) { l = ORG_SEED.map((s) => mkAcc({ ...s, at: Date.now() - s.k * DAY })); store.set(this.KEY, l); } return l; },
+  save(l) { store.set(this.KEY, l); },
+  get(id) { return this.all().find((x) => x.id === id) || null; },
+  byUser(u) { return this.all().find((x) => x.user === u) || null; },
+  put(o) { const l = this.all(), i = l.findIndex((x) => x.id === o.id); if (i >= 0) l[i] = o; else l.push(o); this.save(l); },
+  del(id) { this.save(this.all().filter((x) => x.id !== id)); const ow = store.get('blit.owners', {}); LIST().forEach((e) => { if (this.ownerOf(e) === id) ow[e.id] = ''; }); store.set('blit.owners', ow); },
+  cur() { return this.get(dsess.orgId()) || this.all()[0]; },
+  rights(o) { return { codes: true, staff: true, money: true, ana: true, ...(o && o.rights) }; },
+  // whose a show is: what the admin gave (blit.owners), the organiser who made it, a show of the demo's first account, else spread over the three first accounts; the admin's own shows are the site's
+  ownerOf(e) {
+    const ow = store.get('blit.owners', {}); if (ow[e.id] !== undefined) return ow[e.id];
+    if (e.by === 'admin') return '';
+    if (e.by) return e.by;
+    if (e.draft) return 'org1';
+    return ORG_SEED[seedOf(`${e.id}:own`) % ORG_SEED.length].id;
+  },
+  shows(id) { return LIST().filter((e) => this.ownerOf(e) === id); },
+  // a user name from the name: the first word that is not «group», «institute», «cultural»…, in Latin letters
+  suggest(name) {
+    const M = { ا: 'a', آ: 'a', ب: 'b', پ: 'p', ت: 't', ث: 's', ج: 'j', چ: 'ch', ح: 'h', خ: 'kh', د: 'd', ذ: 'z', ر: 'r', ز: 'z', ژ: 'zh', س: 's', ش: 'sh', ص: 's', ض: 'z', ط: 't', ظ: 'z', ع: 'a', غ: 'gh', ف: 'f', ق: 'gh', ک: 'k', گ: 'g', ل: 'l', م: 'm', ن: 'n', و: 'v', ه: 'h', ی: 'i', ئ: 'e', ؤ: 'o', ة: 'e', أ: 'a', 'ء': '' };
+    const skip = /^(گروه|مؤسسه|موسسه|مؤسسه‌ی|شرکت|انجمن|کانون|فرهنگی|هنری|تئاتر|نمایش|تولیدی)$/, words = String(name).split(/[\s‌]+/).filter((w) => w && !skip.test(w));
+    let s = (words[0] || '').split('').map((c) => (c in M ? M[c] : /[a-z0-9]/i.test(c) ? c.toLowerCase() : '')).join('').replace(/[^a-z0-9]/g, '');
+    if (s.length < 3) s = `org${Math.floor(10 + Math.random() * 89)}`;
+    let u = s, k = 2; while (this.byUser(u) || admins.byUser(u)) u = `${s}${k++}`;
+    return u;
+  },
+};
+
+// who is signed in to a desk: an admin (who may also look at an organiser's panel: `as`) or an organiser; for the tab (sessionStorage) or kept in this browser
+const dsess = {
+  KEY: 'blit.desk',
+  get() { return store.sget(this.KEY, null) || store.get(this.KEY, null); },
+  kept() { return !!store.get(this.KEY, null); },
+  set(s, keep) { store.sset(this.KEY, s); if (keep) store.set(this.KEY, s); else { try { localStorage.removeItem(this.KEY); } catch (err) { /* nothing */ } } },
+  patch(o) { const s = this.get(); if (s) this.set({ ...s, ...o }, this.kept()); },
+  clear() { store.sset(this.KEY, null); try { localStorage.removeItem(this.KEY); } catch (err) { /* nothing */ } },
+  acct() { const s = this.get(); if (!s) return null; const a = s.role === 'admin' ? admins.get(s.id) : orgs.get(s.id); return a && a.active !== false ? a : null; },
+  role() { const s = this.get(); return s && this.acct() ? s.role : null; },
+  orgId() { const s = this.get(); return s ? (s.role === 'org' ? s.id : s.as || '') : ''; },
+  viewAs() { const s = this.get(); return s && s.role === 'admin' && s.as ? orgs.get(s.as) : null; },
+};
+
+const yearFmt = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/Tehran', year: 'numeric', month: 'long' });
+
+const deskAuth = {
+  fails: 0, lockUntil: 0,
+  // null: the desk may open; else a function that draws what is shown instead (the sign-in, or the admin's choice of a panel)
+  guard(v) {
+    const s = dsess.get();
+    if (DESK_OPEN) {
+      if (v.kind === 'admin' && !(s && s.role === 'admin')) dsess.set({ role: 'admin', id: 'a1' });
+      if (v.kind === 'org' && !(s && s.role === 'org') && !(s && s.as)) dsess.set({ role: 'org', id: 'org1' });
+      return null;
+    }
+    const role = dsess.role();
+    if (v.kind === 'admin') return role === 'admin' ? null : () => this.screen('admin');
+    if (role === 'org') return null;
+    if (role === 'admin') return dsess.viewAs() ? null : () => this.pick();
+    return () => this.screen('org');
+  },
+  screen(kind) {
+    const org = kind === 'org', demo = (org ? orgs.all() : admins.all()).filter((a) => a.demo && a.active !== false);
+    document.title = `${org ? 'ورود به پنل تهیه‌کننده' : 'ورود به پنل مدیر'} · بلیت`;
+    page.el.innerHTML = `<div class="evp-in da"><section class="panel da-card evp-rise" aria-labelledby="daH">
+      <span class="da-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <h1 id="daH">${org ? 'ورود به پنل تهیه‌کننده' : 'ورود به پنل مدیر'}</h1>
+      <p class="bk-lead">${org ? 'پنل تهیه‌کننده‌ها رو مدیر سایت می‌سازه؛ نام کاربری و رمزی رو که بهت داده بزن.' : 'فقط مدیرهای سایت وارد می‌شن؛ نام کاربری و رمزت رو بزن.'}</p>
+      <form class="dk-form da-form" novalidate>
+        <label class="bk-fld"><span>نام کاربری</span><input name="u" dir="ltr" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" required></label>
+        <label class="bk-fld da-pw"><span>رمز عبور</span><input name="p" type="password" dir="ltr" autocomplete="current-password" required><button type="button" class="da-eye" aria-label="نشون دادن رمز" aria-pressed="false">${ico('eye')}</button></label>
+        <label class="da-keep"><input type="checkbox" name="k"><span>تو همین مرورگر یادم بمونه</span></label>
+        <p class="bk-otp-st" id="daSt" role="alert"></p>
+        <button type="submit" class="buy">${ico('lock')}ورود</button>
+      </form>
+      ${demo.length ? `<details class="da-demo"><summary>${ico('info')}حساب‌های آزمایشی<small>تا رمزشون عوض نشده</small></summary><ul>${demo.map((a) => `<li><span><b>${esc(a.name || a.who)}</b><small dir="ltr">${esc(a.user)} · ${esc(a.demo)}</small></span><button type="button" class="chip" data-use="${esc(a.id)}">${ico('arrow-l')}بذار تو کادرها</button></li>`).join('')}</ul></details>` : ''}
+      <p class="bk-note">${ico('shield')}${org ? 'رمزت رو فراموش کردی؟ از مدیر سایت بخواه رمز تازه بسازه.' : 'رمز رو بعد از ورود از «حساب من» (پایین نوار کناری) عوض کن.'}</p>
+      <a class="chip da-back" href="#" data-home>${ico('arrow-r')}برگشت به سایت</a></section></div>`;
+    const f = $('.da-form', page.el), st = $('#daSt', page.el), bad = (m) => { st.className = 'bk-otp-st bad'; st.textContent = m; if (MOTK()) gsap.fromTo($('.da-card', page.el), { x: -8 }, { x: 0, duration: 0.5, ease: 'elastic.out(1, .35)', clearProps: 'transform' }); };
+    $('.da-eye', f).addEventListener('click', (ev) => { const b = ev.currentTarget, on = f.elements.p.type === 'password'; f.elements.p.type = on ? 'text' : 'password'; b.setAttribute('aria-pressed', String(on)); b.setAttribute('aria-label', on ? 'پنهان کردن رمز' : 'نشون دادن رمز'); $('use', b).setAttribute('href', on ? '#i-eye-off' : '#i-eye'); });
+    $$('[data-use]', page.el).forEach((b) => b.addEventListener('click', () => { const a = (org ? orgs : admins).get(b.dataset.use); f.elements.u.value = a.user; f.elements.p.value = a.demo; f.elements.p.type = 'text'; f.elements.p.focus(); }));
+    f.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const wait = Math.ceil((this.lockUntil - Date.now()) / 1000);
+      if (wait > 0) { bad(`چند بار اشتباه زدی؛ ${fa(wait)} ثانیه‌ی دیگه دوباره امتحان کن.`); return; }
+      const u = f.elements.u.value.trim().toLowerCase(), p = f.elements.p.value;
+      if (!u || !p) { bad('نام کاربری و رمز رو بزن.'); (u ? f.elements.p : f.elements.u).focus(); return; }
+      const a = (org ? orgs : admins).byUser(u);
+      if (!a || !pw.ok(a, p)) { if (++this.fails >= 5) { this.fails = 0; this.lockUntil = Date.now() + 30000; bad('پنج بار اشتباه شد؛ ۳۰ ثانیه صبر کن.'); } else bad('نام کاربری یا رمز درست نیست.'); return; }
+      if (a.active === false) { bad('این حساب بسته شده؛ با مدیر سایت حرف بزن.'); return; }
+      this.fails = 0; a.last = Date.now(); (org ? orgs : admins).put(a);
+      dsess.set({ role: kind, id: a.id }, f.elements.k.checked);
+      st.className = 'bk-otp-st ok'; st.textContent = 'وارد شدی.'; toast(`خوش اومدی ${a.who || a.name}.`);
+      page.route();
+    });
+    f.elements.u.focus({ preventScroll: true });
+  },
+  // an admin who opens #/org chooses whose panel to look at
+  pick() {
+    document.title = 'دیدن پنل تهیه‌کننده · بلیت';
+    const l = orgs.all().filter((o) => o.active !== false);
+    page.el.innerHTML = `<div class="evp-in da"><section class="panel da-card da-wide evp-rise" aria-labelledby="daH"><h1 id="daH">پنل کدوم تهیه‌کننده رو ببینی؟</h1>
+      <p class="bk-lead">به‌عنوان مدیر، پنل هر تهیه‌کننده رو همون‌طور که خودش می‌بینه می‌بینی؛ هر چی بسازی یا عوض کنی به اسم خودش ثبت می‌شه.</p>
+      <div class="da-list">${l.map((o) => `<button type="button" class="da-pick" data-o="${esc(o.id)}"><span class="dk-av" aria-hidden="true">${esc(o.name.slice(0, 1))}</span><span><b>${esc(o.name)}</b><small>${esc(o.who)} · ${fa(orgs.shows(o.id).length)} برنامه</small></span>${ico('arrow-l')}</button>`).join('') || '<p class="bk-lead">هنوز تهیه‌کننده‌ای نیست.</p>'}</div>
+      <a class="chip" href="#/admin/orgs">${ico('arrow-r')}تهیه‌کننده‌ها</a></section></div>`;
+    $$('[data-o]', page.el).forEach((b) => b.addEventListener('click', () => { dsess.patch({ as: b.dataset.o }); page.route(); }));
+  },
+  out() { dsess.clear(); toast('از پنل خارج شدی.'); const h = location.hash; if (/^#\/(org|admin)/.test(h)) page.route(); },
+  // «حساب من»: who is signed in, the password, the way out
+  account() {
+    const s = dsess.get(), a = dsess.acct(); if (!a) return;
+    const adm = s.role === 'admin';
+    const m = desk.modal('da-acct', `<h2>${ico('user')}حساب من</h2>
+      <dl class="og-cr"><div><dt>${adm ? 'نام' : 'تهیه‌کننده'}</dt><dd>${esc(adm ? a.who : a.name)}</dd></div>${adm ? '' : `<div><dt>مسئول</dt><dd>${esc(a.who)}</dd></div>`}<div><dt>نام کاربری</dt><dd dir="ltr"><code>${esc(a.user)}</code></dd></div><div><dt>آخرین ورود</dt><dd>${a.last ? esc(ago(a.last)) : '—'}</dd></div></dl>
+      <form class="dk-form" id="daPw" novalidate><h3 class="wz-h3">عوض کردن رمز</h3>
+        <label class="bk-fld"><span>رمز فعلی</span><input name="o" type="password" dir="ltr" autocomplete="current-password" required></label>
+        <div class="wz-grid"><label class="bk-fld"><span>رمز تازه</span><input name="n" type="password" dir="ltr" autocomplete="new-password" required></label><label class="bk-fld"><span>تکرار رمز تازه</span><input name="r" type="password" dir="ltr" autocomplete="new-password" required></label></div>
+        <p class="bk-otp-st" id="daPwSt" role="alert"></p>
+        <div class="evp-dlg-end"><button type="submit" class="buy">${ico('check')}عوض کردن رمز</button><button type="button" class="chip" id="daOut">${ico('arrow-r')}خروج از پنل</button></div></form>`, 'حساب من');
+    const f = $('#daPw', m.box), st = $('#daPwSt', m.box), bad = (t) => { st.className = 'bk-otp-st bad'; st.textContent = t; };
+    f.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      if (!pw.ok(a, f.elements.o.value)) { bad('رمز فعلی درست نیست.'); return; }
+      const e1 = pw.bad(f.elements.n.value, a.user); if (e1) { bad(e1); return; }
+      if (f.elements.n.value !== f.elements.r.value) { bad('تکرار رمز با رمز تازه یکی نیست.'); return; }
+      pw.set(a, f.elements.n.value); (adm ? admins : orgs).put(a); auditLog(`رمز ${adm ? 'مدیر' : 'تهیه‌کننده'} «${a.who}» عوض شد`, a.who); m.shut(); toast('رمزت عوض شد.');
+      if (location.hash.startsWith('#/admin/orgs')) page.route();
+    });
+    $('#daOut', m.box).addEventListener('click', () => { m.shut(); this.out(); });
+  },
+};
+
+/* ───── the admin's page of organisers: the list, a new one (with a user name and a password), edit, a new password, look as them, close, delete ───── */
+const orgDesk = {
+  f: { q: '', st: '' },
+  render(el) {
+    const l = orgs.all(), act = l.filter((o) => o.active !== false).length, waiting = drafts.all().filter((d) => d.status === 'review').length + admin.others().length;
+    el.innerHTML = `${desk.head('تهیه‌کننده‌ها', 'هر تهیه‌کننده یه پنل جدا داره، با نام کاربری و رمز خودش. فقط برنامه‌ها و عددهای خودش رو می‌بینه و برنامه‌ی تازه‌اش تا تأیید تو روی سایت نمی‌آد. پنل رو فقط تو می‌سازی و می‌بندی.', `<button type="button" class="buy" id="ogNew">${ico('plus')}تهیه‌کننده‌ی تازه</button>`)}
+      <section class="dk-tiles">${desk.tile('تهیه‌کننده‌ها', money(l.length), null, null, true, `${fa(act)} فعال · ${fa(l.length - act)} بسته`)}${desk.tile('برنامه‌ی تهیه‌کننده‌ها', money(LIST().filter((e) => orgs.ownerOf(e)).length), null, null, true, 'روی سایت و در صف')}${desk.tile('در انتظار تأیید تو', money(waiting), null, null, true, 'برنامه‌ی فرستاده‌شده')}${desk.tile('فروش ۳۰ روز', short(ana.orgsTotal(30)), null, null, true, 'همه‌ی تهیه‌کننده‌ها، تومان')}</section>
+      <div class="dk-filters evp-rise"><label class="bk-fld og-q"><span>جستجو</span><input id="ogQ" type="search" placeholder="اسم، مسئول یا نام کاربری…" value="${esc(this.f.q)}" autocomplete="off"></label>
+        <div class="bk-seg" role="radiogroup" aria-label="وضعیت">${[['', 'همه'], ['on', 'فعال'], ['off', 'بسته']].map(([k, t]) => `<button type="button" role="radio" data-st="${k}" aria-checked="${this.f.st === k}">${t}</button>`).join('')}</div></div>
+      <div class="og-grid" id="ogGrid" role="list"></div>`;
+    const paint = () => {
+      const q = lnorm(this.f.q), list = orgs.all().filter((o) => (!this.f.st || (this.f.st === 'off') === (o.active === false)) && (!q || lnorm(`${o.name} ${o.who} ${o.user}`).includes(q)));
+      $('#ogGrid', el).innerHTML = list.map((o) => this.card(o)).join('') || `<p class="dk-empty">${l.length ? 'چیزی پیدا نشد.' : 'هنوز تهیه‌کننده‌ای نیست؛ اولی رو بساز.'}</p>`;
+      if (MOTK()) gsap.from($$('.og-card', el), { y: 14, opacity: 0, duration: 0.45, ease: 'expo.out', stagger: 0.05, clearProps: 'transform,opacity' });
+    };
+    paint();
+    $('#ogQ', el).addEventListener('input', (ev) => { this.f.q = ev.target.value; paint(); });
+    $$('[data-st]', el).forEach((b) => b.addEventListener('click', () => { this.f.st = b.dataset.st; $$('[data-st]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $('#ogNew', el).addEventListener('click', () => this.edit(null, el));
+    $('#ogGrid', el).addEventListener('click', (ev) => {
+      const b = ev.target.closest('[data-a]'); if (!b) return; const o = orgs.get(b.closest('.og-card').dataset.id); if (!o) return;
+      const a = b.dataset.a;
+      if (a === 'view') { dsess.patch({ as: o.id }); location.hash = '#/org'; }
+      else if (a === 'edit') this.edit(o, el);
+      else if (a === 'pass') { const p = pw.gen(); pw.set(o, p); orgs.put(o); auditLog(`رمز تازه برای «${o.name}» ساخته شد`); this.cred(o, p, 'رمز تازه ساخته شد'); }
+      else if (a === 'toggle') { o.active = o.active === false; orgs.put(o); auditLog(`پنل «${o.name}» ${o.active ? 'باز' : 'بسته'} شد`); toast(o.active ? 'پنل دوباره باز شد.' : 'پنل بسته شد؛ دیگه نمی‌تونه وارد بشه.'); this.render(el); }
+      else if (a === 'del') this.del(o, el);
+    });
+  },
+  card(o) {
+    const b = ana.orgBrief(o.id), r = orgs.rights(o), off = o.active === false;
+    return `<article class="panel og-card${off ? ' is-off' : ''}" data-id="${esc(o.id)}" role="listitem">
+      <header><span class="dk-av" aria-hidden="true">${esc(o.name.slice(0, 1))}</span><div><b>${esc(o.name)}</b><small>${esc(o.who)} · ${esc(maskPhone(o.phone))}</small></div><em class="st" data-tone="${off ? 'bad' : 'good'}">${off ? 'بسته' : 'فعال'}</em></header>
+      <dl class="og-st"><div><dt>نام کاربری</dt><dd dir="ltr"><code>${esc(o.user)}</code></dd></div><div><dt>برنامه‌ها</dt><dd>${fa(b.shows)}${b.wait ? `<small> (${fa(b.wait)} در صف)</small>` : ''}</dd></div><div><dt>فروش ۳۰ روز</dt><dd>${short(b.sales30)}<small> تومان</small></dd></div><div><dt>آخرین ورود</dt><dd>${o.last ? esc(ago(o.last)) : 'هنوز وارد نشده'}</dd></div></dl>
+      <p class="og-rights">${ORG_RIGHTS.map(([k, t]) => `<em class="chip${r[k] ? '' : ' is-no'}">${r[k] ? ico('check') : ico('x')}${esc(t)}</em>`).join('')}</p>
+      <footer><button type="button" class="chip" data-a="view">${ico('arrow-ul')}دیدن پنل</button><button type="button" class="chip" data-a="edit">${ico('sliders')}ویرایش</button><button type="button" class="chip" data-a="pass">${ico('key')}رمز تازه</button><button type="button" class="chip" data-a="toggle">${ico(off ? 'check' : 'lock')}${off ? 'باز کردن' : 'بستن'}</button><button type="button" class="chip gt-ic" data-a="del" aria-label="حذف ${esc(o.name)}" title="حذف">${ico('x')}</button></footer></article>`;
+  },
+  // the user name and the password to give them (the password is seen only now)
+  cred(o, p, title) {
+    const url = `${location.href.split('#')[0]}#/org`, msg = `سلام ${o.who}،\nپنل تهیه‌کننده‌ی «${o.name}» تو بلیت ساخته شد.\nنشانی: ${url}\nنام کاربری: ${o.user}\nرمز: ${p}\nبعد از اولین ورود، رمزت رو از «حساب من» عوض کن.`;
+    const m = desk.modal('og-cred', `<h2>${ico('check')}${esc(title)}</h2><p class="bk-lead">اینا رو برای ${esc(o.who)} بفرست. رمز فقط همین الان دیده می‌شه؛ بعدش فقط می‌تونی رمز تازه بسازی.</p>
+      <dl class="og-cr"><div><dt>نشانی پنل</dt><dd dir="ltr"><code>${esc(url)}</code></dd></div><div><dt>نام کاربری</dt><dd dir="ltr"><code>${esc(o.user)}</code><button type="button" class="chip gt-ic" data-c="${esc(o.user)}" aria-label="کپی نام کاربری">${ico('copy')}</button></dd></div><div><dt>رمز</dt><dd dir="ltr"><code id="ogP">${esc(p)}</code><button type="button" class="chip gt-ic" data-c="${esc(p)}" aria-label="کپی رمز">${ico('copy')}</button></dd></div></dl>
+      <label class="bk-fld"><span>متن آماده‌ی پیام</span><textarea rows="6" readonly dir="rtl">${esc(msg)}</textarea></label>
+      <div class="evp-dlg-end"><button type="button" class="buy" data-all>${ico('copy')}کپی متن پیام</button><button type="button" class="chip" data-x>بستن</button></div>`, 'اطلاعات ورود');
+    $$('[data-c]', m.box).forEach((b) => b.addEventListener('click', () => copyText(b.dataset.c)));
+    $('[data-all]', m.box).addEventListener('click', () => copyText(msg, 'متن پیام کپی شد.'));
+  },
+  // a new organiser, or one's edit: the name, the person, the user name, the rights, the shows that are theirs
+  edit(o, el) {
+    const nw = !o, r = orgs.rights(o), pass0 = nw ? pw.gen() : '', ow = store.get('blit.owners', {});
+    const sh = LIST().filter((e) => e.by !== 'admin' || orgs.ownerOf(e));
+    const m = desk.modal('og-edit', `<h2>${ico(nw ? 'plus' : 'sliders')}${nw ? 'تهیه‌کننده‌ی تازه' : `ویرایش «${esc(o.name)}»`}</h2>
+      <form class="dk-form og-form" id="ogF" novalidate>
+        <div class="wz-grid"><label class="bk-fld"><span>اسم تهیه‌کننده (گروه یا مؤسسه)</span><input name="name" required value="${esc(o ? o.name : '')}" autocomplete="off"></label><label class="bk-fld"><span>اسم مسئول</span><input name="who" required value="${esc(o ? o.who : '')}" autocomplete="off"></label></div>
+        <div class="wz-grid"><label class="bk-fld"><span>موبایل</span><input name="phone" required inputmode="numeric" dir="ltr" maxlength="11" value="${esc(o ? fa(o.phone) : '')}" placeholder="۰۹۱۲ ۰۰۰ ۰۰۰۰"></label><label class="bk-fld"><span>ایمیل <small>(اختیاری)</small></span><input name="email" type="email" dir="ltr" value="${esc(o ? o.email || '' : '')}" autocomplete="off"></label></div>
+        <label class="bk-fld"><span>شماره‌ی شبا برای تسویه <small>(اختیاری)</small></span><input name="iban" dir="ltr" value="${esc(o ? o.iban || '' : '')}" placeholder="IR…" autocomplete="off"></label>
+        <div class="wz-grid"><label class="bk-fld"><span>نام کاربری <small>(حرف و عدد انگلیسی)</small></span><input name="user" dir="ltr" required value="${esc(o ? o.user : '')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
+          ${nw ? `<label class="bk-fld da-pw"><span>رمز</span><input name="pass" dir="ltr" required value="${esc(pass0)}" autocomplete="off" spellcheck="false"><button type="button" class="da-eye" id="ogGen" aria-label="رمز تازه">${ico('spark')}</button></label>` : '<div class="bk-fld og-pwn"><span>رمز</span><p>رمز رو نمی‌شه دید؛ از کارت بیرون «رمز تازه» بساز.</p></div>'}</div>
+        <fieldset class="dk-checks"><legend>چی‌کار می‌تونه بکنه</legend>
+          <p class="bk-note">${ico('info')}همیشه: دیدن پیشخوان و برنامه‌های خودش، ساختن برنامه‌ی تازه و فرستادنش برای تأیید تو. هیچ‌وقت: بنر صفحه‌ی اول، تنظیمات سایت، شهر و سالن، برنامه‌ها و عددهای بقیه.</p>
+          ${ORG_RIGHTS.map(([k, t]) => `<label><input type="checkbox" name="r_${k}"${r[k] ? ' checked' : ''}><span>${esc(t)}</span></label>`).join('')}</fieldset>
+        <fieldset class="dk-checks og-shows"><legend>برنامه‌های این تهیه‌کننده <small>(تیک بزن تا مال اون بشه)</small></legend><div class="og-sh">${sh.map((e) => { const cur = orgs.ownerOf(e), mine = o && cur === o.id; return `<label><input type="checkbox" name="s" value="${esc(e.id)}"${mine ? ' checked' : ''}><span>${esc(e.title)}<small>${cur && !mine ? `الان مال ${esc((orgs.get(cur) || {}).name || '—')}` : mine ? 'مال همین تهیه‌کننده' : 'مال سایت'}</small></span></label>`; }).join('')}</div></fieldset>
+        <p class="bk-otp-st" id="ogSt" role="alert"></p>
+        <div class="evp-dlg-end"><button type="submit" class="buy">${ico('check')}${nw ? 'ساختن پنل' : 'ذخیره'}</button><button type="button" class="chip" data-x>انصراف</button></div></form>`, nw ? 'تهیه‌کننده‌ی تازه' : 'ویرایش تهیه‌کننده');
+    const f = $('#ogF', m.box), st = $('#ogSt', m.box), bad = (t, i) => { st.className = 'bk-otp-st bad'; st.textContent = t; if (i) i.focus(); };
+    f.elements.phone.addEventListener('input', () => { f.elements.phone.value = fa(enDigits(f.elements.phone.value).replace(/\D/g, '').slice(0, 11)); });
+    if (nw) {
+      let touched = false; f.elements.user.addEventListener('input', () => { touched = true; });
+      f.elements.name.addEventListener('input', () => { if (!touched) f.elements.user.value = f.elements.name.value.trim() ? orgs.suggest(f.elements.name.value) : ''; });
+      $('#ogGen', m.box).addEventListener('click', () => { f.elements.pass.value = pw.gen(); });
+    }
+    f.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const v = (k) => f.elements[k].value.trim(), phone = enDigits(v('phone')), user = v('user').toLowerCase();
+      if (!v('name')) return bad('اسم تهیه‌کننده رو بنویس.', f.elements.name);
+      if (!v('who')) return bad('اسم مسئول رو بنویس.', f.elements.who);
+      if (!/^09\d{9}$/.test(phone)) return bad('موبایل ۱۱ رقمه و با ۰۹ شروع می‌شه.', f.elements.phone);
+      if (v('email') && !/^\S+@\S+\.\S+$/.test(v('email'))) return bad('ایمیل درست نیست.', f.elements.email);
+      if (!/^[a-z0-9._-]{3,24}$/.test(user)) return bad('نام کاربری ۳ تا ۲۴ نویسه‌ی انگلیسی (حرف، عدد، نقطه، خط تیره) باشه.', f.elements.user);
+      if ((orgs.byUser(user) && (nw || orgs.byUser(user).id !== o.id)) || admins.byUser(user)) return bad('این نام کاربری برای یکی دیگه‌ست؛ یکی دیگه بنویس.', f.elements.user);
+      let pass = '';
+      if (nw) { pass = f.elements.pass.value.trim(); const e1 = pw.bad(pass, user); if (e1) return bad(e1, f.elements.pass); }
+      const rights = Object.fromEntries(ORG_RIGHTS.map(([k]) => [k, f.elements[`r_${k}`].checked]));
+      const x = nw ? { id: `o${Date.now().toString(36)}`, at: Date.now(), active: true, since: `از ${yearFmt.format(new Date())} با بلیت` } : o;
+      Object.assign(x, { name: v('name'), who: v('who'), phone, email: v('email'), iban: v('iban'), user, rights });
+      if (nw) pw.set(x, pass);
+      orgs.put(x);
+      const ow2 = store.get('blit.owners', {});
+      $$('input[name="s"]', f).forEach((c) => { const e = LIST().find((q) => q.id === c.value); if (!e) return; const cur = orgs.ownerOf(e); if (c.checked && cur !== x.id) ow2[e.id] = x.id; else if (!c.checked && cur === x.id) ow2[e.id] = ''; });
+      store.set('blit.owners', ow2);
+      auditLog(nw ? `تهیه‌کننده‌ی «${x.name}» با نام کاربری ${x.user} ساخته شد` : `تهیه‌کننده‌ی «${x.name}» ویرایش شد`);
+      m.shut(); this.render(el);
+      if (nw) this.cred(x, pass, 'پنل ساخته شد'); else toast('ذخیره شد.');
+    });
+    $('input[name="name"]', f).focus({ preventScroll: true });
+  },
+  del(o, el) {
+    const b = ana.orgBrief(o.id);
+    const m = desk.modal('ad-no', `<h2>${ico('x')}حذف «${esc(o.name)}»</h2><p class="bk-lead">پنلش برای همیشه بسته می‌شه و دیگه نمی‌تونه وارد بشه. ${b.shows ? `${fa(b.shows)} برنامه‌اش مال سایت می‌شن و روی سایت می‌مونن.` : ''} اگه فقط می‌خوای موقتی ببندی، «بستن» رو بزن.</p><div class="evp-dlg-end"><button type="button" class="buy" id="ogDel">${ico('x')}حذفش کن</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'حذف تهیه‌کننده');
+    $('#ogDel', m.box).addEventListener('click', () => { orgs.del(o.id); auditLog(`تهیه‌کننده‌ی «${o.name}» حذف شد`); m.shut(); toast('حذف شد.'); this.render(el); });
+  },
+};
+
+// the name of the organiser who sent a draft (an older one, made before the accounts, is the first account's)
+const draftOrg = (d) => (d.by && d.by !== 'admin' ? (orgs.get(d.by) || {}).name : '') || d.org || (orgs.get('org1') || {}).name || '';
+/* ════════════════════════════════════════════════════════════════
    the desks (brief §2.4): the organiser's panel #/org/<tab> and the admin's #/admin/<tab> (admin.js), on one shell: a side
    bar with the tabs (a row of pills on a phone) and the tab's panels. All of it is simulated in this browser: the organiser is
    a demo account; what they make (a show, a discount code, a controller) is kept in localStorage and goes through the admin's
@@ -9296,7 +9979,8 @@ const gate = {
    a table of the numbers under each chart).
    ════════════════════════════════════════════════════════════════ */
 const FEE = 0.08;   // the site's share of a ticket's price (demo)
-const ORG = { name: 'گروه هنری آوای نو', who: 'سارا محمدی', since: 'از ۱۴۰۱ با بلیت', iban: 'IR•• •••• •••• •••• ۴۲۷۱' };
+// the organiser whose panel is open (round V: a real account, see deskauth.js; before that one demo account)
+const ORG = { get name() { return orgs.cur().name; }, get who() { return orgs.cur().who; }, get since() { return orgs.cur().since || ''; }, get iban() { return orgs.cur().iban || 'IR•• •••• •••• •••• ••••'; } };
 const KIND_T = { concert: 'کنسرت', theatre: 'نمایش', comedy: 'جُنگ' };
 const PLAN_T = { opera: 'تالار با لژ و دو بالکن', 'fan-l': 'سالن بزرگ نیم‌دایره با بالکن', 'fan-m': 'سالن نیم‌دایره', 'fan-s': 'سالن کوچیک نیم‌دایره', 'rect-m': 'سالن مستطیل با بالکن', 'rect-s': 'سالن کوچیک مستطیل', arena: 'ورزشگاه: ایستاده و سکوها', cabaret: 'میز و صندلی جلوی صحنه' };
 // the halls' library lives in hallslib.js; a hall as the wizard, the halls' pages and the admin show it: its city's name, address, plan (a layout of it), capacity and position
@@ -9319,7 +10003,8 @@ const drafts = {
   get(id) { return this.all().find((d) => d.id === id) || null; },
   put(d) { const l = this.all(), i = l.findIndex((x) => x.id === d.id); if (i >= 0) l[i] = d; else l.unshift(d); this.save(l); },
 };
-const orgShows = () => LIST().filter((e) => e.by !== 'admin' && (e.draft || (seedOf(e.id + ':org') % 5 < 3 && statusOf(e).key !== 'cancelled')));
+// the shows of the organiser whose panel is open: the ones that are theirs (orgs.ownerOf), made by them or given by the admin
+const orgShows = () => { const me = dsess.orgId(); return LIST().filter((e) => orgs.ownerOf(e) === me && (e.draft || statusOf(e).key !== 'cancelled')); };
 // a session's numbers from its seat map (the same draw the buyers see): capacity, sold, the money (before VAT and fee)
 const statCache = new Map();
 function sesStats(e, s) {
@@ -9334,14 +10019,14 @@ function sesStats(e, s) {
 const showStats = (e) => sessionsOf(e).reduce((a, s) => { const x = sesStats(e, s); a.cap += x.cap; a.sold += x.sold; a.gross += x.gross; a.n++; return a; }, { cap: 0, sold: 0, gross: 0, n: 0 });
 // the last 30 days of sales (a seeded series: weekdays quieter, Thursday and Friday busier) and the last two hours by 5 minutes
 function salesDays() {
-  const R = rngOf(seedOf('org-days')), out = [];
-  for (let k = 29; k >= 0; k--) { const d = new Date(Date.now() - k * DAY), wd = d.getDay(), busy = wd === 4 || wd === 5 ? 1.45 : wd === 3 ? 1.15 : 1; const n = Math.round((38 + R() * 46) * busy); out.push({ t: d.getTime(), n, sum: Math.round(n * (720000 + R() * 380000) / 1e4) * 1e4 }); }
+  const A = ana.agg(orgShows()), out = [];
+  for (let k = 29; k >= 0; k--) out.push({ t: Date.now() - k * DAY, n: A.n[ANA_N - 1 - k], sum: A.s[ANA_N - 1 - k] });
   const today = out[out.length - 1], h = (Date.now() - new Date(TEHRAN_DAY.format(new Date()) + 'T00:00:00+03:30').getTime()) / DAY;
   today.n = Math.round(today.n * clamp(h, 0.05, 1)); today.sum = Math.round(today.sum * clamp(h, 0.05, 1) / 1e4) * 1e4;
   out.part = clamp(h, 0.05, 1);
   return out;
 }
-function salesSlots() { const R = rngOf(seedOf('org-slots:' + Math.floor(Date.now() / 3e5))), now = Date.now(); return Array.from({ length: 24 }, (_, i) => ({ t: now - (23 - i) * 3e5, sum: i === 23 ? 0 : Math.round((R() < 0.18 ? 0 : 0.6 + R() * 3.2) * 1.6e6 / 1e4) * 1e4 })); }
+function salesSlots() { const R = rngOf(seedOf('org-slots:' + dsess.orgId() + Math.floor(Date.now() / 3e5))), now = Date.now(), k = Math.min(1.4, 0.15 + orgShows().length * 0.18); return Array.from({ length: 24 }, (_, i) => ({ t: now - (23 - i) * 3e5, sum: i === 23 ? 0 : Math.round((R() < 0.18 ? 0 : 0.6 + R() * 3.2) * 1.6e6 * k / 1e4) * 1e4 })); }
 
 /* ───── small charts, one method: the series in --viz-1, thin marks, a readout on hover and focus, the numbers in a table ───── */
 const viz = {
@@ -9438,6 +10123,7 @@ const desk = {
     { const mo = new MutationObserver(syncMode); mo.observe(root, { attributes: true, attributeFilter: ['data-mode'] }); const p1 = page.leave; page.leave = () => { mo.disconnect(); if (p1) p1(); }; }
     $$('[data-dk]', dk).forEach((b) => b.addEventListener('click', () => {
       if (b.dataset.dk === 'mode') { modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', b); return; }
+      if (b.dataset.dk === 'out') { deskAuth.out(); return; }
       const u = this.ui(); if (b.dataset.dk === 'open') u.open = !u.open; else u.side = u.side === 'left' ? 'right' : 'left';
       store.set('blit.deskUi', u); dk.dataset.open = u.open ? 1 : 0; dk.dataset.side = u.side;
       $('[data-dk="open"]', dk).setAttribute('aria-pressed', String(u.open));
@@ -9447,7 +10133,10 @@ const desk = {
   stop() { this.timers.forEach((t) => { clearInterval(t); clearTimeout(t); }); this.timers = []; },
   every(ms, f) { const t = setInterval(f, ms); this.timers.push(t); return t; },
   render(v) {
-    this.stop(); root.classList.add('is-desk');   // (the site's header and the window's scroll step aside: the bezel is the window)
+    this.stop();
+    const need = deskAuth.guard(v);
+    if (need) { root.classList.remove('is-desk'); need(); return; }   // (round V: a desk is for who is signed in to it)
+    root.classList.add('is-desk');   // (the site's header and the window's scroll step aside: the bezel is the window)
     const D = v.kind === 'org' ? org : admin, tabs = D.tabs(), tab = tabs.find((t) => t.id === v.tab) || tabs[0];
     document.title = `${tab.t} · ${D.title} · بلیت`;
     const ui = this.ui(), top = tabs.filter((t) => !t.parent);
@@ -9459,18 +10148,21 @@ const desk = {
           <button type="button" class="dk-tg" data-dk="mode" data-tip="${LOOK.mode === 'light' ? 'حالت تیره' : 'حالت روشن'}">${ico(LOOK.mode === 'light' ? 'moon' : 'sun')}<span>${LOOK.mode === 'light' ? 'حالت تیره' : 'حالت روشن'}</span></button>
           <button type="button" class="dk-tg" data-dk="open" data-tip="نمایش اسم بخش‌ها" aria-pressed="${ui.open}">${ico('menu')}<span>نمایش اسم بخش‌ها</span></button>
           <button type="button" class="dk-tg" data-dk="side" data-tip="نوار رو ببر اون طرف">${ico('swap')}<span>نوار رو ببر اون طرف</span></button>
-          <div class="dk-who" data-tip="${esc(D.who)}"><span class="dk-av" aria-hidden="true">${esc(D.av)}</span><span><b>${esc(D.who)}</b><small>${esc(D.role)}</small></span></div></div>
+          <button type="button" class="dk-tg" data-dk="out" data-tip="خروج از پنل">${ico('logout')}<span>خروج از پنل</span></button>
+          <div class="dk-who" role="button" tabindex="0" data-tip="حساب من: ${esc(D.who)}"><span class="dk-av" aria-hidden="true">${esc(D.av)}</span><span><b>${esc(D.who)}</b><small>${esc(D.role)}</small></span></div></div>
       </aside>
       <div class="dk-main" id="dkMain"></div></div></div>`;
-    this.rail($('.dk', page.el), v.kind);
+    this.rail($('.dk', page.el), v.kind); selUI.start();
+    { const who = $('.dk-who', page.el); who.addEventListener('click', () => deskAuth.account()); who.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); deskAuth.account(); } }); }
     tab.render.call(D, $('#dkMain', page.el), v);
+    { const as = v.kind === 'org' && dsess.viewAs(); if (as) { const bar = document.createElement('div'); bar.className = 'da-as evp-rise'; bar.innerHTML = `${ico('eye')}<span>داری پنل «${esc(as.name)}» رو همون‌طور که خودش می‌بینه می‌بینی.</span><button type="button" class="chip">${ico('arrow-r')}برگشت به پنل مدیر</button>`; $('button', bar).addEventListener('click', () => { dsess.patch({ as: '' }); location.hash = '#/admin/orgs'; }); $('#dkMain', page.el).prepend(bar); } }
     // every cell knows its column's heading (a phone shows a table's rows as cards, with these as small labels); tables drawn later are labelled too
     const main = $('#dkMain', page.el), label = () => $$('.dk-tbl', main).forEach((t) => { const hs = $$('thead th', t).map((h) => h.textContent.trim()); if (!hs.length) return; $$('tbody tr', t).forEach((r) => { if (r.dataset.th) return; r.dataset.th = '1'; [...r.children].forEach((c, i) => { if (hs[i]) c.dataset.th = hs[i]; }); }); const n = t.tBodies[0] ? t.tBodies[0].rows.length : 0, w = t.closest('.dk-tbl-w'); if (n > 12 && w && !(w.nextElementSibling && w.nextElementSibling.classList.contains('dk-more'))) { const bt = document.createElement('button'); bt.type = 'button'; bt.className = 'chip dk-more'; bt.innerHTML = `${ico('down')}همه‌ی ${fa(n)} ردیف`; bt.addEventListener('click', () => { t.classList.add('is-all'); bt.remove(); }); w.after(bt); } });
     label(); const mo = new MutationObserver(label); mo.observe(main, { childList: true, subtree: true });
     // on a phone the tabs are one row that scrolls; the open one is brought into view
     const curT = $('.dk-tabs [aria-current]', page.el); if (curT && matchMedia('(max-width: 760px), (max-aspect-ratio: 5/4)').matches) { const row = curT.parentElement, q = curT.getBoundingClientRect(), rq = row.getBoundingClientRect(); row.scrollLeft += (q.left + q.width / 2) - (rq.left + rq.width / 2); }
     const inner0 = page.leave; page.leave = () => { mo.disconnect(); if (inner0) inner0(); };
-    const inner = page.leave; page.leave = () => { this.stop(); root.classList.remove('is-desk'); if (inner) inner(); };
+    const inner = page.leave; page.leave = () => { this.stop(); selUI.stop(); root.classList.remove('is-desk'); if (inner) inner(); };
   },
   head(t, lead, extra = '') { return `<header class="dk-head evp-rise"><div><h1>${esc(t)}</h1>${lead ? `<p>${lead}</p>` : ''}</div>${extra}</header>`; },
   tile(label, value, delta, vals, good = true, note = '') {
@@ -9494,19 +10186,22 @@ const desk = {
 
 /* ───── the organiser ───── */
 const org = {
-  title: 'پنل برگزارکننده', av: 'آن', who: ORG.name, role: `برگزارکننده · ${ORG.since}`,
-  foot: `<a href="#/gate" data-tip="کنترل ورود">${ico('shield-ok')}<span>کنترل ورود</span></a>`,
+  title: 'پنل برگزارکننده',
+  get av() { return ORG.name.slice(0, 1); }, get who() { return ORG.name; }, get role() { return `برگزارکننده · ${ORG.since}`; },
+  get foot() { return orgs.rights(orgs.cur()).staff ? `<a href="#/gate" data-tip="کنترل ورود">${ico('shield-ok')}<span>کنترل ورود</span></a>` : ''; },
+  // what an organiser has: their dashboard, their shows, a new show (it goes to the admin before it is on the site); the rest is what the admin ticked for them
   tabs() {
-    const rev = drafts.all().filter((d) => d.status === 'review').length;
+    const rev = drafts.all().filter((d) => d.status === 'review' && (d.by || 'org1') === dsess.orgId()).length, r = orgs.rights(orgs.cur());
     return [
       { id: 'home', t: 'پیشخوان', icon: 'grid', render: this.home },
       { id: 'shows', t: 'برنامه‌ها', icon: 'ticket', n: rev ? `${fa(rev)} در انتظار` : '', render: this.shows },
       { id: 'new', t: 'برنامه‌ی جدید', icon: 'plus', render: (el, v) => wizard.render(el, v) },
-      { id: 'settle', t: 'فروش و تسویه', icon: 'bag', render: this.settle },
-      { id: 'codes', t: 'کدهای تخفیف', icon: 'tag', render: (el) => codes.render(el) },
-      { id: 'staff', t: 'کنترل‌چی‌ها', icon: 'users', render: this.staff },
+      r.ana && { id: 'analytics', t: 'تحلیل و نمودارها', icon: 'award', render: (el) => ana.page(el, 'org') },
+      r.money && { id: 'settle', t: 'فروش و تسویه', icon: 'bag', render: this.settle },
+      r.codes && { id: 'codes', t: 'کدهای تخفیف', icon: 'tag', render: (el) => codes.render(el) },
+      r.staff && { id: 'staff', t: 'کنترل‌چی‌ها', icon: 'users', render: this.staff },
       { id: 'show', t: 'نقشه‌ی فروش', icon: 'ruler', parent: 'shows', render: this.show },
-    ];
+    ].filter(Boolean);
   },
 
   // the desk's first page: four numbers, the sales of the last two hours (live), what sells, the sessions ahead, the last sales
@@ -9521,12 +10216,14 @@ const org = {
     const st = { today: today.sum, tn: today.n };
     const rank = shows.map((e) => ({ t: e.title, v: showStats(e).gross })).filter((r) => r.v > 0).sort((a, b) => b.v - a.v).slice(0, 6);
     el.innerHTML = `${desk.head(`سلام، ${ORG.who}`, `فروش برنامه‌های «${esc(ORG.name)}» همین لحظه. <span class="dk-live"><i></i>زنده</span>`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
+      ${shows.length || drafts.all().some((x) => (x.by || 'org1') === dsess.orgId()) ? '' : `<section class="panel dk-box evp-rise an-empty"><h2>${ico('ticket')}هنوز برنامه‌ای نداری</h2><p class="bk-lead">اولین برنامه‌ات رو بساز و بفرست؛ بعد از تأیید مدیر سایت روی سایت می‌آد و همین‌جا فروشش رو می‌بینی.</p><a class="buy" href="#/org/new">${ico('plus')}ساختن برنامه‌ی جدید</a></section>`}
       <section class="dk-tiles" aria-label="عددهای اصلی">
         <div class="panel dk-tile dk-hero evp-rise"><span>فروش امروز (تومان)</span><b id="dkToday">${money(st.today)}</b><em data-tone="${st.today >= yest.sum ? 'good' : 'bad'}">${st.today >= yest.sum ? '▲' : '▼'} ${pct(Math.abs(st.today - yest.sum) / Math.max(1, yest.sum))}<small>دیروز تا همین ساعت ${short(yest.sum)} تومان</small></em>${viz.spark(days.slice(-12).map((d) => d.sum))}</div>
         ${desk.tile('بلیت فروخته‌شده‌ی امروز', `<span id="dkTn">${money(st.tn)}</span>`, (today.n - yest.n) / Math.max(1, yest.n), days.slice(-12).map((d) => d.n))}
         ${desk.tile('فروش ۳۰ روز (تومان)', short(sum30), 0.124, days.filter((_, i) => i % 2).map((d) => d.sum))}
         ${desk.tile('پرشدگی سانس‌های پیش رو', pct(occ), 0.06, up.slice(0, 12).map((x) => x.sold / Math.max(1, x.cap)))}
       </section>
+      <section class="panel dk-box evp-rise cct-box" aria-labelledby="dkTrendH"><h2 id="dkTrendH">${ico('award')}فروش ۳۰ روز گذشته<small>برنامه‌های تو${orgs.rights(orgs.cur()).ana ? ' · <a href="#/org/analytics">تحلیل کامل</a>' : ''}</small></h2><div id="dkCct"></div></section>
       <div class="dk-cols">
         <section class="panel dk-box evp-rise" aria-labelledby="dkSlotsH"><h2 id="dkSlotsH">${ico('clock')}فروش دو ساعت گذشته<small>هر ستون ۵ دقیقه · تومان</small></h2><div id="dkSlots"></div></section>
         <section class="panel dk-box evp-rise" aria-labelledby="dkFeedH"><h2 id="dkFeedH">${ico('bell')}آخرین خریدها<small class="dk-live"><i></i>زنده</small></h2><ol class="dk-feed" id="dkFeed"><li class="dk-empty">منتظر خرید بعدی…</li></ol></section>
@@ -9536,6 +10233,7 @@ const org = {
           <div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>برنامه</th><th>سانس</th><th>فروش</th><th>مبلغ (تومان)</th></tr></thead><tbody>${up.slice(0, 8).map((x) => { const w = whenOf(x.s), p = x.sold / Math.max(1, x.cap); return `<tr><td><a href="#/e/${esc(encodeURIComponent(x.e.id))}">${esc(x.e.title)}</a></td><td>${esc(w.wd)} ${esc(w.dm)} · ${esc(w.tm)}</td><td><span class="dk-meter" style="--p:${p.toFixed(3)}" data-tone="${p > 0.92 ? 'warn' : ''}"><i></i></span><small>${money(x.sold)} از ${money(x.cap)}</small></td><td>${money(x.gross)}</td></tr>`; }).join('')}</tbody></table></div></section>
         <section class="panel dk-box evp-rise" aria-labelledby="dkRankH"><h2 id="dkRankH">${ico('award')}پرفروش‌ترین‌ها<small>سانس‌های پیش رو · تومان</small></h2>${viz.ranked(rank)}</section>
       </div>`;
+    ana.mini($('#dkCct', el), { org: dsess.orgId() });
     const draw = () => {
       const data = slots.map((d) => ({ v: d.sum, x: F.time.format(new Date(d.t)), tip: `${F.time.format(new Date(d.t))} تا ${F.time.format(new Date(d.t + 3e5))}` }));
       $('#dkSlots', el).innerHTML = viz.columns('dkSlotsC', data, { label: 'فروش هر ۵ دقیقه در دو ساعت گذشته', w: $('#dkSlots', el).clientWidth }) + viz.table(['از ساعت', 'فروش (تومان)'], data.map((d) => [d.x, money(d.v)]));
@@ -9566,7 +10264,7 @@ const org = {
 
   // the shows: what is on the site, what waits for the admin, the drafts; each with its sessions, sales and money
   shows(el) {
-    const own = drafts.all().filter((x) => x.by !== 'admin'), live = orgShows().filter((e) => !e.draft);
+    const own = drafts.all().filter((x) => x.by !== 'admin' && (x.by || 'org1') === dsess.orgId()), live = orgShows().filter((e) => !e.draft);
     const card = (o) => `<article class="panel dk-show evp-rise"><figure class="bk-poster"><img src="${esc(o.src)}" alt="" loading="lazy"></figure>
       <div class="dk-show-t"><b>${esc(o.title)}</b><small>${esc(o.line)}</small><span class="dk-show-st"><em class="st" data-tone="${o.st[1]}">${esc(o.st[0])}</em>${o.note ? `<small>${esc(o.note)}</small>` : ''}</span></div>
       <div class="dk-show-n">${o.cap ? `<span class="dk-meter" style="--p:${(o.sold / o.cap).toFixed(3)}"><i></i></span><small>${money(o.sold)} از ${money(o.cap)} بلیت · ${fa(o.n)} سانس</small><b>${short(o.gross)} تومان</b>` : `<small>${esc(o.hint || '')}</small>`}</div>
@@ -9638,11 +10336,13 @@ const org = {
   },
 
   // the controllers: who scans at which door; each one's code for the entry control's start
-  staffList() {
+  staffAll() {
     let l = store.get('blit.staff', null);
     if (!l) { l = [{ id: 'k1', name: 'رضا کریمی', phone: '09123334455', pin: '4826', doors: ['g1'], at: Date.now() - 3 * DAY, seen: Date.now() - 50 * 6e4 }, { id: 'k2', name: 'مریم احمدی', phone: '09351119988', pin: '7315', doors: ['g2', 'g3'], at: Date.now() - 9 * DAY, seen: Date.now() - 2 * DAY }]; store.set('blit.staff', l); }
     return l;
   },
+  staffList() { const me = dsess.orgId(); return this.staffAll().filter((k) => (k.org || 'org1') === me); },
+  staffSave(mine) { const me = dsess.orgId(); store.set('blit.staff', this.staffAll().filter((k) => (k.org || 'org1') !== me).concat(mine.map((k) => ({ ...k, org: me })))); },
   staff(el) {
     const paint = () => {
       const l = this.staffList();
@@ -9661,20 +10361,20 @@ const org = {
       $$('[data-doors]', el).forEach((b) => b.addEventListener('click', () => {
         const k = this.staffList().find((x) => x.id === b.dataset.doors); if (!k) return;
         const m = desk.modal('cd-edit', `<h2>${ico('sliders')}درهای ${esc(k.name)}</h2><p class="bk-lead">فقط تو درهای انتخاب‌شده می‌تونه بلیت اسکن کنه.</p><form class="dk-form" id="dkDoors"><fieldset class="dk-checks"><legend>درها</legend>${GATES.map((g) => `<label><input type="checkbox" name="g" value="${g.id}"${k.doors.includes(g.id) ? ' checked' : ''}><span>${esc(g.t)}<small>${esc(g.s)}</small></span></label>`).join('')}</fieldset><p class="bk-otp-st" id="dkDoorsSt"></p><div class="evp-dlg-end"><button type="submit" class="buy">${ico('check')}ذخیره</button></div></form>`, 'درهای کنترل‌چی');
-        $('#dkDoors', m.box).addEventListener('submit', (ev) => { ev.preventDefault(); const doors = $$('input[name="g"]:checked', m.box).map((x) => x.value); if (!doors.length) { const o = $('#dkDoorsSt', m.box); o.className = 'bk-otp-st bad'; o.textContent = 'دست‌کم یه در انتخاب کن.'; return; } const l = this.staffList(), x = l.find((y) => y.id === k.id); x.doors = doors; store.set('blit.staff', l); m.shut(); toast('درها عوض شد.'); paint(); });
+        $('#dkDoors', m.box).addEventListener('submit', (ev) => { ev.preventDefault(); const doors = $$('input[name="g"]:checked', m.box).map((x) => x.value); if (!doors.length) { const o = $('#dkDoorsSt', m.box); o.className = 'bk-otp-st bad'; o.textContent = 'دست‌کم یه در انتخاب کن.'; return; } const l = this.staffList(), x = l.find((y) => y.id === k.id); x.doors = doors; this.staffSave(l); m.shut(); toast('درها عوض شد.'); paint(); });
       }));
       $$('[data-newpin]', el).forEach((b) => b.addEventListener('click', () => {
-        const l = this.staffList(), k = l.find((y) => y.id === b.dataset.newpin); if (!k) return; const pin = String(1000 + Math.floor(Math.random() * 8999)); k.pin = pin; store.set('blit.staff', l);
+        const l = this.staffList(), k = l.find((y) => y.id === b.dataset.newpin); if (!k) return; const pin = String(1000 + Math.floor(Math.random() * 8999)); k.pin = pin; this.staffSave(l);
         auditLog(`کد ورود ${k.name} عوض شد`, ORG.name); toast(`کد تازه‌ی ${fa(pin)} برای ${maskPhone(k.phone)} پیامک شد؛ کد قبلی دیگه کار نمی‌کنه.`); paint();
       }));
-      $$('[data-del]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.staff', this.staffList().filter((k) => k.id !== b.dataset.del)); toast('کنترل‌چی حذف شد؛ کدش دیگه کار نمی‌کنه.'); paint(); }));
+      $$('[data-del]', el).forEach((b) => b.addEventListener('click', () => { this.staffSave(this.staffList().filter((k) => k.id !== b.dataset.del)); toast('کنترل‌چی حذف شد؛ کدش دیگه کار نمی‌کنه.'); paint(); }));
       const f = $('#dkStaff', el), ph = f.elements.p;
       ph.addEventListener('input', () => { ph.value = fa(enDigits(ph.value).replace(/\D/g, '').slice(0, 11)); });
       f.addEventListener('submit', (ev) => {
         ev.preventDefault(); const p = enDigits(ph.value), doors = $$('input[name="g"]:checked', f).map((x) => x.value), out = $('#dkStaffSt', el);
         if (!/^09\d{9}$/.test(p)) { out.className = 'bk-otp-st bad'; out.textContent = 'شماره‌ی موبایل ۱۱ رقمه و با ۰۹ شروع می‌شه.'; return; }
         if (!doors.length) { out.className = 'bk-otp-st bad'; out.textContent = 'دست‌کم یه در انتخاب کن.'; return; }
-        const pin = String(1000 + Math.floor(Math.random() * 8999)), l = this.staffList(); l.push({ id: `k${Date.now().toString(36)}`, name: f.elements.n.value.trim(), phone: p, pin, doors, at: Date.now() }); store.set('blit.staff', l);
+        const pin = String(1000 + Math.floor(Math.random() * 8999)), l = this.staffList(); l.push({ id: `k${Date.now().toString(36)}`, name: f.elements.n.value.trim(), phone: p, pin, doors, at: Date.now() }); this.staffSave(l);
         toast(`کد ${fa(pin)} برای ${maskPhone(p)} پیامک شد.`); paint();
       });
     };
@@ -9739,12 +10439,12 @@ drafts.all().filter((d) => d.status === 'live').forEach((d) => MORE.push(draftEv
 
 const wizard = {
   d: null, step: 0,
-  blank() { return { by: this.adm ? 'admin' : '', id: `d-${Date.now().toString(36)}`, title: '', kind: 'concert', type: 'کنسرت', city: 'تهران', cs: 'tehran', hall: '', hallLay: 0, venue: '', desc: '', dur: 120, age: 'همه', pal: 'violet', poster: '', posterFit: null, banner: '', bannerFit: null, bannerM: '', bannerMFit: null, days: [], times: ['20:30'], sale: 'now', saleAt: '', prices: {}, weekend: false, status: 'draft', at: Date.now() }; },
+  blank() { return { by: this.adm ? 'admin' : dsess.orgId(), org: this.adm ? '' : ORG.name, id: `d-${Date.now().toString(36)}`, title: '', kind: 'concert', type: 'کنسرت', city: 'تهران', cs: 'tehran', hall: '', hallLay: 0, venue: '', desc: '', dur: 120, age: 'همه', pal: 'violet', poster: '', posterFit: null, banner: '', bannerFit: null, bannerM: '', bannerMFit: null, days: [], times: ['20:30'], sale: 'now', saleAt: '', prices: {}, weekend: false, status: 'draft', at: Date.now() }; },
   render(el, v) {
     this.el = el; this.adm = v.kind === 'admin';
     // #/admin/new/hall:<id> starts a show in that hall
     const pre = v.arg && /^hall:/.test(v.arg) ? v.arg.slice(5) : '', arg = pre ? '' : v.arg, cur = this.d && drafts.get(this.d.id);
-    const stale = !this.d || (arg && this.d.id !== arg) || (!arg && this.d.status !== 'draft') || (!arg && cur && cur.status !== 'draft') || (pre ? this.d.pre !== pre : (!arg && !!this.d.pre)) || (!!this.d.by !== this.adm);
+    const stale = !this.d || (arg && this.d.id !== arg) || (!arg && this.d.status !== 'draft') || (!arg && cur && cur.status !== 'draft') || (pre ? this.d.pre !== pre : (!arg && !!this.d.pre)) || ((this.d.by === 'admin') !== this.adm);
     if (stale) {
       this.d = (arg && drafts.get(arg)) || this.blank(); this.step = this.d.status === 'draft' || this.d.status === 'rejected' ? (this.d.step || 0) : 5;
       const h = pre && hallById(pre);
@@ -9818,7 +10518,8 @@ const wizard = {
     const NONE = { poster: 'بدون پوستر، یه پوستر موقت از اسم و رنگ برنامه کشیده می‌شه.', banner: 'بدون بنر دسکتاپ، برنامه تو بالای صفحه‌ی اصلی نمی‌آد.', mobile: 'بدون بنر موبایل، تو موبایل بنر دسکتاپش به شکل عمودی ۳ به ۴ بریده می‌شه.' };
     const slot = (kind, key, opt) => `<section class="wz-slot" data-kind="${kind}">${framer.row(kind, kind, { filled: !!d[key], opt, drop: `data-drop="${kind}"`, input: `data-kind="${kind}"`, none: NONE[kind], actions: `<label class="chip wz-swap">${ico('upload')}عوض کردن<input type="file" accept="image/*" data-kind="${kind}"></label><button type="button" class="chip" data-rm="${kind}">${ico('x')}برداشتن</button>` })}</section>`;
     b.innerHTML = `<h2>${ico('upload')}تصویرها</h2><p class="bk-lead">هر تصویر یه اندازه‌ی ثابت داره و کادرش رو پر می‌کنه. تصویر رو که گذاشتی، تو کادر بکشش تا همون بخشی که می‌خوای دیده بشه بمونه؛ با نوار یا چرخ ماوس هم بزرگش کن. بدون پوستر، یه پوستر موقت از اسم و رنگ ساخته می‌شه.</p>
-      <div class="wz-slots">${slot('poster', 'poster', false)}${slot('banner', 'banner', true)}${slot('mobile', 'bannerM', true)}</div>
+      <div class="wz-slots">${slot('poster', 'poster', false)}${this.adm ? `${slot('banner', 'banner', true)}${slot('mobile', 'bannerM', true)}` : ''}</div>
+      ${this.adm ? '' : `<label class="wz-ask"><input type="checkbox" id="wzHero"${d.heroAsk ? ' checked' : ''}><span>دوست دارم برنامه‌ام تو بنر بالای صفحه‌ی اول هم بیاد<small>بنر صفحه‌ی اول رو فقط مدیر سایت می‌ذاره. این رو تیک بزنی، مدیر موقع بررسی می‌بینه و اگه خواست برای بنر باهات هماهنگ می‌کنه.</small></span></label>`}
       <h3 class="wz-h3">رنگ برنامه <small>(برای پوستر موقت و دکمه‌ها)</small></h3>
       <div class="wz-pal" role="radiogroup" aria-label="رنگ">${Object.entries(PALETTE).slice(0, 14).map(([k, p]) => `<button type="button" role="radio" data-pal="${k}" aria-checked="${d.pal === k}" style="--c:${p.accent}" aria-label="${esc(p.label)}"></button>`).join('')}</div>`;
     const KEYS = { poster: ['poster', 'posterFit', 1000, 1500], banner: ['banner', 'bannerFit', 1280, 640], mobile: ['bannerM', 'bannerMFit', 800, 1067] };
@@ -9838,6 +10539,7 @@ const wizard = {
     $$('[data-rm]', b).forEach((x) => x.addEventListener('click', () => { const [key, fit] = KEYS[x.dataset.rm]; d[key] = ''; d[fit] = null; this.save(true); this.s1(b); this.preview(true); }));
     // the frames: the picture where it was placed; every change is kept with the draft and shown in the card at once
     $$('.fr', b).forEach((fr) => { const [key, fit] = KEYS[fr.dataset.kind], f = d[fit] || {}; framer.mount(fr, { src: d[key], fx: f.fx, fy: f.fy, fz: f.fz, onChange: (v) => { d[fit] = v; this.save(true); this.preview(true); } }); });
+    { const hb = $('#wzHero', b); if (hb) hb.addEventListener('change', () => { d.heroAsk = hb.checked; this.save(true); }); }
     $$('[data-pal]', b).forEach((x) => x.addEventListener('click', () => { d.pal = x.dataset.pal; $$('[data-pal]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); this.preview(true); }));
   },
 
@@ -9960,7 +10662,7 @@ const wizard = {
       ${d.status === 'rejected' ? `<p class="wz-msg is-bad">${ico('info')}مدیر این برنامه رو برگردوند: «${esc(d.note || 'بدون توضیح')}». درستش کن و دوباره بفرست.</p>` : d.status === 'review' ? `<p class="wz-msg">${ico('clock')}فرستاده شد ${esc(ago(d.sent || d.at))}؛ مدیر بررسیش می‌کنه. تا اون موقع روی سایت نیست.</p>` : d.status === 'live' ? `<p class="wz-msg is-ok">${ico('check')}مدیر تأیید کرد؛ برنامه روی سایته. <a href="#/e/${esc(encodeURIComponent(d.id))}">صفحه‌ی برنامه</a></p>` : ''}
       <dl class="wz-sum">
         ${row(0, 'برنامه', `${esc(d.type)} «${esc(d.title || '—')}» · ${esc(d.kind === 'comedy' ? 'جُنگ و کمدی' : KIND_T[d.kind])} · ${esc(cityName(d.cs) || d.city || '')} · ${fa(d.dur)} دقیقه · ${esc(d.age)}`)}
-        ${row(1, 'تصویرها', `${d.poster ? 'پوستر گذاشته شد' : 'پوستر موقت (از اسم و رنگ)'} · ${d.banner ? 'بنر دسکتاپ' : 'بدون بنر دسکتاپ'} · ${d.bannerM ? 'بنر موبایل' : 'بدون بنر موبایل'}`)}
+        ${row(1, 'تصویرها', `${d.poster ? 'پوستر گذاشته شد' : 'پوستر موقت (از اسم و رنگ)'}${this.adm ? ` · ${d.banner ? 'بنر دسکتاپ' : 'بدون بنر دسکتاپ'} · ${d.bannerM ? 'بنر موبایل' : 'بدون بنر موبایل'}` : d.heroAsk ? ' · می‌خواد تو بنر صفحه‌ی اول باشه' : ''}`)}
         ${row(2, 'سالن', h ? `${esc(h.name)} · ${esc(h.city)}${hall0.lay.length > 1 ? ` · ${esc(layName(hall0, d.hallLay | 0))}` : ''} · ${money(h.cap)} صندلی` : '<b class="neg">انتخاب نشده</b>')}
         ${row(3, 'سانس‌ها', n ? `${fa(n)} سانس، از ${esc(dayOf(atOf(d.days[0], d.times[0])))} تا ${esc(dayOf(atOf(d.days[d.days.length - 1], d.times[0])))} · ساعت ${d.times.map(fa).join('، ')}${d.sale === 'at' && d.saleAt ? ` · شروع فروش ${esc(dayOf(Date.parse(d.saleAt)))} ${esc(F.time.format(new Date(d.saleAt)))}` : ' · فروش بلافاصله بعد از تأیید'}` : '<b class="neg">هنوز سانسی نیست</b>')}
         ${row(4, 'قیمت‌ها', h ? tiersUsed(h.plan).map((t) => `<span class="wz-pt" style="--c:${TIER[t].c}"><i></i>${d.prices[t] ? money(d.prices[t]) : '—'}</span>`).join('') + (d.weekend ? ' · آخر هفته ۱۰٪ بیشتر' : '') + (() => { const v = Object.values(d.seatTier || {}), nV = v.filter((x) => x === 'V').length, nX = v.filter((x) => x === 'X').length; return nV || nX ? ` · ${fa(nV)} صندلی ویژه${d.prices.V ? ` (${money(d.prices.V)})` : ''}، ${fa(nX)} فروشی نیست` : ''; })() : '—')}
@@ -10286,6 +10988,8 @@ const codeUsed = (code, info = {}) => {
   if (store.sget('blit.pendingCode', null) === code) store.sset('blit.pendingCode', null);
 };
 const daysLeft = (t) => { const d = Math.ceil((t - Date.now()) / DAY); return d > 0 ? `${fa(d)} روز مونده` : 'تموم شده'; };
+// the codes of the organiser whose panel is open (the checkout still takes every code: syncCodes)
+const ownCodes = () => { const me = dsess.orgId(); return codeList().filter((c) => (c.org || 'org1') === me); };
 const copyText = async (t, msg) => {
   try { await navigator.clipboard.writeText(t); toast(msg || 'کپی شد.'); } catch (err) {
     const a = document.createElement('textarea'); a.value = t; a.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(a); a.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) { /* nothing */ } a.remove();
@@ -10301,7 +11005,7 @@ const codes = {
   // the organiser's page: the numbers, the codes as coupons (filter, search, edit, share, print), and the form for a new one
   render(el) {
     const shows = orgShows().filter((e) => !e.draft), pre = store.sget('blit.codeFor', null); store.sset('blit.codeFor', null);
-    const l0 = codeList(), on = l0.filter((c) => codeState(c)[1] === 'good');
+    const l0 = ownCodes(), on = l0.filter((c) => codeState(c)[1] === 'good');
     const near = on.filter((c) => c.used >= c.limit * 0.8), soon = on.filter((c) => c.until - Date.now() < 3 * DAY);
     el.innerHTML = `${desk.head('کدهای تخفیف', 'برای یه برنامه یا همه، درصدی یا مبلغی، با سقف استفاده، حداقل خرید و مهلت. هر کد، پیام تبلیغاتی و کارت چاپی آماده داره.')}
       <section class="dk-tiles" aria-label="عددهای کدها">${desk.tile('کدهای فعال', fa(on.length), null, null, true, `از ${fa(l0.length)} کد`)}${desk.tile('بار استفاده', money(l0.reduce((a, c) => a + c.used, 0)), null, null, true, 'روی هم، همه‌ی کدها')}${desk.tile('نزدیک پر شدن', fa(near.length), null, null, true, 'بالای ۸۰٪ ظرفیت')}${desk.tile('در شرف تموم شدن', fa(soon.length), null, null, true, 'کمتر از ۳ روز مهلت')}</section>
@@ -10338,7 +11042,7 @@ const codes = {
         <div class="cpn-acts"><button type="button" class="chip" data-promo="${esc(c.code)}">${ico('share')}پیام تبلیغاتی</button><button type="button" class="chip" data-cards="${esc(c.code)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-edit="${esc(c.code)}">${ico('sliders')}ویرایش</button></div>${more(c)}</article>`;
     };
     const paint = (focusNew) => {
-      const l = codeList().filter((c) => (st.f === 'all' || codeState(c)[1] === st.f || (st.f === 'mute' && codeState(c)[1] === 'mute')) && (!st.q || c.code.includes(st.q)));
+      const l = ownCodes().filter((c) => (st.f === 'all' || codeState(c)[1] === st.f || (st.f === 'mute' && codeState(c)[1] === 'mute')) && (!st.q || c.code.includes(st.q)));
       $('#cpList', el).innerHTML = l.length ? l.map(card).join('') : `<p class="dk-empty cpn-empty">${st.q || st.f !== 'all' ? 'کدی با این فیلتر نیست.' : 'هنوز کدی نساختی؛ از فرم کنار شروع کن.'}</p>`;
       $('#cpCount', el).textContent = `${fa(l.length)} کد`;
       if (focusNew) { const n = $(`[data-c="${CSS.escape(focusNew)}"]`, el); if (n) { n.classList.add('is-new'); n.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' }); } }
@@ -10372,7 +11076,7 @@ const codes = {
       if (type === 'amt' && !(v >= 10000)) return bad('دست‌کم ۱۰ هزار تومان.');
       if (!(lim >= 1)) return bad('تعداد استفاده رو بنویس.');
       if (min && type === 'amt' && min <= v) return bad('حداقل خرید باید از مبلغ تخفیف بیشتر باشه.');
-      const l = codeList(); l.unshift({ code, eid: f.elements.eid.value || null, type, v, limit: lim, used: 0, until: Date.now() + (+f.elements.days.value) * DAY, at: Date.now(), ...(min ? { min } : {}), ...(cap ? { cap } : {}) }); store.set('blit.codes', l); syncCodes();
+      const l = codeList(); l.unshift({ code, org: dsess.orgId(), eid: f.elements.eid.value || null, type, v, limit: lim, used: 0, until: Date.now() + (+f.elements.days.value) * DAY, at: Date.now(), ...(min ? { min } : {}), ...(cap ? { cap } : {}) }); store.set('blit.codes', l); syncCodes();
       auditLog(`کد تخفیف ${code} ساخته شد`, ORG.name); toast(`کد ${code} ساخته شد و از همین حالا تو خرید کار می‌کنه.`);
       st.f = 'all'; st.q = ''; $$('[data-f]', el).forEach((x) => x.setAttribute('aria-checked', String(x.dataset.f === 'all'))); $('#cpQ', el).value = ''; paint(code);
       out.className = 'cpn-done is-ok'; out.innerHTML = `${ico('check')}<span>کد <b dir="ltr">${esc(code)}</b> ساخته شد.</span><button type="button" class="chip" data-p>${ico('share')}پیام تبلیغاتی</button><button type="button" class="chip" data-k>${ico('ticket')}کارت چاپی</button>`;
@@ -10670,21 +11374,24 @@ const refund = (codesToRefund, to, why) => {
 };
 
 const admin = {
-  title: 'پنل مدیر', av: 'م', who: 'مدیر سایت', role: 'مدیر کل · همه‌ی دسترسی‌ها',
+  title: 'پنل مدیر',
+  get av() { return (this.who || 'م').slice(0, 1); }, get who() { const x = dsess.acct(); return x && dsess.role() === 'admin' ? x.who : 'مدیر سایت'; }, get role() { return 'مدیر کل · همه‌ی دسترسی‌ها'; },
   tabs() {
     const q = drafts.all().filter((d) => d.status === 'review').length + this.others().length + changes.pending().length;
     return [
       { id: 'home', t: 'پیشخوان', icon: 'grid', render: this.home },
+      { id: 'orgs', t: 'تهیه‌کننده‌ها', icon: 'mask', render: (el) => orgDesk.render(el) },
       { id: 'shows', t: 'برنامه‌ها و تأیید', icon: 'ticket', n: q ? fa(q) : '', render: this.shows },
       { id: 'content', t: 'محتوای صفحه‌ی اصلی', icon: 'sliders', render: this.content },
       { id: 'orders', t: 'سفارش‌ها', icon: 'bag', render: this.orders },
+      { id: 'analytics', t: 'تحلیل و نمودارها', icon: 'award', render: (el) => ana.page(el, 'admin') },
       { id: 'team', t: 'کاربرها و نقش‌ها', icon: 'users', render: this.team },
       { id: 'cities', t: 'شهرها', icon: 'pin', render: (el) => adminGeo.cities(el) },
       { id: 'halls', t: 'سالن‌ها', icon: 'ruler', render: (el, v) => adminGeo.halls(el, v) },
       { id: 'site', t: 'دسته‌ها و تنظیمات', icon: 'grid', render: this.site },
       { id: 'new', t: 'برنامه‌ی تازه', icon: 'plus', parent: 'shows', render: (el, v) => wizard.render(el, v) },
       { id: 'review', t: 'بررسی کامل', icon: 'search', parent: 'shows', render: (el, v) => admin.review(el, v) },
-      { id: 'reports', t: 'گزارش‌ها', icon: 'award', render: this.reports },
+      { id: 'reports', t: 'گزارش سفارش‌ها', icon: 'award', parent: 'analytics', render: this.reports },
       { id: 'gifts', t: 'کیف پول و کد هدیه', icon: 'tag', render: this.gifts },
       { id: 'sms', t: 'پیامک‌ها', icon: 'bell', render: (el) => this.sms(el) },
       { id: 'log', t: 'تاریخچه‌ی تغییرات', icon: 'clock', render: this.log },
@@ -10720,7 +11427,7 @@ const admin = {
     const id = v.arg, d = drafts.get(id) || this.others().find((x) => x.id === id);
     if (!d) { el.innerHTML = `${desk.head('بررسی برنامه', 'این برنامه پیدا نشد؛ شاید قبلاً بررسی شده.', `<a class="chip" href="#/admin/shows">${ico('arrow-r')}برگشت به صف</a>`)}`; return; }
     const e = draftEvent(d), hall0 = d.hall && hallById(d.hall), h = hall0 ? hallInfo(hall0, d.hallLay | 0) : null, nights = d.days.flatMap((day) => d.times.map((hm) => atOf(day, hm))).sort((x, y) => x - y);
-    const tiers = h ? tiersOf(e) : [], art = artOf(e), org = d.org || ORG.name;
+    const tiers = h ? tiersOf(e) : [], art = artOf(e), org = draftOrg(d);
     const row = (k, val) => `<div><dt>${esc(k)}</dt><dd>${val}</dd></div>`;
     const pic = (kind, a, none) => { const z = SIZES_FIXED[kind], s = a && (a.fake || a.src || a.thumb); return `<figure class="rv-pic" data-kind="${kind}"><div class="rv-box" style="--frr:${z.r.toFixed(4)};${fitVars(a)}">${s ? `<img src="${esc(s)}" alt="${esc(z.name)}">` : `<span>${esc(none)}</span>`}</div><figcaption><b>${esc(z.name)}</b><small><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi>${a && a.w && a.h && !(a.stand || a.fake) ? ` · فایل ${fa(a.w)}×${fa(a.h)}` : ''}</small></figcaption></figure>`; };
     const sendTxt = d.sale === 'at' && d.saleAt ? `از ${esc(dayOf(Date.parse(d.saleAt)))}` : 'همین که تأیید شد';
@@ -10732,7 +11439,7 @@ const admin = {
       [nights.length > 0, `${fa(nights.length)} سانس`, 'سانسی نداره'],
       [nights.length > 0 && nights[0] > Date.now(), 'همه‌ی سانس‌ها بعد از امروزن', 'سانس گذشته داره'],
       [!!h && tiers.length > 0 && tiers.every((t) => t.price > 0), 'برای همه‌ی رده‌ها قیمت هست', 'قیمت بعضی رده‌ها نیست'],
-      [!!(d.banner || d.bannerM), 'بنر هم فرستاده (برای بالای صفحه‌ی اصلی)', 'بنر نفرستاده؛ جایی تو بالای صفحه‌ی اصلی نمی‌گیره'],
+      [true, d.by === 'admin' || d.banner || d.bannerM ? 'بنر صفحه‌ی اول گذاشته شده' : 'بنر صفحه‌ی اول با خودته (بعد از تأیید، از «محتوای صفحه‌ی اصلی»)', ''],
     ];
     const bad = checks.filter((c) => !c[0] && !/بنر|پوستر/.test(c[2])).length;
     el.innerHTML = `${desk.head(`بررسی «${esc(d.title)}»`, `فرستاده‌شده توسط ${esc(org)} · ${esc(ago(d.sent || d.at))}. همه‌ی چیزهایی که برگزارکننده وارد کرده این‌جاست؛ بعد از دیدنش تأیید کن یا با دلیل برگردون.`, `<a class="chip" href="#/admin/shows">${ico('arrow-r')}برگشت به صف</a>`)}
@@ -10748,8 +11455,9 @@ const admin = {
           <section class="panel dk-box evp-rise"><h2>${ico('tag')}قیمت‌ها<small>به تومان، بدون مالیات</small></h2>${tiers.length ? `<ul class="rv-prices">${tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(runName(t))}</span><b>${t.price > 0 ? money(t.price) : '—'}</b></li>`).join('')}</ul>` : '<p class="bk-lead">سالن انتخاب نشده؛ قیمتی نیست.</p>'}</section>
         </div>
         <aside class="rv-side">
-          <section class="panel dk-box evp-rise"><h2>${ico('upload')}تصویرها<small>تو کادر ثابت خودشون</small></h2><div class="rv-pics">${pic('poster', d.poster ? e.poster : art.a, 'پوستر موقت')}${pic('banner', e.banner, 'بنر دسکتاپ نفرستاده')}${pic('mobile', e.bannerM, 'بنر موبایل نفرستاده')}</div></section>
+          <section class="panel dk-box evp-rise"><h2>${ico('upload')}تصویرها<small>تو کادر ثابت خودشون</small></h2><div class="rv-pics">${pic('poster', d.poster ? e.poster : art.a, 'پوستر موقت')}${pic('banner', e.banner, 'بنر صفحه‌ی اول رو فقط مدیر می‌ذاره')}${pic('mobile', e.bannerM, 'بنر موبایل رو فقط مدیر می‌ذاره')}</div></section>
           <section class="panel dk-box evp-rise"><h2>${ico('ticket')}تو لیست این‌طوری دیده می‌شه</h2><div class="wz-card" id="rvCard"></div></section>
+          ${d.heroAsk ? `<section class="panel dk-box evp-rise"><h2>${ico('spark')}می‌خواد تو بنر صفحه‌ی اول باشه</h2><p class="bk-lead">${esc(org)} دوست داره این برنامه بالای صفحه‌ی اصلی بیاد. اگه موافقی، بعد از تأیید بنرش رو از «محتوای صفحه‌ی اصلی» بذار.</p></section>` : ''}
           <section class="panel dk-box evp-rise rv-act"><h2>${ico('check')}بررسی<small>${bad ? `${fa(bad)} مورد مهم` : 'همه‌چیز سر جاشه'}</small></h2><ul class="wz-check rv-checks">${checks.map(([ok, y, n]) => `<li class="${ok ? 'is-ok' : 'is-no'}">${ico(ok ? 'check' : 'info')}${esc(ok ? y : n)}</li>`).join('')}</ul>
             <div class="rv-btns"><button type="button" class="buy" id="rvYes"${h && nights.length ? '' : ' disabled'}>${ico('check')}تأیید و انتشار</button><button type="button" class="chip" id="rvNo">${ico('undo')}برگردوندن با دلیل</button></div></section>
         </aside>
@@ -10761,18 +11469,17 @@ const admin = {
   },
 
   home(el) {
-    const o = allOrders(), paid = o.filter((x) => x.st === 'paid'), byDay = Array.from({ length: 30 }, (_, k) => { const t0 = Date.now() - (29 - k) * DAY, d = TEHRAN_DAY.format(new Date(t0)); const l = paid.filter((x) => TEHRAN_DAY.format(new Date(x.at)) === d); return { v: l.reduce((a, x) => a + x.total, 0), n: l.length, x: dayOf(t0), tip: `${dayOf(t0)} · ${fa(l.length)} سفارش` }; });
+    const o = allOrders(), paid = o.filter((x) => x.st === 'paid'), AH = ana.agg(LIST()), byDay = Array.from({ length: 30 }, (_, k) => { const t0 = Date.now() - (29 - k) * DAY, i = ANA_N - 30 + k; return { v: AH.s[i], n: AH.o[i], x: dayOf(t0), tip: `${dayOf(t0)} · ${fa(AH.o[i])} سفارش` }; });
     const refd = o.filter((x) => x.st === 'refunded'), onSite = LIST().filter((e) => !['held', 'cancelled'].includes(statusOf(e).key));
-    const waitL = drafts.all().filter((d) => d.status === 'review').map((d) => ({ title: `${d.type} «${d.title}»`, org: ORG.name, sent: d.sent || d.at })).concat(this.others().map((x) => ({ title: `${x.type} «${x.title}»`, org: x.org, sent: x.sent })));
+    const waitL = drafts.all().filter((d) => d.status === 'review').map((d) => ({ title: `${d.type} «${d.title}»`, org: draftOrg(d), sent: d.sent || d.at })).concat(this.others().map((x) => ({ title: `${x.type} «${x.title}»`, org: x.org, sent: x.sent })));
     const today = byDay[29].v, yest = byDay[28].v, q = drafts.all().filter((d) => d.status === 'review').length + this.others().length, log = store.get('blit.audit', []);
     el.innerHTML = `${desk.head('پیشخوان مدیر', 'کل سایت، همین لحظه.', `<span class="ad-head-a"><a class="buy" href="#/admin/shows">${ico('ticket')}صف تأیید${q ? ` (${fa(q)})` : ''}</a><a class="chip" href="#/admin/new">${ico('plus')}برنامه‌ی تازه</a><a class="chip" href="#/admin/halls/new">${ico('plus')}سالن تازه</a><a class="chip" href="#/admin/cities">${ico('pin')}شهرها</a></span>`)}
       <section class="dk-tiles"><div class="panel dk-tile dk-hero evp-rise"><span>فروش امروز (تومان)</span><b>${money(today)}</b><em data-tone="${today >= yest ? 'good' : 'bad'}">دیروز ${short(yest)}</em>${viz.spark(byDay.slice(-12).map((d) => d.v))}</div>
-        ${desk.tile('سفارش‌های ۳۰ روز', money(paid.length), 0.09, byDay.slice(-12).map((d) => d.n))}${desk.tile('برگشت پول', money(refd.length), null, null, true, refd.length ? `${short(refd.reduce((s, x) => s + x.total, 0))} تومان برگشت داده شد` : 'هیچ پولی برنگشته')}${desk.tile('برنامه‌های روی سایت', money(onSite.length), null, null, true, `${fa(onSite.filter((e) => statusOf(e).key === 'normal').length)} در حال فروش · ${fa(onSite.filter((e) => statusOf(e).key === 'soon').length)} پیش‌فروش`)}</section>
-      <section class="panel dk-box evp-rise" aria-labelledby="adDayH"><h2 id="adDayH">${ico('award')}فروش ۳۰ روز گذشته<small>تومان، با مالیات</small></h2><div id="adDays"></div></section>
+        ${desk.tile('سفارش‌های ۳۰ روز', money(sumArr(byDay.map((d) => d.n))), (sumArr(byDay.slice(15).map((d) => d.n)) - sumArr(byDay.slice(0, 15).map((d) => d.n))) / Math.max(1, sumArr(byDay.slice(0, 15).map((d) => d.n))), byDay.slice(-12).map((d) => d.n))}${desk.tile('برگشت پول', money(refd.length), null, null, true, refd.length ? `${short(refd.reduce((s, x) => s + x.total, 0))} تومان برگشت داده شد` : 'هیچ پولی برنگشته')}${desk.tile('برنامه‌های روی سایت', money(onSite.length), null, null, true, `${fa(onSite.filter((e) => statusOf(e).key === 'normal').length)} در حال فروش · ${fa(onSite.filter((e) => statusOf(e).key === 'soon').length)} پیش‌فروش`)}</section>
+      <section class="panel dk-box evp-rise cct-box" aria-labelledby="adDayH"><h2 id="adDayH">${ico('award')}فروش ۳۰ روز گذشته<small>همه‌ی سایت · <a href="#/admin/analytics">تحلیل کامل</a></small></h2><div id="adDays"></div></section>
       <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}در انتظار تأیید<small>${fa(q)}</small></h2>${q ? `<ol class="ad-log">${waitL.slice(0, 4).map((x) => `<li><b>${esc(x.title)}</b><small>${esc(x.org)} · فرستاده‌شده ${esc(ago(x.sent))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/shows">${ico('arrow-l')}دیدن صف</a>` : '<p class="bk-lead">صف خالیه.</p>'}</section>
         <section class="panel dk-box evp-rise"><h2>${ico('clock')}آخرین تغییرها</h2><ol class="ad-log">${(log.length ? log : [{ at: Date.now() - 4 * HOUR, what: 'قیمت سانس‌های «شب جاز تهران» تأیید شد', who: 'نگار رضایی (اپراتور)' }]).slice(0, 5).map((x) => `<li><b>${esc(x.what)}</b><small>${esc(x.who)} · ${esc(ago(x.at))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/log">همه‌ی تاریخچه</a></section></div>`;
-    $('#adDays', el).innerHTML = viz.columns('adDaysC', byDay, { label: 'فروش هر روز در ۳۰ روز گذشته', xlab: 7, w: $('#adDays', el).clientWidth }) + viz.table(['روز', 'فروش (تومان)'], byDay.map((d) => [d.x, money(d.v)]));
-    viz.wire('adDaysC', byDay);
+    ana.mini($('#adDays', el), {});
   },
 
   // the queue (yes, or back with a reason) and the shows on the site (cancel: everyone's money back)
@@ -10781,11 +11488,11 @@ const admin = {
     const item = (x) => `<article class="panel dk-show ad-q evp-rise" data-id="${esc(x.id)}"><figure class="bk-poster${x.poster ? '' : ' is-none'}" style="--c:${(PALETTE[x.pal] || PALETTE.violet).accent}">${x.poster ? `<img src="${esc(x.poster)}" alt="">` : ''}</figure>
       <div class="dk-show-t"><b>${esc(x.title)}</b><small>${esc(x.org)} · ${esc(x.city)} · ${esc(x.venue)}</small><small>${fa(x.n)} سانس · از ${money(x.low)} تومان · فرستاده‌شده ${esc(ago(x.sent))}</small></div>
       <div class="dk-show-a"><a class="buy" href="#/admin/review/${esc(x.id)}">${ico('search')}باز کردن و بررسی</a></div></article>`;
-    const q = mine.map((d) => { const n = d.days.length * d.times.length, low = Math.min(...Object.values(d.prices).filter((v) => v > 0)); return { id: d.id, title: `${d.type} «${d.title}»`, org: ORG.name, city: d.city, venue: d.venue, n, low: Number.isFinite(low) ? low : 0, pal: d.pal, poster: d.poster, sent: d.sent || d.at }; }).concat(others.map((x) => ({ id: x.id, title: `${x.type} «${x.title}»`, org: x.org, city: x.city, venue: x.venue, n: x.n, low: x.low, pal: x.pal, poster: x.poster, sent: x.sent })));
+    const q = mine.map((d) => { const n = d.days.length * d.times.length, low = Math.min(...Object.values(d.prices).filter((v) => v > 0)); return { id: d.id, title: `${d.type} «${d.title}»`, org: draftOrg(d), city: d.city, venue: d.venue, n, low: Number.isFinite(low) ? low : 0, pal: d.pal, poster: d.poster, sent: d.sent || d.at }; }).concat(others.map((x) => ({ id: x.id, title: `${x.type} «${x.title}»`, org: x.org, city: x.city, venue: x.venue, n: x.n, low: x.low, pal: x.pal, poster: x.poster, sent: x.sent })));
     const live = LIST().filter((e) => !['held'].includes(statusOf(e).key)).slice(0, 40);
     el.innerHTML = `${desk.head('برنامه‌ها و تأیید', 'هیچ برنامه‌ای (و هیچ تغییری) از برگزارکننده‌ها بدون تأیید روی سایت نمی‌آد. با لغو یه برنامه، پول همه‌ی خریدارهاش برمی‌گرده. خودت هم می‌تونی برای هر سالنی تو هر شهری برنامه‌ی کنسرت یا تئاتر بسازی؛ همون لحظه روی سایته.', `<span class="ad-head-a"><a class="buy" href="#/admin/new">${ico('plus')}برنامه‌ی تازه</a></span>`)}
       <h2 class="dk-sub evp-rise">در انتظار تأیید <small>${fa(q.length)}</small></h2>${q.length ? `<div class="dk-shows">${q.map(item).join('')}</div>` : '<p class="bk-lead evp-rise">صف خالیه.</p>'}
-      ${changes.pending().length ? `<h2 class="dk-sub evp-rise">درخواست‌های تغییر <small>${fa(changes.pending().length)}</small></h2><div class="dk-shows">${changes.pending().map((c) => { const e = showById(c.eid); return `<article class="panel dk-show ad-q ad-ch evp-rise"><span class="sec-ic" aria-hidden="true">${ico(c.kind === 'cancel' ? 'x' : c.kind === 'prices' ? 'tag' : 'info')}</span><div class="dk-show-t"><b>${esc(changes.KIND[c.kind])} · ${esc(e ? e.title : c.eid)}</b><small>${esc(c.what)}</small><small>${esc(ORG.name)} · ${esc(ago(c.at))}${c.note ? ` · «${esc(c.note)}»` : ''}</small></div><div></div><div class="dk-show-a"><button type="button" class="buy" data-cyes="${esc(c.id)}">${ico('check')}تأیید</button><button type="button" class="chip" data-cno="${esc(c.id)}">${ico('undo')}رد</button></div></article>`; }).join('')}</div>` : ''}
+      ${changes.pending().length ? `<h2 class="dk-sub evp-rise">درخواست‌های تغییر <small>${fa(changes.pending().length)}</small></h2><div class="dk-shows">${changes.pending().map((c) => { const e = showById(c.eid); return `<article class="panel dk-show ad-q ad-ch evp-rise"><span class="sec-ic" aria-hidden="true">${ico(c.kind === 'cancel' ? 'x' : c.kind === 'prices' ? 'tag' : 'info')}</span><div class="dk-show-t"><b>${esc(changes.KIND[c.kind])} · ${esc(e ? e.title : c.eid)}</b><small>${esc(c.what)}</small><small>${esc(e ? (orgs.get(orgs.ownerOf(e)) || {}).name || 'خود سایت' : '—')} · ${esc(ago(c.at))}${c.note ? ` · «${esc(c.note)}»` : ''}</small></div><div></div><div class="dk-show-a"><button type="button" class="buy" data-cyes="${esc(c.id)}">${ico('check')}تأیید</button><button type="button" class="chip" data-cno="${esc(c.id)}">${ico('undo')}رد</button></div></article>`; }).join('')}</div>` : ''}
       <h2 class="dk-sub evp-rise">روی سایت <small>${fa(live.length)}</small></h2>
       <div class="panel dk-box evp-rise"><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>برنامه</th><th>شهر</th><th>وضعیت</th><th></th></tr></thead><tbody>${live.map((e) => { const s = statusOf(e); return `<tr><td><a href="#/e/${esc(encodeURIComponent(e.id))}">${esc(e.title)}</a></td><td>${esc(e.city)}</td><td><em class="st" data-tone="${esc(s.label ? s.tone : 'good')}">${esc(s.label || 'در حال فروش')}</em></td><td>${s.key === 'cancelled' ? '' : `<button type="button" class="chip" data-cancel="${esc(e.id)}">${ico('x')}لغو برنامه</button>`}</td></tr>`; }).join('')}</tbody></table></div></div>`;
     $$('[data-cyes]', el).forEach((b) => b.addEventListener('click', () => { changes.yes(b.dataset.cyes); toast('تأیید شد؛ تغییر همین الان روی سایته.'); this.shows(el); }));
@@ -11300,6 +12007,285 @@ const adminGeo = {
     const m = desk.modal('ad-no', `<h2>${ico('x')}حذف «${esc(h.name)}»</h2><p class="bk-lead">از کتابخانه برداشته می‌شه و برگزارکننده‌ها دیگه نمی‌تونن انتخابش کنن. ${h.custom ? 'این سالن رو خودت ساخته بودی و برنمی‌گرده.' : 'از «حذف‌شده‌ها» هر وقت خواستی برش می‌گردونی.'}</p><div class="evp-dlg-end"><button type="button" class="buy ad-danger" id="ahDy">${ico('x')}حذف</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'حذف سالن');
     $('#ahDy', m.box).addEventListener('click', () => { libSet.hallDel(h.id); auditLog(`سالن «${h.name}» حذف شد`); m.shut(); toast('سالن حذف شد.'); page.go('#/admin/halls'); });
   },
+};
+/* ════════════════════════════════════════════════════════════════
+   round V: the numbers of the desks. One sample model gives every show its sale day by day (tickets, orders, money), shaped like
+   a real one (a burst at the launch, a quiet middle, a rush before the first night, busier Thursdays and Fridays) and adding up to what
+   the seat maps already show as sold; everything on a desk is a sum of these. The organiser's scope is their own shows; the admin's is the
+   whole site, one organiser, or one show. Charts: the cell-column trend (columns made of cells, KPI tabs that flip the board), a line chart
+   of this period against the last, a weekday × hour heat map, the funnel, ranked bars. (Sample data: the real ones come from the server.)
+   ════════════════════════════════════════════════════════════════ */
+const ANA_N = 400;   // days of history
+const anDay = (t) => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
+const WD_FA = ['شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
+const wdIdx = (t) => (new Date(t).getDay() + 1) % 7;   // Saturday is 0
+const WD_K = [0.95, 0.88, 0.9, 0.96, 1.06, 1.36, 1.26];
+const HR_BASE = [0.35, 0.12, 0.05, 0.08, 0.25, 0.7, 1.1, 1.3, 1.4, 1.6, 2.3, 2.0];   // two-hour parts from midnight
+const HR_KIND = { concert: [0, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.2, 0.3, 0.3], theatre: [0, 0, 0, 0, 0.05, 0.2, 0.3, 0.3, 0.2, 0.1, 0, 0], comedy: [0.2, 0.1, 0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.4, 0.5] };
+const hrLabel = (i) => `${fa(String(i * 2).padStart(2, '0'))}–${fa(String(i * 2 + 2).padStart(2, '0'))}`;
+const niceMax = (max) => { if (!(max > 0)) return 1; const p = Math.pow(10, Math.floor(Math.log10(max))); for (const m of [1, 1.2, 1.6, 2, 2.4, 3, 4, 5, 6, 8, 10]) if (m * p >= max) return m * p; return 10 * p; };
+const sumArr = (a) => a.reduce((x, y) => x + y, 0);
+const dlt = (cur, prev) => (prev > 0 ? (cur - prev) / prev : null);
+const sgn = (d) => (d == null ? '—' : `${d > 0 ? '+' : d < 0 ? '−' : ''}${fa(Math.abs(d * 100).toFixed(1)).replace('.', '٫')}٪`);
+
+
+// one whole in parts, shown as percentages (the segmented bar of viz.parts with a legend that says the share, not a sum of money)
+const partsPct = (parts) => {
+  const tot = parts.reduce((a, p) => a + p[1], 0) || 1;
+  return `<div class="vz-seg" role="img" aria-label="${esc(parts.map((p) => `${p[0]}: ${pct(p[1] / tot)}`).join('، '))}">${parts.map((p, i) => `<span style="--w:${(p[1] / tot).toFixed(4)};--c:var(--viz-${i + 1})" title="${esc(p[0])}: ${pct(p[1] / tot)}">${p[1] / tot > 0.09 ? pct(p[1] / tot) : ''}</span>`).join('')}</div><ul class="vz-leg">${parts.map((p, i) => `<li><i style="--c:var(--viz-${i + 1})"></i>${esc(p[0])}<b>${pct(p[1] / tot)}</b></li>`).join('')}</ul>`;
+};
+
+const ana = {
+  cache: new Map(),
+  st: null,
+  // one show: its sale by day (index 0 is ANA_N − 1 days ago, the last is today)
+  show(e) {
+    const key = `${e.id}:${e.ver || 0}`; if (this.cache.has(key)) return this.cache.get(key);
+    const R = rngOf(seedOf(`ana:${e.id}`)), n = new Array(ANA_N).fill(0), s = new Array(ANA_N).fill(0), o = new Array(ANA_N).fill(0);
+    const st = showStats(e), ses = sessionsOf(e).map((x) => x.t).sort((a, b) => a - b), today = anDay(Date.now());
+    const out = { e, n, s, o, tix: 0, sum: 0, cap: st.cap, kind: e.kind, city: e.city, views: 0 };
+    if (st.sold > 0 && ses.length && !(e.saleAt && Date.parse(e.saleAt) > Date.now())) {   // (a show whose sale has not opened has sold nothing)
+      const first = anDay(ses[0]), end = Math.min(today, anDay(ses[ses.length - 1]));
+      let start = e.saleAt ? anDay(Date.parse(e.saleAt)) : first - Math.round(35 + R() * 60) * DAY;
+      start = Math.min(start, end - (Math.ceil(st.sold / Math.max(20, st.cap * 0.05)) - 1) * DAY);   // (no day sells more than a twentieth of the hall)
+      const len = Math.max(1, Math.round((end - start) / DAY) + 1), w = [], ph = R() * 6;
+      let tw = 0;
+      for (let k = 0; k < len; k++) {
+        const t = start + k * DAY, left = Math.max(0, (first - t) / DAY);
+        const x = Math.max(0.02, (3.2 * Math.exp(-k / 3.5) + 2.2 * Math.exp(-left / 6) + 0.75 + 0.25 * Math.sin(k / 5 + ph)) * WD_K[wdIdx(t)] * (0.72 + R() * 0.56)); w.push(x); tw += x;
+      }
+      let used = 0; const raw = w.map((x) => (x / tw) * st.sold), fl = raw.map((x) => Math.floor(x)); used = sumArr(fl);
+      raw.map((x, i) => [x - fl[i], i]).sort((a, b) => b[0] - a[0]).slice(0, st.sold - used).forEach(([, i]) => { fl[i]++; });
+      const mon = fl.map((c) => c * (0.92 + R() * 0.16)), tm = sumArr(mon) || 1, per = 2.1 + R() * 0.7;
+      fl.forEach((c, k) => { const idx = ANA_N - 1 - Math.round((today - (start + k * DAY)) / DAY); if (idx < 0 || idx >= ANA_N) return; n[idx] = c; s[idx] = Math.round((mon[k] / tm) * st.gross / 1e4) * 1e4; o[idx] = c ? Math.max(1, Math.round(c / per)) : 0; });
+      out.tix = sumArr(n); out.sum = sumArr(s); out.views = Math.round(out.tix * (15 + R() * 12));
+    }
+    this.cache.set(key, out); return out;
+  },
+  // the shows of a scope: one show, one organiser's, or the whole site's
+  scope(sc) { return sc.show ? [showById(sc.show)].filter(Boolean) : sc.org ? orgs.shows(sc.org) : LIST(); },
+  agg(shows) {
+    const a = { n: new Array(ANA_N).fill(0), s: new Array(ANA_N).fill(0), o: new Array(ANA_N).fill(0), shows: [], tix: 0, sum: 0, ord: 0, views: 0 };
+    for (const e of shows) { const x = this.show(e); if (!x.tix) continue; a.shows.push(x); for (let i = 0; i < ANA_N; i++) { a.n[i] += x.n[i]; a.s[i] += x.s[i]; a.o[i] += x.o[i]; } a.views += x.views; }
+    a.tix = sumArr(a.n); a.sum = sumArr(a.s); a.ord = sumArr(a.o);
+    return a;
+  },
+  win(a, days, back = 0) { const to = ANA_N - back, from = to - days; if (from < 0) return null; return { n: a.n.slice(from, to), s: a.s.slice(from, to), o: a.o.slice(from, to), from, to, days }; },
+  // columns: a day each up to 31 days; weeks over that (the last week is the last 7 days)
+  buckets(w) {
+    const out = [], step = w.days <= 31 ? 1 : 7, now = Date.now();
+    const cnt = Math.ceil(w.days / step);
+    for (let c = 0; c < cnt; c++) {
+      const hi = w.days - (cnt - 1 - c) * step, lo = Math.max(0, hi - step), n = sumArr(w.n.slice(lo, hi)), s = sumArr(w.s.slice(lo, hi)), o = sumArr(w.o.slice(lo, hi));
+      const t1 = now - (w.days - hi) * DAY, t0 = t1 - (hi - lo - 1) * DAY;
+      out.push({ n, s, o, label: step === 1 ? dayOf(t1) : `${dayOf(t0)} تا ${dayOf(t1)}`, short: step === 1 ? dayOf(t1) : dayOf(t0) });
+    }
+    return out;
+  },
+  orgBrief(id) {
+    const sh = orgs.shows(id), a = this.agg(sh), w = this.win(a, 30), wait = drafts.all().filter((d) => d.status === 'review' && (d.by || 'org1') === id).length + admin.others().filter((x) => x.by === id).length;
+    return { shows: sh.length, wait, sales30: w ? sumArr(w.s) : 0, tix30: w ? sumArr(w.n) : 0 };
+  },
+  orgsTotal(days) { const a = this.agg(LIST().filter((e) => orgs.ownerOf(e))), w = this.win(a, days); return w ? sumArr(w.s) : 0; },
+  // the weekday × two-hour matrix of tickets for a set of shows
+  heat(a, w) {
+    const M = Array.from({ length: 7 }, () => new Array(12).fill(0));
+    for (const x of a.shows) {
+      const R = rngOf(seedOf(`heat:${x.e.id}`)), hk = HR_KIND[x.kind] || HR_KIND.concert, hw = HR_BASE.map((v, i) => v + hk[i]), th = sumArr(hw), tx = x.tix || 1;
+      const wk = new Array(7).fill(0); for (let i = 0; i < w.days; i++) wk[wdIdx(Date.now() - (w.days - 1 - i) * DAY)] += x.n[w.from + i];
+      for (let d = 0; d < 7; d++) for (let h = 0; h < 12; h++) M[d][h] += wk[d] * (hw[h] / th) * (0.82 + R() * 0.36);
+      void tx;
+    }
+    return M;
+  },
+};
+
+/* ───── the cell-column trend: a column per period, filled with cells up to its value; the KPI tiles are tabs that flip the board over in a diagonal wave ───── */
+const cellTrend = {
+  ico: ['M4 18l5-6 4 3 7-9', 'M6 20V10M12 20V4M18 20v-7', 'M5 7h14M5 12h14M5 17h9', 'M12 3v18M17 7H9.5a2.5 2.5 0 0 0 0 5h5a2.5 2.5 0 0 1 0 5H6'],
+  draw(host, cfg) {
+    const rows = cfg.rows || 12, M = cfg.metrics;
+    let k = Math.min(cfg.k || 0, M.length - 1), active = -1, flip = 0;
+    host.innerHTML = `<div class="cct" style="--n:${M.length};--k:${k}"><div class="cct-chart"><div class="cct-y" aria-hidden="true"></div><div class="cct-plot" tabindex="0" role="img"><div class="cct-cols"></div><span class="cct-line" aria-hidden="true"></span><div class="cct-tip" aria-live="polite"><div class="cct-tip-d"></div><div class="cct-tip-v"><i aria-hidden="true"></i><b></b></div></div></div><div class="cct-x" aria-hidden="true"></div></div>
+      <div class="cct-tabs" role="tablist" aria-label="${esc(cfg.tabsLabel || 'شاخص')}"><span class="cct-ind" aria-hidden="true"></span>${M.map((m, i) => `<button type="button" role="tab" class="cct-tab" data-k="${i}"><span class="cct-tl"><span class="cct-ic"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${this.ico[i % 4]}"/></svg></span>${esc(m.label)}</span><span class="cct-tv">${esc(m.summary)}</span><span class="cct-td">${m.delta == null ? '<span>—</span>' : `<span class="${(m.delta > 0) === (m.higherIsBetter !== false) ? 'cct-good' : 'cct-bad'}">${sgn(m.delta)}</span> نسبت به دوره‌ی قبل`}</span></button>`).join('')}</div></div>`;
+    const root = $('.cct', host), cols = $('.cct-cols', host), plot = $('.cct-plot', host), y = $('.cct-y', host), x = $('.cct-x', host), line = $('.cct-line', host), tip = $('.cct-tip', host);
+    const n = cfg.labels.length;
+    const paint = (animate) => {
+      const m = M[k], top = niceMax(Math.max(0, ...m.values)), lv = m.values.map((v) => (v <= 0 ? 0 : Math.min(rows, Math.max(1, Math.round((v / top) * rows)))));
+      root.style.setProperty('--k', k);
+      $$('.cct-tab', host).forEach((b, i) => { b.setAttribute('aria-selected', String(i === k)); b.tabIndex = i === k ? 0 : -1; });
+      y.innerHTML = [1, 0.75, 0.5, 0.25].map((f) => `<span style="top:${(1 - f) * 100}%">${esc(m.fmt(top * f))}</span>`).join('');
+      plot.setAttribute('aria-label', `${m.label}: ${cfg.labels.map((l, i) => `${l} ${m.fmt(m.values[i])}`).join('، ')}`);
+      const fl = flip++ % 2 ? 'cct-b' : 'cct-a';
+      cols.innerHTML = lv.map((level, c) => `<div class="cct-col" data-c="${c}">${Array.from({ length: rows }, (_, r) => `<span class="cct-cell${r < level ? ' cct-on' : ''}${r === level - 1 && level < rows ? ' cct-cap1' : ''}"${animate ? ` style="--c:${c};--r:${r};--flip:${fl}"` : ' style="animation:none"'}></span>`).join('')}</div>`).join('');
+      const ticks = cfg.ticks || [];
+      x.innerHTML = ticks.map((t, i) => `<span style="left:${((i + 0.5) / ticks.length) * 100}%">${esc(t)}</span>`).join('') + '<span class="cct-pin"></span>';
+      show(-1);
+    };
+    const show = (c) => {
+      active = c; root.classList.toggle('cct-hot', c >= 0); $$('.cct-col', host).forEach((el, i) => el.classList.toggle('cct-act', i === c));
+      if (c < 0) return;
+      const m = M[k], pct = ((c + 0.5) / n) * 100, top = niceMax(Math.max(0, ...m.values)), frac = Math.min(1, m.values[c] / top);
+      line.style.left = `${pct}%`; tip.style.left = `${pct}%`; tip.style.top = `clamp(26px,${(1 - frac) * 100}%,calc(100% - 26px))`; tip.classList.toggle('cct-flipx', pct > 62);
+      $('.cct-tip-d', tip).textContent = cfg.labels[c]; $('.cct-tip-v b', tip).textContent = m.tip ? m.tip(m.values[c]) : m.fmt(m.values[c]);
+      const pin = $('.cct-pin', x); pin.style.left = `${pct}%`; pin.textContent = cfg.short ? cfg.short[c] : cfg.labels[c];
+    };
+    paint(true);
+    cols.addEventListener('pointerover', (ev) => { const c = ev.target.closest('.cct-col'); if (c) show(+c.dataset.c); });
+    cols.addEventListener('pointerdown', (ev) => { const c = ev.target.closest('.cct-col'); if (c) show(+c.dataset.c); });
+    plot.addEventListener('pointerleave', () => show(-1)); plot.addEventListener('blur', () => show(-1));
+    plot.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape') { show(-1); return; }
+      if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return; ev.preventDefault();
+      const st = ev.key === 'ArrowRight' ? 1 : -1; show(Math.min(n - 1, Math.max(0, active < 0 ? (st > 0 ? 0 : n - 1) : active + st)));
+    });
+    const tabs = $('.cct-tabs', host);
+    tabs.addEventListener('click', (ev) => { const b = ev.target.closest('.cct-tab'); if (!b || +b.dataset.k === k) return; k = +b.dataset.k; cfg.k = k; paint(true); });
+    tabs.addEventListener('keydown', (ev) => { if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return; ev.preventDefault(); k = (k + (ev.key === 'ArrowRight' ? 1 : M.length - 1)) % M.length; cfg.k = k; paint(true); $$('.cct-tab', host)[k].focus(); });
+  },
+};
+
+/* ───── a line chart: smooth lines, a dotted area, the last point pulsing, a crosshair with a tooltip, a legend that switches a line on and off ───── */
+const lineChart = {
+  draw(host, cfg) {
+    const S = cfg.series, labels = cfg.labels, n = labels.length, off = new Set(), H = cfg.h || 220;
+    host.innerHTML = '<div class="lc"><svg class="lc-svg" role="img"></svg><div class="lc-tip" hidden></div></div><ul class="vz-leg lc-leg"></ul>';
+    const box = $('.lc', host), svg = $('svg', box), tip = $('.lc-tip', box), leg = $('.lc-leg', host);
+    let W = 0, act = null;
+    const uid = `lc${Math.random().toString(36).slice(2, 7)}`;
+    const draw = (anim) => {
+      W = Math.max(280, box.clientWidth); const padL = 46, padR = 10, padT = 10, padB = 26, pw = W - padL - padR, ph = H - padT - padB;
+      const live = S.filter((s) => !off.has(s.key)), mx = niceMax(Math.max(1, ...live.flatMap((s) => s.values))), xs = (i) => padL + (n <= 1 ? pw / 2 : (i / (n - 1)) * pw), ys = (v) => padT + (1 - v / mx) * ph;
+      const path = (vals) => { const p = vals.map((v, i) => [xs(i), ys(v)]); if (p.length < 2) return p.length ? `M${p[0][0]},${p[0][1]}` : ''; let d = `M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`; for (let i = 0; i < p.length - 1; i++) { const a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c, t = 0.18; d += `C${(b[0] + (c[0] - a[0]) * t).toFixed(1)},${(b[1] + (c[1] - a[1]) * t).toFixed(1)} ${(c[0] - (e[0] - b[0]) * t).toFixed(1)},${(c[1] - (e[1] - b[1]) * t).toFixed(1)} ${c[0].toFixed(1)},${c[1].toFixed(1)}`; } return d; };
+      const grid = [0, 0.25, 0.5, 0.75, 1].map((f) => `<line x1="${padL}" x2="${W - padR}" y1="${ys(mx * f).toFixed(1)}" y2="${ys(mx * f).toFixed(1)}" class="lc-g"/><text x="${padL - 8}" y="${(ys(mx * f) + 4).toFixed(1)}" text-anchor="end" class="lc-t">${esc(cfg.tick(mx * f))}</text>`).join('');
+      const every = Math.max(1, Math.ceil(n / Math.max(2, Math.floor(pw / 74)))), xl = labels.map((l, i) => ((i % every === 0 && (n - 1 - i >= every * 0.7 || i === n - 1)) || i === n - 1 ? `<text x="${xs(i).toFixed(1)}" y="${H - 6}" text-anchor="middle" class="lc-t">${esc(cfg.short ? cfg.short[i] : l)}</text>` : '')).join('');
+      const defs = S.map((s, i) => `<pattern id="${uid}p${i}" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="1.25" cy="1.25" r="1.05" fill="${s.color}"/><circle cx="3.75" cy="3.75" r="1.05" fill="${s.color}"/></pattern>`).join('') + `<clipPath id="${uid}c"><rect class="lc-rv" x="0" y="-20" width="${anim && MOTK() ? 0 : W + 20}" height="${H + 40}"/></clipPath>`;
+      const base = ys(0), body = S.map((s, i) => { if (off.has(s.key)) return ''; const d = path(s.values); return `${i === 0 && cfg.fill !== false ? `<path d="${d}L${xs(n - 1).toFixed(1)},${base}L${xs(0).toFixed(1)},${base}Z" fill="url(#${uid}p${i})" opacity=".5"/>` : ''}<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.dash ? 1.8 : 2.5}"${s.dash ? ' stroke-dasharray="5 5"' : ''} stroke-linecap="round" stroke-linejoin="round"/>`; }).join('');
+      const first = live[0], last = first ? `<g transform="translate(${xs(n - 1).toFixed(1)} ${ys(first.values[n - 1]).toFixed(1)})"><circle r="7" fill="${first.color}" class="lc-pulse"/><circle r="7.5" class="lc-dotbg"/><circle r="4.5" fill="${first.color}"/></g>` : '';
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('aria-label', cfg.label);
+      svg.innerHTML = `<defs>${defs}</defs>${grid}${xl}<g clip-path="url(#${uid}c)">${body}</g>${last}<g class="lc-cur" pointer-events="none" opacity="0"><line y1="${padT - 4}" y2="${H - padB}" class="lc-cross"/>${S.map((s, i) => `<circle r="5" fill="${s.color}" class="lc-pt" data-i="${i}"/>`).join('')}</g>`;
+      if (anim && MOTK()) { const r = $('.lc-rv', svg); r.getBoundingClientRect(); r.style.transition = 'width 1.1s cubic-bezier(.65,0,.35,1)'; requestAnimationFrame(() => { r.setAttribute('width', W + 20); }); }
+      svg._m = { xs, ys, padL, pw, padT, ph };
+    };
+    const at = (ev) => { const r = svg.getBoundingClientRect(), m = svg._m; if (!m) return; const i = Math.min(n - 1, Math.max(0, Math.round(((ev.clientX - r.left - m.padL) / m.pw) * (n - 1)))); move(i); };
+    const move = (i) => {
+      const m = svg._m, cur = $('.lc-cur', svg); if (!m) return; act = i; cur.setAttribute('opacity', '1');
+      $('.lc-cross', svg).setAttribute('x1', m.xs(i).toFixed(1)); $('.lc-cross', svg).setAttribute('x2', m.xs(i).toFixed(1));
+      let top = 1e9; $$('.lc-pt', svg).forEach((c) => { const s = S[+c.dataset.i]; if (off.has(s.key)) { c.setAttribute('opacity', '0'); return; } c.setAttribute('opacity', '1'); c.setAttribute('cx', m.xs(i).toFixed(1)); c.setAttribute('cy', m.ys(s.values[i]).toFixed(1)); top = Math.min(top, m.ys(s.values[i])); });
+      tip.hidden = false; tip.innerHTML = `<span class="lc-td">${esc(labels[i])}</span>${S.filter((s) => !off.has(s.key)).map((s) => `<span class="lc-tr"><i style="background:${s.color}"></i>${esc(s.label)}<b>${esc(cfg.fmt(s.values[i]))}</b></span>`).join('')}`;
+      const w = tip.offsetWidth; tip.style.left = `${clamp(m.xs(i) - (m.xs(i) > W * 0.6 ? w + 14 : -14), 4, W - w - 4)}px`; tip.style.top = `${clamp(top - 8, 4, H - 70)}px`;
+    };
+    const hide = () => { act = null; tip.hidden = true; const c = $('.lc-cur', svg); if (c) c.setAttribute('opacity', '0'); };
+    svg.addEventListener('pointermove', at); svg.addEventListener('pointerdown', at); svg.addEventListener('pointerleave', hide);
+    const legend = () => { leg.innerHTML = S.map((s) => `<li><button type="button" class="lc-lb" data-k="${esc(s.key)}" aria-pressed="${!off.has(s.key)}"><i style="--c:${s.color}"></i>${esc(s.label)}</button></li>`).join(''); };
+    leg.addEventListener('click', (ev) => { const b = ev.target.closest('[data-k]'); if (!b) return; if (off.has(b.dataset.k)) off.delete(b.dataset.k); else if (off.size < S.length - 1) off.add(b.dataset.k); legend(); draw(false); hide(); });
+    legend(); draw(true);
+    if ('ResizeObserver' in window) { let t = 0, w0 = box.clientWidth; const ro = new ResizeObserver(() => { if (!host.isConnected) { ro.disconnect(); return; } if (Math.abs(box.clientWidth - w0) < 4) return; w0 = box.clientWidth; clearTimeout(t); t = setTimeout(() => { draw(false); hide(); }, 120); }); ro.observe(box); }
+    void act;
+  },
+};
+
+
+// the numbers a trend board shows for a scope: the columns (days, or weeks over 31 days), the four KPIs with their change from the period before
+ana.kpis = function kpis_(A, days, cmp) {
+  const W = this.win(A, days), P = cmp ? this.win(A, days, days) : null;
+  if (!A.tix || !W || !sumArr(W.n)) return null;
+  const B = this.buckets(W), PB = P ? this.buckets(P) : null;
+  const T = (w) => (w ? { rev: sumArr(w.s), tix: sumArr(w.n), ord: sumArr(w.o), aov: sumArr(w.o) ? sumArr(w.s) / sumArr(w.o) : 0 } : null), c = T(W), p = T(P);
+  const mt = (key, label, vals, summary, cur, prev, fmt) => ({ key, label, values: vals, summary, delta: p && prev ? dlt(cur, prev) : null, fmt });
+  const metrics = [
+    mt('rev', 'فروش', B.map((b) => b.s), `${short(c.rev)}`, c.rev, p && p.rev, (v) => short(v)),
+    mt('tix', 'بلیت', B.map((b) => b.n), money(c.tix), c.tix, p && p.tix, (v) => money(Math.round(v))),
+    mt('ord', 'سفارش', B.map((b) => b.o), money(c.ord), c.ord, p && p.ord, (v) => money(Math.round(v))),
+    mt('aov', 'میانگین هر سفارش', B.map((b) => (b.o ? b.s / b.o : 0)), short(c.aov), c.aov, p && p.aov, (v) => short(v)),
+  ];
+  const nt = Math.min(6, B.length), ticks = Array.from({ length: nt }, (_, i) => B[Math.round((i * (B.length - 1)) / Math.max(1, nt - 1))].short);
+  return { W, P, B, PB, c, p, metrics, ticks };
+};
+// a board on its own (the dashboards): a scope, the last days
+ana.mini = function mini_(host, sc, days = 30) {
+  const A = this.agg(this.scope(sc)), K = this.kpis(A, days, true);
+  if (!K) { host.innerHTML = '<p class="bk-lead an-none">هنوز فروشی ثبت نشده؛ اولین بلیت که فروش بره، این‌جا پیداش می‌کنی.</p>'; return; }
+  cellTrend.draw(host, { metrics: K.metrics, labels: K.B.map((b) => b.label), short: K.B.map((b) => b.short), ticks: K.ticks, k: 0 });
+};
+
+/* ───── the analytics page of both desks (#/admin/analytics, #/org/analytics) ───── */
+ana.page = function page_(el, role) {
+  const adm = role === 'admin', me = adm ? '' : dsess.orgId(), st = this.st || (this.st = { days: 30, org: '', show: '', cmp: true });
+  if (!adm) st.org = me;
+  const RANGES = [[7, '۷ روز'], [30, '۳۰ روز'], [90, '۹۰ روز'], [365, 'یک سال']];
+  const scopeShows = () => this.scope({ org: st.org }).filter((e) => this.show(e).tix > 0);
+  if (st.show && !scopeShows().some((e) => e.id === st.show)) st.show = '';
+  el.innerHTML = `${desk.head('تحلیل و نمودارها', adm ? 'فروش کل سایت، یا یه تهیه‌کننده، یا یه برنامه؛ با مقایسه‌ی دوره‌ی قبل. اولین چیزی که باید ببینی کجا افت کرده یا کجا داره رشد می‌کنه.' : 'فروش برنامه‌های خودت: کی می‌خرن، کدوم برنامه می‌فروشه، کجا مشتری از دستت می‌ره و کدوم سانس به توجه نیاز داره.', `<span class="ad-head-a"><button type="button" class="chip" id="anCsv">${ico('arrow-ul')}فایل اکسل (CSV)</button>${adm ? `<a class="chip" href="#/admin/reports">${ico('bag')}گزارش سفارش‌ها</a>` : ''}</span>`)}
+    <div class="dk-filters an-f evp-rise"><div class="bk-seg" role="radiogroup" aria-label="بازه">${RANGES.map(([d, t]) => `<button type="button" role="radio" data-d="${d}" aria-checked="${st.days === d}">${t}</button>`).join('')}</div>
+      ${adm ? `<label class="bk-fld"><span>تهیه‌کننده</span><select id="anOrg"><option value="">همه‌ی سایت</option>${orgs.all().map((o) => `<option value="${esc(o.id)}"${o.id === st.org ? ' selected' : ''}>${esc(o.name)}</option>`).join('')}</select></label>` : ''}
+      <label class="bk-fld"><span>برنامه</span><select id="anShow"></select></label>
+      <label class="an-cmp"><input type="checkbox" id="anCmp"${st.cmp ? ' checked' : ''}><span>مقایسه با دوره‌ی قبل</span></label></div>
+    <div id="anBody" class="dk-stack"></div>`;
+  let rows = [];
+  const paint = () => {
+    const sel = $('#anShow', el), list = scopeShows(); sel.innerHTML = `<option value="">همه‌ی برنامه‌ها (${fa(list.length)})</option>${list.map((e) => `<option value="${esc(e.id)}"${e.id === st.show ? ' selected' : ''}>${esc(e.title)}</option>`).join('')}`;
+    const A = this.agg(this.scope({ org: st.org, show: st.show })), W = this.win(A, st.days), P = st.cmp ? this.win(A, st.days, st.days) : null, body = $('#anBody', el);
+    if (!A.tix || !W || !sumArr(W.n)) { body.innerHTML = `<section class="panel dk-box evp-rise an-empty"><h2>${ico('info')}هنوز عددی نیست</h2><p class="bk-lead">${A.tix ? 'تو این بازه فروشی نبوده؛ بازه‌ی بلندتر رو امتحان کن.' : adm ? 'برای این انتخاب هنوز بلیتی فروخته نشده.' : 'تا یکی از برنامه‌هات روی سایت بیاد و بلیت بفروشه، عددها این‌جا پیدا می‌شن.'}</p>${adm ? '' : `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`}</section>`; rows = []; return; }
+    const K = this.kpis(A, st.days, st.cmp), { B, PB, c, p, metrics, ticks } = K;
+    // the money, the people, the places
+    const byShow = A.shows.map((x) => { const w = this.win({ n: x.n, s: x.s, o: x.o }, st.days); return { x, e: x.e, rev: sumArr(w.s), tix: sumArr(w.n), fill: x.cap ? Math.min(1, x.tix / x.cap) : 0 }; }).filter((r) => r.tix > 0).sort((a, b) => b.rev - a.rev);
+    const by = (k, fn) => Object.entries(byShow.reduce((a, r) => { const key = fn(r); a[key] = (a[key] || 0) + r.rev; return a; }, {})).map(([t, v]) => ({ t, v })).sort((a, b) => b.v - a.v);
+    const heat = this.heat({ shows: byShow.map((r) => r.x) }, W), flat = heat.flat(), hmax = Math.max(1, ...flat), hsum = sumArr(flat) || 1;
+    const wdSum = heat.map(sumArr), hrSum = Array.from({ length: 12 }, (_, h) => sumArr(heat.map((r) => r[h]))), bestD = wdSum.indexOf(Math.max(...wdSum)), bestH = hrSum.indexOf(Math.max(...hrSum)), avgD = hsum / 7;
+    const views = Math.round(sumArr(byShow.map((r) => r.x.views * (r.tix / Math.max(1, r.x.tix))))), pick = Math.round(views * 0.36), seats = Math.round(pick * 0.55), payf = Math.round(seats * 0.62), done = c.ord;
+    const fn = [['دیدن صفحه‌ی برنامه', Math.max(views, pick + 1)], ['انتخاب سانس', pick], ['انتخاب صندلی', Math.max(seats, payf)], ['رسیدن به پرداخت', Math.max(payf, done)], ['خرید موفق', done]];
+    const leak = fn.slice(1).map((q, i) => [i, 1 - q[1] / Math.max(1, fn[i][1])]).sort((a, b) => b[1] - a[1])[0];
+    const refR = 0.034 + (seedOf(`ref:${st.org}${st.show}`) % 30) / 1000, mob = 0.64 + (seedOf(`mob:${st.org}${st.show}`) % 14) / 100;
+    const ins = [];
+    ins.push(p ? `فروش این ${W.days === 365 ? 'سال' : `${fa(W.days)} روز`} ${c.rev >= p.rev ? 'از دوره‌ی قبل' : 'از دوره‌ی قبل'} ${fa(Math.abs((dlt(c.rev, p.rev) || 0) * 100).toFixed(0))}٪ ${c.rev >= p.rev ? 'بیشتره' : 'کمتره'}${c.rev < p.rev ? '؛ بهتره ببینی کدوم برنامه یا روز افت کرده.' : '.'}` : `تو این بازه ${short(c.rev)} تومان بلیت فروخته شده.`);
+    ins.push(`${WD_FA[bestD]}‌ها پرفروش‌ترین روزن (${fa(Math.round((wdSum[bestD] / avgD - 1) * 100))}٪ بالاتر از میانگین روزها)؛ بیشترین خرید ساعت ${hrLabel(bestH)} اتفاق می‌افته. پیام و تبلیغ رو همون موقع بفرست.`);
+    if (byShow.length > 1) ins.push(`«${byShow[0].e.title}» ${fa(Math.round((byShow[0].rev / Math.max(1, c.rev)) * 100))}٪ فروش این بازه رو ساخته.`);
+    ins.push(`بیشترین ریزش مشتری بین «${leak ? fn[leak[0]][0] : ''}» و «${leak ? fn[leak[0] + 1][0] : ''}»ـه (${fa(Math.round((leak ? leak[1] : 0) * 100))}٪ می‌رن)؛ ${leak && leak[0] >= 2 ? 'پرداخت رو ساده‌تر کن یا مهلت نگه‌داری صندلی رو یادآوری کن.' : 'صفحه‌ی برنامه و عکس‌ها رو قوی‌تر کن.'}`);
+    if (refR > 0.06) ins.push(`برگشت پول ${fa((refR * 100).toFixed(1)).replace('.', '٫')}٪ـه که بالاست؛ دلیل‌ها رو تو سفارش‌ها نگاه کن.`);
+    // organiser: the sessions that need attention; admin: the organisers' table
+    let extra = '';
+    if (!adm) {
+      const soon = [];
+      for (const r of byShow) for (const s of sessionsOf(r.e)) { if (s.t < Date.now() || s.t > Date.now() + 14 * DAY) continue; const x = sesStats(r.e, s), f = x.cap ? x.sold / x.cap : 0; if (f < 0.5) soon.push({ e: r.e, s, f, x }); }
+      soon.sort((a, b) => a.s.t - b.s.t);
+      extra = `<section class="panel dk-box evp-rise an-attn"><h2>${ico('bell')}سانس‌هایی که به توجه نیاز دارن<small>تا ۱۴ روز آینده، کمتر از نیمه پُرن</small></h2>${soon.length ? `<ul class="an-att">${soon.slice(0, 6).map((q) => { const w = whenOf(q.s); return `<li><span><b>${esc(q.e.title)}</b><small>${esc(w.wd)} ${esc(w.dm)} · ${esc(w.tm)}</small></span><span class="dk-meter" style="--p:${q.f.toFixed(3)}"><i></i></span><b>${pct(q.f)}</b><a class="chip" href="#/org/codes" data-code="${esc(q.e.id)}">${ico('tag')}کد تخفیف</a></li>`; }).join('')}</ul>` : '<p class="bk-lead">همه‌ی سانس‌های دو هفته‌ی آینده بالای نیمه پُرن.</p>'}</section>`;
+    } else if (!st.org && !st.show) {
+      const rowsO = orgs.all().map((o) => { const a2 = this.agg(orgs.shows(o.id)), w2 = this.win(a2, st.days), pw2 = P ? this.win(a2, st.days, st.days) : null; return { o, rev: w2 ? sumArr(w2.s) : 0, tix: w2 ? sumArr(w2.n) : 0, d: pw2 && sumArr(pw2.s) ? dlt(sumArr(w2.s), sumArr(pw2.s)) : null, shows: a2.shows.length, vals: w2 ? this.buckets(w2).map((b) => b.s) : [] }; }).filter((r) => r.rev > 0).sort((a, b) => b.rev - a.rev);
+      const siteOwn = LIST().filter((e) => !orgs.ownerOf(e)), a3 = this.agg(siteOwn), w3 = this.win(a3, st.days), own = w3 ? sumArr(w3.s) : 0, tot = rowsO.reduce((s, r) => s + r.rev, 0) + own;
+      const fee = Math.round((rowsO.reduce((s, r) => s + r.rev, 0)) * FEE), vat = Math.round(c.rev * 0.1);
+      extra = `<div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('mask')}تهیه‌کننده‌ها<small>فروش این بازه</small></h2><div class="dk-tbl-w"><table class="dk-tbl dk-num"><thead><tr><th>تهیه‌کننده</th><th>برنامه</th><th>بلیت</th><th>فروش (تومان)</th><th>سهم</th><th>تغییر</th></tr></thead><tbody>${rowsO.map((r) => `<tr><td><a href="#/admin/orgs">${esc(r.o.name)}</a></td><td>${fa(r.shows)}</td><td>${money(r.tix)}</td><td>${money(r.rev)}</td><td><span class="dk-meter" style="--p:${(r.rev / Math.max(1, tot)).toFixed(3)}"><i></i></span><small>${pct(r.rev / Math.max(1, tot))}</small></td><td>${r.d == null ? '—' : `<em class="st" data-tone="${r.d >= 0 ? 'good' : 'bad'}">${esc(sgn(r.d))}</em>`}</td></tr>`).join('')}${own ? `<tr><td>برنامه‌های خود سایت</td><td>${fa(a3.shows.length)}</td><td>${money(sumArr(w3.n))}</td><td>${money(own)}</td><td><span class="dk-meter" style="--p:${(own / Math.max(1, tot)).toFixed(3)}"><i></i></span><small>${pct(own / Math.max(1, tot))}</small></td><td>—</td></tr>` : ''}</tbody></table></div></section>
+        <section class="panel dk-box evp-rise"><h2>${ico('bag')}درآمد سایت<small>از این فروش، تومان</small></h2><ul class="an-site"><li><span>کارمزد بلیت (۸٪) از تهیه‌کننده‌ها</span><b>${money(fee)}</b></li><li><span>مالیات بر ارزش افزوده‌ی جمع‌شده (۱۰٪)</span><b>${money(vat)}</b></li>${own ? `<li><span>فروش برنامه‌های خود سایت</span><b>${money(own)}</b></li>` : ''}<li><span>برگشت پول (حدود ${fa((refR * 100).toFixed(1)).replace('.', '٫')}٪ سفارش‌ها)</span><b>${money(Math.round(c.rev * refR))}</b></li></ul></section></div>
+        ${rowsO.length > 1 ? `<section class="panel dk-box evp-rise"><h2>${ico('award')}مقایسه‌ی تهیه‌کننده‌ها<small>فروش هر ${W.days <= 31 ? 'روز' : 'هفته'} · تومان</small></h2><div id="anCmpLine"></div></section>` : ''}`;
+      extra += '';
+      body._orgs = rowsO;
+    }
+    body.innerHTML = `<section class="panel dk-box evp-rise cct-box"><h2>${ico('award')}روند فروش<small>${esc(st.show ? (showById(st.show) || {}).title : st.org ? (orgs.get(st.org) || {}).name : 'کل سایت')} · ${W.days === 365 ? 'یک سال' : `${fa(W.days)} روز`} گذشته</small></h2><div id="anCct"></div></section>
+      <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('clock')}این دوره در برابر دوره‌ی قبل<small>فروش · تومان</small></h2><div id="anLine"></div></section>
+        <section class="panel dk-box evp-rise an-ins"><h2>${ico('spark')}چی می‌بینیم<small>خودکار از همین عددها</small></h2><ul class="an-i">${ins.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></section></div>
+      ${extra}
+      <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('calendar')}چه روزی و چه ساعتی می‌خرن<small>تعداد بلیت</small></h2><div class="hm" role="img" aria-label="بیشترین خرید ${WD_FA[bestD]}‌ها ساعت ${hrLabel(bestH)}"><div class="hm-g">${heat.map((r, d) => `<b class="hm-r">${WD_FA[d]}</b>${r.map((v, h) => `<i class="hm-c" style="--v:${(v / hmax).toFixed(3)}" title="${WD_FA[d]} ${hrLabel(h)}: ${money(Math.round(v))} بلیت"></i>`).join('')}`).join('')}<span></span>${Array.from({ length: 12 }, (_, h) => `<em class="hm-h">${fa(h * 2)}</em>`).join('')}</div><div class="hm-k"><span>کم</span><i></i><span>زیاد</span></div></div></section>
+        <section class="panel dk-box evp-rise"><h2>${ico('route')}مشتری کجا می‌ریزه<small>از دیدن تا خرید</small></h2><ol class="fn">${fn.map((q, i) => `<li><span>${esc(q[0])}</span><i style="--p:${(q[1] / fn[0][1]).toFixed(4)}"></i><b>${money(q[1])}</b><small>${i ? `${pct(q[1] / Math.max(1, fn[i - 1][1]))} از مرحله‌ی قبل` : 'شروع'}</small></li>`).join('')}</ol><p class="bk-note">${ico('info')}نرخ تبدیل کل: ${fa((done / Math.max(1, views) * 100).toFixed(1)).replace('.', '٫')}٪ · ${pct(mob)} از خریدها با موبایله.</p></section></div>
+      <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}برنامه‌ها<small>فروش این بازه · تومان</small></h2>${viz.ranked(byShow.slice(0, 8).map((r) => ({ t: r.e.title, v: r.rev })), short)}${byShow.length > 8 ? `<p class="bk-note">${ico('info')}${fa(byShow.length - 8)} برنامه‌ی دیگه هم هست؛ همه‌شون تو فایل اکسل‌ان.</p>` : ''}</section>
+        <div class="dk-stack"><section class="panel dk-box evp-rise"><h2>${ico('pin')}شهرها</h2>${viz.ranked(by('city', (r) => r.e.city || '—').slice(0, 6), short)}</section>
+          <section class="panel dk-box evp-rise"><h2>${ico('grid')}نوع برنامه</h2>${viz.ranked(by('kind', (r) => KIND_T[r.e.kind] || r.e.kind), short)}</section></div></div>
+      <section class="panel dk-box evp-rise"><h2>${ico('users')}خریدها از کجا میان<small>سهم از سفارش‌ها</small></h2>${partsPct([['موبایل', mob], ['دسکتاپ', (1 - mob) * 0.86], ['تبلت', (1 - mob) * 0.14]])}</section>`;
+    cellTrend.draw($('#anCct', el), { metrics, labels: B.map((b) => b.label), short: B.map((b) => b.short), ticks, k: this.ck || 0, tabsLabel: 'شاخص' });
+    $$('#anCct .cct-tab', el).forEach((b) => b.addEventListener('click', () => { this.ck = +b.dataset.k; }));
+    const cur = { key: 'cur', label: 'این دوره', color: 'var(--viz-1)', values: B.map((b) => b.s) };
+    const sr = [cur]; if (PB) sr.push({ key: 'prev', label: 'دوره‌ی قبل', color: 'var(--viz-2)', values: PB.map((b) => b.s), dash: true });
+    lineChart.draw($('#anLine', el), { series: sr, labels: B.map((b) => b.label), short: B.map((b) => b.short), fmt: (v) => `${money(Math.round(v))} تومان`, tick: (v) => short(v), label: 'فروش این دوره در برابر دوره‌ی قبل', h: 230 });
+    const ro = body._orgs;
+    if (ro && ro.length > 1 && $('#anCmpLine', el)) lineChart.draw($('#anCmpLine', el), { series: ro.slice(0, 4).map((r, i) => ({ key: r.o.id, label: r.o.name, color: `var(--viz-${i + 1})`, values: r.vals })), labels: B.map((b) => b.label), short: B.map((b) => b.short), fmt: (v) => `${money(Math.round(v))} تومان`, tick: (v) => short(v), label: 'فروش تهیه‌کننده‌ها', fill: false, h: 230 });
+    $$('[data-code]', el).forEach((a) => a.addEventListener('click', () => store.sset('blit.codeFor', a.dataset.code)));
+    rows = [['برنامه', 'شهر', 'نوع', 'بلیت', 'فروش (تومان)']].concat(byShow.map((r) => [r.e.title, r.e.city, KIND_T[r.e.kind] || r.e.kind, r.tix, r.rev])).concat([[], ['روز', 'بلیت', 'سفارش', 'فروش (تومان)']]).concat(Array.from({ length: W.days }, (_, i) => [dayOf(Date.now() - (W.days - 1 - i) * DAY), W.n[i], W.o[i], W.s[i]]));
+  };
+  $$('[data-d]', el).forEach((b) => b.addEventListener('click', () => { st.days = +b.dataset.d; $$('[data-d]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+  if (adm) $('#anOrg', el).addEventListener('change', (ev) => { st.org = ev.target.value; st.show = ''; paint(); });
+  $('#anShow', el).addEventListener('change', (ev) => { st.show = ev.target.value; paint(); });
+  $('#anCmp', el).addEventListener('change', (ev) => { st.cmp = ev.target.checked; paint(); });
+  $('#anCsv', el).addEventListener('click', () => { if (!rows.length) { toast('چیزی برای دانلود نیست.'); return; } csvDownload('blit-analytics.csv', rows); auditLog('خروجی تحلیل گرفته شد'); toast('فایل دانلود شد.'); });
+  paint();
 };
 
 /* ════════════════════════════════════════════════════════════════
@@ -12035,7 +13021,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, lab, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, lab, wallet, orgs, admins, dsess, deskAuth, selUI, orgDesk, ana, pw, sha256, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

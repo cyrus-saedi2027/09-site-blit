@@ -1277,9 +1277,46 @@ No new setting except two kept in the browser (`blit.deskUi`, `blit.siteUrl`); `
 - **The hero's panels are not the approved version's** in a window that is not 16 : 9 (the owner's request: the big banner takes the room the rail gave back); at 1920 × 1080 the rail is as it was.
 - **A real phone and a real printer were not used**: the PDF's size and the QR were read back by software; print a sheet on the real printer at «100 %» and scan a card with the owner's phone before a big run. A 15-mm QR scans on a phone; the print shop should not shrink it.
 - The six phone banners are still placeholders; three programs still have no poster (a drawn one stands in).
-- **The client's file does not remember the theme** (by design: white by default).
+- **The client's file does not remember the theme** (by design: dark by default since round V).
 - The rail is on the right by default (the owner asked for it after seeing it on the left, as in his picture); «side» moves it and the choice is kept.
 - The studio's «چاپ» opens a new window with the pages; a browser that blocks pop-ups needs the PDF button.
+
+## 10.16 Round V: dark by default, accounts for the desks, analytics for each role, dressed selects
+
+The owner's round-V message (seven points) and what was done:
+
+- **The few pixels round the desks' bezel are the bezel's own black** in both themes (`html.is-desk, body, .evp { background: #050506 }`); before, the white theme showed its light ground there. Nothing else changed.
+- **No scroll bar in a desk** (`html.is-desk *`: `scrollbar-width: none`, `::-webkit-scrollbar { display: none }`); the wheel, the touch and the keys still scroll. The rail's tabs now scroll *inside* the rail (the logo and the foot stay), so the foot's buttons (theme, names, side, way out, my account) are always in reach however many tabs there are.
+- **Dark is the default everywhere** (`LOOK_DEF.mode = 'dark'`). Saved settings from before this round (`rev` < 4) are reset once for the theme and for the locked layout (below); the sun/moon switch still changes it and the choice is kept. The client's file never saves the theme, so it always opens dark.
+- **The locked, fixed-size layout is the default** («قفل»: one banner shape in every window, `frame: 'lock'`, the fixed picture sizes) and the same reset (`rev` 4) takes a saved «free» layout, fit, fill, poster fit and ratios back to it; a developer or the admin can still change them in the editor.
+- **The jump beside the date.** Measured (`tools/v-dock-cells.js`): each show's dock has cells as wide as their words, so from one show to the next the date's tile moved 11–36 px, the dividers 34 px, the price 39 px and the buy button grew from 173 to 211 px (a «soon» show's countdown). `dockFix` (`app.js`) measures the widest tile, date cell, price cell and buy button over all the shows in a hidden dock of the same width and each dock gives its cell that width (CSS `--dkw-*`, desktop only); after the change all six shows have identical cell positions at 1366, 1536, 1920 and 2560. The swap of the words is shorter (the old ones leave in 0.2 s, the new ones come 0.1 s later, 9 px not 14) so the old and the new date are never both seen. The list's cards were tracked frame by frame (hover, scroll, the countdown's flip): no card moved.
+
+### Accounts for the desks (`deskauth.js`)
+
+- **The admin makes an organiser** (`#/admin/orgs`): name, person, mobile, e-mail, IBAN, a **user name** (suggested from the name) and a **password** (generated, editable), what they may do besides the basics, and which shows are theirs. The password is shown once (with a ready message to copy); it is kept only as a salted SHA-256 (a real site hashes slowly on a server). The same page: look at their panel as they see it (a strip says so and takes you back), a new password, close or open a panel, delete (their shows go back to the site), search and filter.
+- **Sign-in** at `#/org` and `#/admin` (a card with user name, password, the eye, «keep me here»; five wrong tries lock it for 30 s; the demo accounts are listed in a folded box until their password is changed: `admin / blit-admin`, `avaye-no / avaye-1404`, `sarv / sarv-1404`, `ayeneh / ayeneh-1404`). «حساب من» (the person at the foot of the rail) changes the password and signs out; the rail has a way-out button. An admin who opens `#/org` chooses whose panel to see. `?debug` opens the desks without a sign-in (the tests); `?debug&gate` keeps it.
+- **What an organiser has**: their dashboard, their shows, a new show (it goes to the admin before it is on the site) — always; analytics, money (sales and settlement), discount codes and the controllers only when the admin ticked them. Never: the first page's banner (the wizard has the poster only, with a tick «I would like to be in the first banner» that the admin sees in the review; the banners are the admin's, from «محتوای صفحه‌ی اصلی»), the site's settings, cities and halls, other organisers' shows, orders or numbers. Their codes, controllers and drafts are theirs only (`org` on each record); the entry control takes any organiser's controller code.
+- **Whose a show is** (`orgs.ownerOf`): what the admin gave (`blit.owners`), else the organiser who made it, else spread over the three first accounts.
+
+### Analytics (`analytics.js`)
+
+One sample model gives each show its sale day by day (a launch burst, a quiet middle, a rush before the first night, busier Thursdays and Fridays, nothing before the sale opens, no day over a twentieth of the hall) adding up to what the seat map already shows as sold; every number on a dashboard is a sum of these. Scope: an organiser's own shows; the admin's the whole site, one organiser or one show. The page (`#/admin/analytics`, `#/org/analytics`): ranges 7 / 30 / 90 days and a year with the period before (a switch), the **cell-column trend** (the owner's preferred chart: a column of cells per day or week, four KPI tabs — sales, tickets, orders, average order — that flip the board in a wave, a hairline and a tooltip, the arrow keys), a **line chart** of this period against the last (dotted area, the last point pulsing, a crosshair, a legend that switches a line off), **insights** written from the numbers, a **weekday × two-hour heat map**, the **funnel** from seeing a show to buying it (and where most leave), ranked shows, cities and kinds, devices and a CSV; the organiser also gets the sessions in the next 14 days that are under half full (with a button for a discount code); the admin also gets the organisers' table (sales, share, change), the site's own income (the 8 % fee, the VAT, refunds), and a line chart that compares organisers. Both dashboards' 30 days are the same trend board. Sample data: the real ones come from the server.
+
+### The dressed select (`selui.js`)
+
+Every `<select>` on a desk and in its windows (the province menu, the cities, the filters) is a button and a list that opens with a soft motion: the groups' headings, a search box when there are more than nine options, a check on the chosen one, the arrow keys, Home, End, Enter, Escape and the first letters, and a sheet from the bottom on a phone. The real select stays (hidden) and takes the same value and the same `change` (the `value` and `selectedIndex` setters too), so no code that reads it changed.
+
+### Checked (round V)
+
+`tools/v-flow.js` (sign-in: a wrong password, the demo account, an organiser refused at `#/admin`, the admin making an organiser, the password not in the stored record, the new organiser's own tabs and shows, no banner slots for an organiser, the account's password change, the admin looking as an organiser and going back), `tools/v-select.js`, `tools/v-dock-cells.js`, `tools/v-date-jump.js`, `tools/v-card-jump.js`/`v-card-hover.js`, `tools/u-ui-audit.js` (the unstyled-UI audit, now with the new pages), plus the older suites.
+
+### Honest notes (round V)
+
+- **The accounts are a demo**: the passwords are checked in the browser (anyone who can open the developer tools can read what is stored, a hash). A real site needs a server for the sign-in, sessions and the data.
+- **The numbers are sample data** shaped like real ones; the analytics tie to the seat maps but not to real sales.
+- **The date's jump** was found and measured (the cells' widths), not a recording of the owner's screen; if something else still moves beside a date, the window size and a recording are needed.
+- **The theme switch is still there** (the owner asked for dark everywhere; dark is the default and what the client's file opens with). Removing the switch altogether is one line, if wanted.
+- The six phone banners are still placeholders; three programs still have no poster.
 
 ## 11. The look: what the owner can change
 
