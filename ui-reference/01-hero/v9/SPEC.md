@@ -1197,6 +1197,82 @@ The live editor went from seven tabs to two and its long pane folds; the wizard'
 - Opening the page inside the private preview, the version page's own floating menu (the comparison tool) is still there; it is the owner's, not the site's.
 - **A real first-time buyer on a real phone** has still not been seen on the real site.
 
+## 10.15 Round U: a banner that ends whole, a tight rail and a longer banner, saved tickets, the print studio, the desks in a black bezel
+
+**What the owner said** (one message, shortened): *the banners are zoomed too much: in the 7 seconds of the zoom-out the whole banner must be seen and no zoom must be left; the program cards lag or glitch beside the date that is written (check white and black); in the locked mode the frame of the small banners beside the big one became too big: keep only a tiny margin, do not stretch them, make the big banner bigger and longer and tell me how it changes; tell me the sizes of the banners and posters to prepare, and give them again after the fixes; let me download the tickets I buy from this html file as an image and as a PDF, saved on the system or the phone, and make sure the QR codes fully work; make a very strong, professional graphic design for the cards management prints in batches (the codes / discount / gift system is useless: what is printed and sent is terrible, unclear, not downloadable); many places in the panels have no UI; work much more on the admin's and the producer's panels in the style of the picture (a black bezel and a slim icon rail on the left, the page inset with a tiny soft gap, buttons that open a bit more and have motion), and finish what was built too thin, e.g. the gift codes.*
+
+**Rule 0 (the home page):** the rail's size at 1920 × 1080 is unchanged; the banner panel's shape follows the owner's request below, so the parity with the approved version `d4cc53c` is exact only at 1920 × 1080 (§ «Checked»).
+
+### The banner ends whole (`app.js`, zoom)
+
+The slow zoom-out goes **linearly from 1.035 to exactly 1** over `LOOK.dur` (7 s) and stops there; the cross-fade no longer runs the zoom on (it used to end a little past the slide's end, still zoomed). At the end of the 7 s the whole banner, cut only to its panel, is on the screen. (`ZOOM.bar` mid = 1.035; the zoom share tween has `duration = LOOK.dur`, not `dur + fade`.) Measured by `n-zoom-time.js`.
+
+### The program cards beside the date
+
+No single defect was reproduced (recorded frames of the dock in both themes show no flash at the date). What changed anyway: the dock's parts leave in 0.24 s and come in 0.6 s after 0.2 s (the separators belong to the parts that move, `data-part`), the scene's fade eases out (`power2.out`), so a part never shows its old and new text together while the date is typed. If it still shows on the owner's machine, the frame he sees it in is what we need.
+
+### The locked layout: a tight rail, a longer banner (`style.css`, `sizes.js`)
+
+The rail keeps its natural width (`--rail-nat`) and the room that is left goes to the **big banner's panel**, whose width is the window's room up to a shape of **2.1 : 1** (`--lock-rmax`) and never below **1.74 : 1** (`--lock-r`). So at 16 : 9 (1920 × 1080) the panel is 1.74 : 1 as before; in an ordinary browser window (1920 × 937) it is about **2.07 : 1**, and it stops growing at 2.1 (the other panels take the rest). The small banners are not stretched: their frame has only the gap the owner asked for. A banner file in 1.74 : 1 is cut a little at the top and bottom in the wider panel (it fills, it is never bars); this is why the file is now asked in **2 : 1** (below). `u3-measure.js` measured the rail and the panel at 12 window sizes.
+
+### The fixed sizes, again (the answer to «which sizes»)
+
+| picture | size (px) | sharp | note |
+|---|---|---|---|
+| **poster** | **1000 × 1500** (2 : 3) | 2000 × 3000 | every card, the program's page, the tickets |
+| **desktop banner** | **2000 × 1000** (2 : 1) | 4000 × 2000 | keep the important part (faces, words) in the centre **1740 × 1000**; at least 4 % clear on each edge, 8 % at the top and bottom for words |
+| **phone and tablet banner** | **1080 × 1440** (3 : 4, upright) | 2160 × 2880 | words and faces in the middle; 4 % safe edges |
+
+`SIZES_FIXED` (`framer.js`) says them, and the settings' «اندازه‌ها» tab and the picture rows read it. (§10.14's table is replaced by this one.)
+
+### The phone's hero (unchanged in idea, tightened)
+
+The frame is 3 : 4 from `--mr: .75` in a window taller than wide; the dock is a strip of `--dock-m: 78px`; a wide-stacked window (820 × 700) uses the desktop banner with `--mr: var(--lock-r)`.
+
+### Saved tickets (`buy.js`, `tkx`)
+
+The success page's two main buttons are **«دانلود PDF» and «دانلود تصویر»** (all the tickets); each ticket also has its own image and PDF buttons, the calendar file and the share. A browser may block a download in a page shown inside a frame (the online preview): there `tkx.save` also opens a window with the picture (touch and hold to save it), a save link and a link to open it in a tab. **The QR code** says `BLIT2|code|session|seat|signature`; the file the owner saves is read back by a real scanner (OpenCV) and by the entry control's manual entry (`u-ticket.js` + `u-qr.py`): the PNG of one ticket, of all, the PDF's pages, each says its own seat; the entry control lets it in once and refuses it the second time.
+
+### The print studio (`printlab.js`, `codes.js`)
+
+One studio for the discount codes (the organiser's «کارت چاپی» and «پیام تبلیغاتی») and the gift batches (the admin's):
+
+- **Five designs**, each drawn on a canvas at the size asked (so a PDF is sharp): *noir* (the night ticket with a notched stub and a QR), *aurora* (the show's colours as light, the poster blurred behind glass), *velvet* (a curtain and a gold mask, for theatre), *paper* (light, ink-saving), *gold* (a matte gift card with a gold frame). Each has a **QR of at least 15 mm with a white margin round it**, a serial number, the offer in big type, the code in a box.
+- **The outputs**: a **PDF of A4 sheets** (ten cards of 85.6 × 54 mm to a sheet, crop marks, 300 dpi), the same as **PNG** pictures, a **single-card PDF** (one card to a page, for a print shop), the **codes as a CSV** (with each code's link), «چاپ» (opens the pages to print), and for the message **a picture in three sizes** (square 1080², story 1080 × 1920, wide 1920 × 1080) with its text to copy. The PDF is written by hand (JPEG pages, no library). A gift batch can be printed in parts («from the code number …»).
+- **Every card has its own code**: «AVA20-K7QX» for the code AVA20; the same ones every time (a reprint gives the same cards); each is registered at the checkout (`c.subs`) and works **once** (`c.subUsed`), counted in the code's total. The cards' QR opens **`#/code/<CODE>`** (`codes.land`): a discount code is kept (`blit.pendingCode`) and the checkout puts it in by itself; a gift code (`GF-…`) opens the wallet with the code in its field. **The address on the QR is a setting** (`blit.siteUrl`, the client's real domain; it is `https://blit.example` until it is set) in the studio.
+- Checked by `u-print.js` + `u-print.py`: the files are read back by a real PDF reader (page count and size) and a real QR scanner (every card's QR, the same codes as the CSV), a card's code is accepted once at the checkout and refused the second time, the gift QR opens the wallet with its code.
+
+### The codes pages made complete (`codes.js`)
+
+*The organiser's «کدهای تخفیف»*: four numbers (active, uses, near the limit, ending soon); the codes as **coupon cards** (the offer on a stub, the code with a copy button, the show it is for, a meter of the uses, the days left, the minimum purchase and the cap), a filter and a search; four **templates** (Nowruz, first purchase, presale, a special night); a form with the **minimum purchase** and the **cap** (for a percentage); after the making, buttons for the message and the cards at once; **edit** (the limit, extend a week / two weeks / a month or end it now, the minimum, the cap, on / off, **remove with a second press**), **the uses** (written at every purchase: the code, the tracking code, the discount); **a card opens a bit more when pressed** (made, type, printed codes, the last use, the link with a copy button). The checkout knows the minimum (it says why a small basket is refused: «این کد برای خرید بالای … تومانه») and the cap.
+*The admin's «کیف پول و کد هدیه»*: four numbers (batches, credit issued, spent, still open); the batches as cards (the credit, a meter, the days left; open: made, count, spent, what is left, ready codes to copy); **make a batch** (an organisation or an occasion, quick amounts 100 thousand to 1 million, quick counts 10 to 500, the term, the sum line, «prepare the cards after making»); per batch **the cards, every code with its state (ready / spent) with a search, the file of codes, extend, pause**. The wallet refuses a paused batch and a batch past its term, and a batch can hold up to 5000 codes (it was cut at 500).
+
+### The desks in a bezel (`desk.js`, `desk.css`)
+
+The two desks sit in a **black rounded bezel with a slim icon rail on the left** and the page inset in it with a tiny gap and soft corners (the picture the owner sent); the cards inside are separated by tiny gaps (`--gap` 6–9 px). The rail: the logo's bars (they move on hover), an icon for every section, **the open one is a dark circle that slides to the next** (`.dk-ind`), **a name floats beside an icon on hover** (one label that glides from icon to icon), **«names»** widens the rail to show the names and the person, **«side»** moves the rail to the other side (both kept in the browser: `blit.deskUi`); a count is a small dot on the icon (a number when the names are shown). On a phone the rail is a strip on top (the open section shows its name). The desks' buttons have motion: a light sweeps across a main button, it lifts and squeezes; the chips lift and squeeze; reduced motion turns all of it off. Also: the controllers' page can change a controller's doors and send a new code; the admin's orders show thirty rows and «thirty more».
+
+### «No UI»: the audit and what it found
+
+Two tools (`u-ui-audit.js` and `u-click-crawl.js`, with `u-wizard-audit.js`) look at every desk route, every window and every step of the wizard in both themes and on a phone: a control with the browser's own look (a font that is not the site's, a default border, a native checkbox / radio / slider / file field / spin buttons), a window that opens empty, a control that does nothing, a script error. What they found and fixed: the admin's «جایگاه تازه از یه بنر» showed the browser's own file field; the native checkboxes (the controllers' doors, the team's table, the designer's option), the hall designer's slider and the number fields' spin buttons (one look for all: `:where(.dk-main, .evp-dlg, .wz-body)`); **the organiser's sales map of a show with an open (no-seat) section crashed and left the page empty**.
+
+### The look: nothing new for the owner
+
+No new setting except two kept in the browser (`blit.deskUi`, `blit.siteUrl`); `LOOK_DEF` gets `ratioMax: 2.1` (the longest shape of the big banner's panel, in the sizes tab).
+
+### Checked (round U, on the final build)
+
+{{CHECKED}}
+
+### Honest notes (round U)
+
+- **The date's glitch was not reproduced** (above); the transitions were smoothed instead. If it persists, we need the window size and a screen recording.
+- **The hero's panels are not the approved version's** in a window that is not 16 : 9 (the owner's request: the big banner takes the room the rail gave back); at 1920 × 1080 the rail is as it was.
+- **A real phone and a real printer were not used**: the PDF's size and the QR were read back by software; print a sheet on the real printer at «100 %» and scan a card with the owner's phone before a big run. A 15-mm QR scans on a phone; the print shop should not shrink it.
+- The six phone banners are still placeholders; three programs still have no poster (a drawn one stands in).
+- **The client's file does not remember the theme** (by design: white by default).
+- The rail is on the left, as in the picture, in a right-to-left page; «side» moves it.
+- The studio's «چاپ» opens a new window with the pages; a browser that blocks pop-ups needs the PDF button.
+
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.
