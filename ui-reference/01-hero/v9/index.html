@@ -2569,49 +2569,6 @@ button.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-
 .cd-tbl td:first-child .st { margin-inline-start: .5em; font-size: .86em; }
 .cd-acts { white-space: nowrap; }
 .cd-acts .chip { gap: .35em; height: 30px; padding-inline: .8em; }
-.cd-promo, .cd-print { width: min(1100px, 100%); max-height: 92vh; }
-.cd-promo-g { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: calc(var(--u) * 1); align-items: start; }
-.cd-promo canvas { width: 100%; height: auto; border-radius: 14px; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .7); }
-.cd-promo-t textarea { box-sizing: border-box; width: 100%; padding: .8em 1em; border-radius: 12px; border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 500 14px/2 var(--font); resize: vertical; }
-.cd-opts { display: flex; flex-wrap: wrap; align-items: flex-end; gap: .8em 1.2em; }
-.cd-opts .bk-fld { margin: 0; }
-.cd-sheets { display: grid; gap: 18px; justify-items: center; max-height: 56vh; overflow: auto; padding: 16px; border-radius: 14px; background: rgba(var(--fg), .06); }
-.cc-sheet { position: relative; width: 210mm; height: 297mm; flex: none; background: #fff; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); zoom: .42; }
-.cc-grid { position: absolute; left: 19.4mm; top: 13.5mm; display: grid; grid-template-columns: repeat(2, 85.6mm); grid-auto-rows: 53.98mm; }
-.cc-marks { position: absolute; inset: 0; pointer-events: none; background:
-  linear-gradient(#000, #000) 13.4mm 13.5mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 13.5mm / 5mm .2mm,
-  linear-gradient(#000, #000) 13.4mm 283.4mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 283.4mm / 5mm .2mm,
-  linear-gradient(#000, #000) 19.4mm 7.5mm / .2mm 5mm, linear-gradient(#000, #000) 105mm 7.5mm / .2mm 5mm, linear-gradient(#000, #000) 190.6mm 7.5mm / .2mm 5mm,
-  linear-gradient(#000, #000) 19.4mm 284.5mm / .2mm 5mm, linear-gradient(#000, #000) 105mm 284.5mm / .2mm 5mm, linear-gradient(#000, #000) 190.6mm 284.5mm / .2mm 5mm,
-  linear-gradient(#000, #000) 13.4mm 67.5mm / 5mm .2mm, linear-gradient(#000, #000) 13.4mm 121.5mm / 5mm .2mm, linear-gradient(#000, #000) 13.4mm 175.4mm / 5mm .2mm, linear-gradient(#000, #000) 13.4mm 229.4mm / 5mm .2mm,
-  linear-gradient(#000, #000) 191.6mm 67.5mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 121.5mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 175.4mm / 5mm .2mm, linear-gradient(#000, #000) 191.6mm 229.4mm / 5mm .2mm; background-repeat: no-repeat; }
-.cc-card { --cc-acc: #8b5cf6; position: relative; box-sizing: border-box; overflow: hidden; padding: 4.2mm 4.6mm; color: #fff; font-family: var(--font); direction: rtl; background: radial-gradient(70% 90% at 15% 20%, color-mix(in oklab, var(--cc-acc) 70%, transparent), transparent 70%), radial-gradient(60% 80% at 100% 100%, rgba(236, 72, 153, .55), transparent 70%), linear-gradient(135deg, #120d1f, #06050b); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.cc-card::after { content: ""; position: absolute; inset: 2.2mm; border-radius: 3mm; border: .25mm solid rgba(255, 255, 255, .22); pointer-events: none; }
-.cc-card[data-g="theatre"] { background: radial-gradient(70% 90% at 15% 20%, color-mix(in oklab, var(--cc-acc) 70%, transparent), transparent 70%), repeating-linear-gradient(90deg, rgba(160, 20, 40, .55) 0 3mm, rgba(110, 10, 25, .55) 3mm 6mm), linear-gradient(135deg, #1c0610, #06050b); }
-.cc-top { display: flex; align-items: center; gap: 1.6mm; font-size: 3.2mm; }
-.cc-top b { font-size: 4.2mm; font-weight: 900; }
-.cc-top em { margin-inline-start: auto; font-style: normal; font-size: 2.6mm; padding: .5mm 2mm; border-radius: var(--rg); background: rgba(255, 255, 255, .16); }
-.cc-logo { display: inline-flex; align-items: center; gap: .6mm; height: 4.6mm; }
-.cc-logo i { width: .9mm; border-radius: .5mm; background: #fff; }
-.cc-logo i:nth-child(1) { height: 38%; } .cc-logo i:nth-child(2) { height: 72%; } .cc-logo i:nth-child(3) { height: 100%; background: var(--cc-acc); } .cc-logo i:nth-child(4) { height: 60%; } .cc-logo i:nth-child(5) { height: 34%; }
-.cc-art { position: absolute; left: 3.5mm; top: 9mm; width: 30mm; height: 20mm; opacity: .95; }
-.cc-off { position: absolute; right: 4.6mm; top: 12mm; display: grid; line-height: 1.1; }
-.cc-off b { font-size: 11mm; font-weight: 900; letter-spacing: -.02em; }
-.cc-off span { font-size: 3mm; font-weight: 700; opacity: .9; }
-.cc-for { position: absolute; right: 4.6mm; left: 4.6mm; top: 31mm; font-size: 2.9mm; font-weight: 700; opacity: .92; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cc-code { position: absolute; right: 4.6mm; left: 4.6mm; bottom: 4.2mm; display: flex; align-items: center; justify-content: space-between; gap: 2mm; }
-.cc-code code { padding: 1mm 2.6mm; border-radius: 1.6mm; background: #fff; color: #0b0a12; font: 800 3.4mm ui-monospace, Menlo, monospace; letter-spacing: .04em; direction: ltr; }
-.cc-code small { font-size: 2.3mm; opacity: .8; }
-@media print {
-  @page { size: A4; margin: 0; }
-  :root.is-printing-cards body > *:not(#app), :root.is-printing-cards #app > *:not(.evp-modal) { display: none !important; }
-  :root.is-printing-cards .evp-modal { position: static; display: block; padding: 0; background: none; }
-  :root.is-printing-cards .evp-dlg { width: auto; max-height: none; padding: 0; overflow: visible; box-shadow: none; background: none; }
-  :root.is-printing-cards .evp-dlg > *:not(.cd-sheets) { display: none !important; }
-  :root.is-printing-cards .cd-sheets { display: block; max-height: none; overflow: visible; padding: 0; background: none; }
-  :root.is-printing-cards .cc-sheet { zoom: 1; box-shadow: none; break-after: page; }
-}
-
 /* the admin */
 .ad-q .buy { background: #22c55e; color: #052e16; }
 .ad-danger { background: #e11d48 !important; color: #fff !important; }
@@ -2679,7 +2636,7 @@ button.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-
   .wz-steps li { flex: none; }
   .wz-steps button { padding-inline: .9em; }
   .wz-steps .bar { display: none; }
-  .wz-grid, .wz-price, .cd-promo-g { grid-template-columns: minmax(0, 1fr); }
+  .wz-grid, .wz-price { grid-template-columns: minmax(0, 1fr); }
   .wz-sum > div { grid-template-columns: minmax(0, 1fr) auto; }
   .wz-sum dt { grid-column: 1 / -1; }
   .vz-rank li { grid-template-columns: minmax(0, 1fr) auto; }
@@ -2958,6 +2915,51 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
   .ad-des { grid-template-columns: minmax(0, 1fr); }
 }
 .ad-nohall { color: rgba(var(--fg), max(.66, var(--dmin))); font-size: 12px; white-space: nowrap; }   /* (a city with no hall is not in the visitor's lists) */
+
+/* round U: the print studio (cards to print, A4 sheets, the picture to share) */
+.pl-dlg { width: min(1120px, 100%); max-height: 92vh; overflow: auto; }
+.pl-dlg h2 { display: flex; align-items: center; gap: .5em; margin: 0 0 calc(var(--u) * .9); padding-inline-end: 44px; font-size: 17px; }
+.pl-g { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: calc(var(--u) * 1.3); align-items: start; }
+.pl-l, .pl-r { display: grid; gap: calc(var(--u) * .9); min-width: 0; align-content: start; }
+.pl-sec h3 { margin: 0 0 .6em; font-size: 12px; font-weight: 800; letter-spacing: .02em; color: rgba(var(--fg), max(.7, var(--dmin))); }
+.pl-des { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.pl-d { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 3px; align-content: start; padding: 6px 6px 9px; border-radius: 14px; background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); transition: transform .28s cubic-bezier(.2, .8, .2, 1), box-shadow .25s, background .25s; }
+.pl-d canvas { width: 100%; height: auto; aspect-ratio: 856 / 540; border-radius: 9px; display: block; }
+.pl-d b { font-size: 12.5px; padding-inline: 3px; }
+.pl-d small { font-size: 10.5px; padding-inline: 3px; line-height: 1.5; color: rgba(var(--fg), max(.66, var(--dmin))); }
+.pl-d:hover { transform: translateY(-3px); }
+.pl-d[aria-checked="true"] { background: color-mix(in oklab, var(--viz-1) 14%, transparent); box-shadow: inset 0 0 0 2px var(--viz-1); }
+.pl-d:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.pl-opts { display: grid; gap: calc(var(--u) * .7); }
+.pl-opts .bk-fld, .pl-share-f { margin: 0; }
+.pl-chk { display: flex; align-items: flex-start; gap: .65em; font-size: 12.5px; line-height: 1.7; cursor: pointer; }
+.pl-chk input { appearance: none; -webkit-appearance: none; flex: none; width: 20px; height: 20px; margin: 2px 0 0; padding: 0; border-radius: 7px; border: 1.5px solid rgba(var(--fg), .45); background: transparent; display: grid; place-content: center; cursor: pointer; }
+.pl-chk input::after { content: ""; width: 10px; height: 5px; margin-top: -2px; border-left: 2.4px solid var(--capsule); border-bottom: 2.4px solid var(--capsule); transform: rotate(-45deg) scale(0); transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
+.pl-chk input:checked { background: rgb(var(--fg)); border-color: rgb(var(--fg)); }
+.pl-chk input:checked::after { transform: rotate(-45deg) scale(1); }
+.pl-chk input:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.pl-pv { padding: 14px; border-radius: 18px; background: repeating-conic-gradient(rgba(var(--fg), .05) 0 25%, transparent 0 50%) 0 0 / 18px 18px, rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); display: grid; place-items: center; }
+.pl-pv canvas { max-width: 100%; max-height: 46vh; width: auto; height: auto; border-radius: 16px; box-shadow: 0 24px 50px -22px rgba(0, 0, 0, .6); }
+.pl-note, .pl-prog { margin: 0; font-size: 12.5px; line-height: 1.8; color: rgba(var(--fg), max(.72, var(--dmin))); }
+.pl-prog { font-weight: 700; color: rgb(var(--fg)); }
+.pl-act { display: flex; flex-wrap: wrap; gap: 8px; }
+.pl-act .buy { height: 44px; }
+.pl-act .is-busy { opacity: .55; cursor: progress; }
+.pl-dn { display: inline-flex; transform: rotate(180deg); }
+.pl-dlg .bk-seg { max-width: 100%; flex-wrap: wrap; }
+.pl-dlg .bk-seg button { align-items: center; }
+.pl-dlg textarea { width: 100%; box-sizing: border-box; padding: .8em 1em; border-radius: 12px; height: auto; line-height: 1.9; }
+@media (max-width: 860px) {
+  .pl-g { grid-template-columns: minmax(0, 1fr); }
+  .pl-r { display: contents; }
+  /* the picture stays at the top while the designs are chosen below it; the downloads sit right under it */
+  .pl-pv { order: -5; position: sticky; top: -1px; z-index: 2; padding: 8px; background: repeating-conic-gradient(rgba(var(--fg), .05) 0 25%, transparent 0 50%) 0 0 / 18px 18px, linear-gradient(rgba(var(--fg), .04), rgba(var(--fg), .04)), var(--capsule); }
+  .pl-note { order: -4; } .pl-act { order: -3; } .pl-prog { order: -2; } .pl-r .bk-lead { order: 2; }
+  .pl-pv canvas { max-height: 24vh; }
+  .pl-act .buy { flex: 1 1 100%; }
+}
+/* the segmented choice (a role=radio group): the chosen one is filled (a few groups were left without it) */
+.bk-seg button[aria-checked="true"] { background: rgb(var(--fg)); color: var(--capsule); }
 
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
@@ -7726,6 +7728,7 @@ const buy = {
     // the discount code: a link that opens its field
     const dt = $('#bkDiscT', el), db = $('#bkDiscBox', el);
     dt.addEventListener('click', () => { db.hidden = false; dt.setAttribute('aria-expanded', 'true'); $('#bkDisc', el).focus(); });
+    { const pc = store.sget('blit.pendingCode', null); if (pc && CODES[pc] && (!CODES[pc].eid || CODES[pc].eid === st.e.id)) { db.hidden = false; dt.setAttribute('aria-expanded', 'true'); $('#bkDisc', el).value = pc; $('#bkDiscGo', el).click(); } }
     // a phone: the bar at the bottom pays; it hides while the invoice's own button is on the screen
     const bar = $('.bk-paybar', el), pay = $('#bkPay', el);
     $('.bk-pay2', el).addEventListener('click', () => pay.click());
@@ -8439,11 +8442,12 @@ const pages = {
     if ((m = /^#\/c\/(soon|concert|theatre|comedy)(?:-(?:tehran|other))?$/.exec(h))) return { kind: 'cat', key: m[1] };   // (the old «concert-tehran» is «concert»)
     if ((m = /^#\/city\/([^/?#]+)$/.exec(h))) { const a = decodeURIComponent(m[1]), c = cityBySlug(a) || cityByName(a); return { kind: 'city', city: c ? c.slug : null }; }
     if (h === '#/wallet') return { kind: 'wallet' };
+    if ((m = /^#\/code\/([^/?#]+)$/.exec(h))) return { kind: 'code', c: m[1] };
     if (h === '#/account') return { kind: 'account' };
     return queue.parse(h) || hallsPage.parse(h) || gate.parse(h) || desk.parse(h);
   },
   render(v) {
-    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), account: () => account.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x), queue: (x) => queue.render(x) }[v.kind];
+    const fn = { receipts: this.receipts, static: this.static, archive: this.archive, search: this.search, cat: this.cat, city: this.city, wallet: () => walletPage.render(), code: (x) => codes.land(x.c), account: () => account.render(), halls: () => hallsPage.list(), hall: (x) => hallsPage.hall(x), queue: (x) => queue.render(x) }[v.kind];
     if (!fn) { if (v.kind === 'gate') gate.render(v); else desk.render(v); return; }
     fn.call(this, v);
     page.addFooter();
@@ -9718,6 +9722,278 @@ const wizard = {
 };
 
 /* ════════════════════════════════════════════════════════════════
+   round U: the print studio. Discount codes and gift codes come out as
+   · cards the size of a bank card (85.6 × 54 mm), in five designs (a notched night ticket, an aurora, a theatre curtain, paper, a gold gift card), each with a real QR (scan → the code is applied),
+     a serial number and the offer in big type; ten to an A4 sheet with crop marks, as a PDF (300 dpi) or PNG, or one card per page for a print shop;
+   · a message to share, as a picture in three sizes (square post, story, wide) and its text;
+   · the list of codes as a CSV.
+   Everything is drawn on a canvas at the size asked for (so a PDF is sharp), and is saved as a real file (tkx.save: inside a frame a window shows it).
+   ════════════════════════════════════════════════════════════════ */
+const lab = {
+  W: 856, H: 540,   // a card's drawing space: ten units to the millimetre
+  DESIGNS: [
+    { id: 'noir', t: 'شب', d: 'بلیت شبانه با برش و QR', for: 'any' },
+    { id: 'aurora', t: 'شفق', d: 'نور و رنگ برنامه، شیشه‌ای', for: 'any' },
+    { id: 'velvet', t: 'پرده', d: 'تئاتر؛ مخمل و طلا', for: 'theatre' },
+    { id: 'paper', t: 'کاغذ', d: 'روشن و کم‌جوهر، برای چاپ ساده', for: 'any' },
+    { id: 'gold', t: 'طلا', d: 'کارت هدیه‌ی مات با قاب طلایی', for: 'gift' },
+  ],
+  // ── small tools ──
+  hex(h) { const m = /^#?([0-9a-f]{6})$/i.exec(String(h || '').trim()); const n = parseInt(m ? m[1] : '8b5cf6', 16); return [n >> 16, (n >> 8) & 255, n & 255]; },
+  rgba(h, a = 1, k = 1) { const [r, g, b] = this.hex(h); return `rgba(${Math.min(255, Math.round(r * k))},${Math.min(255, Math.round(g * k))},${Math.min(255, Math.round(b * k))},${a})`; },
+  light(h, t) { const [r, g, b] = this.hex(h); const f = (v) => Math.round(v + (255 - v) * t); return `rgb(${f(r)},${f(g)},${f(b)})`; },
+  async fonts() { try { await Promise.all(['900 120px Vazirmatn', '800 60px Vazirmatn', '700 40px Vazirmatn', '500 30px Vazirmatn'].map((f) => document.fonts.load(f))); } catch (err) { /* the system's font */ } },
+  img(src) { return new Promise((ok) => { if (!src) return ok(null); const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = src; }); },
+  // the address the QR leads to (the client's real domain, a setting kept in the browser)
+  site() { const u = String(store.get('blit.siteUrl', 'https://blit.example') || '').trim().replace(/\/+$/, ''); return /^https?:\/\/[^\s/]+/.test(u) ? u : 'https://blit.example'; },
+  host() { return this.site().replace(/^https?:\/\//, ''); },
+  dn: () => `<span class="pl-dn">${ico('upload')}</span>`,
+  FA: (s) => String(s).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]),
+  rr(c, x, y, w, h, r) { c.beginPath(); c.roundRect(x, y, w, h, r); },
+  // a QR (qrcode-generator) at x, y, side s, with its quiet zone drawn in `bg`
+  qr(c, text, x, y, s, fg = '#0b0a10', bg = '#fff', r = 16) {
+    c.fillStyle = bg; this.rr(c, x, y, s, s, r); c.fill();
+    if (typeof qrcode !== 'function') return;
+    const q = qrcode(0, 'M'); q.addData(text); q.make(); const n = q.getModuleCount(), pad = s * 0.12, m = (s - 2 * pad) / n;
+    c.fillStyle = fg; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) if (q.isDark(i, j)) c.fillRect(x + pad + j * m, y + pad + i * m, m + 0.35, m + 0.35);
+  },
+  // text that shrinks to fit a width
+  fit(c, text, x, y, maxW, size, weight = 800, font = 'Vazirmatn, Tahoma, sans-serif') { let s = size; c.font = `${weight} ${s}px ${font}`; while (c.measureText(text).width > maxW && s > 10) { s -= 2; c.font = `${weight} ${s}px ${font}`; } c.fillText(text, x, y); return s; },
+  bars(c, x, y, h, col, acc) { [0.38, 0.72, 1, 0.6, 0.34].forEach((k, i) => { c.fillStyle = i === 2 ? acc : col; c.beginPath(); c.roundRect(x + i * 15, y + h * (1 - k), 8, h * k, 4); c.fill(); }); },
+  // a picture as a soft backdrop over a box: drawn small and enlarged smoothly (a blur that every browser draws)
+  soft(c, im, x, y, w, h, dim = 0.55) {
+    const k = Math.max(w / im.width, h / im.height), t = document.createElement('canvas'); t.width = Math.max(8, Math.round(w / 26)); t.height = Math.max(8, Math.round(h / 26));
+    const tc = t.getContext('2d'); tc.imageSmoothingQuality = 'high'; tc.drawImage(im, (t.width - im.width * k / 26) / 2, (t.height - im.height * k / 26) / 2, im.width * k / 26, im.height * k / 26);
+    c.save(); c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.drawImage(t, x, y, w, h); c.fillStyle = `rgba(8,6,14,${dim})`; c.fillRect(x, y, w, h); c.restore();
+  },
+  // what a card says
+  spec(c, o = {}) {
+    const e = c.eid && showById(c.eid), gift = !!c.gift;
+    return {
+      gift, code: o.code || c.code, serial: o.serial || 0,
+      big: c.type === 'pct' ? `${this.FA(c.v)}٪` : this.FA(Math.round(c.v).toLocaleString('en-US')).replace(/,/g, '٬'),
+      unit: gift ? 'تومان اعتبار هدیه' : c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف',
+      kicker: gift ? 'کارت هدیه' : 'کد تخفیف', title: gift ? c.gift.org : e ? e.title : 'همه‌ی برنامه‌های بلیت',
+      until: `تا ${dayOf(c.until)}`, acc: (e && e.accent) || o.acc || '#8b5cf6', genre: e ? e.kind : 'concert', art: o.art || null,
+      link: `${this.site()}/#/code/${o.code || c.code}`,
+    };
+  },
+  // ── the five designs, all in the 856 × 540 space ──
+  draw(cv, sp, design, k = 1) {
+    const c = cv.getContext('2d'), W = this.W, H = this.H; cv.width = Math.round(W * k); cv.height = Math.round(H * k);
+    c.setTransform(k, 0, 0, k, 0, 0); c.clearRect(0, 0, W, H); c.save(); c.beginPath(); c.roundRect(0, 0, W, H, 34); c.clip();
+    ({ noir: this.noir, aurora: this.aurora, velvet: this.velvet, paper: this.paper, gold: this.gold }[design] || this.noir).call(this, c, sp, W, H);
+    c.restore(); return cv;
+  },
+  texts(c, sp, o) {   // the offer, the title, the code box (shared by the designs; o: colours and places)
+    c.direction = 'rtl'; c.textAlign = 'right';
+    c.fillStyle = o.big; this.fit(c, sp.big, o.x, o.by, o.w, 170, 900);
+    c.fillStyle = o.unitC; c.font = '800 50px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.unit, o.x, o.by + 66);
+    c.fillStyle = o.titleC; this.fit(c, sp.title, o.x, o.by + 128, o.w, 36, 700);
+    c.fillStyle = o.sub; c.font = '500 27px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.until, o.x, o.by + 168);
+  },
+  codeBox(c, sp, x, y, w, h, bg, fg, border) {
+    c.fillStyle = bg; this.rr(c, x, y, w, h, 20); c.fill(); if (border) { c.strokeStyle = border; c.lineWidth = 3; this.rr(c, x, y, w, h, 20); c.stroke(); }
+    c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = fg; const s = sp.code.length > 11 ? 38 : 46; c.font = `900 ${s}px ui-monospace, Menlo, Consolas, monospace`; c.fillText(sp.code, x + w / 2, y + h / 2 + s * 0.34, w - 24);
+  },
+  notches(c, x, W, H, bg) { c.fillStyle = bg; [0, H].forEach((y) => { c.beginPath(); c.arc(x, y, 26, 0, 6.2832); c.fill(); }); c.strokeStyle = 'rgba(128,128,128,.55)'; c.lineWidth = 2.2; c.setLineDash([9, 11]); c.beginPath(); c.moveTo(x, 40); c.lineTo(x, H - 40); c.stroke(); c.setLineDash([]); },
+  noir(c, sp, W, H) {
+    const g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#1f1b2d'); g.addColorStop(1, '#0e0c15'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    // the offer's colour: a soft light and a wave of bars
+    const r = c.createRadialGradient(W * 0.78, H * 0.18, 10, W * 0.78, H * 0.18, 420); r.addColorStop(0, this.rgba(sp.acc, 0.42)); r.addColorStop(1, this.rgba(sp.acc, 0)); c.fillStyle = r; c.fillRect(0, 0, W, H);
+    c.fillStyle = 'rgba(255,255,255,.05)'; for (let i = 0; i < 46; i++) { const h = 24 + Math.abs(Math.sin(i * 0.7)) * 110; c.fillRect(290 + i * 12.2, H - 34 - h, 5, h); }
+    c.fillStyle = sp.acc; c.fillRect(W - 18, 0, 18, H);
+    c.fillStyle = 'rgba(255,255,255,.05)'; c.fillRect(0, 0, 262, H);
+    if (sp.qrOn) { this.qr(c, sp.link, 38, 56, 186, '#0b0a10', '#fff', 20); c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,255,255,.92)'; c.font = '700 25px ui-monospace, Menlo, monospace'; c.fillText(sp.serialText, 131, 292); c.direction = 'rtl'; c.fillStyle = 'rgba(255,255,255,.62)'; c.font = '500 22px Vazirmatn, Tahoma, sans-serif'; c.fillText('اسکن کن؛ کد خودش اعمال می‌شه', 131, 336, 210); }
+    else { c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = '#fff'; c.font = '900 80px ui-monospace, monospace'; c.fillText(sp.serialText, 131, 190); }
+    this.bars(c, 52, 440, 56, 'rgba(255,255,255,.9)', sp.acc); c.direction = 'rtl'; c.textAlign = 'left'; c.fillStyle = '#fff'; c.font = '900 44px Vazirmatn, Tahoma, sans-serif'; c.fillText('بلیت', 138, 490);
+    this.notches(c, 262, W, H, '#ffffff');
+    c.direction = 'rtl'; c.textAlign = 'right'; c.fillStyle = this.rgba(sp.acc, 1, 1); c.beginPath(); c.roundRect(W - 38 - 190, 38, 190, 50, 25); c.fillStyle = 'rgba(255,255,255,.1)'; c.fill(); c.fillStyle = '#fff'; c.font = '800 27px Vazirmatn, Tahoma, sans-serif'; c.textAlign = 'center'; c.fillText(sp.kicker, W - 38 - 95, 73);
+    this.texts(c, sp, { x: W - 52, by: 240, w: 540, big: this.light(sp.acc, 0.7), unitC: '#fff', titleC: 'rgba(255,255,255,.86)', sub: 'rgba(255,255,255,.58)' });
+    this.codeBox(c, sp, 292, 418, 300, 86, '#fff', '#0b0a10');
+  },
+  aurora(c, sp, W, H) {
+    c.fillStyle = '#0b0a12'; c.fillRect(0, 0, W, H);
+    const blob = (x, y, r, col, a) => { const g = c.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, this.rgba(col, a)); g.addColorStop(1, this.rgba(col, 0)); c.fillStyle = g; c.fillRect(0, 0, W, H); };
+    blob(720, 90, 460, sp.acc, 0.95); blob(110, 470, 420, '#38bdf8', 0.55); blob(420, 260, 340, '#ffffff', 0.07); blob(40, 40, 260, '#fb7185', 0.4);
+    if (sp.art) { c.save(); this.rr(c, 0, 0, W, H, 34); c.clip(); this.soft(c, sp.art, 0, 0, W, H, 0.5); c.restore(); }
+    c.fillStyle = 'rgba(255,255,255,.10)'; this.rr(c, 34, 34, W - 68, H - 68, 36); c.fill(); c.strokeStyle = 'rgba(255,255,255,.34)'; c.lineWidth = 2; this.rr(c, 34, 34, W - 68, H - 68, 36); c.stroke();
+    this.qr(c, sp.link, 62, 128, 178, '#0b0a12', '#fff', 20); c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = 'rgba(255,255,255,.9)'; c.font = '700 24px ui-monospace, Menlo, monospace'; c.fillText(sp.serialText, 151, 340);
+    c.direction = 'rtl'; c.textAlign = 'right'; c.fillStyle = 'rgba(255,255,255,.8)'; c.font = '800 28px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.kicker, W - 70, 92);
+    this.texts(c, sp, { x: W - 70, by: 250, w: 480, big: '#ffffff', unitC: '#ffffff', titleC: 'rgba(255,255,255,.92)', sub: 'rgba(255,255,255,.7)' });
+    c.fillStyle = '#fff'; this.rr(c, 300, 396, 300, 80, 40); c.fill(); c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = '#0b0a12'; const s = sp.code.length > 11 ? 34 : 42; c.font = `900 ${s}px ui-monospace, Menlo, monospace`; c.fillText(sp.code, 450, 396 + 40 + s * 0.34, 270);
+    this.bars(c, 74, 410, 54, 'rgba(255,255,255,.92)', '#fff'); c.direction = 'rtl'; c.textAlign = 'left'; c.fillStyle = '#fff'; c.font = '900 40px Vazirmatn, Tahoma, sans-serif'; c.fillText('بلیت', 160, 462);
+  },
+  velvet(c, sp, W, H) {
+    const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#4a0713'); g.addColorStop(1, '#14040a'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+    for (let i = 0; i < 24; i++) { const x = i * 36, f = c.createLinearGradient(x, 0, x + 36, 0); f.addColorStop(0, 'rgba(0,0,0,.34)'); f.addColorStop(0.5, 'rgba(255,120,120,.09)'); f.addColorStop(1, 'rgba(0,0,0,.34)'); c.fillStyle = f; c.fillRect(x, 0, 36, H); }
+    const gold = c.createLinearGradient(0, 0, W, H); gold.addColorStop(0, '#f8e7a1'); gold.addColorStop(0.45, '#c79a2a'); gold.addColorStop(1, '#f4dc86');
+    c.strokeStyle = gold; c.lineWidth = 6; this.rr(c, 20, 20, W - 40, H - 40, 26); c.stroke(); c.lineWidth = 2; this.rr(c, 34, 34, W - 68, H - 68, 18); c.stroke();
+    // the mask pair
+    c.save(); c.translate(210, 116); c.scale(0.5, 0.5); c.fillStyle = gold; c.beginPath(); c.moveTo(-60, -40); c.bezierCurveTo(-30, -56, 30, -56, 60, -40); c.lineTo(60, 10); c.bezierCurveTo(60, 56, 30, 84, 0, 84); c.bezierCurveTo(-30, 84, -60, 56, -60, 10); c.closePath(); c.fill();
+    c.strokeStyle = '#4a0713'; c.lineWidth = 7; c.lineCap = 'round'; c.beginPath(); c.moveTo(-34, 0); c.quadraticCurveTo(-22, -14, -10, 0); c.moveTo(10, 0); c.quadraticCurveTo(22, -14, 34, 0); c.moveTo(-26, 38); c.quadraticCurveTo(0, 62, 26, 38); c.stroke(); c.restore();
+    c.direction = 'rtl'; c.textAlign = 'right'; c.fillStyle = 'rgba(248,231,161,.9)'; c.font = '800 30px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.kicker, W - 70, 96);
+    c.fillStyle = gold; this.fit(c, sp.big, W - 70, 330, 470, 180, 900);
+    c.fillStyle = '#fff5d6'; c.font = '800 50px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.unit, W - 70, 396);
+    c.fillStyle = 'rgba(255,245,214,.88)'; this.fit(c, sp.title, W - 70, 452, 470, 34, 700); c.fillStyle = 'rgba(255,245,214,.62)'; c.font = '500 26px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.until, W - 70, 492);
+    c.fillStyle = '#fff5d6'; this.rr(c, 70, 340, 280, 74, 18); c.fill(); c.strokeStyle = gold; c.lineWidth = 4; this.rr(c, 70, 340, 280, 74, 18); c.stroke(); c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = '#4a0713'; const s = sp.code.length > 11 ? 30 : 38; c.font = `900 ${s}px ui-monospace, Menlo, monospace`; c.fillText(sp.code, 210, 377 + s * 0.34, 252);
+    if (sp.qrOn) this.qr(c, sp.link, 130, 160, 160, '#4a0713', '#fff5d6', 14); c.direction = 'rtl'; c.textAlign = 'left'; c.fillStyle = 'rgba(248,231,161,.9)'; c.font = '900 34px Vazirmatn, Tahoma, sans-serif'; c.fillText('بلیت', 76, 456);
+  },
+  paper(c, sp, W, H) {
+    c.fillStyle = '#f7f3ea'; c.fillRect(0, 0, W, H);
+    c.fillStyle = this.rgba(sp.acc, 0.16); for (let i = 0; i < 9; i++) for (let j = 0; j < 4; j++) { c.beginPath(); c.arc(300 + i * 18, 30 + j * 18, 3, 0, 6.2832); c.fill(); }
+    c.strokeStyle = '#111'; c.lineWidth = 5; this.rr(c, 14, 14, W - 28, H - 28, 26); c.stroke();
+    c.fillStyle = '#fff'; c.fillRect(30, 30, 232, H - 60);
+    if (sp.qrOn) { this.qr(c, sp.link, 52, 70, 190, '#111', '#fff', 8); c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = '#111'; c.font = '800 26px ui-monospace, Menlo, monospace'; c.fillText(sp.serialText, 147, 312); c.direction = 'rtl'; c.fillStyle = '#555'; c.font = '500 22px Vazirmatn, Tahoma, sans-serif'; c.fillText('اسکن کن', 147, 352); }
+    c.strokeStyle = '#111'; c.lineWidth = 2.4; c.setLineDash([8, 9]); c.beginPath(); c.moveTo(262, 40); c.lineTo(262, H - 40); c.stroke(); c.setLineDash([]);
+    this.bars(c, 56, 420, 56, '#111', sp.acc); c.direction = 'rtl'; c.textAlign = 'left'; c.fillStyle = '#111'; c.font = '900 44px Vazirmatn, Tahoma, sans-serif'; c.fillText('بلیت', 142, 470);
+    c.direction = 'rtl'; c.textAlign = 'right'; c.fillStyle = '#111'; c.font = '800 28px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.kicker, W - 54, 82);
+    this.texts(c, sp, { x: W - 54, by: 240, w: 520, big: '#111', unitC: '#111', titleC: '#333', sub: '#666' });
+    c.fillStyle = sp.acc; c.fillRect(W - 54 - 64, 98, 64, 7);
+    this.codeBox(c, sp, 296, 418, 300, 86, '#fff', '#111', '#111');
+  },
+  gold(c, sp, W, H) {
+    c.fillStyle = '#0a0a0a'; c.fillRect(0, 0, W, H);
+    c.strokeStyle = 'rgba(212,175,55,.2)'; c.lineWidth = 1.6; for (let r = 40; r < 460; r += 14) { c.beginPath(); for (let a = 0; a <= 6.2832 + 0.02; a += 0.02) { const rr = r + Math.sin(a * 9 + r * 0.05) * 6; const x = 620 + Math.cos(a) * rr, y = 250 + Math.sin(a) * rr * 0.8; a === 0 ? c.moveTo(x, y) : c.lineTo(x, y); } c.stroke(); }
+    const gold = c.createLinearGradient(0, 0, W, H); gold.addColorStop(0, '#fbeeb0'); gold.addColorStop(0.4, '#c9a02e'); gold.addColorStop(0.7, '#f6e08c'); gold.addColorStop(1, '#a67c1c');
+    c.strokeStyle = gold; c.lineWidth = 7; this.rr(c, 16, 16, W - 32, H - 32, 28); c.stroke(); c.lineWidth = 2; this.rr(c, 30, 30, W - 60, H - 60, 20); c.stroke();
+    c.direction = 'rtl'; c.textAlign = 'right'; c.fillStyle = gold; c.font = '800 30px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.kicker, W - 70, 100);
+    c.fillStyle = gold; this.fit(c, sp.big, W - 70, 316, 500, 170, 900);
+    c.fillStyle = '#f5e6b3'; c.font = '800 48px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.unit, W - 70, 382);
+    c.fillStyle = 'rgba(245,230,179,.9)'; this.fit(c, sp.title, W - 70, 436, 500, 34, 700); c.fillStyle = 'rgba(245,230,179,.6)'; c.font = '500 26px Vazirmatn, Tahoma, sans-serif'; c.fillText(sp.until, W - 70, 478);
+    // a bow
+    c.save(); c.translate(215, 118); c.scale(0.62, 0.62); c.strokeStyle = gold; c.lineWidth = 9; c.lineCap = 'round'; c.beginPath(); c.moveTo(0, 0); c.bezierCurveTo(-70, -60, -90, 10, -20, 20); c.moveTo(0, 0); c.bezierCurveTo(70, -60, 90, 10, 20, 20); c.moveTo(0, 6); c.lineTo(-22, 78); c.moveTo(0, 6); c.lineTo(22, 78); c.stroke(); c.restore();
+    c.fillStyle = '#111'; this.rr(c, 70, 344, 290, 78, 18); c.fill(); c.strokeStyle = gold; c.lineWidth = 3; this.rr(c, 70, 344, 290, 78, 18); c.stroke(); c.direction = 'ltr'; c.textAlign = 'center'; c.fillStyle = '#f6e08c'; const s = sp.code.length > 11 ? 32 : 40; c.font = `900 ${s}px ui-monospace, Menlo, monospace`; c.fillText(sp.code, 215, 383 + s * 0.34, 262);
+    if (sp.qrOn) this.qr(c, sp.link, 135, 164, 160, '#0a0a0a', '#f5e6b3', 14); c.direction = 'rtl'; c.textAlign = 'left'; c.fillStyle = gold; c.font = '900 34px Vazirmatn, Tahoma, sans-serif'; c.fillText('بلیت', 76, 458);
+  },
+  // ── the sheets ──
+  MM: { cw: 85.6, ch: 54, cols: 2, rows: 5, gx: 8, gy: 4.2, mt: 5.4 },
+  async cardCanvases(specs, design, dpi) { const k = (85.6 * dpi / 25.4) / this.W; return specs.map((s) => this.draw(document.createElement('canvas'), s, design, k)); },
+  // A4 pages (ten cards each) with crop marks, at `dpi`
+  async sheets(specs, design, dpi = 300, onPage) {
+    const m = this.MM, px = (mm) => Math.round(mm * dpi / 25.4), W = px(210), H = px(297), per = m.cols * m.rows, pages = [], k = (m.cw * dpi / 25.4) / this.W;
+    const left = (210 - (m.cols * m.cw + (m.cols - 1) * m.gx)) / 2;
+    for (let p = 0; p * per < specs.length; p++) {
+      const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const c = cv.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+      const part = specs.slice(p * per, p * per + per), card = document.createElement('canvas');
+      part.forEach((sp, i) => { const col = i % m.cols, row = Math.floor(i / m.cols), x = left + col * (m.cw + m.gx), y = m.mt + row * (m.ch + m.gy); this.draw(card, sp, design, k); c.drawImage(card, px(x), px(y), px(m.cw), px(m.ch)); this.marks(c, px(x), px(y), px(m.cw), px(m.ch), dpi); });
+      c.fillStyle = '#999'; c.font = `${px(2.6)}px Vazirmatn, sans-serif`; c.direction = 'ltr'; c.textAlign = 'center'; c.fillText(`blit · ${p + 1}/${Math.ceil(specs.length / per)}`, W / 2, H - px(1.4));
+      pages.push(cv); if (onPage) await onPage(p + 1);
+    }
+    return pages;
+  },
+  marks(c, x, y, w, h, dpi) { const g = Math.round(0.5 * dpi / 25.4), l = Math.round(1.3 * dpi / 25.4); c.strokeStyle = '#222'; c.lineWidth = Math.max(1, Math.round(dpi / 300)); c.beginPath(); [[x, y, -1, -1], [x + w, y, 1, -1], [x, y + h, -1, 1], [x + w, y + h, 1, 1]].forEach(([px, py, dx, dy]) => { c.moveTo(px + dx * g, py); c.lineTo(px + dx * (g + l), py); c.moveTo(px, py + dy * g); c.lineTo(px, py + dy * (g + l)); }); c.stroke(); },
+  toBlob(cv, type, q) { return new Promise((ok) => cv.toBlob(ok, type, q)); },
+  // a PDF from canvases: page size in points; a JPEG on every page, full size (no library)
+  async pdf(canvases, wPt = 595.28, hPt = 841.89, q = 0.92) {
+    const pages = []; for (const cv of canvases) { const jb = await this.toBlob(cv, 'image/jpeg', q); pages.push({ w: cv.width, h: cv.height, jpg: new Uint8Array(await jb.arrayBuffer()) }); }
+    const enc = new TextEncoder(), chunks = [], offs = []; let len = 0;
+    const put = (b) => { const u = typeof b === 'string' ? enc.encode(b) : b; chunks.push(u); len += u.length; };
+    const obj = (n, body) => { offs[n] = len; put(`${n} 0 obj\n`); put(body); put('\nendobj\n'); };
+    put('%PDF-1.4\n'); put(new Uint8Array([37, 226, 227, 207, 211, 10]));
+    const N = pages.length, kids = pages.map((_, i) => `${3 + i * 3} 0 R`).join(' ');
+    obj(1, '<< /Type /Catalog /Pages 2 0 R >>'); obj(2, `<< /Type /Pages /Kids [${kids}] /Count ${N} >>`);
+    pages.forEach((p, i) => {
+      const pg = 3 + i * 3, ct = pg + 1, im = pg + 2;
+      obj(pg, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${wPt} ${hPt}] /Resources << /XObject << /Im0 ${im} 0 R >> >> /Contents ${ct} 0 R >>`);
+      const cs = `q ${wPt} 0 0 ${hPt} 0 0 cm /Im0 Do Q`; obj(ct, `<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`);
+      offs[im] = len; put(`${im} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${p.jpg.length} >>\nstream\n`); put(p.jpg); put('\nendstream\nendobj\n');
+    });
+    const total = 3 + N * 3, xr = len; put(`xref\n0 ${total}\n0000000000 65535 f \n`);
+    for (let n = 1; n < total; n++) put(`${String(offs[n]).padStart(10, '0')} 00000 n \n`);
+    put(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`);
+    return new Blob(chunks, { type: 'application/pdf' });
+  },
+  // the codes of a card batch: the unique ones (registered, each works once at checkout) or the one code
+  list(c, n, uniq) {
+    if (c.gift) { const s = c.subs && c.subs.length ? c.subs : [c.code]; return Array.from({ length: n }, (_, i) => s[i % s.length]); }
+    return uniq ? codes.mint(c, n) : Array(n).fill(c.code);
+  },
+  // the picture of a show (its poster, or the drawn stand-in), as an image, or null
+  async artOf(e) { if (!e) return null; const { a, src } = artOf(e); let im = await this.img(src); if (!im && a) { const u = a.fake || (a.fake = fakeArt(e, { w: 2, h: 3 })); im = await this.img(u); } return im; },
+  // ═══════ the studio: designs, quantity, codes, the files ═══════
+  async open(c) {
+    const e = c.eid && showById(c.eid), gift = !!c.gift;
+    await this.fonts();
+    const art = await this.artOf(e);
+    const st = { design: gift ? 'gold' : e && e.kind === 'theatre' ? 'velvet' : 'noir', n: 10, uniq: !gift, qr: true, busy: false };
+    const m = desk.modal('pl', `<h2>${ico('ticket')}${gift ? `کارت‌های هدیه · ${esc(c.gift.org)}` : `کارت‌های چاپی · <span dir="ltr">${esc(c.code)}</span>`}</h2>
+      <div class="pl-g"><div class="pl-l">
+        <div class="pl-sec"><h3>طرح</h3><div class="pl-des" role="radiogroup" aria-label="طرح کارت">${this.DESIGNS.map((d) => `<button type="button" role="radio" class="pl-d" data-d="${d.id}" aria-checked="${d.id === st.design}"><canvas width="214" height="135"></canvas><b>${d.t}</b><small>${d.d}</small></button>`).join('')}</div></div>
+        <div class="pl-sec pl-opts"><label class="bk-fld"><span>تعداد کارت</span><select id="plN">${[10, 20, 50, 100, 200].map((n) => `<option value="${n}">${fa(n)} کارت · ${fa(Math.ceil(n / 10))} برگه‌ی A4</option>`).join('')}</select></label>
+          ${gift ? '' : `<div class="bk-fld"><span>کد روی کارت‌ها</span><div class="bk-seg" role="radiogroup" aria-label="کد"><button type="button" role="radio" data-u="1" aria-checked="true">هر کارت یه کد یکتا</button><button type="button" role="radio" data-u="0" aria-checked="false">همه یه کد</button></div></div>`}
+          <label class="pl-chk"><input type="checkbox" id="plQr" checked><span>QR روی کارت (اسکن کنن، کد خودش اعمال می‌شه)</span></label>
+          <label class="bk-fld"><span>آدرس سایت روی QR</span><input id="plUrl" dir="ltr" value="${esc(this.site())}" autocomplete="off" spellcheck="false" inputmode="url"></label></div>
+      </div><div class="pl-r"><div class="pl-pv"><canvas id="plPv"></canvas></div><p class="pl-note" id="plNote"></p>
+        <div class="pl-act"><button type="button" class="buy" id="plPdf">${this.dn()}دانلود PDF چاپی</button><button type="button" class="chip" id="plPng">${this.dn()}تصویر برگه‌ها (PNG)</button><button type="button" class="chip" id="plOne">${this.dn()}PDF تک‌کارتی (چاپخونه)</button><button type="button" class="chip" id="plCsv">${this.dn()}فایل کدها (CSV)</button><button type="button" class="chip" id="plPrint">${ico('ticket')}چاپ</button></div>
+        <p class="pl-prog" id="plProg" hidden></p>
+        <p class="bk-lead">کارت ۸۵٫۶ × ۵۴ میلی‌متر (اندازه‌ی کارت بانکی)، ده تا تو هر برگه‌ی A4 با علامت برش. موقع چاپ <bdi dir="ltr">Scale: 100%</bdi> و بدون حاشیه‌ی چاپگر؛ کاغذ گلاسه‌ی ۳۰۰ گرم بهترینه.</p></div></div>`, 'کارت‌های چاپی');
+    m.box.querySelector('.evp-dlg').classList.add('pl-dlg');
+    const mkspecs = (n, list) => list.slice(0, n).map((code, i) => Object.assign(this.spec(c, { code, serial: i + 1, art }), { qrOn: st.qr, serialText: `№ ${String(i + 1).padStart(3, '0')}` }));
+    const sample = () => mkspecs(1, [gift ? ((c.subs || [c.code])[0]) : (st.uniq ? `${c.code}-K7QX` : c.code)])[0];
+    const paint = () => {
+      this.draw($('#plPv', m.box), sample(), st.design, 1.2);
+      $$('.pl-d canvas', m.box).forEach((cv, i) => this.draw(cv, sample(), this.DESIGNS[i].id, 214 / this.W));
+      $('#plNote', m.box).textContent = `${fa(st.n)} کارت در ${fa(Math.ceil(st.n / 10))} برگه${gift || !st.uniq ? '' : '؛ هر کد فقط یک بار تو پرداخت کار می‌کنه'}.`;
+    };
+    $$('.pl-d', m.box).forEach((b) => b.addEventListener('click', () => { st.design = b.dataset.d; $$('.pl-d', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $('#plN', m.box).addEventListener('change', (ev) => { st.n = +ev.target.value; paint(); });
+    $$('[data-u]', m.box).forEach((b) => b.addEventListener('click', () => { st.uniq = b.dataset.u === '1'; $$('[data-u]', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $('#plQr', m.box).addEventListener('change', (ev) => { st.qr = ev.target.checked; paint(); });
+    $('#plUrl', m.box).addEventListener('change', (ev) => { const v = ev.target.value.trim(); if (/^https?:\/\/[^\s/]+/.test(v)) { store.set('blit.siteUrl', v.replace(/\/+$/, '')); paint(); } else { toast('آدرس رو با https:// بنویس.'); ev.target.value = this.site(); } });
+    const prog = (t) => { const p = $('#plProg', m.box); p.hidden = !t; p.textContent = t || ''; };
+    const run = (btn, f) => async () => { if (st.busy) return; st.busy = true; btn.classList.add('is-busy'); try { await f(); } catch (err) { toast('نشد؛ دوباره امتحان کن.'); } prog(''); btn.classList.remove('is-busy'); st.busy = false; };
+    const specs = () => mkspecs(st.n, this.list(c, st.n, st.uniq));
+    const base = `blit-${gift ? 'gift' : c.code}-${st.design}`;
+    const go = (id, f) => $(id, m.box).addEventListener('click', run($(id, m.box), f));
+    go('#plPdf', async () => { const sp = specs(); const pages = await this.sheets(sp, st.design, 300, (p) => prog(`برگه‌ی ${fa(p)} ساخته شد…`)); prog('PDF ساخته می‌شه…'); tkx.save(await this.pdf(pages), `${base}-A4.pdf`); toast('PDF چاپی ذخیره شد.'); });
+    go('#plPng', async () => { const sp = specs(); const pages = await this.sheets(sp, st.design, 200, (p) => prog(`برگه‌ی ${fa(p)} ساخته شد…`)); for (let i = 0; i < pages.length; i++) tkx.save(await this.toBlob(pages[i], 'image/png'), `${base}-sheet-${i + 1}.png`); toast(pages.length > 1 ? `${fa(pages.length)} تصویر ذخیره شد.` : 'تصویر برگه ذخیره شد.'); });
+    go('#plOne', async () => { const sp = specs(); prog('کارت‌ها ساخته می‌شن…'); const cvs = await this.cardCanvases(sp, st.design, 300); tkx.save(await this.pdf(cvs, 242.6, 153.07), `${base}-single.pdf`); toast('PDF تک‌کارتی ذخیره شد (هر صفحه یه کارت).'); });
+    go('#plCsv', async () => { const sp = specs(); csvDownload(`${base}.csv`, [['ردیف', 'کد', gift ? 'اعتبار (تومان)' : c.type === 'pct' ? 'تخفیف (درصد)' : 'تخفیف (تومان)', 'برای', 'مهلت', 'لینک QR']].concat(sp.map((s, i) => [i + 1, s.code, c.v, s.title, new Date(c.until).toISOString().slice(0, 10), s.link]))); toast('فایل کدها ذخیره شد.'); });
+    go('#plPrint', async () => { const sp = specs(); const pages = await this.sheets(sp, st.design, 200); const w = window.open('', '_blank'); if (!w) { toast('پنجره‌ی چاپ باز نشد؛ «PDF چاپی» رو دانلود کن.'); return; } w.document.write(`<title>blit</title><style>@page{size:A4;margin:0}body{margin:0}img{display:block;width:210mm;height:297mm;page-break-after:always}</style>${pages.map((cv) => `<img src="${cv.toDataURL('image/jpeg', 0.9)}">`).join('')}`); w.document.close(); setTimeout(() => w.print(), 600); });
+    paint();
+    return m;
+  },
+  // ═══════ the message to share: a picture in three sizes and its text ═══════
+  async share(c) {
+    const e = c.eid && showById(c.eid), gift = !!c.gift; await this.fonts();
+    const art = await this.artOf(e);
+    const SZ = { square: { w: 1080, h: 1080, t: 'مربع · پست' }, story: { w: 1080, h: 1920, t: 'استوری' }, wide: { w: 1920, h: 1080, t: 'افقی · تلگرام و وب' } };
+    const st = { size: 'square', design: gift ? 'gold' : e && e.kind === 'theatre' ? 'velvet' : 'noir' };
+    const m = desk.modal('pl pl-share', `<h2>${ico('share')}پیام تبلیغاتی · <span dir="ltr">${esc(c.code)}</span></h2>
+      <div class="pl-g"><div class="pl-l"><div class="pl-sec"><h3>اندازه</h3><div class="bk-seg" role="radiogroup" aria-label="اندازه">${Object.entries(SZ).map(([k, z]) => `<button type="button" role="radio" data-sz="${k}" aria-checked="${k === st.size}">${z.t}<small dir="ltr">${z.w}×${z.h}</small></button>`).join('')}</div></div>
+        <div class="pl-sec"><h3>طرح کارت</h3><div class="pl-des">${this.DESIGNS.map((d) => `<button type="button" role="radio" class="pl-d" data-d="${d.id}" aria-checked="${d.id === st.design}"><canvas width="214" height="135"></canvas><b>${d.t}</b></button>`).join('')}</div></div>
+        <label class="bk-fld"><span>متن برای پیامک، تلگرام یا اینستاگرام</span><textarea rows="6" id="shTx" dir="rtl">${esc(codes.text(c))}</textarea></label></div>
+        <div class="pl-r"><div class="pl-pv"><canvas id="shCv"></canvas></div><div class="pl-act"><button type="button" class="buy" id="shPng">${this.dn()}دانلود تصویر</button><button type="button" class="chip" id="shAll">${this.dn()}هر سه اندازه</button><button type="button" class="chip" id="shCopy">${ico('copy')}کپی متن</button></div></div></div>`, 'پیام تبلیغاتی');
+    m.box.querySelector('.evp-dlg').classList.add('pl-dlg');
+    const sp = () => Object.assign(this.spec(c, { art }), { qrOn: true, serialText: '№ 001' });
+    const draw = (cv, key) => {
+      const { w, h } = SZ[key], x = cv.getContext('2d'); cv.width = w; cv.height = h; const acc = sp().acc;
+      const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#0b0a12'); g.addColorStop(1, '#1c1430'); x.fillStyle = g; x.fillRect(0, 0, w, h);
+      if (art) { x.save(); x.filter = 'blur(40px) brightness(.5) saturate(1.3)'; const k = Math.max(w / art.width, h / art.height) * 1.15; x.drawImage(art, (w - art.width * k) / 2, (h - art.height * k) / 2, art.width * k, art.height * k); x.restore(); }
+      const rg = x.createRadialGradient(w * 0.7, h * 0.25, 40, w * 0.7, h * 0.25, Math.max(w, h) * 0.6); rg.addColorStop(0, acc + 'aa'); rg.addColorStop(1, 'transparent'); x.fillStyle = rg; x.fillRect(0, 0, w, h);
+      const cw = key === 'wide' ? 1040 : 940, ch = cw * this.H / this.W, card = document.createElement('canvas'); this.draw(card, sp(), st.design, cw / this.W);
+      const cx = key === 'wide' ? 90 : (w - cw) / 2, cy = key === 'square' ? 330 : key === 'story' ? 520 : (h - ch) / 2;
+      x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 70; x.shadowOffsetY = 28; x.drawImage(card, cx, cy, cw, ch); x.restore();
+      x.direction = 'rtl'; x.fillStyle = '#fff'; const tx = key === 'wide' ? w - 90 : w / 2; x.textAlign = key === 'wide' ? 'right' : 'center';
+      const head = gift ? 'یه هدیه برای تو' : sp().big === '' ? '' : 'یه کد تخفیف برای تو'; const ty = key === 'wide' ? 330 : key === 'story' ? 330 : 190;
+      x.font = '900 78px Vazirmatn, Tahoma, sans-serif'; x.fillText(head, tx, ty);
+      x.font = '700 38px Vazirmatn, Tahoma, sans-serif'; x.fillStyle = 'rgba(255,255,255,.82)'; const sub = sp().title.length > 30 ? `${sp().title.slice(0, 29)}…` : sp().title; x.fillText(sub, tx, ty + 70);
+      x.fillStyle = 'rgba(255,255,255,.7)'; x.font = '500 32px Vazirmatn, Tahoma, sans-serif'; x.fillText(`${sp().until} · کد رو تو پرداخت بزن یا QR رو اسکن کن`, tx, key === 'wide' ? ty + 130 : cy + ch + 90);
+      this.bars(x, key === 'wide' ? w - 90 - 70 : 90, h - 120, 56, 'rgba(255,255,255,.9)', acc); x.textAlign = key === 'wide' ? 'right' : 'left'; x.font = '900 46px Vazirmatn, Tahoma, sans-serif'; x.fillStyle = '#fff'; x.fillText('بلیت', key === 'wide' ? w - 90 - 96 : 180, h - 70);
+      x.direction = 'ltr'; x.textAlign = key === 'wide' ? 'left' : 'right'; x.fillStyle = 'rgba(255,255,255,.6)'; x.font = '500 30px ui-monospace, monospace'; x.fillText(this.host(), key === 'wide' ? 90 : w - 90, h - 70);
+    };
+    const paint = () => { draw($('#shCv', m.box), st.size); $$('.pl-d canvas', m.box).forEach((cv, i) => this.draw(cv, sp(), this.DESIGNS[i].id, 214 / this.W)); };
+    $$('[data-sz]', m.box).forEach((b) => b.addEventListener('click', () => { st.size = b.dataset.sz; $$('[data-sz]', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $$('.pl-d', m.box).forEach((b) => b.addEventListener('click', () => { st.design = b.dataset.d; $$('.pl-d', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $('#shCopy', m.box).addEventListener('click', async () => { try { await navigator.clipboard.writeText($('#shTx', m.box).value); toast('متن کپی شد.'); } catch (err) { $('#shTx', m.box).select(); toast('متن انتخاب شد؛ کپیش کن.'); } });
+    $('#shPng', m.box).addEventListener('click', async () => { tkx.save(await this.toBlob($('#shCv', m.box), 'image/png'), `blit-${c.code}-${st.size}.png`); toast('تصویر ذخیره شد.'); });
+    $('#shAll', m.box).addEventListener('click', async () => { for (const k of Object.keys(SZ)) { const cv = document.createElement('canvas'); draw(cv, k); tkx.save(await this.toBlob(cv, 'image/png'), `blit-${c.code}-${k}.png`); } toast('هر سه تصویر ذخیره شد.'); });
+    paint();
+    return m;
+  },
+};
+/* ════════════════════════════════════════════════════════════════
    discount codes (brief §2.4): for one show or all, a percentage or an amount, a number of uses and a last day. Two outputs:
    a promotional message to share (a square picture made on a canvas, and its text for SMS or a channel) and printed cards
    the size of a bank card (85.6 × 54 mm) with strong music or theatre graphics, ten to an A4 sheet with crop marks. The
@@ -9737,9 +10013,18 @@ const codeList = () => {
 const codeLabel = (c) => (c.type === 'pct' ? `${fa(c.v)}٪ تخفیف` : `${short(c.v)} تومان تخفیف`);
 const codeState = (c) => (c.off ? ['غیرفعال', 'mute'] : c.until < Date.now() ? ['تموم شده', 'mute'] : c.used >= c.limit ? ['ظرفیتش پر شد', 'warn'] : ['فعال', 'good']);
 // the checkout reads the codes from here too (buy.js CODES): a code for one show works only for it
-const syncCodes = () => { for (const c of codeList()) { if (codeState(c)[1] !== 'good') { if (CODES[c.code] && CODES[c.code].org) delete CODES[c.code]; continue; } CODES[c.code] = { org: true, eid: c.eid, label: codeLabel(c), of: c.type === 'pct' ? (sum) => Math.round(sum * c.v / 100 / 1000) * 1000 : (sum) => Math.min(sum, c.v) }; } };
+// (a code also has its printed cards' own codes, c.subs: each works once; c.subUsed are the ones spent)
+const syncCodes = () => {
+  for (const c of codeList()) {
+    const on = codeState(c)[1] === 'good', spent = c.subUsed || [];
+    for (const k of [c.code].concat(c.subs || [])) {
+      if (!on || spent.includes(k)) { if (CODES[k] && CODES[k].org) delete CODES[k]; continue; }
+      CODES[k] = { org: true, eid: c.eid, label: codeLabel(c), parent: c.code, of: c.type === 'pct' ? (sum) => Math.round(sum * c.v / 100 / 1000) * 1000 : (sum) => Math.min(sum, c.v) };
+    }
+  }
+};
 syncCodes();
-const codeUsed = (code) => { const l = codeList(), c = l.find((x) => x.code === code); if (c) { c.used++; store.set('blit.codes', l); syncCodes(); } };
+const codeUsed = (code) => { const l = codeList(), c = l.find((x) => x.code === code || (x.subs || []).includes(code)); if (c) { c.used++; if (c.code !== code) c.subUsed = (c.subUsed || []).concat(code); store.set('blit.codes', l); syncCodes(); } if (store.sget('blit.pendingCode', null) === code) store.sset('blit.pendingCode', null); };
 
 const codes = {
   render(el) {
@@ -9781,66 +10066,29 @@ const codes = {
   },
   text(c) {
     const e = c.eid && showById(c.eid), w = e && whenOf({ t: Date.parse(e.startsAt) });
-    return `🎟 ${codeLabel(c)} ${e ? `برای «${e.title}»${w ? `، ${w.wd} ${w.dm}` : ''}` : 'برای همه‌ی برنامه‌های بلیت'}!\nکد: ${c.code}\nتا ${dayOf(c.until)} · فقط ${fa(c.limit - c.used)} بار دیگه\nخرید: blit.example${e ? `/e/${e.id}` : ''}`;
+    return `🎟 ${codeLabel(c)} ${e ? `برای «${e.title}»${w ? `، ${w.wd} ${w.dm}` : ''}` : 'برای همه‌ی برنامه‌های بلیت'}!\nکد: ${c.code}\nتا ${dayOf(c.until)} · فقط ${fa(c.limit - c.used)} بار دیگه\nخرید: ${lab.host()}${e ? `/#/e/${e.id}` : ''}`;
   },
-  // the promotional message: a square picture (1080 × 1080) drawn on a canvas, and its words
-  async promo(c) {
-    const e = c.eid && showById(c.eid);
-    const m = desk.modal('cd-promo', `<h2>${ico('share')}پیام تبلیغاتی · <span dir="ltr">${esc(c.code)}</span></h2><div class="cd-promo-g"><canvas width="1080" height="1080" id="cdCv" aria-label="تصویر تبلیغ"></canvas><div class="cd-promo-t"><label class="bk-fld"><span>متن برای پیامک، تلگرام یا اینستاگرام</span><textarea rows="7" id="cdTx" dir="rtl">${esc(this.text(c))}</textarea></label><div class="evp-dlg-end"><button type="button" class="buy" id="cdPng">${ico('arrow-ul')}دانلود تصویر</button><button type="button" class="chip" id="cdCopy">${ico('copy')}کپی متن</button></div></div></div>`, 'پیام تبلیغاتی');
-    const cv = $('#cdCv', m.box);
-    await this.drawPromo(cv, c, e);
-    $('#cdCopy', m.box).addEventListener('click', async () => { try { await navigator.clipboard.writeText($('#cdTx', m.box).value); toast('متن کپی شد.'); } catch (err) { $('#cdTx', m.box).select(); toast('متن انتخاب شد؛ کپیش کن.'); } });
-    $('#cdPng', m.box).addEventListener('click', () => { const a = document.createElement('a'); a.download = `blit-${c.code}.png`; a.href = cv.toDataURL('image/png'); a.click(); });
+  // the cards' own codes: «AVA20-K7QX»; always the same ones for the same code (a reprint gives the same cards), registered at once so each works once at the checkout
+  mint(c, n) {
+    const l = codeList(), r = l.find((x) => x.code === c.code);
+    if (!r) return Array(n).fill(c.code);
+    const have = r.subs || [], R = rngOf(seedOf(`${r.code}:sub`)), A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789', all = [], seen = new Set([r.code]);
+    while (all.length < Math.max(n, have.length)) { const k = `${r.code}-${Array.from({ length: 4 }, () => A[Math.floor(R() * A.length)]).join('')}`; if (!seen.has(k) && !CODES[k]) { seen.add(k); all.push(k); } else if (!seen.has(k) && have.includes(k)) { seen.add(k); all.push(k); } }
+    if (all.length > have.length) { r.subs = all; store.set('blit.codes', l); syncCodes(); }
+    return all.slice(0, n);
   },
-  async drawPromo(cv, c, e) {
-    const x = cv.getContext('2d'), W = 1080, H = 1080, acc = (e && e.accent) || '#8b5cf6';
-    try { await Promise.all(['900 120px Vazirmatn', '700 40px Vazirmatn', '500 34px Vazirmatn'].map((f) => document.fonts.load(f))); } catch (err) { /* the system's font then */ }
-    const img = await new Promise((ok) => { if (!e) { ok(null); return; } const { a } = artOf(e), im = new Image(); im.onload = () => ok(im); im.onerror = () => { const u = a.fake || fakeArt(e, { w: 2, h: 3 }); const j = new Image(); j.onload = () => ok(j); j.onerror = () => ok(null); j.src = u; }; im.src = a.fake || a.src || ''; });
-    const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, '#0b0a12'); g.addColorStop(1, '#1c1430'); x.fillStyle = g; x.fillRect(0, 0, W, H);
-    if (img) { x.save(); x.filter = 'blur(38px) brightness(.55) saturate(1.3)'; const k = Math.max(W / img.width, H / img.height) * 1.15; x.drawImage(img, (W - img.width * k) / 2, (H - img.height * k) / 2, img.width * k, img.height * k); x.restore(); }
-    // a glow and a ring of light in the show's colour
-    const rg = x.createRadialGradient(W * 0.7, H * 0.3, 40, W * 0.7, H * 0.3, 640); rg.addColorStop(0, acc + 'aa'); rg.addColorStop(1, 'transparent'); x.fillStyle = rg; x.fillRect(0, 0, W, H);
-    if (img) { const ph = 600, pw = ph * img.width / img.height; x.save(); x.shadowColor = 'rgba(0,0,0,.6)'; x.shadowBlur = 60; x.shadowOffsetY = 24; x.translate(W - 120 - pw / 2, 110 + ph / 2); x.rotate(-0.05); const r = 26; x.beginPath(); x.roundRect(-pw / 2, -ph / 2, pw, ph, r); x.clip(); x.drawImage(img, -pw / 2, -ph / 2, pw, ph); x.restore(); }
-    x.direction = 'rtl'; x.textAlign = 'right'; x.fillStyle = '#fff';
-    x.font = '900 150px Vazirmatn, Tahoma, sans-serif'; x.fillText(c.type === 'pct' ? `${fa(c.v)}٪` : short(c.v), W - 80, 860);
-    x.font = '800 54px Vazirmatn, Tahoma, sans-serif'; x.fillText(c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف', W - 80, 940);
-    x.textAlign = 'left'; x.font = '700 34px Vazirmatn, Tahoma, sans-serif'; x.fillStyle = 'rgba(255,255,255,.8)';
-    const t = e ? e.title : 'همه‌ی برنامه‌های بلیت'; x.direction = 'rtl'; x.textAlign = 'left'; x.fillText(t.length > 26 ? `${t.slice(0, 25)}…` : t, 80, 150);
-    x.fillText(`تا ${dayOf(c.until)}`, 80, 205);
-    // the code, in a ticket-shaped box
-    // (the notches are left out of the white by a clip, so the picture stays opaque)
-    x.save(); x.direction = 'ltr'; const bw = 470, bh = 132, bx = 80, by = 800; x.beginPath(); x.rect(0, 0, W, H); x.arc(bx, by + bh / 2, 20, 0, Math.PI * 2); x.arc(bx + bw, by + bh / 2, 20, 0, Math.PI * 2); x.clip('evenodd'); x.fillStyle = '#fff'; x.beginPath(); x.roundRect(bx, by, bw, bh, 22); x.fill(); x.restore();
-    x.save(); x.direction = 'ltr'; x.textAlign = 'center'; x.fillStyle = '#0b0a12'; x.font = '900 64px ui-monospace, Menlo, monospace'; x.fillText(c.code, bx + bw / 2, by + 88); x.restore();
-    x.save(); x.direction = 'rtl'; x.textAlign = 'left'; x.fillStyle = '#fff'; x.font = '700 30px Vazirmatn, Tahoma, sans-serif'; x.fillText('کد تخفیف', bx + 10, by - 22); x.restore();
-    // the logo's bars and the address
-    const bars = [0.38, 0.72, 1, 0.6, 0.34]; bars.forEach((s, i) => { x.fillStyle = i === 2 ? acc : 'rgba(255,255,255,.9)'; const h = 56 * s; x.beginPath(); x.roundRect(80 + i * 16, 1010 - h, 9, h, 4); x.fill(); });
-    x.save(); x.direction = 'rtl'; x.textAlign = 'left'; x.fillStyle = '#fff'; x.font = '900 46px Vazirmatn, Tahoma, sans-serif'; x.fillText('بلیت', 170, 1010); x.fillStyle = 'rgba(255,255,255,.6)'; x.font = '500 28px Vazirmatn, Tahoma, sans-serif'; x.direction = 'ltr'; x.textAlign = 'right'; x.fillText('blit.example', W - 80, 1010); x.restore();
+  // what the QR on a card opens (#/code/<CODE>): a gift code goes to the wallet, a discount code is kept for the checkout
+  land(raw) {
+    let c = ''; try { c = decodeURIComponent(raw); } catch (err) { c = String(raw); }
+    c = enDigits(c).trim().toUpperCase();
+    if (/^GF-/.test(c)) { store.sset('blit.pendingCode', c); location.replace('#/wallet'); toast('کد هدیه آماده‌ست؛ «ثبت کد» رو بزن.'); return; }
+    syncCodes(); const k = CODES[c];
+    location.replace('#/');
+    if (k && k.org) { store.sset('blit.pendingCode', c); toast(`کد «${c}» (${k.label}) ذخیره شد؛ موقع پرداخت خودش اعمال می‌شه.`); } else toast('این کد معتبر نیست یا مهلتش تموم شده.');
   },
-  // the printed cards: bank-card size, ten to an A4 sheet, crop marks round the block; one code each, or the same one
-  cards(c) {
-    const e = c.eid && showById(c.eid), kind = e ? e.kind : 'concert';
-    const m = desk.modal('cd-print', `<h2>${ico('ticket')}${c.gift ? `کارت‌های هدیه · ${esc(c.gift.org)}` : `کارت‌های چاپی · <span dir="ltr">${esc(c.code)}</span>`}</h2>
-      <div class="cd-opts"><label class="bk-fld"><span>تعداد کارت</span><select id="cdN">${[10, 20, 50].map((n) => `<option value="${n}">${fa(n)} کارت (${fa(n / 10)} برگه‌ی A4)</option>`).join('')}</select></label>
-        <div class="bk-fld"><span>کد روی کارت‌ها</span><div class="bk-seg" role="radiogroup" aria-label="کد"><button type="button" role="radio" data-u="1" aria-checked="true">یه کد یکتا برای هر کارت</button><button type="button" role="radio" data-u="0" aria-checked="false">همه یه کد</button></div></div>
-        <div class="bk-fld"><span>گرافیک</span><div class="bk-seg" role="radiogroup" aria-label="گرافیک"><button type="button" role="radio" data-g="concert" aria-checked="${kind !== 'theatre'}">موسیقی</button><button type="button" role="radio" data-g="theatre" aria-checked="${kind === 'theatre'}">تئاتر</button></div></div></div>
-      <p class="bk-lead">۸۵٫۶ × ۵۴ میلی‌متر، اندازه‌ی کارت بانکی؛ ده کارت روی هر برگه با علامت برش. روی کاغذ گلاسه‌ی ۳۰۰ گرم و بدون حاشیه‌ی چاپگر («Scale: 100%») چاپ کن.</p>
-      <div class="cd-sheets" id="cdSheets"></div><div class="evp-dlg-end"><button type="button" class="buy" id="cdPrint">${ico('ticket')}چاپ یا ذخیره‌ی PDF</button></div>`, 'کارت‌های چاپی');
-    let uniq = true, g = kind === 'theatre' ? 'theatre' : 'concert';
-    const subs = (n) => { if (c.subs) return Array.from({ length: n }, (_, i) => c.subs[i % c.subs.length]); const R = rngOf(seedOf(`${c.code}:cards`)), A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; return Array.from({ length: n }, () => `${c.code}-${Array.from({ length: 4 }, () => A[Math.floor(R() * A.length)]).join('')}`); };
-    const art = (kind2) => (kind2 === 'theatre'
-      ? '<svg class="cc-art" viewBox="0 0 120 80" aria-hidden="true"><path d="M18 14c14-6 30-6 44 0v22c0 16-10 28-22 28S18 52 18 36z" fill="rgba(255,255,255,.92)"/><path d="M28 32q5-5 10 0M44 32q5-5 10 0M30 48q10 8 20 0" stroke="#1a1026" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M58 24c14-6 30-6 44 0v22c0 16-10 28-22 28S58 62 58 46z" fill="var(--cc-acc)" opacity=".95"/><path d="M68 42q5 5 10 0M84 42q5 5 10 0M70 62q10-8 20 0" stroke="#1a1026" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg>'
-      : `<svg class="cc-art" viewBox="0 0 120 80" aria-hidden="true">${Array.from({ length: 22 }, (_, i) => { const h = 10 + Math.abs(Math.sin(i * 0.9) * 46) + (i % 3) * 5; return `<rect x="${4 + i * 5.2}" y="${40 - h / 2}" width="3" height="${h}" rx="1.5" fill="${i % 5 === 2 ? 'var(--cc-acc)' : 'rgba(255,255,255,.9)'}"/>`; }).join('')}</svg>`);
-    const draw = () => {
-      const n = +$('#cdN', m.box).value, list = uniq ? subs(n) : Array(n).fill(c.code), acc = (e && e.accent) || '#8b5cf6', pages = [];
-      for (let p = 0; p < n / 10; p++) pages.push(list.slice(p * 10, p * 10 + 10));
-      $('#cdSheets', m.box).innerHTML = pages.map((pg) => `<div class="cc-sheet"><div class="cc-grid">${pg.map((k) => `<div class="cc-card" data-g="${g}" style="--cc-acc:${acc}"><div class="cc-top"><span class="cc-logo"><i></i><i></i><i></i><i></i><i></i></span><b>بلیت</b><em>${esc(g === 'theatre' ? 'تئاتر' : 'موسیقی')}</em></div>${art(g)}<div class="cc-off"><b>${c.type === 'pct' ? `${fa(c.v)}٪` : esc(short(c.v))}</b><span>${c.gift ? 'تومان اعتبار هدیه' : c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف'}</span></div><div class="cc-for">${esc(c.gift ? c.gift.org : e ? e.title : 'همه‌ی برنامه‌ها')}</div><div class="cc-code"><code>${esc(k)}</code><small>تا ${esc(dayOf(c.until))} · blit.example</small></div></div>`).join('')}</div><i class="cc-marks" aria-hidden="true"></i></div>`).join('');
-    };
-    $('#cdN', m.box).addEventListener('change', draw);
-    $$('[data-u]', m.box).forEach((b) => b.addEventListener('click', () => { uniq = b.dataset.u === '1'; $$('[data-u]', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); draw(); }));
-    $$('[data-g]', m.box).forEach((b) => { if (b.closest('.bk-seg')) b.addEventListener('click', () => { g = b.dataset.g; $$('.bk-seg [data-g]', m.box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); draw(); }); });
-    $('#cdPrint', m.box).addEventListener('click', () => { root.classList.add('is-printing-cards'); const done = () => { root.classList.remove('is-printing-cards'); removeEventListener('afterprint', done); }; addEventListener('afterprint', done); window.print(); setTimeout(done, 1500); });
-    draw();
-  },
+  // the studio: cards to print (designs, A4 sheets, PDF, PNG, CSV), and the message to share
+  cards(c) { return lab.open(c); },
+  promo(c) { return lab.share(c); },
 };
 
 /* ════════════════════════════════════════════════════════════════
@@ -10256,6 +10504,7 @@ const walletPage = {
     let amt = 300000;
     $$('[data-v]', box).forEach((b) => b.addEventListener('click', () => { amt = +b.dataset.v; $$('[data-v]', box).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); $('#wlCharge', box).innerHTML = `${ico('shield-ok')}شارژ ${short(amt)} تومان از درگاه`; }));
     $('#wlCharge', box).addEventListener('click', () => { wallet.add(amt, 'شارژ از درگاه'); toast(`${short(amt)} تومان به کیف پولت اضافه شد.`); this.render(); });
+    { const pc = store.sget('blit.pendingCode', null); if (pc && /^GF-/.test(pc)) { $('#wlCode', box).value = pc; store.sset('blit.pendingCode', null); } }
     $('#wlGift', box).addEventListener('submit', (ev) => {
       ev.preventDefault(); const c = enDigits($('#wlCode', box).value).trim().toUpperCase(), st = $('#wlSt', box), used = store.get('blit.giftUsed', []);
       const gifts = store.get('blit.gifts', null) || [{ batch: 'G1', org: 'بانک نمونه (هدیه‌ی کارکنان)', v: 500000, n: 200, used: 64, until: Date.now() + 80 * DAY }];
@@ -11367,7 +11616,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, lab, wallet, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>
