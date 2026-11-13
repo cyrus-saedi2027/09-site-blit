@@ -797,8 +797,8 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .cd-b b { min-width: 2.2em; padding: .24em .28em; border-radius: .5em; background: rgba(var(--fg), .08); box-shadow: inset 0 0 0 1px rgba(var(--fg), .22); font-size: calc(max(13.5px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)); font-weight: 800; line-height: 1.25; text-align: center; font-variant-numeric: tabular-nums; transform-origin: 50% 100%; }
 .cd-b b.fl { animation: flip .55s var(--ease); }
 @keyframes flip { 0% { transform: perspective(300px) rotateX(-88deg); } 100% { transform: none; } }   /* (no fade: a digit turning in is as readable as one at rest; axe caught it at a quarter of its opacity) */
-.cd-b i { font-size: calc(max(10px, calc(var(--u) * .58)) * var(--tx) * var(--tx-small)); font-style: normal; color: rgba(var(--fg), max(.6, var(--dmin))); }
-.cd-b em { padding-top: .3em; font-style: normal; font-weight: 800; color: rgba(var(--fg), max(.5, var(--dmin))); }
+.cd-b i { font-size: calc(max(10px, calc(var(--u) * .58)) * var(--tx) * var(--tx-small)); font-style: normal; color: rgba(var(--fg), max(.72, var(--dmin))); }
+.cd-b em { padding-top: .3em; font-style: normal; font-weight: 800; color: rgba(var(--fg), max(.72, var(--dmin))); }
 
 /* the words over the poster, as in the owner's sample (a look option): the card is the poster's shape and the words sit on its lower part, on a frosted panel */
 :root[data-pinfo="over"] .tkt-in { display: block; aspect-ratio: var(--pr, .8); }
@@ -6109,7 +6109,7 @@ const look = {
     if (!DEV) {
       host.innerHTML = `<div class="pp-sec"><h4>اندازه‌ی ثابت تصویرها</h4><p>هر تصویر یه اندازه‌ی ثابت داره و همیشه کادرش رو پر می‌کنه؛ هر نسبتی هم بدی، تو کادر جاش رو خودت تنظیم می‌کنی.</p><div class="szt">
         ${Object.values(SIZES_FIXED).map((z) => `<div><b>${esc(z.name)}</b><output><bdi dir="ltr">${faP(z.w)}×${faP(z.h)}</bdi></output></div>`).join('')}</div>
-        <div class="rec"><b>برای صفحه‌های تیز:</b> دو برابر هر اندازه (پوستر ${faP(2000)}×${faP(3000)}، بنر دسکتاپ ${faP(3480)}×${faP(2000)}، بنر موبایل ${faP(2160)}×${faP(2160)}). فرمت WebP، JPG یا PNG؛ تا ${faP(500)} کیلوبایت برای هر تصویر خوبه.<br>متن و چهره‌ها رو دست‌کم ۴٪ از لبه‌ها دور نگه دار.</div></div>`;
+        <div class="rec"><b>برای صفحه‌های تیز:</b> دو برابر هر اندازه (${Object.values(SIZES_FIXED).map((z) => `${esc(z.name)} <bdi dir="ltr">${faP(z.w * 2)}×${faP(z.h * 2)}</bdi>`).join('، ')}). فرمت WebP، JPG یا PNG؛ تا ${faP(500)} کیلوبایت برای هر تصویر خوبه.<br>متن و چهره‌ها رو دست‌کم ۴٪ از لبه‌ها دور نگه دار.</div></div>`;
       return;
     }
     host.innerHTML = `
