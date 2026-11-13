@@ -1344,6 +1344,25 @@ Found while checking and fixed: two tests left stale since round V (`u-test.js` 
 - The builder draws plans from rules (rows on arcs or lines); an odd hall (a curved side, a column in the middle) is closest by combining sections; a hall's own exact drawing would be a package like the library's.
 - A layout a show uses cannot be changed in place; this is by design (the tickets already sold point at its seats).
 
+## 10.18 Round X: the hairline beside the date found, four client files, a smaller live editor, designed posters
+
+The owner's round-X message (six points) and what was done:
+
+- **The line beside the date on the program cards (third time it was reported): found by measuring, not by guessing.** The cause: the picture is clipped by a rounded box (`.tkt-pic`, `overflow: hidden`) whose edge is a fraction of a device pixel; the date's pocket was *inside* that clip, so its own square edge was pixel-snapped a row (or a column) away from the clip's, and the picture's edge showed through as a 1-pixel grey line over the pocket's top edge and beside it. It comes and goes with the scroll position (a different fraction every time) and only shows at fractional pixel ratios (125 % and 150 %: what a Windows laptop has; at 100 % and 200 % nothing). `tools/x-seam.js` + `x-seam.py` reproduce it (before: 54 of 72 shots had a seam, all at 1.25 and 1.5) and prove the fix (after: 0 of 72, with and without a half-pixel transform, both themes). The fix: the date is now a sibling of the picture, not inside its clip, and reaches 2 px past the picture's top and side over the card's own colour (its two curves moved to keep their places); the foot's tab got the same 2 px below. **The card's shape is pixel-identical** (the only pixels that changed against the old build are the hairline's row at 1.25 and 1.5).
+- **The client's live editor** is one pane in the client's files: the pictures (desktop banner, phone banner, poster, each with its place in the frame) and the few words (title, kind, short name, place, price, label). No tabs, no layout of the words on the banner, no colour, no category / hall / status, no sizes, no presets, no copy-paste of settings. It is done in the export (`html[data-client]` + a CSS trim); the developer's preview (`?dev`) keeps everything.
+- **Four files for the client** (`client/export.py`, `KIND=site|org|admin|gate`): `blit-site.html` (the public site: no «همکاران» in the footer, the site map or the phone's menu, no tour of the desks, a desk's address typed in goes back to the home page), `blit-org.html` (opens on the organiser's sign-in), `blit-admin.html` (the admin's), `blit-gate.html` (the entry control). The same build; the files share the browser's storage when opened from the same disk (a banner changed in the admin's file shows in the site's file in Chrome); a real site needs a server. `tools/x-client-files.js` tests all of it.
+- **Posters.** Nine programs got designed 1000×1500 posters (2 : 3, so every frame shows them whole): آرمان کیان، پردهٔ سرخ (drawn: a stage, curtains and a spotlight), پینوکیو، شب خنده، بی‌تعارف (drawn: bubbles and a microphone), چهار مضراب، امان، برفاب، هانی نظریان (a window of the program's own banner and our type). The three programs that had none (امان، برفاب، هانی نظریان) have one now. **The sites the owner named (iranejra, melotik, fidibo) refuse this server (from this server they reset the connection or answer 503), so no poster was copied from them**; the printed dates agree with each program's data.
+- The text for an image AI to make the gift / discount cards is in `ui-reference/card-ai-prompt.md`.
+
+### Checked (round X)
+
+`tools/x-seam.js` + `x-seam.py` (above), `tools/x-client-files.js` (the four files), the card and poster tests, the editor's test in the developer's preview.
+
+### Honest notes (round X)
+
+- The posters are designs for a demonstration, with invented credits; a real organiser's poster goes in through the poster slot (any shape: it is fitted to the 2 : 3 frame).
+- The four files are one build in four dresses: the desks' code is in the site file too (unreachable from it).
+
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.

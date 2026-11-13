@@ -2,5 +2,9 @@
 real-*
 photo-*
 !orig-*
+# round X: the designed posters; those made from the owner's photos or from the real banners' art are not committed, the two drawn ones are
+x-*
+!x-bitaarof.webp
+!x-pardeh-sorkh.webp
 !README.md
 !.gitignore

@@ -17,6 +17,7 @@ The list under the hero (and every section after the hero) is made of **tall pos
 | `orig-*.webp` (6) | finished posters designed for this prototype (the names and logos on them are fictional; 720×1080) | yes |
 | `real-*.webp` | the real posters the owner sent (iranejra.com): دختر بودن یا پسر نبودن، زندگی شاید…، دو دقیقه به هشت، SkyKings | **no** |
 | `photo-*.webp` | the photos of the owner's sample (`blit-prototype.html`), 480×640, used as posters | **no** |
+| `x-*.webp` (9) | round X: nine designed 1000×1500 posters (the typography is ours; the pictures are the sample photos or a crop of the program's own banner): آرمان کیان، پردهٔ سرخ، پینوکیو، شب خنده، بی‌تعارف، چهار مضراب، امان، برفاب، هانی نظریان (made by `posters-x/build.js`: HTML rendered by a browser) | only `x-bitaarof` and `x-pardeh-sorkh` (drawn, no outside picture) |
 
 `real-*` و `photo-*` کار دیگرانن و ریپو عمومیه، پس کامیت نمی‌شن (`.gitignore`). بدون اونا صفحه برای هر پوستر که نیست یه پوستر جایگزین (از روی عنوان و رنگ اجرا) می‌کشه، پس چیدمان همچنان دیده می‌شه. پیش‌نمایش خصوصی خودش فایل‌ها رو داره.
 

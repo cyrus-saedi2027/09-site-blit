@@ -807,6 +807,11 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 :root[data-pinfo="over"] .tkt-bg { background: color-mix(in oklab, var(--capsule) 84%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 
 /* ───── the framed card (round N, from the owner's samples) ─────
+   Round X (the hairline beside the date): found by measuring at 125 % and 150 % pixel ratios (what a Windows laptop has): the picture is clipped by a rounded box whose edge
+   is a fraction of a pixel; the pocket (the date) sat inside that clip, so its own square edge was pixel-snapped a row (or a column) away from the clip's, and the picture's
+   edge showed through as a 1 px grey line over the pocket's top edge and beside it, coming and going with the scroll position. The date is now a sibling of the picture (not
+   inside its clip) and reaches 2 px past the picture's top and side (over the card's own colour), and so does the foot's tab below; tools/x-seam.js + x-seam.py read the pixels at
+   1, 1.25, 1.5 and 2 pixel ratios, six sub-pixel scroll positions, three cards, both themes, with and without a sub-pixel transform: no seam.
    Nothing on it moves or hides while the pointer is over it. A mat (the card's own colour) frames the picture, whose corner is soft; three things are cut
    out of the picture's edge: a pocket in the top corner (the date), a tab at the foot (the kind and the days) and, when the show has one, a label in the
    other top corner. Under the picture: the name, the place, then the price and the buy button (or the countdown, or why it can't be bought).
@@ -824,19 +829,19 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 :root[data-pinfo="frame"] .tkt-pic::after, :root[data-pinfo="frame"] .tkt-perf, :root[data-pinfo="frame"] .tkt-bg, :root[data-pinfo="frame"] .tkt-glare { display: none; }
 
 /* the date: a pocket in the picture's top corner (the card's colour, with a curve where it meets each edge) */
-:root[data-pinfo="frame"] .tkt-date { top: 0; inset-inline-start: 0; min-width: 3.7em; padding: .52em .8em .6em; border-radius: 0 0 0 var(--tr); background: var(--tk-card); color: rgb(var(--fg)); box-shadow: none; font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); }
+:root[data-pinfo="frame"] .tkt-date { top: calc(var(--fw) - 2px); inset-inline-start: calc(var(--fw) - 2px); min-width: 3.7em; padding: calc(.52em + 2px) .8em .6em; padding-inline-start: calc(.8em + 2px); border-radius: 0 0 0 var(--tr); background: var(--tk-card); color: rgb(var(--fg)); box-shadow: none; font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); }
 :root[data-pinfo="frame"] .tkt .tkt-date { opacity: 1; }
 :root[data-pinfo="frame"] .tkt-date b { font-size: 2em; color: var(--tk-c); }
 :root[data-pinfo="frame"] .tkt-date small { color: rgba(var(--fg), max(.7, var(--dmin))); }
 :root[data-pinfo="frame"] .tkt-date i { align-self: stretch; margin: 0 0 .3em; padding: .12em .5em; border-radius: var(--rg); font-size: .88em; }
 :root[data-pinfo="frame"] .tkt-date::before, :root[data-pinfo="frame"] .tkt-date::after { content: ""; position: absolute; background: radial-gradient(circle var(--fr) at 0 100%, transparent calc(var(--fr) - .5px), var(--tk-card) calc(var(--fr) + .5px)); pointer-events: none; }
-:root[data-pinfo="frame"] .tkt-date::before { top: 0; right: calc(100% - 1px); width: calc(var(--fr) + 1px); height: var(--fr); }
-:root[data-pinfo="frame"] .tkt-date::after { top: calc(100% - 1px); right: 0; width: var(--fr); height: calc(var(--fr) + 1px); }
+:root[data-pinfo="frame"] .tkt-date::before { top: 0; right: calc(100% - 1px); width: calc(var(--fr) + 1px); height: calc(var(--fr) + 2px); }
+:root[data-pinfo="frame"] .tkt-date::after { top: calc(100% - 1px); right: 0; width: calc(var(--fr) + 2px); height: calc(var(--fr) + 1px); }
 
 /* the kind and the days: a tab rising from the words into the picture's foot, curved out where it meets the picture's edge */
 :root[data-pinfo="frame"] .tkt-info { position: relative; z-index: 1; display: grid; grid-template-rows: auto auto 1fr; align-content: start; row-gap: .1em; overflow: visible; padding: calc(var(--fw) * 1.25) calc(var(--fw) * .6) calc(var(--fw) * .6); }
-:root[data-pinfo="frame"] .tkt-info > .tkt-sub { position: absolute; z-index: 1; bottom: 100%; inset-inline: 0; width: max-content; max-width: calc(100% - 2 * var(--fr) - var(--fw)); margin-inline: auto; justify-content: center; padding: .42em 1.15em .1em; border-radius: var(--tr) var(--tr) 0 0; background: var(--tk-card); font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); line-height: 1.7; }
-:root[data-pinfo="frame"] .tkt-info > .tkt-sub::before, :root[data-pinfo="frame"] .tkt-info > .tkt-sub::after { content: ""; position: absolute; bottom: -1px; width: calc(var(--fr) + 1px); height: calc(var(--fr) + 1px); pointer-events: none; }
+:root[data-pinfo="frame"] .tkt-info > .tkt-sub { position: absolute; z-index: 1; bottom: calc(100% - 2px); inset-inline: 0; width: max-content; max-width: calc(100% - 2 * var(--fr) - var(--fw)); margin-inline: auto; justify-content: center; padding: .42em 1.15em calc(.1em + 2px); border-radius: var(--tr) var(--tr) 0 0; background: var(--tk-card); font-size: calc(max(11px, calc(var(--u) * .66)) * var(--tx) * var(--tx-small)); line-height: 1.7; }
+:root[data-pinfo="frame"] .tkt-info > .tkt-sub::before, :root[data-pinfo="frame"] .tkt-info > .tkt-sub::after { content: ""; position: absolute; bottom: 1px; width: calc(var(--fr) + 1px); height: calc(var(--fr) + 1px); pointer-events: none; }
 :root[data-pinfo="frame"] .tkt-info > .tkt-sub::before { right: calc(100% - 1px); background: radial-gradient(circle var(--fr) at 0 0, transparent calc(var(--fr) - .5px), var(--tk-card) calc(var(--fr) + .5px)); }
 :root[data-pinfo="frame"] .tkt-info > .tkt-sub::after { left: calc(100% - 1px); background: radial-gradient(circle var(--fr) at 100% 0, transparent calc(var(--fr) - .5px), var(--tk-card) calc(var(--fr) + .5px)); }
 :root[data-pinfo="frame"] .tkt-name { font-size: calc(max(15px, calc(var(--u) * 1.04)) * var(--tx) * var(--tx-main)); line-height: 1.55; }
@@ -5014,19 +5019,19 @@ const EVENTS = [
     venue: 'آمفی‌تئاتر شهید سلیمان‌نژاد رامسر', startsAt: '2026-10-15T19:00:00+03:30', endsAt: '2026-10-18T19:00:00+03:30', price: '۲۵۰ هزار', badge: 'پرفروش', status: 'normal', poster: { src: 'assets/posters/real-dokhtar-pesar.webp', w: 800, h: 1200 }, ...art('dokhtar-pesar', 1672, 960) },
   { id: 'hani-nazarian', pal: 'gold', layout: 'bar', kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'هانی نظریان', title: 'اجرای زنده‌ی هانی نظریان با ارکستر سینمایی Sequence',
     desc: 'شبی با موسیقی فیلم، به رهبری هانی نظریان و با ارکستر سینمایی Sequence.',
-    venue: 'سالن اصلی اداره فرهنگ و ارشاد', startsAt: '2026-11-19T20:00:00+03:30', endsAt: '2026-11-20T20:00:00+03:30', price: '۸۵۰ هزار', badge: '', status: 'soon', saleAt: new Date(Date.now() + 26 * HOUR + 37 * 60e3 + 12e3).toISOString(), ...art('hani-nazarian', 1672, 960) },
+    venue: 'سالن اصلی اداره فرهنگ و ارشاد', startsAt: '2026-11-19T20:00:00+03:30', endsAt: '2026-11-20T20:00:00+03:30', price: '۸۵۰ هزار', badge: '', status: 'soon', saleAt: new Date(Date.now() + 26 * HOUR + 37 * 60e3 + 12e3).toISOString(), poster: { src: 'assets/posters/x-hani-nazarian.webp', w: 1000, h: 1500 }, ...art('hani-nazarian', 1672, 960) },
   { id: 'zendegi-shayad', pal: 'crimson', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'زندگی شاید…', title: 'نمایش «زندگی شاید…»',
     desc: 'نمایشی به نویسندگی، طراحی و کارگردانی محمدجواد ملک‌محمودی.',
     venue: 'تهران · سالن نمایش', startsAt: '2026-11-12T20:00:00+03:30', price: '۳۸۰ هزار', badge: 'اجرای ویژه', status: 'normal', poster: { src: 'assets/posters/real-zendegi-shayad.webp', w: 800, h: 1198 }, ...art('zendegi-shayad', 1672, 960) },
   { id: 'barfab', pal: 'violet', layout: 'bar', kind: 'theatre', city: 'ساری', type: 'تئاتر', name: 'برفاب', title: 'نمایش «برفاب» · Mebwater',
     desc: 'نمایش درام مدرن از گروه نمایشی صنم؛ نویسنده و کارگردان میثم رایکا.',
-    venue: 'مجتمع فرهنگی هنری آزادشاد، ساری', startsAt: '2026-11-03T20:00:00+03:30', endsAt: '2026-11-08T20:00:00+03:30', price: '۳۲۰ هزار', badge: '', status: 'extended', ...art('barfab', 1672, 960) },
+    venue: 'مجتمع فرهنگی هنری آزادشاد، ساری', startsAt: '2026-11-03T20:00:00+03:30', endsAt: '2026-11-08T20:00:00+03:30', price: '۳۲۰ هزار', badge: '', status: 'extended', poster: { src: 'assets/posters/x-barfab.webp', w: 1000, h: 1500 }, ...art('barfab', 1672, 960) },
   { id: 'do-daghighe', pal: 'orange', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'دو دقیقه به هشت', title: 'نمایش «دو دقیقه به هشت»',
     desc: 'نمایشی به نویسندگی و کارگردانی علی اصغری، با تهیه‌کنندگی فاطمه مجریان.',
     venue: 'سالن تئاتر مجتمع فرهنگی هنری بصیرت', startsAt: '2026-10-17T20:00:00+03:30', endsAt: '2026-10-22T20:00:00+03:30', price: '۳۰۰ هزار', badge: '', status: 'soldout', seatsLeft: 0, poster: { src: 'assets/posters/real-do-daghighe.webp', w: 800, h: 1224 }, ...art('do-daghighe', 1672, 960) },
   { id: 'aman', pal: 'white', layout: 'bar', kind: 'theatre', city: 'تهران', type: 'تئاتر', name: 'امان', title: 'نمایش «امان»',
     desc: 'نمایشی به کارگردانی مجتبی جدی و تهیه‌کنندگی فرید مقدم.',
-    venue: 'تهران · سالن نمایش', startsAt: '2026-11-09T20:00:00+03:30', price: '۲۸۰ هزار', badge: 'تک‌اجرا', status: 'normal', ...art('aman', 1672, 960) },
+    venue: 'تهران · سالن نمایش', startsAt: '2026-11-09T20:00:00+03:30', price: '۲۸۰ هزار', badge: 'تک‌اجرا', status: 'normal', poster: { src: 'assets/posters/x-aman.webp', w: 1000, h: 1500 }, ...art('aman', 1672, 960) },
 ];
 // the sample photo for the "text" layout: the words sit on the side away from the cards, so the singers
 // stand on the cards' side (the flipped copy when the cards are on the left)
@@ -5202,15 +5207,15 @@ const SAMPLE = [
   ['concert', 'تهران', 'کنسرت', 'کوارتت زهی پارسه', 96, 'teal', 8, 9, '20:00', 700000, 'normal', 0, 'photo-persian-violin-arch', 5],
   ['concert', 'تهران', 'کنسرت', 'شب جاز تهران', 63, 'blue', 15, 16, '21:00', 750000, 'normal', 0, 'photo-jazz-sax-blue', 7],
   ['concert', 'تهران', 'کنسرت', 'گروه سایه', 36, 'crimson', 19, 0, '20:30', 900000, 'soldout', 0, 'photo-rock-guitar-crowd', 8],
-  ['concert', 'اصفهان', 'کنسرت', 'آرمان کیان', 80, 'orange', 2, 3, '19:00', 950000, 'soldout', 0, 'photo-pop-smoke', 9],
-  ['theatre', 'تهران', 'نمایش موزیکال', 'پردهٔ سرخ', 41, 'crimson', 1, 26, '19:30', 700000, 'normal', 0, 'photo-theater-curtain', 21],
-  ['comedy', 'تهران', 'نمایش کودک', 'پینوکیو', 59, 'crimson', 0, 18, '16:00', 280000, 'normal', 0, 'photo-kids-pinocchio', 24],
-  ['comedy', 'اصفهان', 'جُنگ', 'شب خنده (استندآپ کمدی)', 80, 'yellow', 8, 0, '20:00', 500000, 'normal', 0, 'photo-comedy-mic', 25],
+  ['concert', 'اصفهان', 'کنسرت', 'آرمان کیان', 80, 'orange', 2, 3, '19:00', 950000, 'soldout', 0, 'x-arman-kian', 9],
+  ['theatre', 'تهران', 'نمایش موزیکال', 'پردهٔ سرخ', 41, 'crimson', 1, 26, '19:30', 700000, 'normal', 0, 'x-pardeh-sorkh', 21],
+  ['comedy', 'تهران', 'نمایش کودک', 'پینوکیو', 59, 'crimson', 0, 18, '16:00', 280000, 'normal', 0, 'x-pinokio', 24],
+  ['comedy', 'اصفهان', 'جُنگ', 'شب خنده (استندآپ کمدی)', 80, 'yellow', 8, 0, '20:00', 500000, 'normal', 0, 'x-shab-khande', 25],
 ];
 // finished posters: what is printed on them is fixed (the day, the hall, the time)
 const FIXED = [
-  { id: 'o-bitaarof', hall: 62, kind: 'comedy', city: 'تهران', type: 'استندآپ', name: 'بی‌تعارف', venue: 'تهران، پردیس تئاتر شهرزاد', pal: 'yellow', startsAt: '2026-11-03T21:00:00+03:30', price: '۲۲۰ هزار', status: 'normal', poster: 'orig-bitaarof' },
-  { id: 'o-chaharmezrab', hall: 34, kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'چهار مضراب (ارکستر زهی باران)', venue: 'تهران، تالار وحدت', pal: 'teal', startsAt: '2026-11-28T19:00:00+03:30', price: '۶۰۰ هزار', status: 'normal', poster: 'orig-chaharmezrab' },
+  { id: 'o-bitaarof', hall: 62, kind: 'comedy', city: 'تهران', type: 'استندآپ', name: 'بی‌تعارف', venue: 'تهران، پردیس تئاتر شهرزاد', pal: 'yellow', startsAt: '2026-11-03T21:00:00+03:30', price: '۲۲۰ هزار', status: 'normal', poster: 'x-bitaarof' },
+  { id: 'o-chaharmezrab', hall: 34, kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'چهار مضراب (ارکستر زهی باران)', venue: 'تهران، تالار وحدت', pal: 'teal', startsAt: '2026-11-28T19:00:00+03:30', price: '۶۰۰ هزار', status: 'normal', poster: 'x-chaharmezrab' },
   // the real poster of a concert that is over: shows the label «برگزار شد» on a real poster
   { id: 'real-skykings', hall: 96, kind: 'concert', city: 'تهران', type: 'کنسرت', name: 'SkyKings', venue: 'تهران، سالن پاسارگاد اریکه ایرانیان', pal: 'gold', startsAt: '2026-10-29T19:00:00+03:30', price: '۴۵۰ هزار', status: 'held', poster: 'real-skykings' },
 ];
@@ -6826,8 +6831,9 @@ function ticketHTML(e) {
   return `<div class="tkt-in">
       <a class="tkt-pic" href="#/e/${esc(e.id)}" draggable="false" aria-label="${esc(e.title)}${st.label ? `، ${esc(st.label)}` : ''}">
         <img alt="" decoding="async" ${src ? `src="${esc(src)}"${!a.fake && !e.poster && a.srcset ? ` srcset="${esc(a.srcset)}" sizes="(max-width: 520px) 50vw, (max-width: 1100px) 34vw, 17vw"` : ''}` : `data-fake="${esc(e.id)}"`}>
-        ${dateStub(e)}${lbl}${stamp}${meter}<i class="tkt-glare" aria-hidden="true"></i>
+        ${lbl}${stamp}${meter}<i class="tkt-glare" aria-hidden="true"></i>
       </a>
+      ${dateStub(e)}
       <span class="tkt-perf" aria-hidden="true"></span>
       <div class="tkt-info"><i class="tkt-bg" aria-hidden="true"></i>
         <div class="tkt-sub"><span class="k">${ico(KIND_ICON[e.kind] || 'ticket')}${esc(e.type)}</span><span>${esc(e.w.short)}</span></div>
