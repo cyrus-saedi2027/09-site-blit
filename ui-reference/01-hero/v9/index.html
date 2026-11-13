@@ -3137,6 +3137,31 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .ad-more .chip { gap: .6em; height: 38px; padding-inline: 1.2em; }
 .ad-more small { color: rgba(var(--fg), .6); font-size: 11px; }
 
+/* ───── round U10: a desk has no site header; the bezel is the whole window and stays; only the page inside it scrolls ───── */
+.dk { --dk-out: 6px; }
+html.is-desk, html.is-desk body { overflow: hidden; }
+html.is-desk #nav, html.is-desk .totop { display: none !important; }
+html.is-desk .evp { display: block; height: 100vh; height: 100dvh; min-height: 0; overflow: hidden; }
+html.is-desk .evp-in.dk { display: block; height: 100%; padding: var(--dk-out); box-sizing: border-box; }
+html.is-desk .dk-bz { height: 100%; min-height: 0; box-sizing: border-box; grid-template-rows: minmax(0, 1fr); box-shadow: none; }
+html.is-desk .dk-nav { position: static; top: auto; height: 100%; max-height: none; min-height: 0; overflow-x: hidden; overflow-y: auto; scrollbar-width: none; }
+html.is-desk .dk-nav::-webkit-scrollbar { display: none; }
+html.is-desk .dk-main { box-sizing: border-box; height: 100%; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(var(--fg), .22) transparent; align-content: start; }
+html.is-desk .dk-main .wz-side { top: 0; }
+@media (min-width: 1181px) { html.is-desk .dk-main .rv-side { top: 0; } }
+@media (max-height: 820px) {
+  html.is-desk .dk-tabs a, html.is-desk .dk-foot a, html.is-desk .dk-tg, html.is-desk .dk-logo, html.is-desk .dk-who { height: 40px; }
+  html.is-desk .dk-ind { min-height: 40px; }
+  html.is-desk .dk-nav { gap: 8px; padding-block: 4px; }
+}
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .dk { --dk-out: 4px; }
+  html.is-desk .dk-nav { height: auto; overflow: visible; }
+  html.is-desk .dk-bz { grid-template-rows: auto minmax(0, 1fr); }
+}
+/* a table's box scrolls sideways only: the wheel must pass on to the page inside the frame (a «contain» on it stopped the wheel there) */
+html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
+
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
    one frame, one rhythm of spaces, calm panels with a fine light on their edge, headings with a small icon chip, big pictures instead of many small boxes.
@@ -9387,7 +9412,7 @@ const desk = {
     return true;
   },
   // the rail's settings (kept in the browser): its names shown or not, and the side it is on
-  ui() { const u = store.get('blit.deskUi', null) || {}; return { open: !!u.open, side: u.side === 'right' ? 'right' : 'left' }; },
+  ui() { const u = store.get('blit.deskUi', null) || {}; return { open: !!u.open, side: u.side === 'left' ? 'left' : 'right' }; },
   prevTab: {},
   // the rail: the open item is a circle that slides to the next one; «names» widens the rail; «side» moves it
   rail(dk, kind) {
@@ -9408,7 +9433,11 @@ const desk = {
       tip.style.setProperty('--tx', `${Math.round(x)}px`); tip.style.setProperty('--ty', `${Math.round(y)}px`); tip.classList.add('is-on');
     };
     $$('[data-tip]', dk).forEach((el) => { el.addEventListener('pointerenter', (ev) => { if (ev.pointerType !== 'touch') tipOn(el); }); el.addEventListener('pointerleave', tipOff); el.addEventListener('focus', () => { if (el.matches(':focus-visible')) tipOn(el); }); el.addEventListener('blur', tipOff); el.addEventListener('click', tipOff); });
+    // the theme's switch lives in the rail now (the header is not on a desk)
+    const modeBtn = $('[data-dk="mode"]', dk), syncMode = () => { if (!modeBtn) return; const l = LOOK.mode === 'light', t = l ? 'حالت تیره' : 'حالت روشن'; modeBtn.dataset.tip = t; $('span', modeBtn).textContent = t; $('use', modeBtn).setAttribute('href', l ? '#i-moon' : '#i-sun'); };
+    { const mo = new MutationObserver(syncMode); mo.observe(root, { attributes: true, attributeFilter: ['data-mode'] }); const p1 = page.leave; page.leave = () => { mo.disconnect(); if (p1) p1(); }; }
     $$('[data-dk]', dk).forEach((b) => b.addEventListener('click', () => {
+      if (b.dataset.dk === 'mode') { modeFx.set(LOOK.mode === 'light' ? 'dark' : 'light', b); return; }
       const u = this.ui(); if (b.dataset.dk === 'open') u.open = !u.open; else u.side = u.side === 'left' ? 'right' : 'left';
       store.set('blit.deskUi', u); dk.dataset.open = u.open ? 1 : 0; dk.dataset.side = u.side;
       $('[data-dk="open"]', dk).setAttribute('aria-pressed', String(u.open));
@@ -9418,7 +9447,7 @@ const desk = {
   stop() { this.timers.forEach((t) => { clearInterval(t); clearTimeout(t); }); this.timers = []; },
   every(ms, f) { const t = setInterval(f, ms); this.timers.push(t); return t; },
   render(v) {
-    this.stop();
+    this.stop(); root.classList.add('is-desk');   // (the site's header and the window's scroll step aside: the bezel is the window)
     const D = v.kind === 'org' ? org : admin, tabs = D.tabs(), tab = tabs.find((t) => t.id === v.tab) || tabs[0];
     document.title = `${tab.t} · ${D.title} · بلیت`;
     const ui = this.ui(), top = tabs.filter((t) => !t.parent);
@@ -9427,6 +9456,7 @@ const desk = {
         <a class="dk-logo" href="#" data-home aria-label="بلیت · برگشت به سایت"><span class="dk-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>بلیت</b></a>
         <nav class="dk-tabs" aria-label="بخش‌های ${esc(D.title)}"><i class="dk-ind" aria-hidden="true"></i>${top.map((t) => `<a href="#/${v.kind}${t.id === 'home' ? '' : `/${t.id}`}" data-tip="${esc(t.t)}"${t.id === tab.id || t.id === tab.parent ? ' aria-current="page"' : ''}>${ico(t.icon)}<span>${esc(t.t)}</span>${t.n ? `<small>${esc(t.n)}</small>` : ''}</a>`).join('')}</nav>
         <div class="dk-foot">${D.foot || ''}<a href="#" data-home data-tip="برگشت به سایت">${ico('arrow-r')}<span>برگشت به سایت</span></a>
+          <button type="button" class="dk-tg" data-dk="mode" data-tip="${LOOK.mode === 'light' ? 'حالت تیره' : 'حالت روشن'}">${ico(LOOK.mode === 'light' ? 'moon' : 'sun')}<span>${LOOK.mode === 'light' ? 'حالت تیره' : 'حالت روشن'}</span></button>
           <button type="button" class="dk-tg" data-dk="open" data-tip="نمایش اسم بخش‌ها" aria-pressed="${ui.open}">${ico('menu')}<span>نمایش اسم بخش‌ها</span></button>
           <button type="button" class="dk-tg" data-dk="side" data-tip="نوار رو ببر اون طرف">${ico('swap')}<span>نوار رو ببر اون طرف</span></button>
           <div class="dk-who" data-tip="${esc(D.who)}"><span class="dk-av" aria-hidden="true">${esc(D.av)}</span><span><b>${esc(D.who)}</b><small>${esc(D.role)}</small></span></div></div>
@@ -9440,7 +9470,7 @@ const desk = {
     // on a phone the tabs are one row that scrolls; the open one is brought into view
     const curT = $('.dk-tabs [aria-current]', page.el); if (curT && matchMedia('(max-width: 760px), (max-aspect-ratio: 5/4)').matches) { const row = curT.parentElement, q = curT.getBoundingClientRect(), rq = row.getBoundingClientRect(); row.scrollLeft += (q.left + q.width / 2) - (rq.left + rq.width / 2); }
     const inner0 = page.leave; page.leave = () => { mo.disconnect(); if (inner0) inner0(); };
-    const inner = page.leave; page.leave = () => { this.stop(); if (inner) inner(); };
+    const inner = page.leave; page.leave = () => { this.stop(); root.classList.remove('is-desk'); if (inner) inner(); };
   },
   head(t, lead, extra = '') { return `<header class="dk-head evp-rise"><div><h1>${esc(t)}</h1>${lead ? `<p>${lead}</p>` : ''}</div>${extra}</header>`; },
   tile(label, value, delta, vals, good = true, note = '') {
@@ -9737,7 +9767,7 @@ const wizard = {
     const on = (id, f) => { const b = $(id, el); if (b) b.addEventListener('click', f); };
     on('#wzSave', () => this.save()); on('#wzBack', () => this.go(i - 1)); on('#wzNext', () => this.go(i + 1));
   },
-  go(k) { if (k < 0 || k > 5) return; this.step = k; this.save(true); this.paint(); const top = this.el.getBoundingClientRect().top + scrollY - 90; if (scrollY > top) scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' }); },
+  go(k) { if (k < 0 || k > 5) return; this.step = k; this.save(true); this.paint(); const sc = this.el.closest('.dk-main'); if (sc) { if (sc.scrollTop > 0) sc.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); } else { const top = this.el.getBoundingClientRect().top + scrollY - 90; if (scrollY > top) scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' }); } },
   // the card and what is still missing
   missing() {
     const d = this.d, m = [];
