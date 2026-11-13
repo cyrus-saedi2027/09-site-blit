@@ -11373,7 +11373,7 @@ const hallsPage = {
    ten minutes to choose. The seats' address can't skip it (it comes back here without a pass). The admin turns it on for the
    busy shows (the default), for all, or off. Here the line is simulated and moves faster than a real one.
    ════════════════════════════════════════════════════════════════ */
-const hotShow = (e) => !!((e.badge && !e.draft) || saleMs(e)) || ['hani-nazarian', 'dokhtar-pesar'].includes(e.id);   // a new show's «تازه» is not demand
+const hotShow = (e) => !!((e.badge && !e.draft) || saleMs(e)) || ['hani-nazarian', 'dokhtar-pesar', 's-21'].includes(e.id);   // a new show's «تازه» is not demand
 const queue = {
   need(e) { const m = store.get('blit.queueMode', 'hot'); return m === 'always' || (m === 'hot' && hotShow(e)); },
   ok(sid) { const p = store.sget('blit.qpass', null); return !!(p && p.sid === sid && p.until > Date.now()); },
