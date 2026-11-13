@@ -3133,6 +3133,10 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .dk-main .chip:hover svg.i { transform: scale(1.15) rotate(-6deg); }
 @media (prefers-reduced-motion: reduce) { .dk-main .buy, .dk-main .chip, .cp-more, .cp-tg svg.i, .dk-main .buy::after { transition: none !important; } }
 
+.ad-more { display: grid; justify-items: center; padding: 14px 0 4px; }
+.ad-more .chip { gap: .6em; height: 38px; padding-inline: 1.2em; }
+.ad-more small { color: rgba(var(--fg), .6); font-size: 11px; }
+
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
    one frame, one rhythm of spaces, calm panels with a fine light on their edge, headings with a small icon chip, big pictures instead of many small boxes.
@@ -9616,13 +9620,23 @@ const org = {
         <div class="dk-cols dk-cols-r">
           <section class="panel dk-box evp-rise" aria-labelledby="dkStH"><h2 id="dkStH">${ico('users')}فهرست<small>${fa(l.length)} نفر</small></h2>
             <ul class="dk-staff">${l.map((k) => `<li><span class="dk-av" aria-hidden="true">${esc(k.name.slice(0, 1))}</span><span class="dk-staff-t"><b>${esc(k.name)}</b><small>${esc(maskPhone(k.phone))} · آخرین ورود ${esc(ago(k.seen || k.at))}</small><span>${k.doors.map((g) => `<em class="chip">${esc(gateName(g))}</em>`).join('')}</span></span>
-              <span class="dk-pin"><code data-pin="${esc(k.pin)}">••••</code><button type="button" class="chip gt-ic" data-show="${esc(k.id)}" aria-label="نمایش کد ${esc(k.name)}">${ico('search')}</button></span><button type="button" class="chip gt-ic" data-del="${esc(k.id)}" aria-label="حذف ${esc(k.name)}">${ico('x')}</button></li>`).join('')}</ul></section>
+              <span class="dk-pin"><code data-pin="${esc(k.pin)}">••••</code><button type="button" class="chip gt-ic" data-show="${esc(k.id)}" aria-label="نمایش کد ${esc(k.name)}">${ico('search')}</button></span><button type="button" class="chip gt-ic" data-doors="${esc(k.id)}" aria-label="تغییر درهای ${esc(k.name)}" title="تغییر درها">${ico('sliders')}</button><button type="button" class="chip gt-ic" data-newpin="${esc(k.id)}" aria-label="کد تازه برای ${esc(k.name)}" title="کد تازه">${ico('spark')}</button><button type="button" class="chip gt-ic" data-del="${esc(k.id)}" aria-label="حذف ${esc(k.name)}" title="حذف">${ico('x')}</button></li>`).join('')}</ul>
+            <p class="bk-note">${ico('info')}کنترل‌چی فقط تو صفحه‌ی «کنترل ورود» با کد خودش وارد می‌شه، فقط درهایی رو می‌بینه که بهش دادی، و فقط بلیت اسکن می‌کنه (نه فروش، نه پول، نه کد تخفیف).</p></section>
           <section class="panel dk-box evp-rise" aria-labelledby="dkNewK"><h2 id="dkNewK">${ico('plus')}کنترل‌چی تازه</h2>
             <form id="dkStaff" class="dk-form"><label class="bk-fld"><span>نام</span><input name="n" required autocomplete="off"></label><label class="bk-fld"><span>موبایل</span><input name="p" required inputmode="numeric" dir="ltr" maxlength="11" placeholder="۰۹۱۲ ۰۰۰ ۰۰۰۰"></label>
               <fieldset class="dk-checks"><legend>درها</legend>${GATES.map((g, i) => `<label><input type="checkbox" name="g" value="${g.id}"${i === 0 ? ' checked' : ''}><span>${esc(g.t)}<small>${esc(g.s)}</small></span></label>`).join('')}</fieldset>
               <button type="submit" class="buy">${ico('check')}ساختن و فرستادن پیامک</button><p class="bk-otp-st" id="dkStaffSt"></p></form></section>
         </div>`;
       $$('[data-show]', el).forEach((b) => b.addEventListener('click', () => { const c = $('code', b.parentNode); c.textContent = c.textContent === '••••' ? fa(c.dataset.pin) : '••••'; }));
+      $$('[data-doors]', el).forEach((b) => b.addEventListener('click', () => {
+        const k = this.staffList().find((x) => x.id === b.dataset.doors); if (!k) return;
+        const m = desk.modal('cd-edit', `<h2>${ico('sliders')}درهای ${esc(k.name)}</h2><p class="bk-lead">فقط تو درهای انتخاب‌شده می‌تونه بلیت اسکن کنه.</p><form class="dk-form" id="dkDoors"><fieldset class="dk-checks"><legend>درها</legend>${GATES.map((g) => `<label><input type="checkbox" name="g" value="${g.id}"${k.doors.includes(g.id) ? ' checked' : ''}><span>${esc(g.t)}<small>${esc(g.s)}</small></span></label>`).join('')}</fieldset><p class="bk-otp-st" id="dkDoorsSt"></p><div class="evp-dlg-end"><button type="submit" class="buy">${ico('check')}ذخیره</button></div></form>`, 'درهای کنترل‌چی');
+        $('#dkDoors', m.box).addEventListener('submit', (ev) => { ev.preventDefault(); const doors = $$('input[name="g"]:checked', m.box).map((x) => x.value); if (!doors.length) { const o = $('#dkDoorsSt', m.box); o.className = 'bk-otp-st bad'; o.textContent = 'دست‌کم یه در انتخاب کن.'; return; } const l = this.staffList(), x = l.find((y) => y.id === k.id); x.doors = doors; store.set('blit.staff', l); m.shut(); toast('درها عوض شد.'); paint(); });
+      }));
+      $$('[data-newpin]', el).forEach((b) => b.addEventListener('click', () => {
+        const l = this.staffList(), k = l.find((y) => y.id === b.dataset.newpin); if (!k) return; const pin = String(1000 + Math.floor(Math.random() * 8999)); k.pin = pin; store.set('blit.staff', l);
+        auditLog(`کد ورود ${k.name} عوض شد`, ORG.name); toast(`کد تازه‌ی ${fa(pin)} برای ${maskPhone(k.phone)} پیامک شد؛ کد قبلی دیگه کار نمی‌کنه.`); paint();
+      }));
       $$('[data-del]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.staff', this.staffList().filter((k) => k.id !== b.dataset.del)); toast('کنترل‌چی حذف شد؛ کدش دیگه کار نمی‌کنه.'); paint(); }));
       const f = $('#dkStaff', el), ph = f.elements.p;
       ph.addEventListener('input', () => { ph.value = fa(enDigits(ph.value).replace(/\D/g, '').slice(0, 11)); });
@@ -10767,12 +10781,13 @@ const admin = {
 
   // the orders: a search, the period and the state as filters, refunds, a file
   orders(el) {
-    const f = this.of || (this.of = { q: '', days: 30, st: '' });
+    const f = this.of || (this.of = { q: '', days: 30, st: '', n: 30 });
     const paint = () => {
       const all = allOrders(), t0 = Date.now() - f.days * DAY, q = enDigits(f.q).trim().toUpperCase();
       const l = all.filter((o) => o.at >= t0 && (!f.st || o.st === f.st) && (!q || o.code.includes(q) || o.phone.includes(q) || o.title.includes(f.q.trim())));
       const sum = l.filter((o) => o.st === 'paid').reduce((a, o) => a + o.total, 0);
-      $('#adOrd', el).innerHTML = `<p class="ad-sum">${fa(l.length)} سفارش · پرداخت‌شده‌ها ${money(sum)} تومان</p><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>کد پیگیری</th><th>برنامه</th><th>بلیت</th><th>مبلغ</th><th>موبایل</th><th>زمان</th><th>وضعیت</th><th></th></tr></thead><tbody>${l.slice(0, 60).map((o) => { const s = ORDER_ST[o.st]; return `<tr><td><code class="cd-code">${esc(o.code)}</code></td><td>${esc(o.title)}</td><td>${fa(o.n)}</td><td>${money(o.total)}</td><td>${esc(maskPhone(o.phone))}</td><td>${esc(ago(o.at))}</td><td><em class="st" data-tone="${s[1]}">${esc(s[0])}</em>${o.way === 'wallet' ? '<small> · کیف پول</small>' : ''}</td><td>${o.own ? `<a class="chip" href="#/ticket/${esc(encodeURIComponent(o.code))}">بلیت</a>` : ''}${o.st === 'paid' ? `<button type="button" class="chip" data-ref="${esc(o.code)}">${ico('undo')}برگشت پول</button>` : ''}</td></tr>`; }).join('')}</tbody></table></div>${l.length > 60 ? `<p class="bk-lead">${fa(60)} تای اول؛ بقیه تو فایل.</p>` : ''}`;
+      $('#adOrd', el).innerHTML = `<p class="ad-sum">${fa(l.length)} سفارش · پرداخت‌شده‌ها ${money(sum)} تومان</p><div class="dk-tbl-w"><table class="dk-tbl"><thead><tr><th>کد پیگیری</th><th>برنامه</th><th>بلیت</th><th>مبلغ</th><th>موبایل</th><th>زمان</th><th>وضعیت</th><th></th></tr></thead><tbody>${l.slice(0, f.n).map((o) => { const s = ORDER_ST[o.st]; return `<tr><td><code class="cd-code">${esc(o.code)}</code></td><td>${esc(o.title)}</td><td>${fa(o.n)}</td><td>${money(o.total)}</td><td>${esc(maskPhone(o.phone))}</td><td>${esc(ago(o.at))}</td><td><em class="st" data-tone="${s[1]}">${esc(s[0])}</em>${o.way === 'wallet' ? '<small> · کیف پول</small>' : ''}</td><td>${o.own ? `<a class="chip" href="#/ticket/${esc(encodeURIComponent(o.code))}">بلیت</a>` : ''}${o.st === 'paid' ? `<button type="button" class="chip" data-ref="${esc(o.code)}">${ico('undo')}برگشت پول</button>` : ''}</td></tr>`; }).join('')}</tbody></table></div>${l.length > f.n ? `<div class="ad-more"><button type="button" class="chip" id="adMore">نشون دادن ${fa(Math.min(30, l.length - f.n))} مورد بیشتر<small>${fa(f.n)} از ${fa(l.length)}</small></button></div>` : ''}${l.length > 60 ? `<p class="bk-lead">${fa(60)} تای اول؛ بقیه تو فایل.</p>` : ''}`;
+      const mb = $('#adMore', el); if (mb) mb.addEventListener('click', () => { f.n += 30; paint(); });
       $$('[data-ref]', el).forEach((b) => b.addEventListener('click', () => {
         const o = all.find((x) => x.code === b.dataset.ref);
         const m = desk.modal('ad-no', `<h2>${ico('undo')}برگشت پول <span dir="ltr">${esc(o.code)}</span></h2><p class="bk-lead">${money(o.total)} تومان، ${esc(o.title)}.</p><div class="bk-seg" role="radiogroup" aria-label="به کجا"><button type="button" role="radio" data-to="wallet" aria-checked="true">به کیف پول (فوری)</button><button type="button" role="radio" data-to="card" aria-checked="false">به کارت (۳ تا ۷ روز کاری)</button></div><div class="evp-dlg-end"><button type="button" class="buy" id="adRefGo">${ico('check')}برگشت پول</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'برگشت پول');
@@ -10785,9 +10800,9 @@ const admin = {
         <div class="bk-seg" role="radiogroup" aria-label="بازه">${[[1, 'امروز'], [7, '۷ روز'], [30, '۳۰ روز']].map(([n, t]) => `<button type="button" role="radio" data-days="${n}" aria-checked="${f.days === n}">${t}</button>`).join('')}</div>
         <div class="bk-seg" role="radiogroup" aria-label="وضعیت">${[['', 'همه'], ['paid', 'پرداخت شد'], ['refunded', 'پول برگشت'], ['failed', 'ناموفق']].map(([k, t]) => `<button type="button" role="radio" data-st="${k}" aria-checked="${f.st === k}">${t}</button>`).join('')}</div></div>
       <section class="panel dk-box evp-rise" id="adOrd"></section>`;
-    $('#adQ', el).addEventListener('input', (ev) => { f.q = ev.target.value; paint(); });
-    $$('[data-days]', el).forEach((b) => b.addEventListener('click', () => { f.days = +b.dataset.days; $$('[data-days]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
-    $$('[data-st]', el).forEach((b) => b.addEventListener('click', () => { f.st = b.dataset.st; $$('[data-st]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $('#adQ', el).addEventListener('input', (ev) => { f.q = ev.target.value; f.n = 30; paint(); });
+    $$('[data-days]', el).forEach((b) => b.addEventListener('click', () => { f.days = +b.dataset.days; f.n = 30; $$('[data-days]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    $$('[data-st]', el).forEach((b) => b.addEventListener('click', () => { f.st = b.dataset.st; f.n = 30; $$('[data-st]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
     $('#adCsv', el).addEventListener('click', () => { csvDownload('blit-orders.csv', [['کد پیگیری', 'برنامه', 'شهر', 'بلیت', 'مبلغ (تومان)', 'موبایل', 'زمان', 'وضعیت', 'روش']].concat(allOrders().map((o) => [o.code, o.title, o.city, o.n, o.total, o.phone, new Date(o.at).toISOString(), ORDER_ST[o.st][0], o.way === 'wallet' ? 'کیف پول' : 'درگاه']))); auditLog('خروجی سفارش‌ها گرفته شد'); toast('فایل سفارش‌ها دانلود شد.'); });
     paint();
   },

@@ -1120,7 +1120,7 @@ No new setting. `evpPlace` (the place's tabs or inline) is gone with the old pag
 | picture | size (px) | shape | used for |
 |---|---|---|---|
 | **poster** | 1000 × 1500 (2000 × 3000 for sharp screens) | 2 : 3 | every program's card, its page, its tickets, the seats' and the payment's small pictures |
-| **desktop banner** | 1740 × 1000 (3480 × 2000) | 1.74 : 1 | the top of the home page on a computer |
+| **desktop banner** | ~~1740 × 1000~~ **2000 × 1000** (4000 × 2000); the important part in the centre 1740 × 1000 (round U, §10.15) | 2 : 1 (the panel is 1.74 to 2.1 : 1) | the top of the home page on a computer |
 | **phone and tablet banner** | 1080 × 1440 (2160 × 2880) | 3 : 4, upright | the top of the home page in a window that is taller than wide (a phone, a tablet standing up) |
 
 (`SIZES_FIXED` in `framer.js` is the one place that says them; the settings' «اندازه‌ها» tab and the review page read it.)
