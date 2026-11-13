@@ -484,6 +484,9 @@ svg.i { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-
 /* ── the side dock (round L) ── */
 .sdock { --sdk: clamp(42px, calc(var(--u) * 2.7), 52px); --sdw: 60px; position: fixed; z-index: 41; right: 0; top: 50%; translate: 0 -50%; display: flex; align-items: center; direction: rtl; transform: translateX(var(--sdx, 130%)); transition: transform .75s var(--ease); pointer-events: none; }
 .sdock[data-on="1"] { --sdx: 0px; pointer-events: auto; }
+/* round W: when it is not shown it is not there at all (its shadow peeked 8 px into the window's right edge: a faint line that came and went as the widget slid in and out) */
+.sdock:not([data-on="1"]) { visibility: hidden; transition: transform .75s var(--ease), visibility 0s linear .75s; }
+.sdock[data-on="1"] { visibility: visible; }
 .sdock[data-on="1"][data-open="0"] { --sdx: var(--sdw); }
 .sd-in { position: relative; display: grid; gap: 4px; padding: 8px 6px 8px 8px; background: var(--capsule); border-radius: calc(var(--r) * 1.15) 0 0 calc(var(--r) * 1.15); box-shadow: inset 0 0 0 var(--bw) rgba(var(--fg), var(--bo)); filter: drop-shadow(-8px 12px 24px rgba(0, 0, 0, calc(.34 * var(--shk) + .06))); }
 /* the curves that join it to the edge: the dock's colour in the corner, minus a quarter disc */
@@ -3396,6 +3399,88 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 }
 .og-rights .chip { pointer-events: none; }
 
+/* round W: the way into the full analytics is a button, not a small link */
+.an-full { margin-inline-start: auto; gap: .5em; padding: .55em 1.1em; font-weight: 800; background: rgb(var(--fg)); color: var(--capsule); box-shadow: 0 6px 18px -8px rgba(var(--fg), .55); border-color: transparent; }
+.an-full:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.an-full svg.i { width: 16px; height: 16px; }
+
+/* round W: the forecast, the buyers, the codes */
+.an-mini { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin: 0 0 14px; }
+.an-mini > div { display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; background: rgba(var(--fg), .05); }
+.an-mini span { font-size: 11.5px; color: rgba(var(--fg), .65); }
+.an-mini b { font-size: 20px; font-weight: 900; letter-spacing: -.01em; }
+.an-fc .dk-tbl td small { color: rgba(var(--fg), .6); }
+.an-buy h3 small { font-weight: 500; font-size: .8em; color: rgba(var(--fg), .6); }
+.cct-cols { gap: 2px; } .cct-col { gap: 2px; } .cct-cell { border-radius: 2px; }
+
+/* ───── round W: the hall builder of the admin's panel ───── */
+.evp-dlg.hb-modal { width: min(1240px, 100%); }
+.hd { display: grid; gap: calc(var(--u) * .9); }
+.hd-m { justify-self: start; }
+.hd-m button, .hb-seg button { display: inline-flex; align-items: center; gap: .45em; }
+.hd .bk-seg button[aria-checked="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.hb { display: grid; gap: calc(var(--u) * .9); }
+.hb-top { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .9) calc(var(--u) * 1.6); align-items: flex-start; justify-content: space-between; }
+.hb-f { display: grid; gap: .4em; min-width: 0; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.hb-f > span { font-weight: var(--fwm); color: rgba(var(--fg), .82); }
+.hb-f > span small { font-weight: 400; color: rgba(var(--fg), max(.55, var(--dmin))); }
+.hb-tpl { display: flex; flex-wrap: wrap; gap: .4em; }
+.hb-main { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, .85fr); gap: calc(var(--u) * 1.2); align-items: start; }
+.hb-l { display: grid; gap: calc(var(--u) * .8); min-width: 0; }
+.hb-secs { display: grid; gap: calc(var(--u) * .7); }
+.hb-v { position: sticky; top: 0; display: grid; gap: .7em; align-content: start; padding: calc(var(--u) * .8); border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .035); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); }
+.hb-pv .hpm { height: auto; aspect-ratio: 4 / 3; max-height: min(56svh, 520px); }
+@media (max-width: 1180px) { .hb-pv .hpm { max-height: 34svh; } }
+.hb-cap { margin: 0; font-weight: 900; font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-variant-numeric: tabular-nums; }
+.hb-leg { list-style: none; margin: 0; padding: 0; display: grid; gap: .3em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.hb-leg li { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: .6em; }
+.hb-leg b { font-variant-numeric: tabular-nums; }
+.hb-leg small { color: rgba(var(--fg), max(.6, var(--dmin))); min-width: 3.2em; text-align: end; }
+.hb-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: var(--c); flex: none; box-shadow: 0 0 0 1px rgba(var(--fg), .25); }
+.hb-msg { margin: 0; min-height: 1.6em; font-size: calc(max(12px, calc(var(--u) * .75)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), .78); }
+.hb-msg.is-bad { color: var(--t-bad); font-weight: 700; }
+.hb-empty { margin: 0; padding: 1.2em; text-align: center; border-radius: calc(var(--r) * .55); border: 1px dashed rgba(var(--fg), .25); color: rgba(var(--fg), max(.6, var(--dmin))); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.hb-card { border-radius: calc(var(--r) * .7); background: rgba(var(--fg), .035); box-shadow: inset 0 0 0 1px rgba(var(--fg), .12); }
+.hb-card > header { display: flex; flex-wrap: wrap; align-items: center; gap: .6em; padding: calc(var(--u) * .6) calc(var(--u) * .8); border-bottom: 1px solid rgba(var(--fg), .09); }
+.hb-n { display: grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: 50%; background: rgb(var(--fg)); color: var(--capsule); font-weight: 900; font-size: calc(max(12px, calc(var(--u) * .75)) * var(--tx) * var(--tx-small)); flex: none; }
+.hb-name { flex: 1 1 9em; min-width: 7em; }
+.hb-name input { box-sizing: border-box; width: 100%; height: 2.6em; padding: 0 .8em; border-radius: calc(var(--r) * .45); border: 1px solid transparent; background: transparent; color: rgb(var(--fg)); font: 800 calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)) var(--font); }
+.hb-name input:hover { border-color: rgba(var(--fg), .15); }
+.hb-name input:focus { border-color: var(--viz-1); background: rgba(var(--fg), .05); outline: 0; }
+.hb-kind { font-style: normal; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); padding: .2em .7em; border-radius: 99px; background: rgba(var(--fg), .08); color: rgba(var(--fg), .82); white-space: nowrap; }
+.hb-sum { font-size: calc(max(12px, calc(var(--u) * .75)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .85); font-variant-numeric: tabular-nums; margin-inline-start: auto; }
+.hb-act { display: inline-flex; gap: .25em; }
+.hb-act .chip { padding-inline: .55em; }
+.hb-body { display: grid; gap: calc(var(--u) * .7); padding: calc(var(--u) * .8); }
+.hb-g { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: .7em 1em; align-items: end; }
+.hb-g .hb-seg { justify-self: start; max-width: 100%; flex-wrap: wrap; }
+.hb-st { direction: ltr; display: inline-flex; align-items: stretch; height: max(42px, calc(var(--u) * 2.6)); border-radius: calc(var(--r) * .5); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); overflow: hidden; width: fit-content; max-width: 100%; }
+.hb-st button { all: unset; cursor: pointer; box-sizing: border-box; width: 2.6em; display: grid; place-items: center; font: 700 1.25em/1 var(--font); color: rgba(var(--fg), .85); }
+.hb-st button:hover { background: rgba(var(--fg), .1); }
+.hb-st button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -3px; }
+.hb-st input { all: unset; box-sizing: border-box; width: 4.4em; text-align: center; font: 800 calc(max(14px, calc(var(--u) * .9)) * var(--tx) * var(--tx-main)) var(--font); font-variant-numeric: tabular-nums; color: rgb(var(--fg)); direction: ltr; -moz-appearance: textfield; }
+.hb-st input::-webkit-outer-spin-button, .hb-st input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.hb-st input:focus { background: rgba(var(--fg), .08); }
+.hb-cs .hb-sel, .hb-cr .hb-sel { position: relative; display: block; }
+.hb-sel .hb-dot { position: absolute; inset-inline-start: .9em; top: 50%; translate: 0 -50%; z-index: 1; pointer-events: none; }
+.hb-sel .su-b, .hb-sel select { padding-inline-start: 2.4em; }
+.hb-fl { display: flex; flex-wrap: wrap; align-items: center; gap: .4em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.hb-fl > span { font-weight: var(--fwm); color: rgba(var(--fg), .82); margin-inline-end: .3em; }
+.hb-fl .chip[aria-pressed="true"] { background: rgb(var(--fg)); color: var(--capsule); }
+.hb-cls { display: grid; gap: .6em; padding-top: calc(var(--u) * .6); border-top: 1px dashed rgba(var(--fg), .16); }
+.hb-list-c { display: grid; gap: .5em; justify-items: start; }
+.hb-cr { display: flex; flex-wrap: wrap; align-items: center; gap: .6em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.hb-cr input { box-sizing: border-box; width: 5em; height: 2.8em; text-align: center; border-radius: calc(var(--r) * .45); border: 1px solid rgba(var(--fg), .18); background: rgba(var(--fg), .04); color: rgb(var(--fg)); font: 800 calc(max(13.5px, calc(var(--u) * .85)) * var(--tx) * var(--tx-main)) var(--font); direction: ltr; }
+.hb-cr .hb-sel { min-width: 9em; }
+.hb-add { display: flex; flex-wrap: wrap; align-items: center; gap: .5em; padding: calc(var(--u) * .7); border-radius: calc(var(--r) * .7); border: 1px dashed rgba(var(--fg), .28); font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.hb-add > span { font-weight: var(--fwm); color: rgba(var(--fg), .85); }
+.hb-add .chip { gap: .4em; }
+.hb-add .hb-floor { background: rgb(var(--fg)); color: var(--capsule); }
+@media (max-width: 1180px) {
+  .hb-main { grid-template-columns: minmax(0, 1fr); }
+  .hb-v { position: static; order: -1; }
+}
+
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
    one frame, one rhythm of spaces, calm panels with a fine light on their edge, headings with a small icon chip, big pictures instead of many small boxes.
@@ -4507,7 +4592,7 @@ const CLS_OK = 'ABCDEFGHVX';   // the price classes (X: outside the capacity)
 function sanitizeLib(j) {
   const np = GEO_DATA.p.length, obj = (x) => (x && typeof x === 'object' && !Array.isArray(x) ? x : {}), arr = (x) => (Array.isArray(x) ? x : []), str = (x) => typeof x === 'string' && x.length > 0 && x.length < 300;
   const pt = (x) => Array.isArray(x) && x.length >= 2 && x[0] !== null && x[1] !== null && x[0] !== '' && x[1] !== '' && isFinite(x[0]) && isFinite(x[1]) ? [+x[0], +x[1]] : null;
-  const okLay = (l) => !!l && typeof l === 'object' && (typeof l.txt === 'string' || (l.p && typeof l.p === 'object') || (l.copy && typeof l.copy === 'object' && l.copy.hall != null));
+  const okLay = (l) => !!l && typeof l === 'object' && ((l.b && typeof l.b === 'object' && Array.isArray(l.b.secs)) || typeof l.txt === 'string' || (l.p && typeof l.p === 'object') || (l.copy && typeof l.copy === 'object' && l.copy.hall != null));
   const lay = (l) => ({ ...l, n: typeof l.n === 'string' ? l.n : '' });
   const cities = {}; Object.entries(obj(j.cities)).forEach(([k, x]) => { x = obj(x); const c = {}; if (x.del) c.del = true; if (x.hide) c.hide = true; if (str(x.name)) c.name = x.name; if (Number.isInteger(x.p) && x.p >= 0 && x.p < np) c.p = x.p; if (typeof x.county === 'string') c.county = x.county; cities[k] = c; });
   const cityNew = arr(j.cityNew).filter((c) => c && str(c.slug) && str(c.name)).map((c) => ({ slug: c.slug, name: c.name, p: Number.isInteger(c.p) && c.p >= 0 && c.p < np ? c.p : 0, hide: !!c.hide, county: typeof c.county === 'string' ? c.county : '' }));
@@ -4631,7 +4716,8 @@ function planOfHall(h, i = 0) {
   let plan = null;
   const l0 = h.lay[ix] || {};
   if (l0.x) {
-    if (l0.txt && typeof planFromText === 'function') { const r = planFromText(l0.txt); plan = r.secs ? r.plan : null; }
+    if (l0.b && typeof planFromBuilder === 'function') { const r = planFromBuilder(l0.b); plan = r.secs ? r.plan : null; }
+    else if (l0.txt && typeof planFromText === 'function') { const r = planFromText(l0.txt); plan = r.secs ? r.plan : null; }
     else if (l0.p && typeof buildPlan === 'function') plan = buildPlan(l0.p);
     else if (l0.copy) { const src = hallById(l0.copy.hall); plan = src && src.id !== h.id ? planOfHall(src, l0.copy.lay | 0) : null; }
   } else if (!h.custom) {
@@ -4737,6 +4823,17 @@ const libSet = {
     else { const k = i - h.lay.filter((l) => !l.x).length, x = lib.o.halls[h.id]; if (k < 0 || !x || !x.addLay || !x.addLay[k]) return false; x.addLay[k].n = name; }
     lib.save(); return true;
   },
+  // change a layout the admin built: in place while no show uses it (the numbers of its rows stay the same), else it is kept as it was and the new one is added after it
+  layEdit(id, i, layout) {
+    const h = hallById(id); if (!h || !h.lay[i] || !h.lay[i].x) return -1;
+    const used = LIST().concat(EVENTS).some((e) => e.hall === h.id && (e.hallLay | 0) === i);
+    if (used) return libSet.layAdd(id, { n: `${h.lay[i].n || layName(h, i) || 'چیدمان'} (ویرایش)`, ...layout });
+    let t = null;
+    if (h.custom) { const n = lib.o.hallNew.find((q) => q.id === h.id); t = n && n.lay[i]; }
+    else { const k = i - h.lay.filter((q) => !q.x).length, x = lib.o.halls[h.id]; t = x && x.addLay && x.addLay[k]; }
+    if (!t) return -1;
+    ['b', 'txt', 'p', 'copy'].forEach((k) => { delete t[k]; }); Object.assign(t, layout); lib.save(); return i;
+  },
   // only the last layout the admin added, and only when no show uses it (a show keeps its layout's number)
   layDel(id, i) {
     const h = hallById(id); if (!h || i !== h.lay.length - 1 || !h.lay[i] || !h.lay[i].x || (h.custom && h.lay.length < 2)) return false;
@@ -4808,7 +4905,7 @@ const LOOK_DEF = {
   panelColor: '#0d0d0d', textColor: 'auto', textCustom: '#ffffff',
   font: 'vazir', weight: 'normal', tx: 100, txNav: 100, txMain: 100, txSmall: 100, txCap: 100, txCopy: 100, digits: 'fa',
   // the header
-  hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdScroll: 'dock', hdWidth: 100, hdCompact: true, hdCompactW: 1400, hdSpeed: 0.8, hdHover: 'pill', hdProg: true,
+  hdSearch: true, hdCity: true, hdTickets: true, hdBell: true, hdLogin: true, hdScroll: 'one', hdWidth: 100, hdCompact: true, hdCompactW: 1400, hdSpeed: 0.8, hdHover: 'pill', hdProg: true,
   // motion
   mot: 'balanced', trans: 'fade', zoom: 'mid', zoomShare: 100, dur: 7, fade: 1.2, spot: true, magnet: true, magnetPow: 33, swipe: true, story: true, intro: true, scroll: 'smooth', scrollSoft: 55,
   // the list under the hero: the sample shows that fill it, the shape of a poster's frame (width ÷ height), the words under the poster or over it
@@ -5789,7 +5886,7 @@ const UI = {
     { h: 'هدر', c: [
       W('hdSearch', 'جستجو'), W('hdCity', 'انتخاب شهر'), W('hdTickets', 'بلیت‌های من'), W('hdBell', 'اعلان‌ها'), W('hdLogin', 'دکمه‌ی ورود'),
       R('hdWidth', 'عرض هدر بالای صفحه', 60, 100, 1, '٪'),
-      S('hdScroll', 'وقتی اسکرول می‌کنی (دسته‌ها کجا باشن)', [['dock', 'ویجت کناری، سمت راست (بدون هدر دوم)'], ['one', 'فقط یه هدر که خودش نشون می‌ده کدوم دسته‌ایم'], ['bar', 'هدر + نوار دسته‌ها زیرش (قبلی)']]),
+      S('hdScroll', 'وقتی اسکرول می‌کنی (دسته‌ها کجا باشن)', [['dock', 'ویجت کناری، سمت راست (فعلاً خاموشه؛ از این‌جا روشنش کن)'], ['one', 'فقط یه هدر که خودش نشون می‌ده کدوم دسته‌ایم (پیش‌فرض)'], ['bar', 'هدر + نوار دسته‌ها زیرش (قبلی)']]),
       W('hdCompact', 'هدر با اسکرول کوچیک بشه'),
       R('hdCompactW', 'عرض هدر کوچیک‌شده', 760, 1400, 10, 'px'),
       S('hdSpeed', 'سرعت جمع‌شدن هدر', [[0.5, 'تند'], [0.8, 'معمولی'], [1.2, 'آروم']]),
@@ -7097,20 +7194,20 @@ function hallLayout(plan) {
     if (sec.k === 'fan') {
       for (let r = 0; r < sec.rows; r++) {
         const R = sec.R0 + r * HP.gap, blocks = sec.seats(r), step = HP.pitch / R;
-        const slots = blocks.reduce((a, b) => a + b, 0) + (blocks.length - 1) * HP.aisle, span = (slots - 1) * step;
+        const ai = sec.aisle != null ? sec.aisle : HP.aisle, slots = blocks.reduce((a, b) => a + b, 0) + (blocks.length - 1) * ai, span = (slots - 1) * step;
         const at = (sl) => { const th = span / 2 - sl * step; return { x: R * Math.sin(th), y: R * Math.cos(th), a: -th }; };
         let sl = 0, n = 0;
-        blocks.forEach((b) => { for (let k = 0; k < b; k++) { seats.push({ row: r + 1, n: ++n, ...at(sl) }); sl++; } sl += HP.aisle; });
+        blocks.forEach((b) => { for (let k = 0; k < b; k++) { seats.push({ row: r + 1, n: ++n, ...at(sl) }); sl++; } sl += ai; });
         labels.push({ row: r + 1, ...at(-1.3) }, { row: r + 1, ...at(slots + 0.3) });
       }
     } else if (sec.k === 'rect') {
       const rot = sec.rot || 0, c = Math.cos(rot), s = Math.sin(rot), x0 = sec.x0 || 0, y0 = sec.yc != null ? sec.yc : 0;
       const T = (x, y) => (rot ? { x: x0 + x * c - y * s, y: y0 + x * s + y * c } : { x: x + x0, y });
       for (let r = 0; r < sec.rows; r++) {
-        const blocks = sec.seats(r), slots = blocks.reduce((a, b) => a + b, 0) + (blocks.length - 1) * HP.aisle, y = (sec.y0 || 0) + r * HP.gap;
+        const ai = sec.aisle != null ? sec.aisle : HP.aisle, blocks = sec.seats(r), slots = blocks.reduce((a, b) => a + b, 0) + (blocks.length - 1) * ai, y = (sec.y0 || 0) + r * HP.gap;
         const at = (sl) => ({ ...T((slots - 1) * HP.pitch / 2 - sl * HP.pitch, rot ? r * HP.gap + 40 : y), a: rot });
         let sl = 0, n = 0;
-        blocks.forEach((b) => { for (let k = 0; k < b; k++) { seats.push({ row: r + 1, n: ++n, ...at(sl) }); sl++; } sl += HP.aisle; });
+        blocks.forEach((b) => { for (let k = 0; k < b; k++) { seats.push({ row: r + 1, n: ++n, ...at(sl) }); sl++; } sl += ai; });
         labels.push({ row: r + 1, ...at(-1.3) }, { row: r + 1, ...at(slots + 0.3) });
       }
     } else if (sec.k === 'boxes') {
@@ -7256,6 +7353,238 @@ function hallLayoutGrid(plan) {
     GRID_L.set(plan, G);
   }
   return { ...G, secs: G.secs.map((z) => ({ ...z, seats: z.seats.map((s) => ({ ...s })) })) };
+}
+/* ════════════════════════════════════════════════════════════════
+   round W: the hall builder of the admin's panel. A hall's seats are laid out from a list of SECTIONS the admin adds one by one, in the order they sit from the stage back:
+     ردیف‌های صندلی  rows (a semicircle of rows round the stage, or straight rows): how many rows, the seats of the first, how much each row widens, how many blocks (aisles), the aisle's width,
+                     the distance from the section before it, and the price class of the rows (one class, three cuts, or by hand)
+     کنار سالن       rows along a side wall, facing the stage (the stands of a sports hall)
+     لژ              boxes on the walls: how many, how many seats, which side
+     میز             round tables with chairs
+     ایستاده         a standing area (a number of people)
+   as many floors as wanted (a floor is a section further back: «+ طبقه‌ی تازه»), templates to start from, a drawing that follows every change, and the count of seats of every price class.
+   What it makes is a plan the same as the others (planFromBuilder: {stage, secs}); the state is kept in the layout (`b`) so it can be edited again.
+   ════════════════════════════════════════════════════════════════ */
+const HB_KINDS = { seat: 'ردیف‌های صندلی', side: 'کنار سالن', box: 'لژ', table: 'میز', stand: 'ایستاده' };
+const HB_W = { 1: [1], 2: [0.5, 0.5], 3: [0.3, 0.4, 0.3], 4: [0.22, 0.28, 0.28, 0.22], 5: [0.17, 0.22, 0.22, 0.22, 0.17] };
+const HB_AISLE = { n: 1.1, m: 1.7, w: 2.6 };
+const HB_CLS = ['V', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const HB_FLOORS = ['همکف', 'بالکن', 'طبقه‌ی اول', 'طبقه‌ی دوم', 'طبقه‌ی سوم', 'طبقه‌ی چهارم', 'طبقه‌ی پنجم'];
+const hbNext = (c) => { const L = 'ABCDEFGH', i = L.indexOf(c); return i < 0 ? 'A' : L[Math.min(7, i + 1)]; };
+const hbId = () => `s${Math.random().toString(36).slice(2, 7)}`;
+
+// the seats of row r of a seated section as blocks: n seats cut by the weights of its blocks
+function hbBlocks(s, r) {
+  const n = Math.max(1, Math.round((+s.first || 1) + (+s.grow || 0) * r)), B = clamp(s.blocks | 0 || 1, 1, 5), sz = HB_W[B].map((w) => Math.max(1, Math.round(n * w)));
+  let d = n - sz.reduce((a, b) => a + b, 0), i = Math.floor(B / 2); while (d !== 0) { sz[i] = Math.max(1, sz[i] + Math.sign(d)); d -= Math.sign(d); i = (i + 1) % B; if (sz.every((x) => x <= 1) && d < 0) break; }
+  return sz;
+}
+// the price class of every row: [[from, to, class]]
+function hbRuns(s, R) {
+  const c = s.cls || { mode: 'one', c: 'B' }, run = [];
+  if (c.mode === 'thirds') { const a = Math.max(1, Math.round(R / 3)), b = Math.max(a + 1, Math.round((2 * R) / 3)), c1 = c.c || 'A', c2 = hbNext(c1), c3 = hbNext(c2); [[1, a, c1], [a + 1, Math.min(b, R), c2], [b + 1, R, c3]].forEach((x) => { if (x[1] >= x[0]) run.push(x); }); }
+  else if (c.mode === 'custom') { let from = 1; for (const [to, k] of (c.list || []).slice().sort((p, q) => p[0] - q[0])) { const t = Math.min(R, to | 0); if (t >= from) { run.push([from, t, k]); from = t + 1; } } if (from <= R) run.push([from, R, ((c.list || [])[(c.list || []).length - 1] || [0, c.c || 'B'])[1]]); }
+  else run.push([1, R, c.c || 'B']);
+  return run.length ? run : [[1, Math.max(1, R), 'B']];
+}
+// the plan of a builder state, as planFromText makes one: {plan, errs, cap, secs}
+function planFromBuilder(b) {
+  const errs = [], out = [], S = (b && b.secs) || [], stage = (b && b.stage) || 'arc'; let idn = 0;
+  const stands = S.filter((s) => s.kind === 'stand');
+  stands.forEach((s, k) => { if (!(s.cap >= 1 && s.cap <= 30000)) errs.push(`«${s.t || 'ایستاده'}»: جای ایستاده چند نفره؟`); out.push({ id: `ga${idn++}`, t: s.t || 'ایستاده', k: 'stand', cap: s.cap | 0, box: [-310, 110 + k * 350, 620, 330], runs: [[0, 0, s.c || 'B']] }); });
+  let cursor = stands.length ? 520 + (stands.length - 1) * 350 : 150, seatedBefore = false;
+  for (const s of S) {
+    if (s.kind === 'table') {
+      const n = clamp(s.n | 0, 1, 80), per = clamp(s.per | 0, 2, 12), cols = clamp(Math.round(Math.sqrt(n * 1.7)), 2, 7), rows = Math.ceil(n / cols), y0 = cursor + (seatedBefore || stands.length ? 50 : 50);
+      if (!(s.n >= 1)) { errs.push(`«${s.t || 'میزها'}»: چند میز؟`); continue; }
+      const c1 = s.c1 || 'A', c2 = s.c2 || c1;
+      out.push({ id: `t${idn++}`, t: s.t || 'میزها', k: 'tables', cols, rows, per, y0, dx: 128, dy: 116, runs: [[1, cols, c1], [cols + 1, cols * rows, c2]].filter(([a, z]) => z >= a) }); cursor = y0 + rows * 116; seatedBefore = true;
+    } else if (s.kind === 'seat') {
+      const R = clamp(s.rows | 0, 0, 60); if (!(R >= 1)) { errs.push(`«${s.t || 'بخش'}» هنوز ردیفی نداره`); continue; }
+      const gap = s.gap === 'big' ? 170 : s.gap === 'none' ? 0 : seatedBefore ? 80 : 0, runs = hbRuns(s, R), aisle = HB_AISLE[s.aisle || 'm'];
+      if (s.shape === 'rect') { const y0 = cursor + gap; out.push({ id: `s${idn++}`, t: s.t || 'سالن', k: 'rect', rows: R, y0, seats: (r) => hbBlocks(s, r), runs, aisle }); cursor = y0 + (R - 1) * HP.gap; }
+      else { const R0 = Math.max(220, cursor - 20 + gap); out.push({ id: `s${idn++}`, t: s.t || 'سالن', k: 'fan', rows: R, R0, seats: (r) => hbBlocks(s, r), runs, aisle }); cursor = R0 + (R - 1) * HP.gap + 20; }
+      seatedBefore = true;
+    }
+  }
+  // the boxes and the stands along the walls go beside the widest rows
+  const side = S.filter((s) => s.kind === 'box' || s.kind === 'side');
+  if (side.length) {
+    const L0 = hallLayout({ stage, secs: out.length ? out : [{ id: 'x', t: '', k: 'rect', rows: 1, y0: 150, seats: () => [10], runs: [[1, 1, 'A']] }] });
+    const seatsAll = L0.secs.flatMap((z) => z.seats), xs = seatsAll.map((p) => Math.abs(p.x - L0.cx)), ys = seatsAll.map((p) => p.y - L0.cy);
+    const stBoxes = out.filter((z) => z.k === 'stand').map((z) => z.box), seatYc = ys.length ? (Math.min(...ys) + Math.max(...ys)) / 2 : 300,
+      yc = stBoxes.length ? stBoxes.reduce((a, q) => a + q[1] + q[3] / 2, 0) / stBoxes.length : seatYc,   // (beside the standing floor when there is one, else beside the rows)
+      maxX = Math.max(260, stBoxes.length ? 330 : 0, ...xs), hasBox = side.some((s) => s.kind === 'box');
+    const yb = { 1: 170, '-1': 170 }, xb = { 1: maxX + (hasBox ? 220 : 90), '-1': maxX + (hasBox ? 220 : 90) }; let next = 1;
+    for (const s of side) {
+      if (s.kind === 'box') {
+        const n = clamp(s.n | 0, 1, 24), per = clamp(s.per | 0, 1, 10); if (!(s.n >= 1)) { errs.push(`«${s.t || 'لژ'}»: چند لژ؟`); continue; }
+        const sides = s.side === 'both' ? [1, -1] : s.side === 'l' ? [-1] : [1];
+        for (const sd of sides) { out.push({ id: `l${idn++}`, t: sides.length > 1 ? `${s.t || 'لژها'} ${sd > 0 ? 'راست' : 'چپ'}` : s.t || 'لژها', k: 'boxes', side: sd, n, per, x: Math.max(300, maxX + 70), y0: yb[sd], dy: 82, runs: [[1, n, s.c || 'A']] }); yb[sd] += n * 82 + 40; }
+      } else {
+        const R = clamp(s.rows | 0, 0, 40); if (!(R >= 1)) { errs.push(`«${s.t || 'کنار سالن'}» هنوز ردیفی نداره`); continue; }
+        const sd = s.side === 'l' ? -1 : s.side === 'r' ? 1 : next; next = -sd;
+        out.push({ id: `w${idn++}`, t: s.t || (sd > 0 ? 'سکوی راست' : 'سکوی چپ'), k: 'rect', rows: R, y0: 0, x0: sd * xb[sd], yc: Math.max(160, yc), rot: sd > 0 ? -Math.PI / 2 : Math.PI / 2, seats: (r) => hbBlocks({ ...s, blocks: Math.min(s.blocks | 0 || 1, 2) }, r), runs: hbRuns(s, R), aisle: HB_AISLE[s.aisle || 'm'] });
+        xb[sd] += R * HP.gap + 70;
+      }
+    }
+  }
+  if (!out.length && !errs.length) errs.push('هنوز هیچ بخشی نیست؛ از «بخش تازه» یکی اضافه کن یا یه قالب آماده بذار.');
+  const plan = { stage, secs: out }, L = out.length ? hallLayout(plan) : null;
+  return { plan, errs, cap: L ? L.secs.reduce((n, z) => n + (z.sec.k === 'stand' ? z.sec.cap : z.seats.length), 0) : 0, secs: out.length };
+}
+// the old designer's numbers as a builder state (to open an older layout in the builder)
+function bFromP(p) {
+  const fan = p.shape === 'fan', secs = [];
+  if (p.stand > 0) secs.push({ id: hbId(), kind: 'stand', t: 'ایستاده (جلوی صحنه)', cap: p.stand | 0, c: 'B' });
+  if (p.tables > 0) secs.push({ id: hbId(), kind: 'table', t: 'میزها', n: p.tables | 0, per: 6, c1: 'A', c2: 'B' });
+  secs.push({ id: hbId(), kind: 'seat', t: p.balcony ? 'همکف' : 'سالن', shape: fan ? 'fan' : 'rect', rows: p.rows | 0, first: p.seats | 0, grow: p.grow ? 0.5 : 0, blocks: clamp(p.blocks | 0, 1, 3), aisle: 'm', gap: 'auto', cls: { mode: 'thirds', c: 'A' } });
+  if (p.boxes > 0) secs.push({ id: hbId(), kind: 'box', t: 'لژها', side: 'both', n: p.boxes | 0, per: 4, c: 'A' });
+  if (p.balcony > 0) secs.push({ id: hbId(), kind: 'seat', t: 'بالکن', shape: fan ? 'fan' : 'rect', rows: p.balcony | 0, first: (p.seats | 0) + 6, grow: 1, blocks: clamp(p.blocks | 0, 1, 3), aisle: 'm', gap: 'auto', cls: { mode: 'one', c: 'D' } });
+  return { v: 1, stage: fan ? 'arc' : p.stand ? 'wide' : 'rect', secs };
+}
+const hbSeat = (o) => ({ id: hbId(), kind: 'seat', shape: 'fan', rows: 10, first: 14, grow: 0.5, blocks: 3, aisle: 'm', gap: 'auto', cls: { mode: 'thirds', c: 'A' }, ...o });
+const HB_TPL = {
+  classic: { t: 'تالار کلاسیک (لژ و دو بالکن)', b: { v: 1, stage: 'arc', secs: [hbSeat({ t: 'پارتر', rows: 14, first: 12, grow: 1 }), { id: hbId(), kind: 'box', t: 'لژها', side: 'both', n: 5, per: 4, c: 'A' }, hbSeat({ t: 'بالکن اول', rows: 5, first: 20, grow: 1, gap: 'big', cls: { mode: 'one', c: 'C' } }), hbSeat({ t: 'بالکن دوم', rows: 4, first: 24, grow: 1, cls: { mode: 'one', c: 'D' } })] } },
+  rect: { t: 'سالن مستطیل (همکف و بالکن)', b: { v: 1, stage: 'rect', secs: [hbSeat({ t: 'همکف', shape: 'rect', rows: 12, first: 16, grow: 0, blocks: 2 }), hbSeat({ t: 'بالکن', shape: 'rect', rows: 4, first: 20, grow: 0, blocks: 2, gap: 'big', cls: { mode: 'one', c: 'D' } })] } },
+  small: { t: 'سالن کوچک (یه تکه)', b: { v: 1, stage: 'rect', secs: [hbSeat({ t: 'سالن', shape: 'rect', rows: 10, first: 12, grow: 0, blocks: 2 })] } },
+  amph: { t: 'آمفی‌تئاتر نیم‌دایره', b: { v: 1, stage: 'arc', secs: [hbSeat({ t: 'سالن', rows: 18, first: 10, grow: 1.5, blocks: 3 })] } },
+  concert: { t: 'کنسرت ایستاده و سکوی پشتش', b: { v: 1, stage: 'wide', secs: [{ id: hbId(), kind: 'stand', t: 'ایستاده (جلوی صحنه)', cap: 1500, c: 'B' }, hbSeat({ t: 'سکوی پشت', shape: 'rect', rows: 8, first: 30, grow: 0, blocks: 3, cls: { mode: 'one', c: 'C' } })] } },
+  cabaret: { t: 'کافه‌تئاتر (میز و ردیف)', b: { v: 1, stage: 'rect', secs: [{ id: hbId(), kind: 'table', t: 'میزها', n: 15, per: 6, c1: 'A', c2: 'B' }, hbSeat({ t: 'پشت میزها', shape: 'rect', rows: 6, first: 20, grow: 0, blocks: 2, cls: { mode: 'one', c: 'C' } })] } },
+  arena: { t: 'ورزشگاه (ایستاده و سکوهای کنار)', b: { v: 1, stage: 'wide', secs: [{ id: hbId(), kind: 'stand', t: 'ایستاده (جلوی صحنه)', cap: 1200, c: 'B' }, { id: hbId(), kind: 'side', t: 'سکوی راست', side: 'r', rows: 7, first: 16, grow: 0, blocks: 1, aisle: 'm', cls: { mode: 'custom', c: 'A', list: [[3, 'A'], [7, 'C']] } }, { id: hbId(), kind: 'side', t: 'سکوی چپ', side: 'l', rows: 7, first: 16, grow: 0, blocks: 1, aisle: 'm', cls: { mode: 'custom', c: 'A', list: [[3, 'A'], [7, 'C']] } }, hbSeat({ t: 'سکوی روبه‌رو', rows: 6, first: 14, grow: 1, gap: 'big', cls: { mode: 'one', c: 'D' } })] } },
+  floors: { t: 'سالن چندطبقه (چهار طبقه و لژ)', b: { v: 1, stage: 'arc', secs: [hbSeat({ t: 'همکف', rows: 12, first: 12, grow: 1 }), { id: hbId(), kind: 'box', t: 'لژها', side: 'both', n: 4, per: 4, c: 'A' }, hbSeat({ t: 'طبقه‌ی اول', rows: 6, first: 20, grow: 1, gap: 'big', cls: { mode: 'one', c: 'C' } }), hbSeat({ t: 'طبقه‌ی دوم', rows: 5, first: 24, grow: 1, gap: 'big', cls: { mode: 'one', c: 'D' } }), hbSeat({ t: 'طبقه‌ی سوم', rows: 4, first: 28, grow: 1, gap: 'big', cls: { mode: 'one', c: 'E' } })] } },
+  blank: { t: 'از صفر', b: { v: 1, stage: 'arc', secs: [] } },
+};
+const hbClone = (b) => JSON.parse(JSON.stringify(b));
+const HB = { cur: null };   // the state of a new hall's layout (kept while the page redraws)
+
+/* ───── the builder's screen ───── */
+function hallBuilderUI(root, onChange = () => {}, init = null) {
+  const st = init ? hbClone(init) : HB.cur ? HB.cur : (HB.cur = hbClone(HB_TPL.classic.b));
+  if (init) HB.cur = null;
+  st.secs.forEach((s) => { if (!s.id) s.id = hbId(); });
+  let last = { ok: false };
+  const secOf = (id) => st.secs.find((s) => s.id === id);
+  const num = (s, k, t, min, max, step = 1) => `<div class="hb-f"><span>${t}</span><div class="hb-st"><button type="button" data-st="-${step}" data-k="${k}" aria-label="کمتر">−</button><input type="number" inputmode="numeric" min="${min}" max="${max}" step="${step}" value="${s[k] == null ? '' : s[k]}" data-k="${k}" data-min="${min}" data-max="${max}" aria-label="${esc(t)}"><button type="button" data-st="${step}" data-k="${k}" aria-label="بیشتر">+</button></div></div>`;
+  const seg = (s, k, t, opts) => `<div class="hb-f"><span>${t}</span><div class="bk-seg hb-seg" role="radiogroup" aria-label="${esc(t)}">${opts.map(([v, l]) => `<button type="button" role="radio" data-k="${k}" data-v="${v}" aria-checked="${String(s[k]) === String(v)}">${l}</button>`).join('')}</div></div>`;
+  const clsSel = (cur, k, t) => `<div class="hb-f hb-cs"><span>${t}</span><div class="hb-sel"><i class="hb-dot" style="--c:${(TIER[cur] || TIER.B).c}" aria-hidden="true"></i><select data-k="${k}" aria-label="${esc(t)}">${HB_CLS.map((c) => `<option value="${c}"${c === cur ? ' selected' : ''}>${c === 'V' ? 'ویژه (گران‌ترین)' : `رده‌ی ${c}${c === 'A' ? ' (گران)' : c === 'H' ? ' (ارزان)' : ''}`}</option>`).join('')}</select></div></div>`;
+  const clsBlock = (s) => {
+    const c = s.cls || (s.cls = { mode: 'one', c: 'B' });
+    return `<div class="hb-cls"><div class="hb-f"><span>رده‌بندی ردیف‌ها (قیمت)</span><div class="bk-seg hb-seg" role="radiogroup" aria-label="رده‌بندی"><button type="button" role="radio" data-cm="one" aria-checked="${c.mode === 'one'}">همه یه رده</button><button type="button" role="radio" data-cm="thirds" aria-checked="${c.mode === 'thirds'}">سه‌تکه (جلو گران)</button><button type="button" role="radio" data-cm="custom" aria-checked="${c.mode === 'custom'}">دستی</button></div></div>
+      ${c.mode === 'custom' ? `<div class="hb-list-c">${(c.list || []).map(([to, k], i) => `<div class="hb-cr"><span>تا ردیف</span><input type="number" min="1" max="60" value="${to}" data-ci="${i}" data-ck="to" aria-label="تا ردیف"><span>رده‌ی</span><div class="hb-sel"><i class="hb-dot" style="--c:${(TIER[k] || TIER.B).c}" aria-hidden="true"></i><select data-ci="${i}" data-ck="c" aria-label="رده">${HB_CLS.map((q) => `<option value="${q}"${q === k ? ' selected' : ''}>${q === 'V' ? 'ویژه' : q}</option>`).join('')}</select></div><button type="button" class="chip gt-ic" data-cdel="${i}" aria-label="برداشتن">${ico('x')}</button></div>`).join('')}<button type="button" class="chip" data-cadd>${ico('plus')}یه مرز تازه</button><p class="bk-note">${ico('info')}آخرین رده تا آخرین ردیف ادامه داره.</p></div>`
+      : c.mode === 'thirds' ? clsSel(c.c || 'A', 'cls.c', 'رده‌ی ردیف‌های جلو (بعدی‌ها یکی‌یکی ارزون‌تر)') : clsSel(c.c || 'B', 'cls.c', 'رده')}</div>`;
+  };
+  const body = (s) => {
+    if (s.kind === 'seat') return `<div class="hb-g">${seg(s, 'shape', 'شکل ردیف‌ها', [['fan', 'قوسی'], ['rect', 'صاف']])}${num(s, 'rows', 'تعداد ردیف', 1, 60)}${num(s, 'first', 'صندلی ردیف اول', 2, 80)}${seg(s, 'grow', 'هر ردیف چندتا بلندتر بشه', [[0, '۰'], [0.5, 'نیم'], [1, '۱'], [2, '۲']])}${seg(s, 'blocks', 'بلوک‌ها', [[1, '۱'], [2, '۲'], [3, '۳'], [4, '۴'], [5, '۵']])}${seg(s, 'aisle', 'عرض راهرو', [['n', 'باریک'], ['m', 'معمولی'], ['w', 'پهن']])}${seg(s, 'gap', 'فاصله از بخش قبلی', [['auto', 'خودکار'], ['none', 'چسبیده'], ['big', 'زیاد']])}</div><div class="hb-fl"><span>این بخش کدوم طبقه‌ست؟</span>${HB_FLOORS.map((f) => `<button type="button" class="chip" data-fl="${esc(f)}" aria-pressed="${s.t === f}">${esc(f)}</button>`).join('')}</div>${clsBlock(s)}`;
+    if (s.kind === 'side') return `<div class="hb-g">${seg(s, 'side', 'سمت', [['r', 'راست'], ['l', 'چپ']])}${num(s, 'rows', 'تعداد ردیف (از دیوار به سمت صحنه)', 1, 40)}${num(s, 'first', 'صندلی هر ردیف', 2, 60)}${seg(s, 'grow', 'هر ردیف چندتا بلندتر بشه', [[0, '۰'], [0.5, 'نیم'], [1, '۱'], [2, '۲']])}${seg(s, 'blocks', 'بلوک‌ها', [[1, '۱'], [2, '۲']])}</div>${clsBlock(s)}`;
+    if (s.kind === 'box') return `<div class="hb-g">${seg(s, 'side', 'کجا', [['both', 'دو طرف'], ['r', 'راست'], ['l', 'چپ']])}${num(s, 'n', 'تعداد لژ (هر طرف)', 1, 24)}${num(s, 'per', 'صندلی هر لژ', 1, 10)}${clsSel(s.c || 'A', 'c', 'رده')}</div>`;
+    if (s.kind === 'table') return `<div class="hb-g">${num(s, 'n', 'تعداد میز', 1, 80)}${num(s, 'per', 'صندلی دور هر میز', 2, 12)}${clsSel(s.c1 || 'A', 'c1', 'رده‌ی ردیف اول میزها')}${clsSel(s.c2 || s.c1 || 'B', 'c2', 'رده‌ی بقیه‌ی میزها')}</div>`;
+    return `<div class="hb-g">${num(s, 'cap', 'ظرفیت (نفر)', 1, 30000, 50)}${clsSel(s.c || 'B', 'c', 'رده')}</div>`;
+  };
+  const card = (s, i) => `<article class="hb-card" data-id="${esc(s.id)}"><header><span class="hb-n" aria-hidden="true">${fa(i + 1)}</span><label class="hb-name"><span class="sr">اسم بخش</span><input data-k="t" value="${esc(s.t || '')}" maxlength="40" placeholder="اسم بخش" autocomplete="off"></label><em class="hb-kind">${HB_KINDS[s.kind]}</em><b class="hb-sum" aria-live="polite"></b>
+      <span class="hb-act"><button type="button" class="chip gt-ic" data-mv="-1" aria-label="بالا">${ico('up')}</button><button type="button" class="chip gt-ic" data-mv="1" aria-label="پایین">${ico('down')}</button><button type="button" class="chip gt-ic" data-dup aria-label="کپی">${ico('copy')}</button><button type="button" class="chip gt-ic" data-del aria-label="حذف">${ico('x')}</button></span></header><div class="hb-body">${body(s)}</div></article>`;
+  root.innerHTML = `<div class="hb">
+    <div class="hb-top"><div class="hb-f"><span>شروع از یه قالب آماده <small>(بعدش هر چی خواستی عوضش کن)</small></span><div class="hb-tpl">${Object.entries(HB_TPL).map(([k, v]) => `<button type="button" class="chip" data-tpl="${k}">${esc(v.t)}</button>`).join('')}</div></div>
+      <div class="hb-f"><span>شکل صحنه</span><div class="bk-seg hb-seg" role="radiogroup" aria-label="شکل صحنه">${[['arc', 'قوسی'], ['rect', 'صاف'], ['wide', 'پهن']].map(([v, l]) => `<button type="button" role="radio" data-stage="${v}" aria-checked="${st.stage === v}">${l}</button>`).join('')}</div></div></div>
+    <div class="hb-main"><div class="hb-l"><div id="hbL" class="hb-secs"></div>
+      <div class="hb-add"><span>اضافه کن:</span>${Object.entries(HB_KINDS).map(([k, t]) => `<button type="button" class="chip" data-add="${k}">${ico('plus')}${t}</button>`).join('')}<button type="button" class="chip hb-floor" data-floor>${ico('plus')}طبقه‌ی تازه</button></div></div>
+      <aside class="hb-v"><div class="hb-pv" id="hbPv" role="img" aria-label="پیش‌نمایش پلان"></div><p class="hb-cap" id="hbCap" aria-live="polite"></p><ul class="hb-leg" id="hbLeg"></ul><p class="hb-msg" id="hbMsg" role="status"></p></aside></div></div>`;
+  const list = $('#hbL', root);
+  const names = { seat: 'سالن', side: 'سکوی کنار', box: 'لژها', table: 'میزها', stand: 'ایستاده' };
+  const mk = (kind) => {
+    const base = { id: hbId(), kind, t: names[kind] };
+    if (kind === 'seat') return hbSeat({ ...base, t: st.secs.some((s) => s.kind === 'seat') ? 'بخش تازه' : 'سالن' });
+    if (kind === 'side') return { ...base, side: st.secs.some((s) => s.kind === 'side' && s.side === 'r') ? 'l' : 'r', rows: 6, first: 14, grow: 0, blocks: 1, aisle: 'm', cls: { mode: 'one', c: 'C' } };
+    if (kind === 'box') return { ...base, side: 'both', n: 4, per: 4, c: 'A' };
+    if (kind === 'table') return { ...base, n: 12, per: 6, c1: 'A', c2: 'B' };
+    return { ...base, cap: 500, c: 'B' };
+  };
+  // the summary of every card and the drawing: after every change
+  const refresh = () => {
+    const r = planFromBuilder(st);
+    $$('.hb-card', list).forEach((el) => {
+      const s = secOf(el.dataset.id); if (!s) return; let n = 0, w = '';
+      if (s.kind === 'seat' || s.kind === 'side') { const R = clamp(s.rows | 0, 0, 60); for (let k = 0; k < R; k++) n += hbBlocks(s.kind === 'side' ? { ...s, blocks: Math.min(s.blocks | 0 || 1, 2) } : s, k).reduce((a, b) => a + b, 0); w = `${fa(R)} ردیف · ${money(n)} جا`; }
+      else if (s.kind === 'box') { const sides = s.side === 'both' ? 2 : 1; n = (s.n | 0) * (s.per | 0) * sides; w = `${fa((s.n | 0) * sides)} لژ · ${money(n)} جا`; }
+      else if (s.kind === 'table') { n = (s.n | 0) * (s.per | 0); w = `${fa(s.n | 0)} میز · ${money(n)} جا`; }
+      else w = `${money(s.cap | 0)} نفر`;
+      $('.hb-sum', el).textContent = w;
+      $$('.hb-dot', el).forEach((d) => { const sel = d.nextElementSibling; if (sel && sel.value) d.style.setProperty('--c', (TIER[sel.value] || TIER.B).c); });
+    });
+    const pv = $('#hbPv', root);
+    if (r.secs) pv.innerHTML = miniPlan(r.plan); else pv.innerHTML = '<p class="hb-empty">بخشی نیست؛ از پایین یکی اضافه کن.</p>';
+    $('#hbCap', root).textContent = r.secs ? `${money(r.cap)} جا · ${fa(st.secs.length)} بخش` : '';
+    // the seats of every price class
+    const cnt = {}; if (r.secs) { const L = hallLayout(r.plan); for (const z of L.secs) { if (z.sec.k === 'stand') { const k = z.sec.runs[0][2]; cnt[k] = (cnt[k] || 0) + z.sec.cap; continue; } for (const p of z.seats) { const q = z.sec.runs.find(([a, b]) => p.row >= a && p.row <= b); const k = q ? q[2] : 'D'; cnt[k] = (cnt[k] || 0) + 1; } } }
+    const tot = Object.values(cnt).reduce((a, b) => a + b, 0) || 1;
+    $('#hbLeg', root).innerHTML = HB_CLS.filter((k) => cnt[k]).map((k) => `<li><i class="hb-dot" style="--c:${TIER[k].c}" aria-hidden="true"></i><span>${k === 'V' ? 'ویژه' : `رده‌ی ${k}`}</span><b>${money(cnt[k])}</b><small>${pct(cnt[k] / tot)}</small></li>`).join('');
+    const bad = r.errs[0] || (r.cap > 30000 ? 'ظرفیت از ۳۰٬۰۰۰ بیشتر شد.' : '');
+    const ms = $('#hbMsg', root); ms.classList.toggle('is-bad', !!bad); ms.textContent = bad || (r.secs ? `درسته؛ ${fa(HB_CLS.filter((k) => cnt[k]).length)} رده‌ی قیمت باید برای هر برنامه قیمت بخوره.` : '');
+    last = { ok: !bad && r.secs > 0 && r.cap > 0, layout: { b: hbClone(st) }, cap: r.cap, msg: bad || 'پلان هنوز خالیه.' };
+    onChange(last);
+  };
+  let tt = 0; const soon = () => { clearTimeout(tt); tt = setTimeout(refresh, 90); };
+  const draw = () => { list.innerHTML = st.secs.map(card).join('') || '<p class="hb-empty">هنوز بخشی نیست؛ یه قالب آماده بذار یا از پایین بخش اضافه کن.</p>'; refresh(); };
+  draw();
+  // a value written with a dot path (cls.c) into the section
+  const put = (s, k, v) => { if (k.startsWith('cls.')) { s.cls = s.cls || { mode: 'one', c: 'B' }; s.cls[k.slice(4)] = v; } else s[k] = v; };
+  list.addEventListener('input', (ev) => {
+    const el = ev.target, card = el.closest('.hb-card'); if (!card) return; const s = secOf(card.dataset.id); if (!s) return;
+    if (el.dataset.ci != null) { const l = s.cls.list[+el.dataset.ci]; if (el.dataset.ck === 'to') l[0] = clamp(+el.value || 1, 1, 60); else { l[1] = el.value; } soon(); return; }
+    const k = el.dataset.k; if (!k) return;
+    if (el.tagName === 'INPUT' && el.type === 'number') { const v = el.value === '' ? '' : clamp(+el.value, +el.dataset.min, +el.dataset.max); put(s, k, v === '' ? 0 : v); }
+    else if (el.tagName === 'INPUT') put(s, k, el.value);
+    else if (el.tagName === 'SELECT') put(s, k, el.value);
+    soon();
+  });
+  list.addEventListener('click', (ev) => {
+    const el = ev.target.closest('button'); if (!el) return; const card = el.closest('.hb-card'); if (!card) return; const s = secOf(card.dataset.id), i = st.secs.indexOf(s); if (!s) return;
+    const again = () => { const keep = card.dataset.id; draw(); const c = $(`.hb-card[data-id="${keep}"]`, list); if (c && MOTK()) gsap.from($('.hb-body', c), { opacity: 0.4, y: 6, duration: 0.3, ease: 'expo.out', clearProps: 'opacity,transform' }); };
+    if (el.dataset.st) { const k = el.dataset.k, inp = $(`input[data-k="${k}"]`, card), v = clamp((+inp.value || 0) + +el.dataset.st, +inp.dataset.min, +inp.dataset.max); inp.value = v; s[k] = v; refresh(); return; }
+    if (el.dataset.v != null && el.dataset.k) { const raw = el.dataset.v, v = /^-?[\d.]+$/.test(raw) ? +raw : raw; s[el.dataset.k] = v; $$(`[data-k="${el.dataset.k}"]`, el.parentElement).forEach((x) => x.setAttribute('aria-checked', String(x === el))); refresh(); return; }
+    if (el.dataset.cm) { const c = s.cls = s.cls || { mode: 'one', c: 'B' }; c.mode = el.dataset.cm; if (c.mode === 'custom' && !(c.list || []).length) c.list = [[Math.max(1, Math.round((s.rows | 0) / 2)), c.c || 'A'], [s.rows | 0, hbNext(c.c || 'A')]]; if (c.mode === 'thirds' && c.c === 'B' && s.kind === 'seat') c.c = 'A'; again(); return; }
+    if (el.dataset.cadd != null) { const l = s.cls.list = s.cls.list || []; l.push([Math.min(60, ((l[l.length - 1] || [0])[0] | 0) + 3), 'D']); again(); return; }
+    if (el.dataset.cdel != null) { s.cls.list.splice(+el.dataset.cdel, 1); again(); return; }
+    if (el.dataset.fl) { s.t = el.dataset.fl; $('input[data-k="t"]', card).value = s.t; $$('[data-fl]', card).forEach((x) => x.setAttribute('aria-pressed', String(x === el))); refresh(); return; }
+    if (el.dataset.mv) { const j = i + +el.dataset.mv; if (j < 0 || j >= st.secs.length) return; [st.secs[i], st.secs[j]] = [st.secs[j], st.secs[i]]; draw(); const c = $(`.hb-card[data-id="${s.id}"]`, list); if (c) { c.scrollIntoView({ block: 'nearest', behavior: MOTK() ? 'smooth' : 'auto' }); const b = $(`[data-mv="${el.dataset.mv}"]`, c); if (b) b.focus(); } return; }
+    if (el.dataset.dup != null) { const c = hbClone(s); c.id = hbId(); c.t = `${s.t || ''} (کپی)`; st.secs.splice(i + 1, 0, c); draw(); return; }
+    if (el.dataset.del != null) { st.secs.splice(i, 1); draw(); return; }
+  });
+  $('.hb-top', root).addEventListener('click', (ev) => {
+    const t = ev.target.closest('[data-tpl]'), g = ev.target.closest('[data-stage]');
+    if (t) { const b = hbClone(HB_TPL[t.dataset.tpl].b); b.secs.forEach((s) => { s.id = hbId(); }); st.stage = b.stage; st.secs = b.secs; $$('[data-stage]', root).forEach((x) => x.setAttribute('aria-checked', String(x.dataset.stage === st.stage))); draw(); if (MOTK()) gsap.from($$('.hb-card', list), { opacity: 0, y: 10, duration: 0.4, ease: 'expo.out', stagger: 0.05, clearProps: 'opacity,transform' }); }
+    if (g) { st.stage = g.dataset.stage; $$('[data-stage]', root).forEach((x) => x.setAttribute('aria-checked', String(x === g))); refresh(); }
+  });
+  $('.hb-add', root).addEventListener('click', (ev) => {
+    const a = ev.target.closest('[data-add]'), f = ev.target.closest('[data-floor]');
+    if (a) { const s = mk(a.dataset.add); st.secs.push(s); draw(); const c = $(`.hb-card[data-id="${s.id}"]`, list); if (c) { c.scrollIntoView({ block: 'nearest', behavior: MOTK() ? 'smooth' : 'auto' }); const inp = $('input[data-k="t"]', c); inp.focus(); inp.select(); if (MOTK()) gsap.from(c, { opacity: 0, y: 14, duration: 0.4, ease: 'expo.out', clearProps: 'opacity,transform' }); } }
+    if (f) {   // a new floor: another seated section behind the last, a little wider, the next price class
+      const seats = st.secs.filter((s) => s.kind === 'seat'), l = seats[seats.length - 1], used = new Set(seats.map((s) => s.t)), nm = HB_FLOORS.find((q) => !used.has(q)) || `طبقه‌ی ${fa(seats.length + 1)}`;
+      const lc = l && l.cls ? ((l.cls.mode === 'custom' ? (l.cls.list || [])[(l.cls.list || []).length - 1] : null) || [0, l.cls.mode === 'thirds' ? hbNext(hbNext(l.cls.c || 'A')) : l.cls.c || 'B'])[1] : 'C';
+      const s = hbSeat({ t: nm, shape: l ? l.shape : 'fan', rows: l ? Math.max(3, Math.min(8, (l.rows | 0) - 2)) : 6, first: l ? (l.first | 0) + 4 : 16, grow: l ? l.grow : 1, blocks: l ? l.blocks : 3, aisle: l ? l.aisle : 'm', gap: 'big', cls: { mode: 'one', c: hbNext(lc) } });
+      st.secs.push(s); draw(); const c = $(`.hb-card[data-id="${s.id}"]`, list); if (c) { c.scrollIntoView({ block: 'nearest', behavior: MOTK() ? 'smooth' : 'auto' }); if (MOTK()) gsap.from(c, { opacity: 0, y: 14, duration: 0.4, ease: 'expo.out', clearProps: 'opacity,transform' }); }
+    }
+  });
+  return { get: () => last };
+}
+
+/* ───── the designer of a layout: the builder (default), or the older table of rows as text (advanced); `init` is a saved layout to open again ───── */
+function hallDesigner(root, onChange = () => {}, init = null) {
+  const txtOnly = !!(init && init.txt && !init.b && !init.p);
+  const b0 = init ? (init.b ? init.b : init.p ? bFromP(init.p) : null) : null;
+  root.innerHTML = `<div class="hd"><div class="bk-seg hd-m" role="radiogroup" aria-label="روش ساخت"><button type="button" role="radio" data-m="b" aria-checked="${!txtOnly}">${ico('ruler')}سازنده‌ی تصویری</button><button type="button" role="radio" data-m="t" aria-checked="${txtOnly}">${ico('menu')}جدول متنی (پیشرفته)</button></div>
+    <div class="hd-b"${txtOnly ? ' hidden' : ''}></div><div class="hd-t"${txtOnly ? '' : ' hidden'}></div></div>`;
+  let mode = txtOnly ? 't' : 'b', ui = { b: null, t: null };
+  const last = { b: { ok: false }, t: { ok: false } };
+  const emit = () => onChange(last[mode]);
+  const mount = (m) => {
+    if (ui[m]) return;
+    if (m === 'b') ui.b = hallBuilderUI($('.hd-b', root), (x) => { last.b = x; if (mode === 'b') emit(); }, b0);
+    else { if (init && init.txt) DS.ht = init.txt; DS.hm = 'txt'; ui.t = designerUI($('.hd-t', root), (x) => { last.t = x; if (mode === 't') emit(); }); $('.hd-t .ad-hm', root).hidden = true; }
+  };
+  mount(mode);
+  $$('[data-m]', root).forEach((bt) => bt.addEventListener('click', () => { mode = bt.dataset.m; $$('[data-m]', root).forEach((x) => x.setAttribute('aria-checked', String(x === bt))); $('.hd-b', root).hidden = mode !== 'b'; $('.hd-t', root).hidden = mode !== 't'; mount(mode); emit(); }));
+  return { get: () => (mode === 'b' ? ui.b : ui.t).get() };
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -10222,7 +10551,7 @@ const org = {
         ${desk.tile('فروش ۳۰ روز (تومان)', short(sum30), 0.124, days.filter((_, i) => i % 2).map((d) => d.sum))}
         ${desk.tile('پرشدگی سانس‌های پیش رو', pct(occ), 0.06, up.slice(0, 12).map((x) => x.sold / Math.max(1, x.cap)))}
       </section>
-      <section class="panel dk-box evp-rise cct-box" aria-labelledby="dkTrendH"><h2 id="dkTrendH">${ico('award')}فروش ۳۰ روز گذشته<small>برنامه‌های تو${orgs.rights(orgs.cur()).ana ? ' · <a href="#/org/analytics">تحلیل کامل</a>' : ''}</small></h2><div id="dkCct"></div></section>
+      <section class="panel dk-box evp-rise cct-box" aria-labelledby="dkTrendH"><h2 id="dkTrendH">${ico('award')}فروش ۳۰ روز گذشته<small>برنامه‌های تو</small>${orgs.rights(orgs.cur()).ana ? `<a class="chip an-full" href="#/org/analytics">${ico('award')}تحلیل کامل${ico('arrow-l')}</a>` : ''}</h2><div id="dkCct"></div></section>
       <div class="dk-cols">
         <section class="panel dk-box evp-rise" aria-labelledby="dkSlotsH"><h2 id="dkSlotsH">${ico('clock')}فروش دو ساعت گذشته<small>هر ستون ۵ دقیقه · تومان</small></h2><div id="dkSlots"></div></section>
         <section class="panel dk-box evp-rise" aria-labelledby="dkFeedH"><h2 id="dkFeedH">${ico('bell')}آخرین خریدها<small class="dk-live"><i></i>زنده</small></h2><ol class="dk-feed" id="dkFeed"><li class="dk-empty">منتظر خرید بعدی…</li></ol></section>
@@ -11475,7 +11804,7 @@ const admin = {
     el.innerHTML = `${desk.head('پیشخوان مدیر', 'کل سایت، همین لحظه.', `<span class="ad-head-a"><a class="buy" href="#/admin/shows">${ico('ticket')}صف تأیید${q ? ` (${fa(q)})` : ''}</a><a class="chip" href="#/admin/new">${ico('plus')}برنامه‌ی تازه</a><a class="chip" href="#/admin/halls/new">${ico('plus')}سالن تازه</a><a class="chip" href="#/admin/cities">${ico('pin')}شهرها</a></span>`)}
       <section class="dk-tiles"><div class="panel dk-tile dk-hero evp-rise"><span>فروش امروز (تومان)</span><b>${money(today)}</b><em data-tone="${today >= yest ? 'good' : 'bad'}">دیروز ${short(yest)}</em>${viz.spark(byDay.slice(-12).map((d) => d.v))}</div>
         ${desk.tile('سفارش‌های ۳۰ روز', money(sumArr(byDay.map((d) => d.n))), (sumArr(byDay.slice(15).map((d) => d.n)) - sumArr(byDay.slice(0, 15).map((d) => d.n))) / Math.max(1, sumArr(byDay.slice(0, 15).map((d) => d.n))), byDay.slice(-12).map((d) => d.n))}${desk.tile('برگشت پول', money(refd.length), null, null, true, refd.length ? `${short(refd.reduce((s, x) => s + x.total, 0))} تومان برگشت داده شد` : 'هیچ پولی برنگشته')}${desk.tile('برنامه‌های روی سایت', money(onSite.length), null, null, true, `${fa(onSite.filter((e) => statusOf(e).key === 'normal').length)} در حال فروش · ${fa(onSite.filter((e) => statusOf(e).key === 'soon').length)} پیش‌فروش`)}</section>
-      <section class="panel dk-box evp-rise cct-box" aria-labelledby="adDayH"><h2 id="adDayH">${ico('award')}فروش ۳۰ روز گذشته<small>همه‌ی سایت · <a href="#/admin/analytics">تحلیل کامل</a></small></h2><div id="adDays"></div></section>
+      <section class="panel dk-box evp-rise cct-box" aria-labelledby="adDayH"><h2 id="adDayH">${ico('award')}فروش ۳۰ روز گذشته<small>همه‌ی سایت</small><a class="chip an-full" href="#/admin/analytics">${ico('award')}تحلیل کامل${ico('arrow-l')}</a></h2><div id="adDays"></div></section>
       <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}در انتظار تأیید<small>${fa(q)}</small></h2>${q ? `<ol class="ad-log">${waitL.slice(0, 4).map((x) => `<li><b>${esc(x.title)}</b><small>${esc(x.org)} · فرستاده‌شده ${esc(ago(x.sent))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/shows">${ico('arrow-l')}دیدن صف</a>` : '<p class="bk-lead">صف خالیه.</p>'}</section>
         <section class="panel dk-box evp-rise"><h2>${ico('clock')}آخرین تغییرها</h2><ol class="ad-log">${(log.length ? log : [{ at: Date.now() - 4 * HOUR, what: 'قیمت سانس‌های «شب جاز تهران» تأیید شد', who: 'نگار رضایی (اپراتور)' }]).slice(0, 5).map((x) => `<li><b>${esc(x.what)}</b><small>${esc(x.who)} · ${esc(ago(x.at))}</small></li>`).join('')}</ol><a class="chip" href="#/admin/log">همه‌ی تاریخچه</a></section></div>`;
     ana.mini($('#adDays', el), {});
@@ -11952,22 +12281,29 @@ const adminGeo = {
     const box = $('#ahLay', el);
     if (isNew) {
       box.innerHTML = `<label class="bk-fld"><span>اسم چیدمان</span><input id="ahLn" value="چیدمان اصلی" maxlength="40" autocomplete="off"></label><div id="ahDz"></div>`;
-      this.ui = designerUI($('#ahDz', el), (st) => { const b = $('#ahCreate', el); if (b) b.disabled = !st.ok; });
+      this.ui = hallDesigner($('#ahDz', el), (st) => { const b = $('#ahCreate', el); if (b) b.disabled = !st.ok; });
       return;
     }
     const used = (i) => showsOfHall(h.id).filter((e) => (e.hallLay | 0) === i).length;
-    box.innerHTML = `<ul class="ad-lays">${h.lay.map((l, i) => { const P = planOfHall(h, i), nsec = hallLayout(P).secs.length; return `<li class="ad-lay" data-i="${i}"><span class="hl-thumb" data-plan="${esc(planKeyOf(h, i))}" aria-hidden="true"></span><div class="ad-lay-t"><b>${esc(layName(h, i) || 'چیدمان اصلی')}</b><small>${money(layoutCap(h, i))} صندلی · ${fa(nsec)} بخش${used(i) ? ` · ${fa(used(i))} برنامه` : ''}</small><em class="st" data-tone="${l.x ? 'info' : 'mute'}">${l.x ? 'ساخته‌ی مدیر' : 'از بسته‌ی سالن‌ها'}</em></div><div class="ad-act">${l.x ? `<button type="button" class="chip" data-rn="${i}">اسم</button>` : ''}${l.x && i === h.lay.length - 1 && !(h.custom && h.lay.length < 2) ? `<button type="button" class="chip" data-ld="${i}">حذف</button>` : ''}</div></li>`; }).join('')}</ul>
+    box.innerHTML = `<ul class="ad-lays">${h.lay.map((l, i) => { const P = planOfHall(h, i), nsec = hallLayout(P).secs.length; return `<li class="ad-lay" data-i="${i}"><span class="hl-thumb" data-plan="${esc(planKeyOf(h, i))}" aria-hidden="true"></span><div class="ad-lay-t"><b>${esc(layName(h, i) || 'چیدمان اصلی')}</b><small>${money(layoutCap(h, i))} صندلی · ${fa(nsec)} بخش${used(i) ? ` · ${fa(used(i))} برنامه` : ''}</small><em class="st" data-tone="${l.x ? 'info' : 'mute'}">${l.x ? 'ساخته‌ی مدیر' : 'از بسته‌ی سالن‌ها'}</em></div><div class="ad-act">${l.x && !l.copy ? `<button type="button" class="chip" data-le="${i}">${ico('ruler')}ویرایش چیدمان</button>` : ''}${l.x ? `<button type="button" class="chip" data-rn="${i}">اسم</button>` : ''}${l.x && i === h.lay.length - 1 && !(h.custom && h.lay.length < 2) ? `<button type="button" class="chip" data-ld="${i}">حذف</button>` : ''}</div></li>`; }).join('')}</ul>
       <div class="ad-actions"><button type="button" class="chip" id="ahLayNew">${ico('plus')}چیدمان تازه با طراح</button><button type="button" class="chip" id="ahLayCopy">${ico('copy')}کپی چیدمان یه سالن دیگه</button></div>
       <p class="bk-note">${ico('info')}نقشه‌ی صندلی‌های بسته‌ی سالن‌ها دست‌نخورده می‌مونه؛ برای نقشه‌ی دیگه، چیدمان تازه بساز. یه برنامه چیدمان خودش رو انتخاب می‌کنه و شماره‌ی چیدمان تو برنامه می‌مونه، برای همین فقط آخرین چیدمانِ ساخته‌ی مدیر، وقتی هیچ برنامه‌ای ازش استفاده نمی‌کنه، حذف می‌شه.</p>`;
     drawThumbs(box);
     box.addEventListener('click', (ev) => {
-      const r = ev.target.closest('[data-rn]'), d = ev.target.closest('[data-ld]');
+      const r = ev.target.closest('[data-rn]'), d = ev.target.closest('[data-ld]'), ed = ev.target.closest('[data-le]');
+      if (ed) {
+        const i = +ed.dataset.le, l = h.lay[i], u = showsOfHall(h.id).filter((e) => (e.hallLay | 0) === i).length;
+        const m = desk.modal('ad-no ad-wide hb-modal', `<h2>${ico('ruler')}ویرایش «${esc(layName(h, i) || 'چیدمان اصلی')}»</h2>${u ? `<p class="bk-note">${ico('info')}${fa(u)} برنامه از این چیدمان استفاده می‌کنه؛ پس چیدمان قبلی دست‌نخورده می‌مونه و تغییرها به‌صورت یه چیدمان تازه بعدش اضافه می‌شن.</p>` : ''}<div id="ahDz3"></div><div class="evp-dlg-end"><button type="button" class="buy" id="ahLs3" disabled>${ico('check')}ذخیره</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'ویرایش چیدمان');
+        const ui = hallDesigner($('#ahDz3', m.box), (s) => { $('#ahLs3', m.box).disabled = !s.ok; }, l);
+        $('#ahLs3', m.box).addEventListener('click', () => { const s = ui.get(); if (!s.ok) return; const at = libSet.layEdit(h.id, i, s.layout); if (at < 0) { toast('ذخیره نشد.'); return; } auditLog(`چیدمان سالن «${h.name}» ویرایش شد`); m.shut(); toast(at === i ? 'ذخیره شد.' : 'چیدمان تازه اضافه شد.'); this.edit(el, h.id); });
+        return;
+      }
       if (r) { const i = +r.dataset.rn, m = desk.modal('ad-no', `<h2>${ico('ruler')}اسم چیدمان</h2><label class="bk-fld"><span>اسم</span><input id="ahRn" value="${esc(layName(h, i))}" maxlength="40"></label><div class="evp-dlg-end"><button type="button" class="buy" id="ahRs">${ico('check')}ذخیره</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'اسم چیدمان'); $('#ahRn', m.box).focus(); $('#ahRs', m.box).addEventListener('click', () => { const n = $('#ahRn', m.box).value.trim(); if (!n) return; libSet.layName(h.id, i, n); auditLog(`چیدمان سالن «${h.name}» اسم «${n}» گرفت`); m.shut(); this.edit(el, h.id); }); }
       if (d) { const i = +d.dataset.ld; if (!libSet.layDel(h.id, i)) { toast('این چیدمان تو برنامه‌ای استفاده شده؛ حذفش نمی‌شه.'); return; } auditLog(`یه چیدمان سالن «${h.name}» حذف شد`); toast('چیدمان حذف شد.'); this.edit(el, h.id); }
     });
     $('#ahLayNew', el).addEventListener('click', () => {
       const m = desk.modal('ad-no ad-wide', `<h2>${ico('ruler')}چیدمان تازه برای «${esc(h.name)}»</h2><label class="bk-fld"><span>اسم چیدمان</span><input id="ahLn2" value="${esc(`چیدمان ${fa(h.lay.length + 1)}`)}" maxlength="40"></label><div id="ahDz2"></div><div class="evp-dlg-end"><button type="button" class="buy" id="ahLs" disabled>${ico('check')}افزودن</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'چیدمان تازه');
-      const ui = designerUI($('#ahDz2', m.box), (s) => { $('#ahLs', m.box).disabled = !s.ok; });
+      const ui = hallDesigner($('#ahDz2', m.box), (s) => { $('#ahLs', m.box).disabled = !s.ok; });
       $('#ahLs', m.box).addEventListener('click', () => { const s = ui.get(); if (!s.ok) return; libSet.layAdd(h.id, { n: $('#ahLn2', m.box).value.trim() || `چیدمان ${fa(h.lay.length + 1)}`, ...s.layout }); auditLog(`چیدمان تازه برای سالن «${h.name}» ساخته شد`); m.shut(); toast('چیدمان اضافه شد.'); this.edit(el, h.id); });
     });
     $('#ahLayCopy', el).addEventListener('click', () => {
@@ -12014,7 +12350,9 @@ const adminGeo = {
    whole site, one organiser, or one show. Charts: the cell-column trend (columns made of cells, KPI tabs that flip the board), a line chart
    of this period against the last, a weekday × hour heat map, the funnel, ranked bars. (Sample data: the real ones come from the server.)
    ════════════════════════════════════════════════════════════════ */
-const ANA_N = 400;   // days of history
+const ANA_N = 800;   // days of history (two years: the year before a year is there to compare with)
+const BSPEC = { 7: 2, 30: 6, 90: 24, 180: 48, 365: 84 };   // a column of a board, in two-hour parts: 4 hours, 12 hours, 2 days, 4 days, a week (40 to 60 small columns whatever the range)
+const rname = (d) => (d === 365 ? 'یک سال' : d === 180 ? '۶ ماه' : `${fa(d)} روز`);
 const anDay = (t) => { const d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); };
 const WD_FA = ['شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
 const wdIdx = (t) => (new Date(t).getDay() + 1) % 7;   // Saturday is 0
@@ -12070,17 +12408,42 @@ const ana = {
     return a;
   },
   win(a, days, back = 0) { const to = ANA_N - back, from = to - days; if (from < 0) return null; return { n: a.n.slice(from, to), s: a.s.slice(from, to), o: a.o.slice(from, to), from, to, days }; },
-  // columns: a day each up to 31 days; weeks over that (the last week is the last 7 days)
-  buckets(w) {
-    const out = [], step = w.days <= 31 ? 1 : 7, now = Date.now();
-    const cnt = Math.ceil(w.days / step);
+  // a show's day split into twelve two-hour parts (the weekday's hours of its kind, a little noise); money and orders follow the tickets
+  hourly(x) {
+    if (x.h) return x.h;
+    const R = rngOf(seedOf(`hr:${x.e.id}`)), hk = HR_KIND[x.kind] || HR_KIND.concert, hw = HR_BASE.map((v, i) => v + hk[i] + 1.4), N = ANA_N * 12;   // (flattened a little: the columns of 4 and 12 hours are not a comb of nights and days)
+    const hn = new Float64Array(N), hs = new Float64Array(N), ho = new Float64Array(N);
+    for (let d = 0; d < ANA_N; d++) {
+      const n = x.n[d]; if (!n) continue;
+      const w = hw.map((v) => v * (0.75 + R() * 0.5)), tw = sumArr(w), raw = w.map((v) => (v / tw) * n), fl = raw.map(Math.floor), rest = n - sumArr(fl);
+      raw.map((v, i) => [v - fl[i], i]).sort((p, q) => q[0] - p[0]).slice(0, rest).forEach(([, i]) => { fl[i]++; });
+      for (let p = 0; p < 12; p++) { const k = d * 12 + p, sh = fl[p] / n; hn[k] = fl[p]; hs[k] = x.s[d] * sh; ho[k] = x.o[d] * sh; }
+    }
+    return (x.h = { n: hn, s: hs, o: ho });
+  },
+  // the columns of a board for a window: 40–60 small ones whatever the range (BSPEC); under a day a column is some hours, over a day it is some days (the last ends today)
+  buckets(A, w) {
+    const parts = BSPEC[w.days] || Math.max(12, Math.round(w.days / 45) * 12), out = [], now = Date.now(), d0 = anDay(now) - (w.days - 1) * DAY;
+    const hh = (h) => fa(String(h).padStart(2, '0'));
+    if (parts < 12) {
+      const nP = w.days * 12, hn = new Float64Array(nP), hs = new Float64Array(nP), ho = new Float64Array(nP);
+      for (const x of A.shows) { const h = this.hourly(x); for (let i = 0; i < nP; i++) { const k = w.from * 12 + i; hn[i] += h.n[k]; hs[i] += h.s[k]; ho[i] += h.o[k]; } }
+      for (let lo = 0; lo < nP; lo += parts) {
+        const hi = Math.min(nP, lo + parts), sum = (v) => { let t = 0; for (let i = lo; i < hi; i++) t += v[i]; return t; }, t = d0 + Math.floor(lo / 12) * DAY, h0 = (lo % 12) * 2, h1 = h0 + (hi - lo) * 2;
+        out.push({ n: sum(hn), s: sum(hs), o: sum(ho), label: `${dayOf(t)} · ${hh(h0)}–${hh(h1)}`, short: dayOf(t), day0: Math.floor(lo / 12), per: 12 / parts });
+      }
+      return out;
+    }
+    const step = parts / 12, cnt = Math.ceil(w.days / step);
     for (let c = 0; c < cnt; c++) {
       const hi = w.days - (cnt - 1 - c) * step, lo = Math.max(0, hi - step), n = sumArr(w.n.slice(lo, hi)), s = sumArr(w.s.slice(lo, hi)), o = sumArr(w.o.slice(lo, hi));
       const t1 = now - (w.days - hi) * DAY, t0 = t1 - (hi - lo - 1) * DAY;
-      out.push({ n, s, o, label: step === 1 ? dayOf(t1) : `${dayOf(t0)} تا ${dayOf(t1)}`, short: step === 1 ? dayOf(t1) : dayOf(t0) });
+      out.push({ n, s, o, label: hi - lo === 1 ? dayOf(t1) : `${dayOf(t0)} تا ${dayOf(t1)}`, short: dayOf(t0) });
     }
     return out;
   },
+  // a column a day (the lines of the page)
+  dayBuckets(w) { const now = Date.now(); return Array.from({ length: w.days }, (_, i) => { const t = now - (w.days - 1 - i) * DAY; return { n: w.n[i], s: w.s[i], o: w.o[i], label: dayOf(t), short: dayOf(t) }; }); },
   orgBrief(id) {
     const sh = orgs.shows(id), a = this.agg(sh), w = this.win(a, 30), wait = drafts.all().filter((d) => d.status === 'review' && (d.by || 'org1') === id).length + admin.others().filter((x) => x.by === id).length;
     return { shows: sh.length, wait, sales30: w ? sumArr(w.s) : 0, tix30: w ? sumArr(w.n) : 0 };
@@ -12187,9 +12550,10 @@ const lineChart = {
 
 // the numbers a trend board shows for a scope: the columns (days, or weeks over 31 days), the four KPIs with their change from the period before
 ana.kpis = function kpis_(A, days, cmp) {
-  const W = this.win(A, days), P = cmp ? this.win(A, days, days) : null;
+  const W = this.win(A, days); let P = cmp ? this.win(A, days, days) : null;
   if (!A.tix || !W || !sumArr(W.n)) return null;
-  const B = this.buckets(W), PB = P ? this.buckets(P) : null;
+  if (P && !sumArr(P.n)) P = null;   // (nothing was sold in the period before: no change to show)
+  const B = this.buckets(A, W), PB = P ? this.buckets(A, P) : null;
   const T = (w) => (w ? { rev: sumArr(w.s), tix: sumArr(w.n), ord: sumArr(w.o), aov: sumArr(w.o) ? sumArr(w.s) / sumArr(w.o) : 0 } : null), c = T(W), p = T(P);
   const mt = (key, label, vals, summary, cur, prev, fmt) => ({ key, label, values: vals, summary, delta: p && prev ? dlt(cur, prev) : null, fmt });
   const metrics = [
@@ -12198,7 +12562,10 @@ ana.kpis = function kpis_(A, days, cmp) {
     mt('ord', 'سفارش', B.map((b) => b.o), money(c.ord), c.ord, p && p.ord, (v) => money(Math.round(v))),
     mt('aov', 'میانگین هر سفارش', B.map((b) => (b.o ? b.s / b.o : 0)), short(c.aov), c.aov, p && p.aov, (v) => short(v)),
   ];
-  const nt = Math.min(6, B.length), ticks = Array.from({ length: nt }, (_, i) => B[Math.round((i * (B.length - 1)) / Math.max(1, nt - 1))].short);
+  // the ticks under the columns: a label per day (7 days), per five days (30), else six evenly
+  let ticks;
+  if (B[0] && B[0].per) { const every = Math.max(1, Math.ceil(days / 6)), per = B[0].per; ticks = []; for (let d = 0; d < days; d += every) { const b = B[d * per]; if (b) ticks.push(b.short); } }
+  else { const nt = Math.min(6, B.length); ticks = Array.from({ length: nt }, (_, i) => B[Math.round((i * (B.length - 1)) / Math.max(1, nt - 1))].short); }
   return { W, P, B, PB, c, p, metrics, ticks };
 };
 // a board on its own (the dashboards): a scope, the last days
@@ -12212,7 +12579,7 @@ ana.mini = function mini_(host, sc, days = 30) {
 ana.page = function page_(el, role) {
   const adm = role === 'admin', me = adm ? '' : dsess.orgId(), st = this.st || (this.st = { days: 30, org: '', show: '', cmp: true });
   if (!adm) st.org = me;
-  const RANGES = [[7, '۷ روز'], [30, '۳۰ روز'], [90, '۹۰ روز'], [365, 'یک سال']];
+  const RANGES = [[7, '۷ روز'], [30, '۳۰ روز'], [90, '۹۰ روز'], [180, '۶ ماه'], [365, 'یک سال']];
   const scopeShows = () => this.scope({ org: st.org }).filter((e) => this.show(e).tix > 0);
   if (st.show && !scopeShows().some((e) => e.id === st.show)) st.show = '';
   el.innerHTML = `${desk.head('تحلیل و نمودارها', adm ? 'فروش کل سایت، یا یه تهیه‌کننده، یا یه برنامه؛ با مقایسه‌ی دوره‌ی قبل. اولین چیزی که باید ببینی کجا افت کرده یا کجا داره رشد می‌کنه.' : 'فروش برنامه‌های خودت: کی می‌خرن، کدوم برنامه می‌فروشه، کجا مشتری از دستت می‌ره و کدوم سانس به توجه نیاز داره.', `<span class="ad-head-a"><button type="button" class="chip" id="anCsv">${ico('arrow-ul')}فایل اکسل (CSV)</button>${adm ? `<a class="chip" href="#/admin/reports">${ico('bag')}گزارش سفارش‌ها</a>` : ''}</span>`)}
@@ -12227,6 +12594,7 @@ ana.page = function page_(el, role) {
     const A = this.agg(this.scope({ org: st.org, show: st.show })), W = this.win(A, st.days), P = st.cmp ? this.win(A, st.days, st.days) : null, body = $('#anBody', el);
     if (!A.tix || !W || !sumArr(W.n)) { body.innerHTML = `<section class="panel dk-box evp-rise an-empty"><h2>${ico('info')}هنوز عددی نیست</h2><p class="bk-lead">${A.tix ? 'تو این بازه فروشی نبوده؛ بازه‌ی بلندتر رو امتحان کن.' : adm ? 'برای این انتخاب هنوز بلیتی فروخته نشده.' : 'تا یکی از برنامه‌هات روی سایت بیاد و بلیت بفروشه، عددها این‌جا پیدا می‌شن.'}</p>${adm ? '' : `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`}</section>`; rows = []; return; }
     const K = this.kpis(A, st.days, st.cmp), { B, PB, c, p, metrics, ticks } = K;
+    const LB = W.days <= 30 ? this.dayBuckets(W) : B, LPB = PB ? (W.days <= 30 ? this.dayBuckets(K.P) : PB) : null;   // (the lines are drawn by days: a line through the 4- and 12-hour columns would be a comb)
     // the money, the people, the places
     const byShow = A.shows.map((x) => { const w = this.win({ n: x.n, s: x.s, o: x.o }, st.days); return { x, e: x.e, rev: sumArr(w.s), tix: sumArr(w.n), fill: x.cap ? Math.min(1, x.tix / x.cap) : 0 }; }).filter((r) => r.tix > 0).sort((a, b) => b.rev - a.rev);
     const by = (k, fn) => Object.entries(byShow.reduce((a, r) => { const key = fn(r); a[key] = (a[key] || 0) + r.rev; return a; }, {})).map(([t, v]) => ({ t, v })).sort((a, b) => b.v - a.v);
@@ -12237,45 +12605,64 @@ ana.page = function page_(el, role) {
     const leak = fn.slice(1).map((q, i) => [i, 1 - q[1] / Math.max(1, fn[i][1])]).sort((a, b) => b[1] - a[1])[0];
     const refR = 0.034 + (seedOf(`ref:${st.org}${st.show}`) % 30) / 1000, mob = 0.64 + (seedOf(`mob:${st.org}${st.show}`) % 14) / 100;
     const ins = [];
-    ins.push(p ? `فروش این ${W.days === 365 ? 'سال' : `${fa(W.days)} روز`} ${c.rev >= p.rev ? 'از دوره‌ی قبل' : 'از دوره‌ی قبل'} ${fa(Math.abs((dlt(c.rev, p.rev) || 0) * 100).toFixed(0))}٪ ${c.rev >= p.rev ? 'بیشتره' : 'کمتره'}${c.rev < p.rev ? '؛ بهتره ببینی کدوم برنامه یا روز افت کرده.' : '.'}` : `تو این بازه ${short(c.rev)} تومان بلیت فروخته شده.`);
+    ins.push(p ? `فروش این بازه (${rname(W.days)}) ${c.rev >= p.rev ? 'از دوره‌ی قبل' : 'از دوره‌ی قبل'} ${fa(Math.abs((dlt(c.rev, p.rev) || 0) * 100).toFixed(0))}٪ ${c.rev >= p.rev ? 'بیشتره' : 'کمتره'}${c.rev < p.rev ? '؛ بهتره ببینی کدوم برنامه یا روز افت کرده.' : '.'}` : `تو این بازه ${short(c.rev)} تومان بلیت فروخته شده.`);
     ins.push(`${WD_FA[bestD]}‌ها پرفروش‌ترین روزن (${fa(Math.round((wdSum[bestD] / avgD - 1) * 100))}٪ بالاتر از میانگین روزها)؛ بیشترین خرید ساعت ${hrLabel(bestH)} اتفاق می‌افته. پیام و تبلیغ رو همون موقع بفرست.`);
     if (byShow.length > 1) ins.push(`«${byShow[0].e.title}» ${fa(Math.round((byShow[0].rev / Math.max(1, c.rev)) * 100))}٪ فروش این بازه رو ساخته.`);
     ins.push(`بیشترین ریزش مشتری بین «${leak ? fn[leak[0]][0] : ''}» و «${leak ? fn[leak[0] + 1][0] : ''}»ـه (${fa(Math.round((leak ? leak[1] : 0) * 100))}٪ می‌رن)؛ ${leak && leak[0] >= 2 ? 'پرداخت رو ساده‌تر کن یا مهلت نگه‌داری صندلی رو یادآوری کن.' : 'صفحه‌ی برنامه و عکس‌ها رو قوی‌تر کن.'}`);
     if (refR > 0.06) ins.push(`برگشت پول ${fa((refR * 100).toFixed(1)).replace('.', '٫')}٪ـه که بالاست؛ دلیل‌ها رو تو سفارش‌ها نگاه کن.`);
     // organiser: the sessions that need attention; admin: the organisers' table
     let extra = '';
-    if (!adm) {
-      const soon = [];
-      for (const r of byShow) for (const s of sessionsOf(r.e)) { if (s.t < Date.now() || s.t > Date.now() + 14 * DAY) continue; const x = sesStats(r.e, s), f = x.cap ? x.sold / x.cap : 0; if (f < 0.5) soon.push({ e: r.e, s, f, x }); }
-      soon.sort((a, b) => a.s.t - b.s.t);
-      extra = `<section class="panel dk-box evp-rise an-attn"><h2>${ico('bell')}سانس‌هایی که به توجه نیاز دارن<small>تا ۱۴ روز آینده، کمتر از نیمه پُرن</small></h2>${soon.length ? `<ul class="an-att">${soon.slice(0, 6).map((q) => { const w = whenOf(q.s); return `<li><span><b>${esc(q.e.title)}</b><small>${esc(w.wd)} ${esc(w.dm)} · ${esc(w.tm)}</small></span><span class="dk-meter" style="--p:${q.f.toFixed(3)}"><i></i></span><b>${pct(q.f)}</b><a class="chip" href="#/org/codes" data-code="${esc(q.e.id)}">${ico('tag')}کد تخفیف</a></li>`; }).join('')}</ul>` : '<p class="bk-lead">همه‌ی سانس‌های دو هفته‌ی آینده بالای نیمه پُرن.</p>'}</section>`;
-    } else if (!st.org && !st.show) {
-      const rowsO = orgs.all().map((o) => { const a2 = this.agg(orgs.shows(o.id)), w2 = this.win(a2, st.days), pw2 = P ? this.win(a2, st.days, st.days) : null; return { o, rev: w2 ? sumArr(w2.s) : 0, tix: w2 ? sumArr(w2.n) : 0, d: pw2 && sumArr(pw2.s) ? dlt(sumArr(w2.s), sumArr(pw2.s)) : null, shows: a2.shows.length, vals: w2 ? this.buckets(w2).map((b) => b.s) : [] }; }).filter((r) => r.rev > 0).sort((a, b) => b.rev - a.rev);
+    if (adm && !st.org && !st.show) {
+      const rowsO = orgs.all().map((o) => { const a2 = this.agg(orgs.shows(o.id)), w2 = this.win(a2, st.days), pw2 = P ? this.win(a2, st.days, st.days) : null; return { o, rev: w2 ? sumArr(w2.s) : 0, tix: w2 ? sumArr(w2.n) : 0, d: pw2 && sumArr(pw2.s) ? dlt(sumArr(w2.s), sumArr(pw2.s)) : null, shows: a2.shows.length, vals: w2 ? (W.days <= 30 ? this.dayBuckets(w2) : this.buckets(a2, w2)).map((b) => b.s) : [] }; }).filter((r) => r.rev > 0).sort((a, b) => b.rev - a.rev);
       const siteOwn = LIST().filter((e) => !orgs.ownerOf(e)), a3 = this.agg(siteOwn), w3 = this.win(a3, st.days), own = w3 ? sumArr(w3.s) : 0, tot = rowsO.reduce((s, r) => s + r.rev, 0) + own;
       const fee = Math.round((rowsO.reduce((s, r) => s + r.rev, 0)) * FEE), vat = Math.round(c.rev * 0.1);
       extra = `<div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('mask')}تهیه‌کننده‌ها<small>فروش این بازه</small></h2><div class="dk-tbl-w"><table class="dk-tbl dk-num"><thead><tr><th>تهیه‌کننده</th><th>برنامه</th><th>بلیت</th><th>فروش (تومان)</th><th>سهم</th><th>تغییر</th></tr></thead><tbody>${rowsO.map((r) => `<tr><td><a href="#/admin/orgs">${esc(r.o.name)}</a></td><td>${fa(r.shows)}</td><td>${money(r.tix)}</td><td>${money(r.rev)}</td><td><span class="dk-meter" style="--p:${(r.rev / Math.max(1, tot)).toFixed(3)}"><i></i></span><small>${pct(r.rev / Math.max(1, tot))}</small></td><td>${r.d == null ? '—' : `<em class="st" data-tone="${r.d >= 0 ? 'good' : 'bad'}">${esc(sgn(r.d))}</em>`}</td></tr>`).join('')}${own ? `<tr><td>برنامه‌های خود سایت</td><td>${fa(a3.shows.length)}</td><td>${money(sumArr(w3.n))}</td><td>${money(own)}</td><td><span class="dk-meter" style="--p:${(own / Math.max(1, tot)).toFixed(3)}"><i></i></span><small>${pct(own / Math.max(1, tot))}</small></td><td>—</td></tr>` : ''}</tbody></table></div></section>
         <section class="panel dk-box evp-rise"><h2>${ico('bag')}درآمد سایت<small>از این فروش، تومان</small></h2><ul class="an-site"><li><span>کارمزد بلیت (۸٪) از تهیه‌کننده‌ها</span><b>${money(fee)}</b></li><li><span>مالیات بر ارزش افزوده‌ی جمع‌شده (۱۰٪)</span><b>${money(vat)}</b></li>${own ? `<li><span>فروش برنامه‌های خود سایت</span><b>${money(own)}</b></li>` : ''}<li><span>برگشت پول (حدود ${fa((refR * 100).toFixed(1)).replace('.', '٫')}٪ سفارش‌ها)</span><b>${money(Math.round(c.rev * refR))}</b></li></ul></section></div>
-        ${rowsO.length > 1 ? `<section class="panel dk-box evp-rise"><h2>${ico('award')}مقایسه‌ی تهیه‌کننده‌ها<small>فروش هر ${W.days <= 31 ? 'روز' : 'هفته'} · تومان</small></h2><div id="anCmpLine"></div></section>` : ''}`;
+        ${rowsO.length > 1 ? `<section class="panel dk-box evp-rise"><h2>${ico('award')}مقایسه‌ی تهیه‌کننده‌ها<small>فروش هر ستون · تومان</small></h2><div id="anCmpLine"></div></section>` : ''}`;
       extra += '';
       body._orgs = rowsO;
     }
-    body.innerHTML = `<section class="panel dk-box evp-rise cct-box"><h2>${ico('award')}روند فروش<small>${esc(st.show ? (showById(st.show) || {}).title : st.org ? (orgs.get(st.org) || {}).name : 'کل سایت')} · ${W.days === 365 ? 'یک سال' : `${fa(W.days)} روز`} گذشته</small></h2><div id="anCct"></div></section>
+
+    // the forecast: the next session of each show, how full it is, the pace of the last week, and where it will be on the night
+    const fcRows = [];
+    for (const r of byShow) {
+      const up = sessionsOf(r.e).filter((s) => s.t > Date.now() && s.t < Date.now() + 45 * DAY).sort((p, q) => p.t - q.t); if (!up.length) continue;
+      const s = up[0], x = sesStats(r.e, s), f = x.cap ? x.sold / x.cap : 0, d = Math.max(0.5, (s.t - Date.now()) / DAY), pace = sumArr(r.x.n.slice(ANA_N - 7)) / 7, per = pace / up.length;
+      const proj = Math.min(1, f + (per * d) / Math.max(1, x.cap)), risk = proj < 0.5 || (f < 0.4 && d < 10), hot = proj >= 0.97;
+      fcRows.push({ e: r.e, s, f, d, pace, proj, tone: hot ? 'good' : risk ? 'bad' : 'info', txt: hot ? 'پر می‌شه' : risk ? 'کم‌فروش' : 'در مسیر' });
+    }
+    fcRows.sort((p, q) => p.d - q.d);
+    const fcHTML = `<section class="panel dk-box evp-rise an-fc"><h2>${ico('bell')}پیش‌بینی پرشدن سانس‌ها<small>نزدیک‌ترین سانس هر برنامه تا ۴۵ روز آینده</small></h2>${fcRows.length ? `<div class="dk-tbl-w"><table class="dk-tbl dk-num"><thead><tr><th>برنامه</th><th>سانس</th><th>الان</th><th>سرعت فروش</th><th>تا شب اجرا</th><th>وضعیت</th></tr></thead><tbody>${fcRows.slice(0, 10).map((q) => { const w = whenOf(q.s); return `<tr><td><b>${esc(q.e.title)}</b></td><td>${esc(w.wd)} ${esc(w.dm)} · ${esc(w.tm)}<small> (${fa(Math.round(q.d))} روز دیگه)</small></td><td><span class="dk-meter" style="--p:${q.f.toFixed(3)}"><i></i></span><small>${pct(q.f)}</small></td><td>${fa(Math.round(q.pace))} بلیت در روز</td><td><b>${pct(q.proj)}</b></td><td><em class="st" data-tone="${q.tone}">${q.txt}</em>${!adm && q.tone === 'bad' ? ` <a class="chip" href="#/org/codes" data-code="${esc(q.e.id)}">${ico('tag')}کد تخفیف</a>` : ''}</td></tr>`; }).join('')}</tbody></table></div><p class="bk-note">${ico('info')}پیش‌بینی با سرعت فروش هفته‌ی گذشته حساب می‌شه؛ «کم‌فروش» یعنی با همین سرعت کمتر از نیمه پُر می‌شه، یا ده روز مونده و هنوز کمتر از ۴۰٪ فروخته.</p>` : '<p class="bk-lead">سانسی تو ۴۵ روز آینده نیست.</p>'}</section>`;
+    // the buyers, the codes, the payments
+    const sd = seedOf(`buy:${st.org}${st.show}`), newR = 0.55 + (sd % 14) / 100, tpo = c.ord ? c.tix / c.ord : 0, failR = 0.02 + (sd % 9) / 1000;
+    const homeCity = (byShow[0] && byShow[0].e.city) || 'تهران', others = ['تهران', 'کرج', 'اصفهان', 'شیراز', 'مشهد', 'تبریز', 'قم'].filter((q) => q !== homeCity);
+    const cityRows = [{ t: homeCity, v: Math.round(c.ord * 0.72) }].concat(others.slice(0, 4).map((q, i) => ({ t: q, v: Math.round(c.ord * [0.1, 0.07, 0.05, 0.03][i]) })));
+    const codeRows = (adm ? codeList().filter((q) => !st.org || (q.org || 'org1') === st.org) : ownCodes()).filter((q) => q.used > 0).sort((p, q) => q.used - p.used);
+    const avgT = c.tix ? c.rev / c.tix : 0, given = codeRows.reduce((t, q) => t + (q.type === 'pct' ? q.used * 2 * avgT * (q.v / 100) : q.used * q.v), 0), withCode = Math.min(0.4, codeRows.reduce((t, q) => t + q.used, 0) / Math.max(1, c.ord));
+    const extraHTML = `<div class="dk-cols"><section class="panel dk-box evp-rise an-buy"><h2>${ico('users')}خریدارها<small>این بازه</small></h2>
+        <div class="an-mini"><div><span>بلیت در هر سفارش</span><b>${fa(tpo.toFixed(1)).replace('.', '٫')}</b></div><div><span>خریدار تازه</span><b>${pct(newR)}</b></div><div><span>خریدار برگشتی</span><b>${pct(1 - newR)}</b></div></div>
+        <h3 class="wz-h3">خریدارها از کدوم شهر<small> (از روی سفارش‌ها)</small></h3>${viz.ranked(cityRows, (v) => money(v))}</section>
+      <div class="dk-stack"><section class="panel dk-box evp-rise an-cod"><h2>${ico('tag')}کدهای تخفیف<small>${codeRows.length ? `${fa(codeRows.length)} کد استفاده شده` : 'هنوز کدی استفاده نشده'}</small></h2>${codeRows.length ? `<div class="an-mini"><div><span>سفارش با کد</span><b>${pct(withCode)}</b></div><div><span>تخفیف داده‌شده</span><b>${short(given)}</b></div></div>${viz.ranked(codeRows.slice(0, 5).map((q) => ({ t: q.code, v: q.used })), (v) => `${money(v)} بار`)}` : `<p class="bk-lead">کدی که تو خرید استفاده بشه، این‌جا سهمش از فروش و هزینه‌ش دیده می‌شه.${adm ? '' : ` <a href="#/org/codes">کد بساز</a>`}</p>`}</section>
+        <section class="panel dk-box evp-rise"><h2>${ico('bag')}وضعیت پرداخت‌ها</h2>${partsPct([['موفق', 1 - refR - failR], ['پول برگشته', refR], ['ناموفق', failR]])}</section></div></div>`;
+    body.innerHTML = `<section class="panel dk-box evp-rise cct-box"><h2>${ico('award')}روند فروش<small>${esc(st.show ? (showById(st.show) || {}).title : st.org ? (orgs.get(st.org) || {}).name : 'کل سایت')} · ${rname(W.days)} گذشته</small></h2><div id="anCct"></div></section>
       <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('clock')}این دوره در برابر دوره‌ی قبل<small>فروش · تومان</small></h2><div id="anLine"></div></section>
         <section class="panel dk-box evp-rise an-ins"><h2>${ico('spark')}چی می‌بینیم<small>خودکار از همین عددها</small></h2><ul class="an-i">${ins.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></section></div>
       ${extra}
+      ${fcHTML}
       <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('calendar')}چه روزی و چه ساعتی می‌خرن<small>تعداد بلیت</small></h2><div class="hm" role="img" aria-label="بیشترین خرید ${WD_FA[bestD]}‌ها ساعت ${hrLabel(bestH)}"><div class="hm-g">${heat.map((r, d) => `<b class="hm-r">${WD_FA[d]}</b>${r.map((v, h) => `<i class="hm-c" style="--v:${(v / hmax).toFixed(3)}" title="${WD_FA[d]} ${hrLabel(h)}: ${money(Math.round(v))} بلیت"></i>`).join('')}`).join('')}<span></span>${Array.from({ length: 12 }, (_, h) => `<em class="hm-h">${fa(h * 2)}</em>`).join('')}</div><div class="hm-k"><span>کم</span><i></i><span>زیاد</span></div></div></section>
         <section class="panel dk-box evp-rise"><h2>${ico('route')}مشتری کجا می‌ریزه<small>از دیدن تا خرید</small></h2><ol class="fn">${fn.map((q, i) => `<li><span>${esc(q[0])}</span><i style="--p:${(q[1] / fn[0][1]).toFixed(4)}"></i><b>${money(q[1])}</b><small>${i ? `${pct(q[1] / Math.max(1, fn[i - 1][1]))} از مرحله‌ی قبل` : 'شروع'}</small></li>`).join('')}</ol><p class="bk-note">${ico('info')}نرخ تبدیل کل: ${fa((done / Math.max(1, views) * 100).toFixed(1)).replace('.', '٫')}٪ · ${pct(mob)} از خریدها با موبایله.</p></section></div>
       <div class="dk-cols"><section class="panel dk-box evp-rise"><h2>${ico('ticket')}برنامه‌ها<small>فروش این بازه · تومان</small></h2>${viz.ranked(byShow.slice(0, 8).map((r) => ({ t: r.e.title, v: r.rev })), short)}${byShow.length > 8 ? `<p class="bk-note">${ico('info')}${fa(byShow.length - 8)} برنامه‌ی دیگه هم هست؛ همه‌شون تو فایل اکسل‌ان.</p>` : ''}</section>
         <div class="dk-stack"><section class="panel dk-box evp-rise"><h2>${ico('pin')}شهرها</h2>${viz.ranked(by('city', (r) => r.e.city || '—').slice(0, 6), short)}</section>
           <section class="panel dk-box evp-rise"><h2>${ico('grid')}نوع برنامه</h2>${viz.ranked(by('kind', (r) => KIND_T[r.e.kind] || r.e.kind), short)}</section></div></div>
+      ${extraHTML}
       <section class="panel dk-box evp-rise"><h2>${ico('users')}خریدها از کجا میان<small>سهم از سفارش‌ها</small></h2>${partsPct([['موبایل', mob], ['دسکتاپ', (1 - mob) * 0.86], ['تبلت', (1 - mob) * 0.14]])}</section>`;
     cellTrend.draw($('#anCct', el), { metrics, labels: B.map((b) => b.label), short: B.map((b) => b.short), ticks, k: this.ck || 0, tabsLabel: 'شاخص' });
     $$('#anCct .cct-tab', el).forEach((b) => b.addEventListener('click', () => { this.ck = +b.dataset.k; }));
-    const cur = { key: 'cur', label: 'این دوره', color: 'var(--viz-1)', values: B.map((b) => b.s) };
-    const sr = [cur]; if (PB) sr.push({ key: 'prev', label: 'دوره‌ی قبل', color: 'var(--viz-2)', values: PB.map((b) => b.s), dash: true });
-    lineChart.draw($('#anLine', el), { series: sr, labels: B.map((b) => b.label), short: B.map((b) => b.short), fmt: (v) => `${money(Math.round(v))} تومان`, tick: (v) => short(v), label: 'فروش این دوره در برابر دوره‌ی قبل', h: 230 });
+    const cur = { key: 'cur', label: 'این دوره', color: 'var(--viz-1)', values: LB.map((b) => b.s) };
+    const sr = [cur]; if (LPB) sr.push({ key: 'prev', label: 'دوره‌ی قبل', color: 'var(--viz-2)', values: LPB.map((b) => b.s), dash: true });
+    lineChart.draw($('#anLine', el), { series: sr, labels: LB.map((b) => b.label), short: LB.map((b) => b.short), fmt: (v) => `${money(Math.round(v))} تومان`, tick: (v) => short(v), label: 'فروش این دوره در برابر دوره‌ی قبل', h: 230 });
     const ro = body._orgs;
-    if (ro && ro.length > 1 && $('#anCmpLine', el)) lineChart.draw($('#anCmpLine', el), { series: ro.slice(0, 4).map((r, i) => ({ key: r.o.id, label: r.o.name, color: `var(--viz-${i + 1})`, values: r.vals })), labels: B.map((b) => b.label), short: B.map((b) => b.short), fmt: (v) => `${money(Math.round(v))} تومان`, tick: (v) => short(v), label: 'فروش تهیه‌کننده‌ها', fill: false, h: 230 });
+    if (ro && ro.length > 1 && $('#anCmpLine', el)) lineChart.draw($('#anCmpLine', el), { series: ro.slice(0, 4).map((r, i) => ({ key: r.o.id, label: r.o.name, color: `var(--viz-${i + 1})`, values: r.vals })), labels: LB.map((b) => b.label), short: LB.map((b) => b.short), fmt: (v) => `${money(Math.round(v))} تومان`, tick: (v) => short(v), label: 'فروش تهیه‌کننده‌ها', fill: false, h: 230 });
     $$('[data-code]', el).forEach((a) => a.addEventListener('click', () => store.sset('blit.codeFor', a.dataset.code)));
     rows = [['برنامه', 'شهر', 'نوع', 'بلیت', 'فروش (تومان)']].concat(byShow.map((r) => [r.e.title, r.e.city, KIND_T[r.e.kind] || r.e.kind, r.tix, r.rev])).concat([[], ['روز', 'بلیت', 'سفارش', 'فروش (تومان)']]).concat(Array.from({ length: W.days }, (_, i) => [dayOf(Date.now() - (W.days - 1 - i) * DAY), W.n[i], W.o[i], W.s[i]]));
   };
@@ -13020,7 +13407,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, lab, wallet, orgs, admins, dsess, deskAuth, selUI, orgDesk, ana, pw, sha256, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, lab, wallet, orgs, admins, dsess, deskAuth, selUI, orgDesk, ana, pw, sha256, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, planFromBuilder, hallDesigner, bFromP, HB_TPL, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

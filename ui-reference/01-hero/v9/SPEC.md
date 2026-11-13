@@ -1318,6 +1318,30 @@ Every `<select>` on a desk and in its windows (the province menu, the cities, th
 - **The theme switch is still there** (the owner asked for dark everywhere; dark is the default and what the client's file opens with). Removing the switch altogether is one line, if wanted.
 - The six phone banners are still placeholders; three programs still have no poster.
 
+## 10.17 Round W: the hall builder of the panel, analytics that stay small, the side widget off, the line at a card's edge
+
+The owner's round-W message (seven points) and what was done:
+
+- **The hall builder (`hallbuilder.js`, in the admin's panel, «سالن‌ها» → a new hall, and «ویرایش چیدمان» on a layout the admin made).** A layout is a list of **sections** the admin adds one by one, from the stage back: *rows of seats* (a semicircle round the stage, or straight rows: rows, seats of the first row, how many more each row gets, 1–5 blocks, the aisle's width, the gap from the section before), *a side stand* (rows along a wall, facing the stage), *boxes* (لژ: how many, how many seats, which side), *round tables*, *a standing area*. **A floor is a seated section further back** («+ طبقه‌ی تازه» copies the last one a little wider, with the next price class), so any number of floors, any shape. Nine templates to start from (classic hall with boxes and two balconies, rectangular hall, small hall, amphitheatre, concert with a standing floor, cabaret, a stadium with side stands, a four-floor hall, from nothing). The price class of the rows of a section: one class, three cuts (the front dearest), or a hand-made table («تا ردیف ۳ رده‌ی A، تا ردیف ۷ رده‌ی C»). A drawing that follows every change, the number of seats and of each class beside it, and a message that says why a plan cannot be saved yet. The older text table of rows stays as «جدول متنی (پیشرفته)».
+  - What it makes is a plan like the others (`planFromBuilder(b)` → `{stage, secs}`; the state `b` is kept in the layout so it can be opened again; `bFromP` opens a layout made with the older numbers). `hall.js` gives a section its own aisle (`sec.aisle`), `hallslib.js` accepts `l.b`, `planOfHall` builds it, and **`libSet.layEdit`** changes a layout in place only when no show uses it (else the old one stays and the new one is added after it, so a show keeps its seats).
+  - The buyer's map takes these halls without change (`tools/w-hall-buy.js`: floors, stadium, cabaret, concert).
+- **The poster and banner sizes** were given once in the reply (poster 1000×1500, desktop banner 2000×1000, phone and tablet banner 1080×1440 (3:4; the desktop banner keeps its important part in the middle 1740×1000), the files as they are or 2× for sharp screens); nothing in the files changed.
+- **Analytics** (`analytics.js`): small columns in every range: 7 days = 42 columns of 4 hours, 30 days = 60 of 12 hours, 3 months = 45, **6 months = 45 (new range)**, a year = 53 weeks; none wider than 40 px (the column count is fixed per range, not the width). The line charts use daily points up to 30 days. New panels: the forecast of every session (sold, speed, expected sell-out), buyers (new and returning, tickets per order), discount codes and the payment methods. «تحلیل کامل» on both dashboards is now a filled button beside the box's title.
+- **Money flow** was described to the owner as it is in the code (a demo gateway; the site's 8 % and the 10 % VAT are constants; the settlement page is sample data; no real money moves) and **nothing was changed**, as asked.
+- **The line at a card's right edge.** Found by measuring: the side widget (`.sdock`) was only translated out of the window, so its drop shadow (8 px + 24 px blur) showed at the right edge as a thin vertical line that came and went with the scroll. It is now `visibility: hidden` when it is off (the visibility changes after the slide, `transition: visibility 0s linear .75s`).
+- **The side widget is off by default** (`hdScroll: 'one'`: the single morphing header; the setting «dock» is still there under «هدر و متن» and says it is off for now). `look.js` keeps the old saved value, so the owner can turn it back on.
+- **What the client can change** was listed from the code (see the reply and the table in HANDOFF 30).
+
+### Checked (round W)
+
+`tools/w-hall-test.js` (every template: no two seats on one spot, none outside the drawing, the count on the screen = the count of the plan; floors, side stand, standing area and tables added, copied, moved, removed; an empty plan cannot be saved; a hall made with it survives a reload; the layout opened again and changed in place; a layout a show uses stays and a new one is added; the text mode; nothing outside the screen on a phone), `tools/w-hall-buy.js` (the buyer's map of four such halls), `tools/w-hall-axe.js` (axe on the builder, dark and light, desktop and phone: nothing), `tools/v-ana-test.js` (columns per range and their width).
+
+### Honest notes (round W)
+
+- The analytics are still sample data; the settlement page is sample numbers and the gateway is a demonstration. Real money needs a bank gateway (in the management's name), a server and a settlement rule agreed with the client.
+- The builder draws plans from rules (rows on arcs or lines); an odd hall (a curved side, a column in the middle) is closest by combining sections; a hall's own exact drawing would be a package like the library's.
+- A layout a show uses cannot be changed in place; this is by design (the tickets already sold point at its seats).
+
 ## 11. The look: what the owner can change
 
 Every setting is a variable or an attribute; the settings panel writes it, `localStorage` keeps it (`hero9.look`), **«کپی تنظیمات»** gives the changes as a small JSON text (`{ "version": 9, "look": {…}, "texts": {…} }`) to send to us, **«وارد کردن»** takes such a text back, **«بازگردانی همه»** returns the defaults. **«حالت آماده»** applies a mode over the defaults: پیش‌فرض، فشرده، باز و نرم، خیلی گرد، تیز و رسمی، چسبیده (بدون فاصله و گوشه)، کادرهای سیاه خالص، کادرهای سفید، نوشته‌ی درشت، حرکت قوی. Double-clicking a slider puts it back. While a slider is dragged the panel fades so the page can be seen.
