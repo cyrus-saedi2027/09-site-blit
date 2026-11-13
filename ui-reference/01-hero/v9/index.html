@@ -3075,6 +3075,64 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .gf-codes .cp-bar { margin: 0 0 10px; }
 @media (max-width: 560px) { .cp { grid-template-columns: 86px minmax(0, 1fr); } .cp-off b { font-size: 18px; } .cp-meter .dk-meter { flex-basis: 70px; } .cp-acts { padding-bottom: 10px; } }
 
+/* ───── round U7: one look for the browser's own controls inside the desks and their windows (a control with a class of its own keeps its own look) ───── */
+.ad-up { position: relative; overflow: hidden; cursor: pointer; gap: .45em; }
+.ad-up input[type="file"] { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer; font-size: 0; }
+.ad-addslot { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-top: calc(var(--u) * .8); }
+.ad-addslot small { font-size: 12px; line-height: 1.8; color: rgba(var(--fg), max(.66, var(--dmin))); }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="checkbox"]:not([class]), input[type="radio"]:not([class])) {
+  appearance: none; -webkit-appearance: none; flex: none; display: inline-grid; place-content: center; width: 18px; height: 18px; margin: 0; padding: 0; vertical-align: middle; cursor: pointer;
+  border: 1.5px solid rgba(var(--fg), .45); border-radius: 6px; background: transparent; transition: background-color .2s, border-color .2s, box-shadow .2s;
+}
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="radio"]:not([class])) { border-radius: 50%; }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="checkbox"]:not([class]))::after { content: ""; width: 9px; height: 5px; margin-top: -2px; border-left: 2.2px solid var(--capsule); border-bottom: 2.2px solid var(--capsule); transform: rotate(-45deg) scale(0); transition: transform .22s cubic-bezier(.34, 1.6, .5, 1); }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="radio"]:not([class]))::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--capsule); transform: scale(0); transition: transform .22s cubic-bezier(.34, 1.6, .5, 1); }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="checkbox"]:not([class]):checked, input[type="radio"]:not([class]):checked) { background: rgb(var(--fg)); border-color: rgb(var(--fg)); }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="checkbox"]:not([class]):checked)::after { transform: rotate(-45deg) scale(1); }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="radio"]:not([class]):checked)::after { transform: scale(1); }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="checkbox"]:not([class]), input[type="radio"]:not([class])):hover { border-color: rgb(var(--fg)); }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="checkbox"]:not([class]), input[type="radio"]:not([class])):focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+:where(.dk-main, .evp-dlg, .wz-body) :where(input[type="checkbox"]:not([class]):disabled) { opacity: .45; cursor: not-allowed; }
+/* the sliders: a thin track and a round thumb in the text colour */
+:where(.dk-main, .evp-dlg, .wz-body) input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; margin: 0; background: transparent; cursor: pointer; direction: ltr; }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 4px; background: rgba(var(--fg), .2); }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -7px; border-radius: 50%; border: 0; background: rgb(var(--fg)); box-shadow: 0 0 0 4px var(--capsule), 0 2px 8px rgba(0, 0, 0, .4); transition: transform .25s cubic-bezier(.34, 1.6, .5, 1); }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.18); }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="range"]::-moz-range-track { height: 4px; border-radius: 4px; background: rgba(var(--fg), .2); }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: rgb(var(--fg)); box-shadow: 0 0 0 4px var(--capsule), 0 2px 8px rgba(0, 0, 0, .4); }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="range"]:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 4px; border-radius: 6px; }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+:where(.dk-main, .evp-dlg, .wz-body) input[type="number"]::-webkit-inner-spin-button, :where(.dk-main, .evp-dlg, .wz-body) input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* ───── round U8f: a card opens a bit more when pressed; the desks' buttons have a motion of their own ───── */
+.cp { grid-template-rows: auto auto auto; }
+.cp-off { grid-row: 1 / -1; }
+.cp-body { cursor: pointer; }
+.cp-tg svg.i { transition: transform .4s cubic-bezier(.34, 1.5, .5, 1); }
+.cp.is-open .cp-tg svg.i { transform: rotate(180deg); }
+.cp-more { grid-column: 2; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.2, .8, .2, 1); }
+.cp.is-open .cp-more { grid-template-rows: 1fr; }
+.cp-more-in { min-height: 0; overflow: hidden; display: grid; gap: 10px; padding-inline-end: 14px; }
+.cp.is-open .cp-more-in { padding-bottom: 14px; }
+.cp-dl { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px 14px; padding: 12px 14px; border-radius: 14px; background: rgba(var(--fg), .05); }
+.cp-dl > div { display: grid; gap: 2px; min-width: 0; }
+.cp-dl dt { font-size: 11px; color: rgba(var(--fg), max(.62, var(--dmin))); }
+.cp-dl dd { margin: 0; font-size: 12.5px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cp-link { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 12px; }
+.cp-link code { min-width: 0; padding: 5px 10px; border-radius: 9px; background: rgba(var(--fg), .07); font: 600 11.5px ui-monospace, Menlo, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.cp-link .chip { height: 30px; font-size: 11.5px; gap: .4em; }
+.dk-main .buy { position: relative; overflow: hidden; transition: translate .3s cubic-bezier(.34, 1.5, .5, 1), scale .2s, box-shadow .3s, filter .2s; }
+.dk-main .buy::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 32%, rgba(255, 255, 255, .38) 50%, transparent 68%); transform: translateX(-130%); transition: transform .8s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+.dk-main .buy:hover:not(:disabled) { translate: 0 -2px; box-shadow: 0 14px 28px -12px color-mix(in oklab, var(--viz-1) 60%, transparent); }
+.dk-main .buy:hover:not(:disabled)::after { transform: translateX(130%); }
+.dk-main .buy:active:not(:disabled) { translate: 0 0; scale: .965; transition-duration: .1s; }
+.dk-main .chip { transition: translate .3s cubic-bezier(.34, 1.5, .5, 1), scale .2s, background-color .2s, box-shadow .2s; }
+.dk-main .chip:hover:not(:disabled) { translate: 0 -1px; }
+.dk-main .chip:active:not(:disabled) { translate: 0 0; scale: .94; transition-duration: .1s; }
+.dk-main .chip svg.i { transition: transform .35s cubic-bezier(.34, 1.6, .5, 1); }
+.dk-main .chip:hover svg.i { transform: scale(1.15) rotate(-6deg); }
+@media (prefers-reduced-motion: reduce) { .dk-main .buy, .dk-main .chip, .cp-more, .cp-tg svg.i, .dk-main .buy::after { transition: none !important; } }
+
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
    one frame, one rhythm of spaces, calm panels with a fine light on their edge, headings with a small icon chip, big pictures instead of many small boxes.
@@ -9316,6 +9374,14 @@ const desk = {
     const m = /^#\/(org|admin)(?:\/([a-z]+))?(?:\/([^/?#]+))?$/.exec(h);
     return m ? { kind: m[1], tab: m[2] || 'home', arg: m[3] ? decodeURIComponent(m[3]) : null } : null;
   },
+  // a card that opens a bit more when it is pressed (a coupon, a gift batch): the toggle, or a press on its body (not on a button or a link)
+  openCard(ev) {
+    const card = ev.target.closest('.cp'); if (!card) return false;
+    const tg = ev.target.closest('[data-tg]');
+    if (!tg && (ev.target.closest('button, a, input, select, textarea, code') || !ev.target.closest('.cp-body'))) return false;
+    const on = card.classList.toggle('is-open'), b = $('[data-tg]', card); if (b) b.setAttribute('aria-expanded', String(on));
+    return true;
+  },
   // the rail's settings (kept in the browser): its names shown or not, and the side it is on
   ui() { const u = store.get('blit.deskUi', null) || {}; return { open: !!u.open, side: u.side === 'right' ? 'right' : 'left' }; },
   prevTab: {},
@@ -9502,7 +9568,7 @@ const org = {
       $$('#osMap circle', el).forEach((c) => { const p = L.by.get(c.dataset.k); if (!p) return; c.dataset.st = p.st; if (p.st === 'held') { c.setAttribute('fill', 'none'); c.setAttribute('stroke', C.held); c.setAttribute('stroke-width', '4'); } else { c.setAttribute('fill', p.st === 'sold' ? p.c : C[p.st]); c.removeAttribute('stroke'); } });   // held: a ring, so it never reads as a tier's colour
     };
     const cx = L.cx, cy = L.cy, stage = L.stage === 'arc' ? `<path d="M ${cx - 230} ${cy - 96} H ${cx + 230} V ${cy - 20} Q ${cx} ${cy + 70} ${cx - 230} ${cy - 20} Z" class="hpm-st"/>` : `<rect x="${cx - 250}" y="${cy - 96}" width="500" height="96" rx="14" class="hpm-st"/>`;
-    const ga = L.secs.filter((z) => z.ga).map((z) => { const p = z.shapes[0]; return `<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="20" fill="${z.ga.c}" opacity=".35"/><text x="${p.x + p.w / 2}" y="${p.y + p.h / 2 + 10}" text-anchor="middle" class="hpm-l">${esc(z.sec.t)}</text>`; }).join('');
+    const ga = L.secs.filter((z) => z.ga && z.shapes && z.shapes[0]).map((z) => { const p = z.shapes[0]; return `<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="20" fill="${z.ga.c}" opacity=".35"/><text x="${p.x + p.w / 2}" y="${p.y + p.h / 2 + 10}" text-anchor="middle" class="hpm-l">${esc(z.sec.t)}</text>`; }).join('');
     const dots = L.secs.flatMap((z) => z.seats.map((p) => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="8" data-k="${p.key}"/>`)).join('');
     el.innerHTML = `${desk.head(`نقشه‌ی فروش · ${e.title}`, `${esc(hallOf(e).name)} · هر صندلی با وضعیتش، همین لحظه. <span class="dk-live"><i></i>زنده</span>`, `<a class="chip" href="#/org/shows">${ico('arrow-r')}برنامه‌ها</a>`)}
       <div class="sec-chips os-ses evp-rise" role="radiogroup" aria-label="سانس">${ses.map((x) => { const ww = whenOf(x); return `<button type="button" class="chip" role="radio" data-s="${esc(x.id)}" aria-checked="${x.id === s.id}">${esc(ww.wd)} ${esc(ww.dm)} · ${esc(ww.tm)}</button>`; }).join('')}</div>
@@ -10213,14 +10279,19 @@ const codes = {
     const f = $('#cdNew', el), st = { f: 'all', q: '' }; let type = 'pct';
     const nf = (n) => (n ? fa(n.toLocaleString('en-US')).replace(/,/g, '٬') : '');
     const num = (s) => +enDigits(String(s)).replace(/\D/g, '') || 0;
+    const more = (c) => {
+      const link = `${lab.site()}/#/code/${c.code}`, last = (c.log || [])[0], subs = (c.subs || []).length;
+      return `<div class="cp-more"><div class="cp-more-in"><dl class="cp-dl"><div><dt>ساخته‌شده</dt><dd>${esc(dayOf(c.at))}</dd></div><div><dt>نوع</dt><dd>${c.type === 'pct' ? 'درصدی' : 'مبلغی'}</dd></div><div><dt>کدهای یکتای چاپی</dt><dd>${subs ? `${fa(subs)} (مصرف‌شده ${fa((c.subUsed || []).length)})` : 'ندارد'}</dd></div><div><dt>آخرین مصرف</dt><dd>${last ? `${esc(dayOf(last.at))}${last.order ? ` · ${esc(last.order)}` : ''}` : 'هنوز نه'}</dd></div></dl>
+        <div class="cp-link"><code dir="ltr">${esc(link)}</code><button type="button" class="chip" data-copy="${esc(link)}">${ico('copy')}کپی لینک</button></div></div></div>`;
+    };
     const card = (c) => {
       const e = c.eid && showById(c.eid), s = codeState(c), p = Math.min(1, c.used / Math.max(1, c.limit));
       return `<article class="cp" data-tone="${s[1]}" data-c="${esc(c.code)}"><div class="cp-off"><b>${c.type === 'pct' ? `${fa(c.v)}٪` : esc(short(c.v))}</b><small>${c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف'}</small></div>
-        <div class="cp-body"><div class="cp-top"><code class="cp-code" dir="ltr">${esc(c.code)}</code><button type="button" class="cp-ic" data-copy="${esc(c.code)}" aria-label="کپی کد ${esc(c.code)}">${ico('copy')}</button><em class="st" data-tone="${s[1]}">${esc(s[0])}</em></div>
+        <div class="cp-body"><div class="cp-top"><code class="cp-code" dir="ltr">${esc(c.code)}</code><button type="button" class="cp-ic" data-copy="${esc(c.code)}" aria-label="کپی کد ${esc(c.code)}">${ico('copy')}</button><em class="st" data-tone="${s[1]}">${esc(s[0])}</em><button type="button" class="cp-ic cp-tg" data-tg aria-expanded="false" aria-label="جزئیات کد ${esc(c.code)}">${ico('down')}</button></div>
           <p class="cp-for">${esc(e ? e.title : 'همه‌ی برنامه‌ها')}</p>
           <div class="cp-meter"><span class="dk-meter" style="--p:${p.toFixed(3)}"><i></i></span><small>${money(c.used)} از ${money(c.limit)} بار${c.subs && c.subs.length ? ` · ${fa(c.subs.length)} کد یکتای چاپی` : ''}</small></div>
           <div class="cp-meta"><span>${ico('clock')}${esc(dayOf(c.until))} · ${esc(daysLeft(c.until))}</span>${c.min ? `<span>${ico('bag')}حداقل خرید ${esc(short(c.min))}</span>` : ''}${c.cap && c.type === 'pct' ? `<span>${ico('tag')}تا ${esc(short(c.cap))} تخفیف</span>` : ''}</div></div>
-        <div class="cp-acts"><button type="button" class="chip" data-promo="${esc(c.code)}">${ico('share')}پیام تبلیغاتی</button><button type="button" class="chip" data-cards="${esc(c.code)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-edit="${esc(c.code)}">${ico('sliders')}ویرایش</button></div></article>`;
+        <div class="cp-acts"><button type="button" class="chip" data-promo="${esc(c.code)}">${ico('share')}پیام تبلیغاتی</button><button type="button" class="chip" data-cards="${esc(c.code)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-edit="${esc(c.code)}">${ico('sliders')}ویرایش</button></div>${more(c)}</article>`;
     };
     const paint = (focusNew) => {
       const l = codeList().filter((c) => (st.f === 'all' || codeState(c)[1] === st.f || (st.f === 'mute' && codeState(c)[1] === 'mute')) && (!st.q || c.code.includes(st.q)));
@@ -10232,8 +10303,9 @@ const codes = {
     $$('[data-f]', el).forEach((b) => b.addEventListener('click', () => { st.f = b.dataset.f; $$('[data-f]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
     $('#cpQ', el).addEventListener('input', (ev) => { st.q = enDigits(ev.target.value).toUpperCase().replace(/[^A-Z0-9-]/g, ''); paint(); });
     $('#cpList', el).addEventListener('click', async (ev) => {
+      if (desk.openCard(ev)) return;
       const b = ev.target.closest('button'); if (!b) return; const get = (k) => codeList().find((c) => c.code === b.dataset[k]);
-      if (b.dataset.copy) copyText(b.dataset.copy, `کد ${b.dataset.copy} کپی شد.`);
+      if (b.dataset.copy) copyText(b.dataset.copy, /^https?:/.test(b.dataset.copy) ? 'لینک کپی شد.' : `کد ${b.dataset.copy} کپی شد.`);
       else if (b.dataset.promo) this.promo(get('promo'));
       else if (b.dataset.cards) this.cards(get('cards'));
       else if (b.dataset.edit) this.edit(get('edit'), () => { this.render(el); });
@@ -10317,14 +10389,15 @@ const codes = {
             <button type="submit" class="buy">${ico('check')}ساختن کدها</button><p class="bk-otp-st" id="gfSt"></p></form></section>
       </div>`;
     const f = $('#adGift', el), sum = () => { const v = num(f.elements.v.value), n = num(f.elements.n.value); $('#gfSum', el).innerHTML = v && n ? `${ico('info')}<span>${fa(n)} کد × ${money(v)} = <b>${money(v * n)} تومان</b> اعتبار</span>` : ''; };
+    const gmore = (g, used) => { const ready = admin.giftCodes(g).filter((x) => !used.has(x)); return `<div class="cp-more"><div class="cp-more-in"><dl class="cp-dl"><div><dt>ساخته‌شده</dt><dd>${esc(dayOf(g.at))}</dd></div><div><dt>تعداد کد</dt><dd>${money(g.n)}</dd></div><div><dt>مصرف‌شده</dt><dd>${money(g.used)}</dd></div><div><dt>اعتبار مونده</dt><dd>${money(g.v * (g.n - g.used))} تومان</dd></div></dl>${ready.length ? `<div class="cp-link"><span>چند کد آماده:</span>${ready.slice(0, 3).map((x) => `<button type="button" class="chip" data-copy="${esc(x)}" dir="ltr">${esc(x)}</button>`).join('')}</div>` : ''}</div></div>`; };
     const paint = () => {
       const l = giftList(), used = new Set(store.get('blit.giftUsed', []));
       $('#gfList', el).innerHTML = l.map((g) => { const s = giftState(g), p = Math.min(1, g.used / Math.max(1, g.n));
         return `<article class="cp cp-gift" data-tone="${s[1]}" data-g="${esc(g.batch)}"><div class="cp-off"><b>${esc(short(g.v))}</b><small>تومان اعتبار</small></div>
-          <div class="cp-body"><div class="cp-top"><b class="cp-org">${esc(g.org)}</b><em class="st" data-tone="${s[1]}">${esc(s[0])}</em></div>
+          <div class="cp-body"><div class="cp-top"><b class="cp-org">${esc(g.org)}</b><em class="st" data-tone="${s[1]}">${esc(s[0])}</em><button type="button" class="cp-ic cp-tg" data-tg aria-expanded="false" aria-label="جزئیات ${esc(g.org)}">${ico('down')}</button></div>
             <div class="cp-meter"><span class="dk-meter" style="--p:${p.toFixed(3)}"><i></i></span><small>${money(g.used)} از ${money(g.n)} کد مصرف شده · ${money(g.v * (g.n - g.used))} تومان مونده</small></div>
             <div class="cp-meta"><span>${ico('clock')}${esc(dayOf(g.until))} · ${esc(daysLeft(g.until))}</span><span>${ico('bag')}ساخته‌شده ${esc(dayOf(g.at))}</span></div></div>
-          <div class="cp-acts"><button type="button" class="chip" data-gprint="${esc(g.batch)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-gview="${esc(g.batch)}">${ico('search')}کدها</button><button type="button" class="chip" data-gcsv="${esc(g.batch)}">${lab.dn()}فایل کدها</button><button type="button" class="chip" data-gext="${esc(g.batch)}">${ico('clock')}تمدید</button><button type="button" class="chip" data-goff="${esc(g.batch)}" aria-pressed="${!g.off}">${ico(g.off ? 'play' : 'pause')}${g.off ? 'فعال کن' : 'غیرفعال کن'}</button></div></article>`; }).join('');
+          <div class="cp-acts"><button type="button" class="chip" data-gprint="${esc(g.batch)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-gview="${esc(g.batch)}">${ico('search')}کدها</button><button type="button" class="chip" data-gcsv="${esc(g.batch)}">${lab.dn()}فایل کدها</button><button type="button" class="chip" data-gext="${esc(g.batch)}">${ico('clock')}تمدید</button><button type="button" class="chip" data-goff="${esc(g.batch)}" aria-pressed="${!g.off}">${ico(g.off ? 'play' : 'pause')}${g.off ? 'فعال کن' : 'غیرفعال کن'}</button></div>${gmore(g, used)}</article>`; }).join('');
       const live = l.find((g) => giftState(g)[1] === 'good'), ready = live && admin.giftCodes(live).find((x) => !used.has(x));
       $('#gfTry', el).innerHTML = ready ? `${ico('info')}برای آزمایش: کد <code dir="ltr">${esc(ready)}</code> رو تو «کیف پول من» بزن.` : '';
     };
@@ -10341,7 +10414,8 @@ const codes = {
       const want = f.elements.print.checked; this.giftsDesk(el); if (want) this.giftCards(g);
     });
     $('#gfList', el).addEventListener('click', (ev) => {
-      const b = ev.target.closest('button'); if (!b) return; const k = Object.keys(b.dataset)[0], g = giftList().find((x) => x.batch === b.dataset[k]); if (!g) return;
+      if (desk.openCard(ev)) return;
+      const b = ev.target.closest('button'); if (!b) return; if (b.dataset.copy) { copyText(b.dataset.copy, `${b.dataset.copy} کپی شد.`); return; } const k = Object.keys(b.dataset)[0], g = giftList().find((x) => x.batch === b.dataset[k]); if (!g) return;
       if (k === 'gprint') this.giftCards(g);
       else if (k === 'gview') this.giftCodes(g);
       else if (k === 'gcsv') { csvDownload(`blit-gift-${g.batch}.csv`, [['کد', 'مبلغ (تومان)', 'سازمان', 'مهلت', 'وضعیت']].concat(admin.giftCodes(g).map((c) => [c, g.v, g.org, new Date(g.until).toISOString().slice(0, 10), (store.get('blit.giftUsed', []).includes(c)) ? 'مصرف شده' : 'آماده']))); toast('فایل کدها دانلود شد.'); }
