@@ -1382,6 +1382,7 @@ The owner sent his own card designs (discount cards: models 1(2), 1(3), 2, 3, 4;
 
 - Only Chromium was used here. An SVG with a data-URL font inside is drawn the same by Firefox and Safari as far as is known, but it has not been seen there.
 - The font makes the page about 140 KB heavier (and each SVG file about 120 KB: the font is in it so it opens the same anywhere; an editor that does not know the face shows the words in its own font until Vazirmatn is installed).
+- The whole regression of this round passed except `poster-test.js`, which was written before the 2 : 3 frames of round T and fails the same eight checks on the build before this round (it is out of date, not broken by this round). The card says the year with its date («۲۹ اسفند ۱۴۰۵»: the sample's «۳۰ اسفند ۱۴۰۵» is not a real day, 1405 has 29 Esfand).
 - The pictures are redrawn from his samples, not traced: the same shapes and words, cleaner lines; the popcorn and the coupon are drawn by hand in code. Models 2, 3 and 4 and the other gift cards wait for his word.
 
 ## 11. The look: what the owner can change

@@ -11108,7 +11108,7 @@ const cs = {
       ${bigText}<g stroke="${ink}" stroke-width="6" stroke-linecap="round" fill="none">${burst(150)}${burst(964)}</g>
       <path d="M170 582H940" stroke="${ink}" stroke-width="2.4"/>${this.T(557, 616, 'کد را در مرحله‌ی پرداخت وارد کنید یا QR را اسکن کنید.', 33, 600, ink, 'middle')}
       <path d="M86 634H1014" stroke="${ink}" stroke-width="2.4"/>
-      ${this.T(92, 666, `اعتبار تا ${sp.untilDay}`, 29, 600, ink, 'left')}${this.T(606, 666, `شماره‌ی کارت: ${sp.serialNo}`, 29, 600, ink, 'middle')}${this.T(995, 666, sp.host, this.fit(sp.host, 600, 29, 200), 600, ink, 'right', 'ltr')}
+      ${this.T(92, 666, `اعتبار تا ${sp.untilDay}`, this.fit(`اعتبار تا ${sp.untilDay}`, 600, 29, 300), 600, ink, 'left')}${this.T(606, 666, `شماره‌ی کارت: ${sp.serialNo}`, 29, 600, ink, 'middle')}${this.T(995, 666, sp.host, this.fit(sp.host, 600, 29, 200), 600, ink, 'right', 'ltr')}
       <path d="M404 642V678M797 642V678" stroke="${ink}" stroke-width="2.4"/>
       <rect x="1118" y="42" width="432" height="636" rx="36" fill="none" stroke="${C.blue}" stroke-width="3.6"/>
       <rect x="1152" y="64" width="364" height="60" rx="22" fill="${C.blue}"/>${this.T(cx, 108, sp.kicker, 42, 800, C.cream, 'middle')}
@@ -11123,7 +11123,7 @@ const cs = {
     const body = `${this.coupon(318, 340, 0.92, ink, C.blue)}
       ${top}${this.T(780, 480, sp.unitLine, this.fit(sp.unitLine, 900, off ? 124 : 138, 470), 900, ink, 'middle')}
       <path d="M86 538H1014" stroke="${ink}" stroke-width="2.4"/>${this.T(1000, 592, 'کد را در مرحله‌ی پرداخت وارد کنید یا QR را اسکن کنید.', 38, 700, ink, 'right')}
-      ${this.T(1000, 660, `اعتبار تا: ${sp.untilDay}`, 29, 600, ink, 'right')}${this.T(492, 660, `شماره‌ی کارت: ${sp.serialNo}`, 29, 600, ink, 'middle')}${this.T(96, 660, sp.host, this.fit(sp.host, 600, 29, 226), 600, ink, 'left', 'ltr')}
+      ${this.T(1000, 660, `اعتبار تا: ${sp.untilDay}`, this.fit(`اعتبار تا: ${sp.untilDay}`, 600, 29, 300), 600, ink, 'right')}${this.T(492, 660, `شماره‌ی کارت: ${sp.serialNo}`, 29, 600, ink, 'middle')}${this.T(96, 660, sp.host, this.fit(sp.host, 600, 29, 226), 600, ink, 'left', 'ltr')}
       <path d="M336 632V672M688 632V672" stroke="${ink}" stroke-width="2.4"/>
       <rect x="1112" y="52" width="444" height="616" rx="40" fill="none" stroke="${C.ink}" stroke-width="3.6"/>
       <rect x="1166" y="34" width="336" height="76" rx="38" fill="${C.blue}"/>${this.T(cx, 90, sp.kicker, 46, 800, C.cream, 'middle')}
@@ -11141,7 +11141,7 @@ const cs = {
       <rect x="536" y="344" width="424" height="72" rx="34" fill="${C.box}"/>${this.T(748, 396, sp.kicker2, 48, 800, C.blue, 'middle')}
       <rect x="78" y="428" width="910" height="158" rx="46" fill="${C.box}"/>${amount}
       <path d="M86 610H1014" stroke="${ink}" stroke-width="2.4"/>
-      ${this.T(980, 654, `اعتبار تا ${sp.untilDay}`, 34, 600, ink, 'right')}${this.T(100, 654, `شماره‌ی کارت: ${sp.serialNo}`, 34, 600, ink, 'left')}<path d="M554 622V664" stroke="${ink}" stroke-width="2.4"/>
+      ${this.T(980, 654, `اعتبار تا ${sp.untilDay}`, this.fit(`اعتبار تا ${sp.untilDay}`, 600, 34, 400), 600, ink, 'right')}${this.T(100, 654, `شماره‌ی کارت: ${sp.serialNo}`, 34, 600, ink, 'left')}<path d="M554 622V664" stroke="${ink}" stroke-width="2.4"/>
       <rect x="1096" y="40" width="424" height="92" rx="38" fill="none" stroke="${C.ink}" stroke-width="3.8"/>${this.T(cx, 108, sp.kicker, 56, 800, C.ink, 'middle')}
       ${this.qrBox(sp, 1144, 152, 328, 24)}${this.T(cx, 530, sp.code, this.fit(sp.code, 800, 56, 420), 800, C.ink, 'middle', 'ltr')}
       ${this.T(cx, 584, 'کد را در مرحله‌ی پرداخت وارد کنید', 31, 600, C.ink, 'middle')}${this.T(cx, 624, 'یا QR را اسکن کنید.', 31, 600, C.ink, 'middle')}
@@ -11182,6 +11182,7 @@ const lab = {
     { id: 'gold', t: 'طلا', d: 'کارت هدیه‌ی مات با قاب طلایی', for: 'gift' },
   ],
   thumb(d) { const m = this.dim(d.id); return `<canvas width="214" height="${Math.round(214 * m.h / m.w)}" style="aspect-ratio:${m.w} / ${m.h}"></canvas>`; },
+  dayY: new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/Tehran', day: 'numeric', month: 'long', year: 'numeric' }),   // «۲۹ اسفند ۱۴۰۵»: the cards say the year
   design(id) { return this.DESIGNS.find((d) => d.id === id) || this.DESIGNS[0]; },
   dim(id) { return this.design(id).svg ? this.CARD : this.OLD; },
   // ── small tools ──
@@ -11217,7 +11218,7 @@ const lab = {
     const e = c.eid && showById(c.eid), gift = !!c.gift, pct = c.type === 'pct', num = pct ? `${this.FA(c.v)}٪` : this.FA(Math.round(c.v).toLocaleString('en-US')).replace(/,/g, '٬');
     return {
       gift, code: o.code || c.code, serial: o.serial || 0,
-      big: num, bigNum: num, fixed: !pct, unitWord: gift ? 'اعتبار' : 'تخفیف', untilDay: dayOf(c.until), serialNo: this.FA(String(o.serial || 1).padStart(7, '0')), host: this.host(),
+      big: num, bigNum: num, fixed: !pct, unitWord: gift ? 'اعتبار' : 'تخفیف', untilDay: this.dayY.format(new Date(c.until)), serialNo: this.FA(String(o.serial || 1).padStart(7, '0')), host: this.host(),
       unit: gift ? 'تومان اعتبار هدیه' : c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف',
       kicker: gift ? 'کارت هدیه' : 'کد تخفیف', title: gift ? c.gift.org : e ? e.title : 'همه‌ی برنامه‌های بلیت',
       until: `تا ${dayOf(c.until)}`, acc: (e && e.accent) || o.acc || '#8b5cf6', genre: e ? e.kind : 'concert', art: o.art || null,
