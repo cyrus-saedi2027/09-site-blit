@@ -1362,6 +1362,7 @@ The owner's round-X message (six points) and what was done:
 
 - The posters are designs for a demonstration, with invented credits; a real organiser's poster goes in through the poster slot (any shape: it is fitted to the 2 : 3 frame).
 - The four files are one build in four dresses: the desks' code is in the site file too (unreachable from it).
+- Tests that had to follow: the card audit lets the date's pocket reach 2 px past the picture (and fails if it does not: that is the hairline guard), the tests that needed a program with no poster take the poster away in memory, the one that opens the entry control uses `blit-gate.html` (the files share the browser's storage when opened from the same disk), and one that picks the first buyable card skips the presale cards. `poster-test.js` is older than the 2 : 3 frame (it still looks for 3 : 4) and is not part of the round's regression.
 
 ## 11. The look: what the owner can change
 
