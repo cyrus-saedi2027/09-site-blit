@@ -11642,7 +11642,7 @@ ${d.bar(100, 40, "#1c1b1a")}
    round Z: the ticket designs. The owner's six new designs (tickfaces-tpl.js: made Persian, right to left, every real word a place) and the site's own boarding pass («pass») are one library: the admin chooses which a
    concert, a play or a comedy gets, and any one show (the tab «طرح بلیت‌ها»); the choice is kept in `blit.ticketDesign`. It is used where a ticket is shown or saved: the page after the payment, the saved picture / PDF / share
    (a design is HTML: it is drawn into an SVG <foreignObject> with its fonts inside, then onto a canvas), and the previews. The first design's left picture is the show's own poster (2 : 3, like every poster of the site);
-   the wide pictures of the stage and the curtain take the show's banner (or keep their drawing when the admin asks, or the show has no banner).
+   the other designs keep their own pictures (the stage lights, the curtain).
    On a phone the page keeps the vertical pass (a wide design would be too small to read); the saved picture still has the chosen design.
    ════════════════════════════════════════════════════════════════ */
 const tf = {
@@ -11658,9 +11658,9 @@ const tf = {
   KINDS: [['concert', 'کنسرت‌ها'], ['theatre', 'تئاترها'], ['comedy', 'جُنگ و کمدی']],
   // the default is «auto»: every kind its own design (the stage for a concert, the curtain for a play, the red one for a comedy); the admin may name one design for all, or one for a kind or a show
   AUTO: { concert: 'n2', theatre: 'n3', comedy: 'n6' },
-  DEF: { def: 'auto', kind: {}, show: {}, art: 'show' },
+  DEF: { def: 'auto', kind: {}, show: {} },
   // ── the choice ──
-  set() { const s = store.get('blit.ticketDesign', null) || {}; return { def: s.def === 'auto' || this.has(s.def) ? s.def : this.DEF.def, kind: Object.assign({}, s.kind || {}), show: Object.assign({}, s.show || {}), art: s.art || this.DEF.art }; },
+  set() { const s = store.get('blit.ticketDesign', null) || {}; return { def: s.def === 'auto' || this.has(s.def) ? s.def : this.DEF.def, kind: Object.assign({}, s.kind || {}), show: Object.assign({}, s.show || {}) }; },
   save(s) { store.set('blit.ticketDesign', s); },
   has(id) { return this.DESIGNS.some((d) => d.id === id); },
   // the design a show's tickets have: the show's own choice, else its kind's, else the default; '' means «follow the kind»
@@ -11691,7 +11691,7 @@ const tf = {
   },
   // the data of one ticket (o: the order, e: the show, x: the seat, i: its number): every text is escaped, the pictures are made here
   data(o, e, x, i = 0) {
-    const t = new Date(o.t), pl = placeOf(e), h = hallOf(e), { a } = artOf(e), ga = !!x.ga, q = qrText(o.code, o.sid, x.key), set = this.set();
+    const t = new Date(o.t), pl = placeOf(e), h = hallOf(e), { a } = artOf(e), ga = !!x.ga, q = qrText(o.code, o.sid, x.key);
     const seq = 1 + (seedOf(o.code) % 8900) + i, dur = DUR[e.kind] || 100;
     const [t1, t2] = this.split2(e.title), seatNo = ga ? 0 : +x.n || 0, start = ga ? 1 : Math.max(1, seatNo - 5);
     const S = (v) => esc(String(v));
@@ -11711,8 +11711,8 @@ const tf = {
       },
       // the show's own poster (2 : 3), placed the way the admin placed it
       poster: () => { const { src } = artOf(e), fx = a && a.fx != null ? a.fx : 50, fy = a && a.fy != null ? a.fy : 50, fz = (a && a.fz) || 1; return `<img src="${esc(src)}" alt="" style="display:block;width:100%;height:100%;object-fit:cover;object-position:${fx}% ${fy}%${fz !== 1 ? `;transform:scale(${fz});transform-origin:${fx}% ${fy}%` : ''}">`; },
-      // a wide picture: the show's banner, or the design's own drawing
-      wide: (w, hh, art) => { const b = e.banner && e.banner.src; return set.art === 'show' && b ? `<img src="${esc(b)}" alt="" style="display:block;width:${w}px;height:${hh}px;object-fit:cover"><div style="position:absolute;left:0;right:0;top:0;bottom:0;background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,.15) 55%,rgba(0,0,0,.4))"></div>` : art; },
+      // the wide pictures (the stage, the curtain) stay the design's own drawing; only the first design takes the show's poster
+      wide: (w, hh, art) => art,
     };
     return d;
   },
@@ -11795,9 +11795,6 @@ const tf = {
             <label class="bk-fld"><span>طرح این برنامه</span><select id="tfShowD"><option value="">از نوع برنامه (${esc(this.DESIGNS.find((dz) => dz.id === (s.kind[sh.kind] || (s.def === 'auto' ? this.AUTO[sh.kind] || 'pass' : s.def))).t)})</option>${this.DESIGNS.map((dz) => `<option value="${dz.id}"${s.show[sh.id] === dz.id ? ' selected' : ''}>${dz.t}</option>`).join('')}</select></label></div>
           <div class="tf-live"><b>این برنامه الان:</b> ${this.DESIGNS.find((dz) => dz.id === cur).t}</div>
         </section>
-        <section class="panel dk-box evp-rise" aria-labelledby="tfH4"><h2 id="tfH4">${ico('spark')}عکس روی طرح‌ها</h2><p class="bk-lead">طرح «کلاسیک» پوستر برنامه رو توی قابش می‌ذاره؛ طرح‌های «صحنه» و «پرده» بنر برنامه رو. اگه نخوای، تصویر خود طرح می‌مونه.</p>
-          <div class="bk-seg" role="radiogroup" aria-label="عکس روی طرح‌ها"><button type="button" role="radio" data-art="show" aria-checked="${s.art === 'show'}">عکس برنامه</button><button type="button" role="radio" data-art="design" aria-checked="${s.art === 'design'}">تصویر خود طرح</button></div>
-        </section>
         <section class="panel dk-box evp-rise tf-prev" aria-labelledby="tfH5"><h2 id="tfH5">${ico('eye')}پیش‌نمایش بلیت این برنامه</h2><div class="tf-big">${cur === 'pass' ? '<p class="bk-lead">این برنامه بلیت پیش‌فرض سایت رو داره (پیش‌نمایشش تو صفحه‌ی بلیت بعد از خرید دیده می‌شه).</p>' : this.html(cur, sm.d)}</div></section>
       </div>`;
       this.mount(el);
@@ -11806,7 +11803,6 @@ const tf = {
       $$('[data-kind]', el).forEach((s2) => s2.addEventListener('change', () => { const v = this.set(), k = s2.dataset.kind; v.kind[k] = s2.value; this.save(v); note(`طرح بلیت ${this.KINDS.find((x) => x[0] === k)[1]}: ${s2.value ? this.DESIGNS.find((dz) => dz.id === s2.value).t : 'همون پیش‌فرض'}`); draw(); }));
       $('#tfShow', el).addEventListener('change', (ev) => { sh = shows.find((x) => x.id === ev.target.value) || sh; draw(); });
       $('#tfShowD', el).addEventListener('change', (ev) => { const v = this.set(); if (ev.target.value) v.show[sh.id] = ev.target.value; else delete v.show[sh.id]; this.save(v); note(`طرح بلیت «${sh.title}»: ${ev.target.value ? this.DESIGNS.find((dz) => dz.id === ev.target.value).t : 'از نوع برنامه'}`); draw(); });
-      $$('[data-art]', el).forEach((b) => b.addEventListener('click', () => { const v = this.set(); v.art = b.dataset.art; this.save(v); note(`عکس روی طرح‌های بلیت: ${v.art === 'show' ? 'عکس برنامه' : 'تصویر خود طرح'}`); draw(); }));
     };
     draw();
   },
