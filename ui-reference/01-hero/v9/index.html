@@ -2712,61 +2712,173 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .q-tips { position: relative; }
 @media (max-width: 760px) { .q-nums { grid-template-columns: 1fr; } .q-box { padding: 18px; } }
 
-/* round AA: prices seat by seat (seatprice.js): the wizard's summary, the window */
+/* prices seat by seat (seatprice.js): the wizard's summary, then the whole-screen workspace */
 .wz-sp { display: flex; flex-wrap: wrap; align-items: center; gap: .6em 1em; justify-content: space-between; padding: .8em 1em; border-radius: 14px; background: rgba(var(--fg), .04); }
-.wz-sp p { margin: 0; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .82); }
-.evp-dlg.spx-dlg { width: min(1240px, 100%); max-height: min(94vh, 980px); }
-.spx-dlg h2 small { margin-inline-start: .6em; font-weight: 500; opacity: .65; }
-.spx-wrap { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); gap: calc(var(--u) * 1.1); align-items: start; }
-/* a plan that is wide (a hall seen from the front) gets the whole width for its map and the three boxes under it; a tall one has its map beside the boxes, and the boxes scroll alone */
-.spx-wrap.is-wide { grid-template-columns: minmax(0, 1fr); }
-.spx-wrap.is-wide .spx-map { height: clamp(240px, 38vh, 480px); }
-.spx-wrap.is-wide .spx-side { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
-.spx-wrap.is-wide .spx-list ul { max-height: 190px; }
-@media (min-width: 901px) { .spx-wrap:not(.is-wide) { height: clamp(420px, 64vh, 700px); } .spx-wrap:not(.is-wide) .spx-mapc { height: 100%; grid-template-rows: auto minmax(0, 1fr) auto auto; } .spx-wrap:not(.is-wide) .spx-map { height: 100%; } .spx-wrap:not(.is-wide) .spx-side { height: 100%; overflow-y: auto; align-content: start; padding-inline-end: .2em; } }
-.spx-mapc { display: grid; gap: .6em; min-width: 0; }
-.spx-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .5em .8em; }
-.spx-bar .bk-seg button { display: inline-flex; align-items: center; gap: .4em; }
-.spx-zoom { display: inline-flex; gap: .3em; }
-.spx-zoom .chip { min-width: 2.4em; justify-content: center; }
-.spx-hov { display: block; min-width: 0; min-height: 1.7em; line-height: 1.7; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* (a fixed row: a text that comes and goes must never move the map under the pointer) */
-.spx-map { display: block; width: 100%; height: clamp(320px, 64vh, 700px); border-radius: calc(var(--r) * .6); background: radial-gradient(90% 80% at 50% 0%, rgba(var(--fg), .06), transparent 70%), rgba(var(--fg), .03); touch-action: none; user-select: none; -webkit-user-select: none; }
-.spx-map[data-tool="pen"] { cursor: crosshair; }
+.wz-sp p { margin: 0; font-size: 13px; color: rgba(var(--fg), .82); }
+html.spx-open, html.spx-open body { overflow: hidden; }
+.spx-top { grid-row: 1; } .spx-ask { grid-row: 2; } .spx-body { grid-row: 3; }
+.spx-full { position: fixed; inset: 0; z-index: 90; display: grid; grid-template-rows: auto auto minmax(0, 1fr); background: var(--capsule); color: rgb(var(--fg)); font-family: var(--font); }
+.spx-top { display: flex; flex-wrap: wrap; align-items: center; gap: .5em 1.3em; padding: 10px 18px; border-bottom: 1px solid rgba(var(--fg), .1); }
+.spx-top h2 { display: flex; align-items: center; gap: .5em; margin: 0; font-size: 17px; }
+.spx-top h2 small { font-size: 13px; font-weight: 500; opacity: .65; }
+.spx-stat { flex: 1 1 260px; margin: 0; font-size: 12.5px; color: rgba(var(--fg), .8); }
+.spx-stat b { color: rgb(var(--fg)); }
+.spx-top-a { display: flex; align-items: center; gap: .5em; margin-inline-start: auto; }
+.spx-dirty { font-size: 12px; color: #f59e0b; }
+.spx-ask { display: flex; flex-wrap: wrap; align-items: center; gap: .6em; padding: 8px 18px; font-size: 13px; background: color-mix(in oklab, #f59e0b 16%, transparent); }
+.spx-ask[hidden] { display: none; }
+.spx-body { display: grid; grid-template-columns: 82px minmax(0, 1fr) minmax(310px, 370px); min-height: 0; }
+/* the tools (on the right) */
+.spx-tools { display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 10px 8px; overflow-y: auto; border-inline-end: 1px solid rgba(var(--fg), .1); }
+.spx-tools button { appearance: none; display: grid; justify-items: center; gap: 3px; padding: 8px 2px 7px; border: 0; border-radius: 12px; background: transparent; color: rgba(var(--fg), .78); font: inherit; cursor: pointer; transition: background .15s, color .15s; }
+.spx-tools button:hover:not(:disabled) { background: rgba(var(--fg), .08); color: rgb(var(--fg)); }
+.spx-tools button[aria-pressed="true"] { background: color-mix(in oklab, var(--viz-1) 24%, transparent); color: rgb(var(--fg)); box-shadow: inset 0 0 0 1.5px var(--viz-1); }
+.spx-tools button:disabled { opacity: .32; cursor: default; }
+.spx-tools button:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 1px; }
+.spx-tools b { font-size: 10.5px; font-weight: 600; line-height: 1.3; text-align: center; }
+.spx-tsep { height: 1px; margin: 4px 6px; background: rgba(var(--fg), .12); }
+.spx-op { display: grid; gap: 4px; }
+.spx-op button { padding: 5px 2px 4px; font-size: 17px; font-weight: 700; line-height: 1; }
+.spx-zi { font-size: 20px; font-weight: 700; line-height: 24px; }
+/* the stage */
+.spx-stage { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto auto auto; gap: 6px; padding: 10px; min-width: 0; min-height: 0; }
+.spx-map { display: block; width: 100%; height: 100%; min-height: 0; border-radius: 16px; background: radial-gradient(90% 80% at 50% 0%, rgba(var(--fg), .07), transparent 70%), rgba(var(--fg), .03); touch-action: none; user-select: none; -webkit-user-select: none; }
+.spx-map[data-tool="seat"], .spx-map[data-tool="free"] { cursor: crosshair; }
+.spx-map[data-tool="row"], .spx-map[data-tool="sec"] { cursor: pointer; }
 .spx-map[data-tool="box"] { cursor: cell; }
-.spx-map[data-tool="pan"] { cursor: grab; }
+.spx-map[data-tool="hand"], .spx-map.is-space { cursor: grab; }
+.spx-map.is-pan { cursor: grabbing; }
 .spx-map .hpm-st { fill: rgba(var(--fg), .14); }
 .spx-map .hpm-w { fill: rgba(var(--fg), .55); font: 700 18px var(--font); }
-.spx-map .spx-zl { fill: rgba(var(--fg), .55); font: 600 13px var(--font); pointer-events: none; }
-.spx-map circle { stroke: transparent; stroke-width: 2; transition: fill .12s; }
-.spx-map circle.cus { stroke: rgba(var(--fg), .6); stroke-width: 2; }
-.spx-map circle.sel { stroke: rgb(var(--fg)); stroke-width: 4.5; transform-box: fill-box; transform-origin: center; transform: scale(1.22); }
-.spx-rect { fill: color-mix(in oklab, var(--viz-1, #8b5cf6) 22%, transparent); stroke: var(--viz-1, #8b5cf6); stroke-width: 2; stroke-dasharray: 6 4; pointer-events: none; }
-.spx-leg { display: flex; flex-wrap: wrap; gap: .4em 1.2em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .75); }
-.spx-leg i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-inline-end: .4em; }
-.spx-side { display: grid; gap: .7em; min-width: 0; }
-.spx-box { display: grid; gap: .6em; padding: .9em 1em; border-radius: 14px; background: rgba(var(--fg), .04); }
-.spx-box h3 { margin: 0; font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); }
-.spx-n, .spx-cur { margin: 0; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .85); }
+.spx-sg rect { fill: rgba(var(--fg), .028); stroke: rgba(var(--fg), .15); stroke-width: 1.5; transition: fill .15s, stroke .15s; }
+.spx-sg.hov rect { fill: color-mix(in oklab, var(--viz-1) 13%, transparent); stroke: var(--viz-1); }
+.spx-zl { fill: rgba(var(--fg), .78); font: 700 14px var(--font); cursor: pointer; stroke: transparent; stroke-width: 18px; paint-order: stroke; }
+.spx-zl:hover { fill: rgb(var(--fg)); }
+.spx-rl { fill: rgba(var(--fg), .6); font: 700 10px var(--font); cursor: pointer; stroke: transparent; stroke-width: 12px; paint-order: stroke; }
+.spx-rl:hover { fill: rgb(var(--fg)); }
+.spx-sn { fill: #0b0b10; font: 700 8px var(--font); }
+.spx-map circle { stroke: transparent; stroke-width: 2; transition: opacity .12s; }
+.spx-map.has-sel circle:not(.sel):not(.hov) { opacity: .4; }
+.spx-map circle.off { opacity: .55; }
+.spx-map circle.cus { stroke: rgba(var(--fg), .7); stroke-width: 2.2; }
+.spx-map circle.sel { stroke: rgb(var(--fg)); stroke-width: 4; transform-box: fill-box; transform-origin: center; transform: scale(1.2); }
+.spx-map circle.hov { stroke: rgb(var(--fg)); stroke-width: 3; opacity: 1 !important; }
+.spx-rect { fill: color-mix(in oklab, var(--viz-1, #8b5cf6) 22%, transparent); stroke: var(--viz-1, #8b5cf6); stroke-width: 2.5; stroke-dasharray: 7 5; pointer-events: none; }
+.spx-rect.is-sub, .spx-free.is-sub { fill: color-mix(in oklab, #ef4444 20%, transparent); stroke: #ef4444; }
+.spx-free { fill: color-mix(in oklab, var(--viz-1, #8b5cf6) 16%, transparent); stroke: var(--viz-1, #8b5cf6); stroke-width: 3; stroke-dasharray: 7 5; stroke-linejoin: round; stroke-linecap: round; pointer-events: none; }
+.spx-hint { margin: 0; min-height: 1.6em; font-size: 12.5px; line-height: 1.6; color: rgba(var(--fg), .75); }
+.spx-hov { display: block; min-width: 0; min-height: 1.7em; font-size: 12.5px; line-height: 1.7; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }   /* (a fixed row: a text that comes and goes must never move the map under the pointer) */
+.spx-sel-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .5em; padding: 8px 10px; border-radius: 12px; background: rgba(var(--fg), .06); font-size: 13px; font-weight: 700; }
+.spx-sel-bar span { margin-inline-end: auto; }
+/* the panel (on the left) */
+.spx-panel { display: grid; gap: 10px; align-content: start; padding: 10px; overflow-y: auto; border-inline-start: 1px solid rgba(var(--fg), .1); }
+.spx-box { display: grid; gap: .6em; padding: .85em 1em; border-radius: 14px; background: rgba(var(--fg), .05); }
+.spx-box h3 { margin: 0; font-size: 13.5px; font-weight: var(--fwm); }
+.spx-box summary { cursor: pointer; font-size: 13.5px; font-weight: var(--fwm); }
+.spx-box summary small { font-weight: 500; opacity: .65; }
+.spx-box[open] summary { margin-bottom: .5em; }
+.spx-price { background: color-mix(in oklab, var(--viz-1) 11%, rgba(var(--fg), .04)); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--viz-1) 40%, transparent); }
+.spx-cur { margin: 0; font-size: 13px; color: rgba(var(--fg), .85); }
 .spx-cur b { color: rgb(var(--fg)); }
 .spx-chips { display: flex; flex-wrap: wrap; gap: .4em; }
 .spx-chips .chip { padding-inline: .8em; }
 .spx-tc { display: inline-flex; align-items: center; gap: .45em; }
 .spx-tc i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
-.spx-pc small { margin-inline-start: .45em; opacity: .6; }
-.spx-sel { display: grid; gap: .3em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.spx-prices { display: flex; flex-wrap: wrap; gap: .4em; }
+.spx-pc { display: inline-flex; align-items: center; gap: .45em; }
+.spx-pc i { width: 10px; height: 10px; border-radius: 50%; }
+.spx-pc small { opacity: .6; }
 .spx-set { display: flex; flex-wrap: wrap; gap: .5em; align-items: center; }
-.spx-set .wz-in input { width: 9.5em; }
-.spx-list summary { cursor: pointer; font-weight: var(--fwm); font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
-.spx-list ul { list-style: none; margin: .6em 0 0; padding: 0; display: grid; gap: .4em; max-height: 230px; overflow: auto; }
-.spx-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .5em; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
+.spx-set .wz-in input { width: 9.5em; height: 42px; font-size: 15px; }
+.spx-secs { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 260px; overflow-y: auto; }
+.spx-secs button { appearance: none; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .6em; width: 100%; padding: 8px 10px; border: 0; border-radius: 10px; background: rgba(var(--fg), .05); color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.spx-secs button:hover { background: rgba(var(--fg), .1); }
+.spx-secs [data-on="some"] button { box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--viz-1) 55%, transparent); }
+.spx-secs [data-on="all"] button { background: color-mix(in oklab, var(--viz-1) 26%, transparent); box-shadow: inset 0 0 0 1.5px var(--viz-1); }
+.spx-sn1 { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.spx-secs small { font-size: 11.5px; opacity: .65; }
+.spx-secs em { min-width: 2.2em; font-style: normal; font-size: 12px; font-weight: 700; text-align: end; color: var(--viz-1); }
+.spx-list summary b { margin-inline-start: .3em; }
+.spx-list ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .4em; max-height: 240px; overflow: auto; }
+.spx-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: .5em; font-size: 12px; }
 .spx-list li em { font-style: normal; opacity: .7; }
 .spx-list .wz-in input { width: 7.5em; height: 32px; font-size: 13px; }
 .spx-go { appearance: none; border: 0; background: none; color: inherit; font: inherit; text-align: start; padding: 0; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .spx-go:hover { text-decoration: underline; }
 .spx-more { display: block !important; opacity: .65; }
-.spx-end { position: sticky; bottom: calc(var(--u) * -1.5); z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: .5em; margin: .9em calc(var(--u) * -1.7) calc(var(--u) * -1.5); padding: .7em calc(var(--u) * 1.7) calc(var(--u) * 1.5); background: var(--capsule); border-top: 1px solid rgba(var(--fg), .1); }   /* (it covers the dialog's own padding too, so nothing shows under it) */
-.spx-dirty { color: #f59e0b; font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
-@media (max-width: 900px) { .spx-wrap, .spx-wrap.is-wide { grid-template-columns: minmax(0, 1fr); } .spx-wrap.is-wide .spx-side { grid-template-columns: minmax(0, 1fr); } .spx-map { height: clamp(260px, 48vh, 460px); } }
+.spx-clear { justify-self: start; }
+@media (max-width: 600px) { .spx-stat, .spx-top h2 small { display: none; } .spx-top { padding: 8px 12px; } }
+@media (max-width: 900px) {
+  .spx-full { grid-template-rows: auto auto minmax(0, 1fr); }
+  .spx-body { grid-template-columns: minmax(0, 1fr); grid-template-rows: max-content max-content max-content; align-content: start; overflow-y: auto; }
+  .spx-tools { flex-direction: row; overflow-x: auto; overflow-y: hidden; min-height: 76px; padding: 8px; border-inline-end: 0; border-bottom: 1px solid rgba(var(--fg), .1); }
+  .spx-tools button { flex: 0 0 62px; }
+  .spx-tsep { width: 1px; height: auto; margin: 6px 4px; flex: 0 0 1px; }
+  .spx-op { display: flex; }
+  .spx-stage { height: min(62vh, 560px); }
+  .spx-panel { overflow: visible; border-inline-start: 0; border-top: 1px solid rgba(var(--fg), .1); }
+}
+
+/* the session planner of the wizard (wizard.js s3): a month calendar, the hours, the list of every session */
+.wz-pl { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr); gap: calc(var(--u) * 1.1); align-items: start; }
+.wz-c, .wz-t { display: grid; gap: .7em; padding: calc(var(--u) * 1) calc(var(--u) * 1.1); border-radius: 18px; background: rgba(var(--fg), .045); min-width: 0; }
+.wz-c-head { display: flex; align-items: center; gap: .6em; }
+.wz-c-t { display: grid; flex: 1; min-width: 0; }
+.wz-c-t b { font-size: 18px; font-weight: 800; }
+.wz-c-t small { font-size: 11.5px; opacity: .65; }
+.wz-nav { appearance: none; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 12px; background: rgba(var(--fg), .08); color: inherit; cursor: pointer; transition: background .15s; }
+.wz-nav:hover:not(:disabled) { background: rgba(var(--fg), .16); }
+.wz-nav:disabled { opacity: .3; cursor: default; }
+.wz-nav svg { width: 18px; height: 18px; }
+.wz-c-wk { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; text-align: center; }
+.wz-c-wk i { font-style: normal; font-size: 11.5px; font-weight: 700; color: rgba(var(--fg), .6); }
+.wz-c-wk i:nth-child(6), .wz-c-wk i:nth-child(7) { color: color-mix(in oklab, #f59e0b 80%, rgb(var(--fg))); }
+.wz-c-wk .s { display: none; }
+@media (max-width: 560px) { .wz-c-wk .f { display: none; } .wz-c-wk .s { display: inline; font-size: 13px; } }
+.wz-c-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; touch-action: none; user-select: none; -webkit-user-select: none; }
+.wz-d { appearance: none; position: relative; display: grid; place-items: center; aspect-ratio: 1.12; border: 0; border-radius: 14px; background: rgba(var(--fg), .06); color: rgb(var(--fg)); font: inherit; cursor: pointer; transition: background .12s, transform .12s, box-shadow .12s; }
+.wz-d b { font-size: 16px; font-weight: 700; }
+.wz-d:hover:not(:disabled) { background: rgba(var(--fg), .14); transform: translateY(-1px); }
+.wz-d.is-thu, .wz-d.is-fri { background: color-mix(in oklab, #f59e0b 11%, rgba(var(--fg), .05)); }
+.wz-d.is-today { box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .5); }
+.wz-d.has { box-shadow: inset 0 -3px 0 var(--viz-1); }
+.wz-d.has i { position: absolute; top: 4px; inset-inline-start: 5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--viz-1); color: #fff; font-style: normal; font-size: 10.5px; font-weight: 800; line-height: 17px; text-align: center; }
+.wz-d.is-sel { background: var(--viz-1); color: #fff; box-shadow: 0 4px 14px color-mix(in oklab, var(--viz-1) 50%, transparent); transform: translateY(-1px); }
+.wz-d:disabled { opacity: .28; cursor: default; }
+.wz-d:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.wz-c-q { display: flex; flex-wrap: wrap; gap: .4em; }
+.wz-t h3 { margin: 0; font-size: 15px; }
+.wz-pre { display: flex; flex-wrap: wrap; gap: .4em; }
+.wz-pre .chip[aria-pressed="true"], .wz-tc { background: var(--viz-1); color: #fff; }
+.wz-step { display: flex; align-items: center; justify-content: center; gap: .4em; padding: .5em; border-radius: 14px; background: rgba(var(--fg), .06); }
+.wz-step output { min-width: 3.6em; font-size: 26px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; }
+.wz-step .chip { padding-inline: .6em; font-size: 12px; }
+.wz-tadd { justify-self: start; }
+.wz-ch { display: flex; flex-wrap: wrap; gap: .4em; min-height: 36px; align-items: center; }
+.wz-ch small { opacity: .6; }
+.wz-tc { display: inline-flex; align-items: center; gap: .3em; padding: .25em .3em .25em .8em; border-radius: 999px; font-size: 13.5px; }
+.wz-tc button { appearance: none; border: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(255, 255, 255, .25); color: inherit; font-size: 15px; line-height: 1; cursor: pointer; }
+.wz-go { display: grid; gap: 2px; justify-items: center; width: 100%; padding-block: .7em; }
+.wz-go small { font-size: 11px; font-weight: 500; opacity: .85; }
+.wz-go:disabled { opacity: .45; }
+.wz-lh { display: flex; align-items: center; justify-content: space-between; gap: .6em; }
+.wz-lh .wz-h3 { margin: 0; }
+.wz-sl { display: grid; gap: 8px; }
+.wz-sg { display: grid; gap: .5em; padding: .7em .9em; border-radius: 14px; background: rgba(var(--fg), .045); }
+.wz-sg.is-past { opacity: .55; }
+.wz-sg-h { display: flex; flex-wrap: wrap; align-items: center; gap: .4em .8em; }
+.wz-sg-h b { font-size: 14px; }
+.wz-sg-h small { opacity: .65; font-size: 12px; }
+.wz-sg-a { display: inline-flex; flex-wrap: wrap; gap: .35em; margin-inline-start: auto; }
+.wz-sg-a .chip { padding-inline: .7em; font-size: 12px; }
+.wz-sg-t { display: flex; flex-wrap: wrap; gap: .5em; }
+.wz-sc { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border-radius: 12px; background: rgba(var(--fg), .09); }
+.wz-sc b { min-width: 3.4em; font-size: 15px; font-weight: 800; text-align: center; font-variant-numeric: tabular-nums; }
+.wz-sc button { appearance: none; border: 0; width: 28px; height: 28px; border-radius: 9px; background: transparent; color: inherit; font-size: 17px; line-height: 1; cursor: pointer; }
+.wz-sc button:hover { background: rgba(var(--fg), .16); }
+.wz-sc .x { color: #ef4444; }
+.wz-empty { margin: 0; padding: 1.2em; border-radius: 14px; border: 1.5px dashed rgba(var(--fg), .2); text-align: center; font-size: 13px; color: rgba(var(--fg), .7); }
+@media (max-width: 900px) { .wz-pl { grid-template-columns: minmax(0, 1fr); } .wz-d b { font-size: 15px; } .wz-d { aspect-ratio: 1; } }
 
 /* the admin's featured slots */
 .ad-slots { list-style: none; margin: 0; padding: 0; display: grid; gap: .5em; }
@@ -10712,7 +10824,7 @@ const org = {
       <div class="dk-show-t"><b>${esc(o.title)}</b><small>${esc(o.line)}</small><span class="dk-show-st"><em class="st" data-tone="${o.st[1]}">${esc(o.st[0])}</em>${o.note ? `<small>${esc(o.note)}</small>` : ''}</span></div>
       <div class="dk-show-n">${o.cap ? `<span class="dk-meter" style="--p:${(o.sold / o.cap).toFixed(3)}"><i></i></span><small>${money(o.sold)} از ${money(o.cap)} بلیت · ${fa(o.n)} سانس</small><b>${short(o.gross)} تومان</b>` : `<small>${esc(o.hint || '')}</small>`}</div>
       <div class="dk-show-a">${o.acts}</div></article>`;
-    const rows = own.map((d) => ({ title: d.title || 'برنامه‌ی بی‌نام', src: d.poster || '', line: `${d.city || '—'} · ${d.venue || 'سالن انتخاب نشده'} · ${fa((d.days || []).length * (d.times || []).length)} سانس`, st: desk.status(d.status), note: d.status === 'rejected' && d.note ? `دلیل: ${d.note}` : d.status === 'review' ? `فرستاده شد ${ago(d.sent || d.at)}` : '', hint: d.status === 'draft' ? 'هنوز فرستاده نشده؛ تا تأیید مدیر روی سایت نمی‌آد.' : '', acts: d.status === 'live' ? `<a class="chip" href="#/e/${esc(encodeURIComponent(d.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a>` : `<a class="chip" href="#/org/new/${esc(encodeURIComponent(d.id))}">${ico('sliders')}${d.status === 'review' ? 'دیدن' : 'ادامه‌ی ساختن'}</a>` }));
+    const rows = own.map((d) => ({ title: d.title || 'برنامه‌ی بی‌نام', src: d.poster || '', line: `${d.city || '—'} · ${d.venue || 'سالن انتخاب نشده'} · ${fa(sesOf(d).length)} سانس`, st: desk.status(d.status), note: d.status === 'rejected' && d.note ? `دلیل: ${d.note}` : d.status === 'review' ? `فرستاده شد ${ago(d.sent || d.at)}` : '', hint: d.status === 'draft' ? 'هنوز فرستاده نشده؛ تا تأیید مدیر روی سایت نمی‌آد.' : '', acts: d.status === 'live' ? `<a class="chip" href="#/e/${esc(encodeURIComponent(d.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a>` : `<a class="chip" href="#/org/new/${esc(encodeURIComponent(d.id))}">${ico('sliders')}${d.status === 'review' ? 'دیدن' : 'ادامه‌ی ساختن'}</a>` }));
     const lives = live.map((e) => { const x = showStats(e), h = hallOf(e), { src } = artOf(e), pend = changes.pending(e.id); return { title: e.title, src, line: `${e.city} · ${h.name}`, st: statusOf(e).key === 'cancelled' ? ['لغو شد', 'bad'] : ['منتشر شده', 'good'], note: pend.length ? `تغییر در انتظار تأیید: ${pend.map((c) => changes.KIND[c.kind]).join('، ')}` : '', ...x, acts: `<button type="button" class="chip" data-ask="${esc(e.id)}">${ico('sliders')}درخواست تغییر</button>${x.n ? `<a class="chip" href="#/org/show/${esc(encodeURIComponent(e.id))}">${ico('ruler')}نقشه‌ی فروش</a>` : ''}<a class="chip" href="#/e/${esc(encodeURIComponent(e.id))}">${ico('arrow-ul')}صفحه‌ی برنامه</a><a class="chip" href="#/org/codes" data-code="${esc(e.id)}">${ico('tag')}کد تخفیف</a>` }; });
     el.innerHTML = `${desk.head('برنامه‌ها', `${fa(lives.length)} برنامه روی سایت${own.length ? ` · ${fa(own.length)} برنامه‌ی ساخته‌شده تو پنل` : ''}. هر برنامه‌ی تازه یا هر تغییر تا تأیید مدیر روی سایت نمی‌آد.`, `<a class="buy" href="#/org/new">${ico('plus')}برنامه‌ی جدید</a>`)}
       ${rows.length ? `<h2 class="dk-sub evp-rise">ساخته‌شده تو پنل</h2><div class="dk-shows">${rows.map(card).join('')}</div>` : ''}
@@ -10839,6 +10951,11 @@ const jMonth = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/T
 const jWeek = new Intl.DateTimeFormat('fa-IR-u-ca-persian', { timeZone: 'Asia/Tehran', weekday: 'short' });
 const isoDay = (t) => TEHRAN_DAY.format(new Date(t));
 const atOf = (day, hm) => Date.parse(`${day}T${hm}:00+03:30`);
+// the sessions of a draft: a list of 'YYYY-MM-DDTHH:MM' (Tehran), any day with any hours; a draft made when it was days × hours is read as all its pairs
+const sesOf = (d) => { if (!Array.isArray(d.ses)) d.ses = (d.days || []).flatMap((day) => (d.times || []).map((hm) => `${day}T${hm}`)).sort(); return d.ses; };
+const sesTimes = (d) => sesOf(d).map((x) => atOf(x.slice(0, 10), x.slice(11, 16))).sort((p, q) => p - q);
+const WZ_JP = new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-latn', { timeZone: 'Asia/Tehran', year: 'numeric', month: 'numeric', day: 'numeric' });
+const WZ_MON = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
 // the price classes a plan has, dearest first (V, A, B … H), and the zones in each (a real plan's classes are its zones'; the designer's plans have runs of rows)
 const tiersUsed = (key) => {
   const P = planByKey(key);
@@ -10863,7 +10980,7 @@ function miniPlan(key, prices) {
 }
 // a draft as a show of the list (for the card beside the steps, and on the site once the admin has said yes)
 function draftEvent(d) {
-  const ts = (d.days || []).flatMap((day) => (d.times || []).map((hm) => atOf(day, hm))).sort((a, b) => a - b);
+  const ts = sesTimes(d);
   const low = Math.min(...Object.values(d.prices || {}).filter((x) => x > 0), Infinity);
   const e = { id: d.id, by: d.by || '', draft: true, filler: true, layout: 'bar', kind: d.kind, city: cityName(d.cs) || d.city || '', cs: d.cs, hall: d.hall || undefined, hallLay: d.hallLay | 0, type: d.type || KIND_T[d.kind], name: d.title || 'برنامه‌ی بی‌نام', desc: d.desc || '', venue: `${cityName(d.cs) || d.city || ''}، ${d.venue || '…'}`,
     startsAt: new Date(ts[0] || Date.now() + 7 * DAY).toISOString(), endsAt: ts.length > 1 ? new Date(ts[ts.length - 1]).toISOString() : undefined, price: priceText(low < Infinity ? low : KIND_BASE[d.kind] || 500000),
@@ -10882,7 +10999,7 @@ drafts.all().filter((d) => d.status === 'live').forEach((d) => MORE.push(draftEv
 
 const wizard = {
   d: null, step: 0,
-  blank() { return { by: this.adm ? 'admin' : dsess.orgId(), org: this.adm ? '' : ORG.name, id: `d-${Date.now().toString(36)}`, title: '', kind: 'concert', type: 'کنسرت', city: 'تهران', cs: 'tehran', hall: '', hallLay: 0, venue: '', desc: '', dur: 120, age: 'همه', pal: 'violet', poster: '', posterFit: null, banner: '', bannerFit: null, bannerM: '', bannerMFit: null, days: [], times: ['20:30'], sale: 'now', saleAt: '', prices: {}, weekend: false, status: 'draft', at: Date.now() }; },
+  blank() { return { by: this.adm ? 'admin' : dsess.orgId(), org: this.adm ? '' : ORG.name, id: `d-${Date.now().toString(36)}`, title: '', kind: 'concert', type: 'کنسرت', city: 'تهران', cs: 'tehran', hall: '', hallLay: 0, venue: '', desc: '', dur: 120, age: 'همه', pal: 'violet', poster: '', posterFit: null, banner: '', bannerFit: null, bannerM: '', bannerMFit: null, days: [], times: [], ses: [], sale: 'now', saleAt: '', prices: {}, weekend: false, status: 'draft', at: Date.now() }; },
   render(el, v) {
     this.el = el; this.adm = v.kind === 'admin';
     // #/admin/new/hall:<id> starts a show in that hall
@@ -10916,7 +11033,7 @@ const wizard = {
     const d = this.d, m = [];
     if (!d.title.trim()) m.push([0, 'اسم برنامه']);
     if (!d.hall || !hallById(d.hall)) m.push([2, 'سالن']);
-    if (!d.days.length || !d.times.length) m.push([3, 'دست‌کم یه سانس']);
+    if (!sesOf(d).length) m.push([3, 'دست‌کم یه سانس']);
     const hh = d.hall && hallById(d.hall); if (hh && tiersUsed(planKeyOf(hh, d.hallLay)).some((t) => !(d.prices[t] > 0))) m.push([4, 'قیمت همه‌ی رده‌ها']);
     return m;
   },
@@ -11020,27 +11137,105 @@ const wizard = {
     $('#wzAsk', b).addEventListener('click', (ev) => { ev.preventDefault(); toast('درخواست افزودن سالن برای مدیر فرستاده شد.'); });
   },
 
-  /* 4. the sessions: the days on a Persian calendar, the hours, when the sale starts */
+  /* 4. the sessions: a Persian month calendar (a press, a drag or a range chooses days; quick rules), the hours (chips, a stepper), «add», and the list of every session of the show (each hour can be moved, removed, copied), when the sale starts */
   s3(b) {
-    const d = this.d, start = Date.now(), days = Array.from({ length: 63 }, (_, k) => start + (k + 1) * DAY), months = [];
-    for (const t of days) { const m = jMonth.format(new Date(t)); let g = months[months.length - 1]; if (!g || g.m !== m) months.push(g = { m, days: [] }); g.days.push(t); }
-    const wd = (t) => (new Date(new Date(t).toLocaleString('en-US', { timeZone: 'Asia/Tehran' })).getDay() + 1) % 7;   // Saturday first
-    const head = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+    const d = this.d, ses = sesOf(d), DAYMS = 864e5, tk = isoDay(Date.now()), today0 = atOf(tk, '12:00');
+    const jp = (t) => { const o = {}; for (const q of WZ_JP.formatToParts(new Date(t))) if (q.type !== 'literal') o[q.type] = +q.value; return o; };
+    const wd = (t) => ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'].indexOf(new Date(t).toLocaleDateString('en-US', { timeZone: 'Asia/Tehran', weekday: 'short' }));   // Saturday first
+    let cal = this._cal;
+    if (!cal || cal.k !== tk) {
+      const first = today0 - (jp(today0).day - 1) * DAYMS, months = [];
+      for (let i = 0, t = first; i < 440; i++, t += DAYMS) { const q = jp(t), key = `${q.year}-${q.month}`; let g = months[months.length - 1]; if (!g || g.key !== key) months.push(g = { key, y: q.year, m: q.month, days: [] }); g.days.push({ t, k: isoDay(t), jd: q.day }); }
+      cal = this._cal = { k: tk, months: months.slice(0, 14) };
+    }
+    const flat = cal.months.flatMap((g) => g.days), okDay = (k) => k > tk;
+    const hm2 = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`, mins = (hm) => +hm.slice(0, 2) * 60 + +hm.slice(3);
+    const PRE = ['16:00', '17:30', '19:00', '20:00', '20:30', '21:00', '21:30', '22:30'];
+    let view = cal.months[0].days.filter((x) => okDay(x.k)).length < 5 ? 1 : 0, last = null, drag = null, cur = 20 * 60 + 30, armed = false; const pick = new Set(); let times = ['20:30'];
     b.innerHTML = `<h2>${ico('calendar')}سانس‌ها<small id="wzSum"></small></h2>
-      <div class="wz-cal">${months.map((g) => `<div class="wz-month"><b>${esc(g.m)}</b><div class="wz-days">${head.map((h) => `<i>${h}</i>`).join('')}${'<span></span>'.repeat(wd(g.days[0]))}${g.days.map((t) => { const k = isoDay(t), fri = wd(t) === 6; return `<button type="button" data-day="${k}" aria-pressed="${d.days.includes(k)}"${fri ? ' class="is-fri"' : ''} aria-label="${esc(jWeek.format(new Date(t)))} ${esc(dayOf(t))}">${esc(jDay.format(new Date(t)))}</button>`; }).join('')}</div></div>`).join('')}</div>
-      <h3 class="wz-h3">ساعت‌ها <small>(برای همه‌ی روزهای انتخاب‌شده)</small></h3>
-      <div class="sec-chips wz-times">${[...new Set(WZ_TIMES.concat(d.times))].sort().map((hm) => `<button type="button" class="chip" data-hm="${hm}" aria-pressed="${d.times.includes(hm)}">${fa(hm)}</button>`).join('')}<label class="wz-time"><input type="time" id="wzTime" step="900" aria-label="ساعت دیگه"><button type="button" class="chip" id="wzAddT">${ico('plus')}افزودن</button></label></div>
+      <div class="wz-pl">
+        <section class="wz-c" aria-label="تقویم"><div class="wz-c-head"><button type="button" class="wz-nav" id="wzPrev" aria-label="ماه قبل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button><div class="wz-c-t"><b id="wzMon"></b><small>روزهایی که می‌خوای سانس داشته باشن رو بزن یا بکش</small></div><button type="button" class="wz-nav" id="wzNext2" aria-label="ماه بعد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5L8.5 12l6.5 6.5"/></svg></button><button type="button" class="chip" id="wzNow">امروز</button></div>
+          <div class="wz-c-wk" aria-hidden="true">${[['شنبه', 'ش'], ['یکشنبه', 'ی'], ['دوشنبه', 'د'], ['سه‌شنبه', 'س'], ['چهارشنبه', 'چ'], ['پنجشنبه', 'پ'], ['جمعه', 'ج']].map(([f, sh]) => `<i><span class="f">${f}</span><span class="s">${sh}</span></i>`).join('')}</div>
+          <div class="wz-c-grid" id="wzGrid" role="group" aria-label="روزهای ماه"></div>
+          <div class="wz-c-q" role="group" aria-label="انتخاب سریع"><button type="button" class="chip" data-q="week">هفته‌ی آینده</button><button type="button" class="chip" data-q="end">پنجشنبه و جمعه‌های این ماه</button><button type="button" class="chip" data-q="month">همه‌ی روزهای این ماه</button><button type="button" class="chip" data-q="rep">تکرار ۴ هفته‌ای انتخاب‌ها</button><button type="button" class="chip" data-q="none">پاک کردن انتخاب</button></div></section>
+        <section class="wz-t" aria-label="ساعت‌ها"><h3>ساعت‌ها</h3>
+          <div class="wz-pre" id="wzPre" role="group" aria-label="ساعت‌های رایج">${PRE.map((h) => `<button type="button" class="chip" data-hm="${h}" aria-pressed="false">${fa(h)}</button>`).join('')}</div>
+          <div class="wz-step" role="group" aria-label="ساعت دلخواه"><button type="button" class="chip" data-st="-60" aria-label="یک ساعت زودتر">−۱ ساعت</button><button type="button" class="chip" data-st="-15" aria-label="یک ربع زودتر">−۱۵</button><output id="wzTv" aria-live="polite"></output><button type="button" class="chip" data-st="15" aria-label="یک ربع دیرتر">+۱۵</button><button type="button" class="chip" data-st="60" aria-label="یک ساعت دیرتر">+۱ ساعت</button></div>
+          <button type="button" class="chip wz-tadd" id="wzTadd">${ico('plus')}ساعت دلخواه رو هم بذار</button>
+          <div class="wz-ch" id="wzCh" aria-label="ساعت‌های انتخاب‌شده"></div>
+          <button type="button" class="buy wz-go" id="wzGo"></button></section>
+      </div>
+      <div class="wz-lh"><h3 class="wz-h3">سانس‌های برنامه <small id="wzCnt"></small></h3><button type="button" class="chip" id="wzClr">پاک کردن همه</button></div>
+      <div class="wz-sl" id="wzList"></div>
       <h3 class="wz-h3">شروع فروش</h3>
       <div class="bk-seg" role="radiogroup" aria-label="شروع فروش"><button type="button" role="radio" data-sale="now" aria-checked="${d.sale === 'now'}">همین که مدیر تأیید کرد</button><button type="button" role="radio" data-sale="at" aria-checked="${d.sale === 'at'}">زمان مشخص (با شمارش معکوس)</button></div>
       <label class="bk-fld wz-saleat" ${d.sale === 'at' ? '' : 'hidden'}><span>شروع فروش</span><input type="datetime-local" id="wzSaleAt" value="${esc(d.saleLocal || '')}" dir="ltr"></label>`;
-    const sum = () => { const n = d.days.length * d.times.length; $('#wzSum', b).textContent = n ? `${fa(n)} سانس · ${fa(d.days.length)} روز × ${fa(d.times.length)} ساعت` : 'هنوز سانسی نیست'; this.preview(); };
-    $$('[data-day]', b).forEach((x) => x.addEventListener('click', () => { const k = x.dataset.day, i = d.days.indexOf(k); if (i >= 0) d.days.splice(i, 1); else { d.days.push(k); d.days.sort(); } x.setAttribute('aria-pressed', String(i < 0)); sum(); }));
-    const wireT = () => $$('[data-hm]', b).forEach((x) => { x.onclick = () => { const k = x.dataset.hm, i = d.times.indexOf(k); if (i >= 0) d.times.splice(i, 1); else { d.times.push(k); d.times.sort(); } x.setAttribute('aria-pressed', String(i < 0)); sum(); }; });
-    wireT();
-    $('#wzAddT', b).addEventListener('click', () => { const v = $('#wzTime', b).value; if (!/^\d\d:\d\d$/.test(v)) { toast('یه ساعت انتخاب کن.'); return; } if (!d.times.includes(v)) { d.times.push(v); d.times.sort(); } this.s3(b); });
+    const grid = $('#wzGrid', b), cnt = () => { const m = new Map(); ses.forEach((x) => m.set(x.slice(0, 10), (m.get(x.slice(0, 10)) || 0) + 1)); return m; };
+    const dayName = (t) => `${F.week.format(t)} ${F.day.format(t)} ${F.month.format(t)}`;
+    // the month
+    const paintCal = () => {
+      const g = cal.months[view], off = wd(g.days[0].t), c = cnt();
+      $('#wzMon', b).textContent = `${WZ_MON[g.m - 1]} ${fa(g.y)}`; $('#wzPrev', b).disabled = view === 0; $('#wzNext2', b).disabled = view === cal.months.length - 1;
+      grid.innerHTML = '<span></span>'.repeat(off) + g.days.map((x) => `<button type="button" class="wz-d${pick.has(x.k) ? ' is-sel' : ''}${c.has(x.k) ? ' has' : ''}${wd(x.t) === 6 ? ' is-fri' : wd(x.t) === 5 ? ' is-thu' : ''}${x.k === tk ? ' is-today' : ''}" data-day="${x.k}"${okDay(x.k) ? '' : ' disabled'} aria-pressed="${pick.has(x.k)}" aria-label="${esc(dayName(x.t))}${c.has(x.k) ? `، ${fa(c.get(x.k))} سانس` : ''}"><b>${fa(x.jd)}</b>${c.has(x.k) ? `<i>${fa(c.get(x.k))}</i>` : ''}</button>`).join('');
+    };
+    const cell = (k) => grid.querySelector(`[data-day="${k}"]`);
+    const setDays = (keys, on) => { for (const k of keys) { if (!okDay(k)) continue; if (on) pick.add(k); else pick.delete(k); const e = cell(k); if (e) { e.classList.toggle('is-sel', on); e.setAttribute('aria-pressed', String(on)); } } paintBtn(); };
+    const range = (a, c, on) => { const i = flat.findIndex((x) => x.k === a), j = flat.findIndex((x) => x.k === c); if (i < 0 || j < 0) return; setDays(flat.slice(Math.min(i, j), Math.max(i, j) + 1).map((x) => x.k), on); };
+    grid.addEventListener('pointerdown', (ev) => { const e = ev.target.closest('[data-day]'); if (!e || e.disabled) return; ev.preventDefault(); const k = e.dataset.day; if (ev.shiftKey && last) range(last, k, true); else { drag = { add: !pick.has(k) }; setDays([k], drag.add); } last = k; try { grid.setPointerCapture(ev.pointerId); } catch (err) { /* nothing */ } });
+    grid.addEventListener('pointermove', (ev) => { if (!drag) return; const c = document.elementFromPoint(ev.clientX, ev.clientY), e = c && c.closest && c.closest('[data-day]'); if (!e || e.disabled || !grid.contains(e)) return; const k = e.dataset.day; if (pick.has(k) !== drag.add) { setDays([k], drag.add); last = k; } });
+    const endDrag = () => { drag = null; }; grid.addEventListener('pointerup', endDrag); grid.addEventListener('pointercancel', endDrag);
+    grid.addEventListener('click', (ev) => { if (ev.detail !== 0) return; const e = ev.target.closest('[data-day]'); if (e && !e.disabled) { setDays([e.dataset.day], !pick.has(e.dataset.day)); last = e.dataset.day; } });
+    $('#wzPrev', b).addEventListener('click', () => { view = Math.max(0, view - 1); paintCal(); });
+    $('#wzNext2', b).addEventListener('click', () => { view = Math.min(cal.months.length - 1, view + 1); paintCal(); });
+    $('#wzNow', b).addEventListener('click', () => { view = cal.months[0].days.filter((x) => okDay(x.k)).length < 5 ? 1 : 0; paintCal(); });
+    $$('[data-q]', b).forEach((x) => x.addEventListener('click', () => {
+      const q = x.dataset.q, g = cal.months[view];
+      if (q === 'none') { setDays([...pick], false); return; }
+      if (q === 'week') setDays(flat.filter((y) => okDay(y.k)).slice(0, 7).map((y) => y.k), true);
+      else if (q === 'end') { const ks = g.days.filter((y) => wd(y.t) >= 5).map((y) => y.k); if (!ks.some(okDay)) toast('تو این ماه پنجشنبه یا جمعه‌ی آینده نیست.'); setDays(ks, true); }
+      else if (q === 'month') setDays(g.days.map((y) => y.k), true);
+      else if (q === 'rep') { if (!pick.size) { toast('اول چند روز انتخاب کن؛ بعد این دکمه همون روزها رو تا ۴ هفته تکرار می‌کنه.'); return; } const add = []; for (const k of [...pick]) { const i = flat.findIndex((y) => y.k === k); for (const w of [7, 14, 21]) if (flat[i + w]) add.push(flat[i + w].k); } setDays(add, true); }
+    }));
+    // the hours: the common ones, a stepper for any other, what is chosen
+    const paintTimes = () => {
+      $$('#wzPre [data-hm]', b).forEach((x) => x.setAttribute('aria-pressed', String(times.includes(x.dataset.hm))));
+      $('#wzTv', b).textContent = fa(hm2(cur));
+      $('#wzCh', b).innerHTML = times.length ? times.map((h) => `<span class="wz-tc"><b>${fa(h)}</b><button type="button" data-tx="${h}" aria-label="برداشتن ساعت ${fa(h)}">×</button></span>`).join('') : '<small>هنوز ساعتی انتخاب نشده.</small>';
+      paintBtn();
+    };
+    const paintBtn = () => { const g = $('#wzGo', b), n = pick.size * times.length; g.disabled = !n; g.innerHTML = n ? `${ico('plus')}${fa(n)} سانس اضافه کن<small>${fa(pick.size)} روز × ${fa(times.length)} ساعت</small>` : `${ico('plus')}سانس اضافه کن<small>${pick.size ? 'یه ساعت هم انتخاب کن' : 'اول از تقویم روز انتخاب کن'}</small>`; };
+    $$('#wzPre [data-hm]', b).forEach((x) => x.addEventListener('click', () => { const h = x.dataset.hm, i = times.indexOf(h); if (i >= 0) times.splice(i, 1); else times.push(h); times.sort(); paintTimes(); }));
+    $$('[data-st]', b).forEach((x) => x.addEventListener('click', () => { cur = clamp(cur + +x.dataset.st, 0, 23 * 60 + 45); paintTimes(); }));
+    $('#wzTadd', b).addEventListener('click', () => { const h = hm2(cur); if (!times.includes(h)) { times.push(h); times.sort(); } paintTimes(); });
+    $('#wzCh', b).addEventListener('click', (ev) => { const x = ev.target.closest('[data-tx]'); if (x) { times = times.filter((h) => h !== x.dataset.tx); paintTimes(); } });
+    // the list of sessions: every day with its hours; an hour moves by a quarter, goes, or is copied to the chosen days
+    const sum = () => {
+      const n = ses.length, days = new Set(ses.map((x) => x.slice(0, 10))), ts = sesTimes(d);
+      $('#wzSum', b).textContent = n ? `${fa(n)} سانس · ${fa(days.size)} روز · از ${dayOf(ts[0])} تا ${dayOf(ts[n - 1])}` : 'هنوز سانسی نیست';
+      $('#wzCnt', b).textContent = n ? `(${fa(n)})` : ''; $('#wzClr', b).hidden = !n; this.preview();
+    };
+    const paintList = () => {
+      const by = new Map(); ses.slice().sort().forEach((x) => { const k = x.slice(0, 10); (by.get(k) || by.set(k, []).get(k)).push(x.slice(11, 16)); });
+      $('#wzList', b).innerHTML = by.size ? [...by].map(([k, hs]) => { const t = atOf(k, '12:00'), past = atOf(k, hs[hs.length - 1]) < Date.now(); return `<div class="wz-sg${past ? ' is-past' : ''}" data-d="${k}"><div class="wz-sg-h"><b>${esc(dayName(t))}</b><small>${past ? 'گذشته' : `${fa(hs.length)} سانس`}</small><span class="wz-sg-a"><button type="button" class="chip" data-dp title="یه سانس دیگه تو همین روز">${ico('plus')}ساعت</button><button type="button" class="chip" data-dc title="ساعت‌های این روز رو بذار تو روزهایی که انتخاب کردی">کپی به روزهای انتخابی</button><button type="button" class="chip" data-dx aria-label="حذف این روز">${ico('x')}</button></span></div><div class="wz-sg-t">${hs.map((h) => `<span class="wz-sc" data-s="${k}T${h}"><button type="button" data-sm="-15" aria-label="یک ربع زودتر">−</button><b>${fa(h)}</b><button type="button" data-sm="15" aria-label="یک ربع دیرتر">+</button><button type="button" class="x" data-sx aria-label="حذف سانس ${fa(h)}">×</button></span>`).join('')}</div></div>`; }).join('') : '<p class="wz-empty">هنوز سانسی نیست. از تقویم بالا روز انتخاب کن، ساعت بذار و «سانس اضافه کن» رو بزن.</p>';
+    };
+    const redo = () => { ses.sort(); d.ses = ses; paintCal(); paintList(); sum(); };
+    $('#wzGo', b).addEventListener('click', () => {
+      const n0 = ses.length; for (const k of [...pick].sort()) for (const h of times) { const x = `${k}T${h}`; if (!ses.includes(x)) ses.push(x); }
+      const add = ses.length - n0, skipped = pick.size * times.length - add; pick.clear(); redo(); paintBtn();
+      toast(add ? `${fa(add)} سانس اضافه شد${skipped ? ` (${fa(skipped)} تاش از قبل بود)` : ''}.` : 'همه‌ی این سانس‌ها از قبل بودن.');
+    });
+    $('#wzList', b).addEventListener('click', (ev) => {
+      const g = ev.target.closest('[data-d]'); if (!g) return; const k = g.dataset.d, c = ev.target.closest('[data-s]'), hs = ses.filter((x) => x.startsWith(k)).map((x) => x.slice(11, 16)).sort();
+      if (ev.target.closest('[data-sx]')) { ses.splice(ses.indexOf(c.dataset.s), 1); redo(); }
+      else if (ev.target.closest('[data-sm]')) { const old = c.dataset.s, nm = clamp(mins(old.slice(11)) + +ev.target.closest('[data-sm]').dataset.sm, 0, 23 * 60 + 45), nx = `${k}T${hm2(nm)}`; if (nx === old) return; if (ses.includes(nx)) { toast('این ساعت تو همین روز از قبل هست.'); return; } ses[ses.indexOf(old)] = nx; redo(); }
+      else if (ev.target.closest('[data-dx]')) { for (let i = ses.length - 1; i >= 0; i--) if (ses[i].startsWith(k)) ses.splice(i, 1); redo(); }
+      else if (ev.target.closest('[data-dp]')) { let m = clamp(mins(hs[hs.length - 1]) + 150, 0, 23 * 60 + 45); while (ses.includes(`${k}T${hm2(m)}`) && m > 0) m -= 15; if (!ses.includes(`${k}T${hm2(m)}`)) { ses.push(`${k}T${hm2(m)}`); redo(); } }
+      else if (ev.target.closest('[data-dc]')) { const ks = [...pick].filter((y) => y !== k); if (!ks.length) { toast('اول تو تقویم روزهایی رو که می‌خوای این ساعت‌ها رو داشته باشن انتخاب کن.'); return; } let add = 0; for (const y of ks) for (const h of hs) if (!ses.includes(`${y}T${h}`)) { ses.push(`${y}T${h}`); add++; } pick.clear(); redo(); paintBtn(); toast(`${fa(add)} سانس تو ${fa(ks.length)} روز اضافه شد.`); }
+    });
+    $('#wzClr', b).addEventListener('click', (ev) => { if (!armed) { armed = true; ev.currentTarget.textContent = 'مطمئنی؟ دوباره بزن'; setTimeout(() => { armed = false; const e = $('#wzClr', b); if (e) e.textContent = 'پاک کردن همه'; }, 3200); return; } armed = false; ses.length = 0; redo(); ev.currentTarget.textContent = 'پاک کردن همه'; });
     $$('[data-sale]', b).forEach((x) => x.addEventListener('click', () => { d.sale = x.dataset.sale; $$('[data-sale]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); $('.wz-saleat', b).hidden = d.sale !== 'at'; if (d.sale === 'now') d.saleAt = ''; this.preview(); }));
     $('#wzSaleAt', b).addEventListener('change', (ev) => { d.saleLocal = ev.target.value; const t = Date.parse(`${ev.target.value}:00+03:30`); d.saleAt = Number.isFinite(t) ? new Date(t).toISOString() : ''; this.preview(); });
-    sum();
+    paintCal(); paintTimes(); paintList(); sum();
   },
 
   /* 5. the prices, per tier of the hall's plan */
@@ -11063,7 +11258,7 @@ const wizard = {
       const PP = planByKey(h.plan); let one = 0;
       for (const z of hallLayout(PP).secs) if (z.sec.k === 'stand') one += z.sec.cap * (d.prices[z.sec.runs[0][2]] || 0);
       for (const q of spx.seats(PP, d.prices).list) one += spx.priceIn(d.seatTier, q, d.prices);
-      const n = Math.max(1, d.days.length * d.times.length), all = one * n * (d.weekend ? 1.04 : 1);
+      const n = Math.max(1, sesOf(d).length), all = one * n * (d.weekend ? 1.04 : 1);
       $('#wzEst', b).innerHTML = `<span>اگه همه‌ی ${fa(n)} سانس پر بشه</span><b>${short(all)} تومان</b><small>سهم شما بعد از کارمزد: ${short(all * (1 - FEE))} تومان</small>`;
     };
     $$('.wz-tiers [data-t]', b).forEach((x) => x.addEventListener('input', () => { const v = +enDigits(x.value).replace(/\D/g, '') || 0; d.prices[x.dataset.t] = v; x.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; const svg = miniPlan(h.plan, d.prices); $('.wz-plan', b).innerHTML = svg; est(); this.preview(); }));
@@ -11076,7 +11271,7 @@ const wizard = {
 
   /* 6. a last look, and to the admin */
   s5(b) {
-    const d = this.d, m = this.missing(), hall0 = d.hall && hallById(d.hall), h = hall0 ? hallInfo(hall0, d.hallLay) : null, n = d.days.length * d.times.length;
+    const d = this.d, m = this.missing(), hall0 = d.hall && hallById(d.hall), h = hall0 ? hallInfo(hall0, d.hallLay) : null, ts = sesTimes(d), n = ts.length, nd = new Set(sesOf(d).map((x) => x.slice(0, 10))).size;
     const row = (k, t, v) => `<div><dt>${esc(t)}</dt><dd>${v}</dd>${this.lock ? '' : `<button type="button" class="chip" data-step="${k}">ویرایش</button>`}</div>`;
     const st = desk.status(d.status);
     b.innerHTML = `<h2>${ico('check')}بررسی و ارسال<small><em class="st" data-tone="${st[1]}">${esc(st[0])}</em></small></h2>
@@ -11085,7 +11280,7 @@ const wizard = {
         ${row(0, 'برنامه', `${esc(d.type)} «${esc(d.title || '—')}» · ${esc(d.kind === 'comedy' ? 'جُنگ و کمدی' : KIND_T[d.kind])} · ${esc(cityName(d.cs) || d.city || '')} · ${fa(d.dur)} دقیقه · ${esc(d.age)}`)}
         ${row(1, 'تصویرها', `${d.poster ? 'پوستر گذاشته شد' : 'پوستر موقت (از اسم و رنگ)'}${this.adm ? ` · ${d.banner ? 'بنر دسکتاپ' : 'بدون بنر دسکتاپ'} · ${d.bannerM ? 'بنر موبایل' : 'بدون بنر موبایل'}` : d.heroAsk ? ' · می‌خواد تو بنر صفحه‌ی اول باشه' : ''}`)}
         ${row(2, 'سالن', h ? `${esc(h.name)} · ${esc(h.city)}${hall0.lay.length > 1 ? ` · ${esc(layName(hall0, d.hallLay | 0))}` : ''} · ${money(h.cap)} صندلی` : '<b class="neg">انتخاب نشده</b>')}
-        ${row(3, 'سانس‌ها', n ? `${fa(n)} سانس، از ${esc(dayOf(atOf(d.days[0], d.times[0])))} تا ${esc(dayOf(atOf(d.days[d.days.length - 1], d.times[0])))} · ساعت ${d.times.map(fa).join('، ')}${d.sale === 'at' && d.saleAt ? ` · شروع فروش ${esc(dayOf(Date.parse(d.saleAt)))} ${esc(F.time.format(new Date(d.saleAt)))}` : ' · فروش بلافاصله بعد از تأیید'}` : '<b class="neg">هنوز سانسی نیست</b>')}
+        ${row(3, 'سانس‌ها', n ? `${fa(n)} سانس در ${fa(nd)} روز، از ${esc(dayOf(ts[0]))} تا ${esc(dayOf(ts[n - 1]))}${d.sale === 'at' && d.saleAt ? ` · شروع فروش ${esc(dayOf(Date.parse(d.saleAt)))} ${esc(F.time.format(new Date(d.saleAt)))}` : ' · فروش بلافاصله بعد از تأیید'}` : '<b class="neg">هنوز سانسی نیست</b>')}
         ${row(4, 'قیمت‌ها', h ? tiersUsed(h.plan).map((t) => `<span class="wz-pt" style="--c:${TIER[t].c}"><i></i>${d.prices[t] ? money(d.prices[t]) : '—'}</span>`).join('') + (d.weekend ? ' · آخر هفته ۱۰٪ بیشتر' : '') + (() => { const c = spx.count(d.seatTier); return c.own || c.off ? ` · ${spx.line(d.seatTier)}` : ''; })() : '—')}
       </dl>
       ${m.length ? `<p class="wz-msg is-bad">${ico('info')}مونده: ${m.map(([k, t]) => `<a href="#" data-step="${k}">${esc(t)}</a>`).join('، ')}</p>` : ''}
@@ -12701,7 +12896,7 @@ const admin = {
   review(el, v) {
     const id = v.arg, d = drafts.get(id) || this.others().find((x) => x.id === id);
     if (!d) { el.innerHTML = `${desk.head('بررسی برنامه', 'این برنامه پیدا نشد؛ شاید قبلاً بررسی شده.', `<a class="chip" href="#/admin/shows">${ico('arrow-r')}برگشت به صف</a>`)}`; return; }
-    const e = draftEvent(d), hall0 = d.hall && hallById(d.hall), h = hall0 ? hallInfo(hall0, d.hallLay | 0) : null, nights = d.days.flatMap((day) => d.times.map((hm) => atOf(day, hm))).sort((x, y) => x - y);
+    const e = draftEvent(d), hall0 = d.hall && hallById(d.hall), h = hall0 ? hallInfo(hall0, d.hallLay | 0) : null, nights = sesTimes(d);
     const tiers = h ? tiersOf(e) : [], art = artOf(e), org = draftOrg(d);
     const row = (k, val) => `<div><dt>${esc(k)}</dt><dd>${val}</dd></div>`;
     const pic = (kind, a, none) => { const z = SIZES_FIXED[kind], s = a && (a.fake || a.src || a.thumb); return `<figure class="rv-pic" data-kind="${kind}"><div class="rv-box" style="--frr:${z.r.toFixed(4)};${fitVars(a)}">${s ? `<img src="${esc(s)}" alt="${esc(z.name)}">` : `<span>${esc(none)}</span>`}</div><figcaption><b>${esc(z.name)}</b><small><bdi dir="ltr">${fa(z.w)}×${fa(z.h)}</bdi>${a && a.w && a.h && !(a.stand || a.fake) ? ` · فایل ${fa(a.w)}×${fa(a.h)}` : ''}</small></figcaption></figure>`; };
@@ -12763,7 +12958,7 @@ const admin = {
     const item = (x) => `<article class="panel dk-show ad-q evp-rise" data-id="${esc(x.id)}"><figure class="bk-poster${x.poster ? '' : ' is-none'}" style="--c:${(PALETTE[x.pal] || PALETTE.violet).accent}">${x.poster ? `<img src="${esc(x.poster)}" alt="">` : ''}</figure>
       <div class="dk-show-t"><b>${esc(x.title)}</b><small>${esc(x.org)} · ${esc(x.city)} · ${esc(x.venue)}</small><small>${fa(x.n)} سانس · از ${money(x.low)} تومان · فرستاده‌شده ${esc(ago(x.sent))}</small></div>
       <div class="dk-show-a"><a class="buy" href="#/admin/review/${esc(x.id)}">${ico('search')}باز کردن و بررسی</a></div></article>`;
-    const q = mine.map((d) => { const n = d.days.length * d.times.length, low = Math.min(...Object.values(d.prices).filter((v) => v > 0)); return { id: d.id, title: `${d.type} «${d.title}»`, org: draftOrg(d), city: d.city, venue: d.venue, n, low: Number.isFinite(low) ? low : 0, pal: d.pal, poster: d.poster, sent: d.sent || d.at }; }).concat(others.map((x) => ({ id: x.id, title: `${x.type} «${x.title}»`, org: x.org, city: x.city, venue: x.venue, n: x.n, low: x.low, pal: x.pal, poster: x.poster, sent: x.sent })));
+    const q = mine.map((d) => { const n = sesOf(d).length, low = Math.min(...Object.values(d.prices).filter((v) => v > 0)); return { id: d.id, title: `${d.type} «${d.title}»`, org: draftOrg(d), city: d.city, venue: d.venue, n, low: Number.isFinite(low) ? low : 0, pal: d.pal, poster: d.poster, sent: d.sent || d.at }; }).concat(others.map((x) => ({ id: x.id, title: `${x.type} «${x.title}»`, org: x.org, city: x.city, venue: x.venue, n: x.n, low: x.low, pal: x.pal, poster: x.poster, sent: x.sent })));
     const live = LIST().filter((e) => !['held'].includes(statusOf(e).key)).slice(0, 40);
     el.innerHTML = `${desk.head('برنامه‌ها و تأیید', 'هیچ برنامه‌ای (و هیچ تغییری) از برگزارکننده‌ها بدون تأیید روی سایت نمی‌آد. با لغو یه برنامه، پول همه‌ی خریدارهاش برمی‌گرده. خودت هم می‌تونی برای هر سالنی تو هر شهری برنامه‌ی کنسرت یا تئاتر بسازی؛ همون لحظه روی سایته.', `<span class="ad-head-a"><a class="buy" href="#/admin/new">${ico('plus')}برنامه‌ی تازه</a></span>`)}
       <h2 class="dk-sub evp-rise">در انتظار تأیید <small>${fa(q.length)}</small></h2>${q.length ? `<div class="dk-shows">${q.map(item).join('')}</div>` : '<p class="bk-lead evp-rise">صف خالیه.</p>'}
@@ -13906,12 +14101,13 @@ const changes = {
 changes.apply();
 
 /* ════════════════════════════════════════════════════════════════
-   round AA: prices seat by seat, made easy. One window (the wizard's step «قیمت‌ها» and the admin's list of shows open it): the hall's
-   map; choose seats (a press, a drag, a frame, a whole row, a whole section, every seat of one price); set one price for them all
-   (typed, or a class's price, or ± a share or an amount), «فروشی نیست», or back to the row's price; undo; every seat that has its own
-   price is in a list where it can be changed or taken back one by one.
-   The saved thing is the show's `seatTier`: {seat key: a number (its own price, toman) | 'X' (not for sale)} (an older 'V' is read as the
-   special-seat price). The buyer's map reads it in seatPlan (buy.js): a seat with its own price is a seat of tier «S» (its own colour and legend row) at that price.
+   prices seat by seat (round AA, redone in round AB). A whole-screen workspace (the wizard's step «قیمت‌ها» and the admin's list of shows open it): the hall's map
+   fills the screen, every seat in the colour of its price (so the prices of the hall are seen at a glance), the sections drawn as boxes with their names, every row numbered
+   at both ends. Choosing is done the way the admin thinks: a seat (a press, or a drag over many), a whole row (a press on any seat of it, or on its number), a whole section
+   or floor (a press on any seat of it, or on its name, or in the list), a frame, a free line drawn round the seats, every seat of one price; the hand moves the map (the
+   wheel zooms). The price of the chosen seats is typed or taken from a class, a share or an amount; «فروشی نیست»; back to the row's price; undo.
+   The saved thing is the show's `seatTier`: {seat key: a number (its own price, toman) | 'X' (not for sale)} (an older 'V' is read as the special-seat price). The buyer's
+   map reads it in seatPlan (buy.js): a seat with its own price is a seat of tier «S» (its own colour and legend row) at that price.
    ════════════════════════════════════════════════════════════════ */
 const spx = {
   // every seat of a plan that is sold one by one: its key (the same key the buyer's map uses), place, price class and the price of its row
@@ -13935,120 +14131,193 @@ const spx = {
   line(map) { const c = this.count(map); return c.own || c.off ? [c.own ? `${fa(c.own)} صندلی با قیمت جدا` : '', c.off ? `${fa(c.off)} فروشی نیست` : ''].filter(Boolean).join(' · ') : 'همه‌ی صندلی‌ها قیمت ردیف خودشون رو دارن'; },
   // a seat's price in a saved map (for the estimates): its own, none when it is not for sale, or the row's
   priceIn(map, s, prices) { const v = map && map[s.key]; return v === 'X' ? 0 : v === 'V' ? (+prices.V > 0 ? +prices.V : s.base) : typeof v === 'number' && v > 0 ? v : s.base; },
+  // the tools' little pictures
+  IC: {
+    seat: '<path d="M6 3l12 7-5.5 1.6L10 17z"/>', row: '<rect x="2" y="8" width="20" height="8" rx="4"/><circle cx="7" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="17" cy="12" r="1.3"/>',
+    sec: '<rect x="3" y="3.5" width="18" height="17" rx="3" stroke-dasharray="3 2.2"/><circle cx="8" cy="9" r="1.1"/><circle cx="12" cy="9" r="1.1"/><circle cx="16" cy="9" r="1.1"/><circle cx="8" cy="14" r="1.1"/><circle cx="12" cy="14" r="1.1"/><circle cx="16" cy="14" r="1.1"/>',
+    box: '<rect x="4" y="6" width="16" height="12" stroke-dasharray="2.4 2"/><rect x="2.5" y="4.5" width="3" height="3"/><rect x="18.5" y="16.5" width="3" height="3"/>',
+    free: '<path d="M6 14C3 10 6 4.5 12.5 4.5S21 8 18.5 12.5 11 18 7.5 16"/><path d="M7.5 16l-1.5 4.5"/>',
+    hand: '<path d="M8.5 13V6.2a1.5 1.5 0 0 1 3 0V11m0-1V4.7a1.5 1.5 0 0 1 3 0V11m0-.5V6.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.8a6 6 0 0 1-4.9-2.5L4 14.6a1.5 1.5 0 0 1 2.4-1.8L8.5 15"/>',
+  },
+  // the colours of the prices of a hall: cheap is cool, dear is warm
+  RAMP: ['#38bdf8', '#22d3ee', '#2dd4bf', '#4ade80', '#a3e635', '#facc15', '#fb923c', '#f97316', '#ef4444', '#d946ef'],
 
-  // the window. o = { title, plan (a plan object), prices ({class: price}), tier (the saved map), save(map), note }
+  // the workspace. o = { title, plan (a plan object), prices ({class: price}), tier (the saved map), save(map), note }
   edit(o) {
     const P = o.plan, prices = { ...o.prices }, { L, list } = this.seats(P, prices);
     if (!list.length) { toast('این سالن صندلی تکی نداره (جای ایستاده یا فروش با تعداده).'); return; }
     const byKey = new Map(list.map((s) => [s.key, s])), cur = {}, sel = new Set(), undo = [];
-    const bx = list.reduce((a, s) => [Math.min(a[0], s.x), Math.min(a[1], s.y), Math.max(a[2], s.x), Math.max(a[3], s.y)], [L.cx - 250, L.cy - 96, L.cx + 250, L.cy + 10]), FIT = { x: bx[0] - 26, y: bx[1] - 26, w: bx[2] - bx[0] + 52, h: bx[3] - bx[1] + 52 };
     for (const [k, v] of Object.entries(o.tier || {})) { const s = byKey.get(k); if (!s) continue; if (v === 'X') cur[k] = 'X'; else if (v === 'V') cur[k] = +prices.V > 0 ? +prices.V : Math.round(s.base * 1.5 / 1e4) * 1e4; else if (typeof v === 'number' && v > 0) cur[k] = Math.round(v); }
     const priceOf = (s) => (cur[s.key] === 'X' ? 0 : typeof cur[s.key] === 'number' ? cur[s.key] : s.base), off = (s) => cur[s.key] === 'X', own = (s) => typeof cur[s.key] === 'number';
     const fmt = (v) => (v ? fa(Math.round(v).toLocaleString('en-US')).replace(/,/g, '٬') : ''), name = (s) => `${s.zone}، ${s.word} ${fa(s.row)}، صندلی ${fa(s.n)}`;
     const classes = [...new Set(list.map((s) => s.cls))].sort((a, b) => CLS_ORDER.indexOf(a) - CLS_ORDER.indexOf(b));
-    const zones = [...list.reduce((m, s) => m.set(s.zid, { zid: s.zid, zone: s.zone, n: ((m.get(s.zid) || {}).n || 0) + 1 }), new Map()).values()];
-    const m = desk.modal('ad-wide spx-dlg', `<h2>${ico('tag')}قیمت تک‌صندلی<small>${esc(o.title || '')}</small></h2>
-      <p class="bk-lead">صندلی‌ها رو انتخاب کن (بزن، بکش یا کادر بکش) و قیمتشون رو بزن. تا «ذخیره» نزنی جایی ثبت نمی‌شه.</p>
-      <div class="spx-wrap${FIT.w / FIT.h > 1.25 ? ' is-wide' : ''}">
-        <div class="spx-mapc">
-          <div class="spx-bar"><div class="bk-seg" role="radiogroup" aria-label="ابزار"><button type="button" role="radio" data-tool="pen" aria-checked="true">${ico('tag')}قلم</button><button type="button" role="radio" data-tool="box" aria-checked="false">${ico('ruler')}کادر</button><button type="button" role="radio" data-tool="pan" aria-checked="false">${ico('arrow-ul')}جابه‌جایی</button></div>
-            <span class="spx-zoom"><button type="button" class="chip" data-z="in" aria-label="نزدیک‌تر">+</button><button type="button" class="chip" data-z="out" aria-label="دورتر">−</button><button type="button" class="chip" data-z="fit">همه</button></span></div>
-          <svg class="spx-map" id="spxMap" role="img" aria-label="نقشه‌ی سالن برای قیمت تک‌صندلی"></svg>
-          <output class="spx-hov" id="spxHov" aria-live="off"></output>
-          <div class="spx-leg" id="spxLeg"></div>
-        </div>
-        <div class="spx-side">
-          <section class="spx-box"><h3>۱ · انتخاب</h3><p class="spx-n" id="spxN"></p>
-            <div class="spx-chips"><button type="button" class="chip" data-s="all">همه</button><button type="button" class="chip" data-s="none">هیچ</button><button type="button" class="chip" data-s="inv">برعکس</button><button type="button" class="chip" data-s="row">کل ردیف</button><button type="button" class="chip" data-s="zone">کل بخش</button><button type="button" class="chip" data-s="same">هم‌قیمت‌ها</button></div>
-            <label class="spx-sel"><span>یه بخش کامل</span><select id="spxZone"><option value="">انتخاب بخش…</option>${zones.map((z) => `<option value="${esc(z.zid)}">${esc(z.zone)} (${fa(z.n)})</option>`).join('')}</select></label>
-            <div class="spx-prices" id="spxPrices" aria-label="قیمت‌هایی که الان هست"></div></section>
-          <section class="spx-box"><h3>۲ · قیمت</h3><p class="spx-cur" id="spxCur"></p>
+    // rows and sections (a section is a floor, a block, a balcony: the plan's own parts)
+    const rows = new Map(), secs = new Map(), r = P.real ? 8 : 9;
+    for (const s of list) {
+      s.rk = `${s.zid}|${s.row}`;
+      let w = rows.get(s.rk); if (!w) rows.set(s.rk, w = { k: s.rk, zid: s.zid, row: s.row, seats: [], a: s, b: s });
+      w.seats.push(s); if (s.x < w.a.x) w.a = s; if (s.x > w.b.x) w.b = s;
+      let z = secs.get(s.zid); if (!z) secs.set(s.zid, z = { zid: s.zid, zone: s.zone, seats: [], x0: 1e9, y0: 1e9, x1: -1e9, y1: -1e9 });
+      z.seats.push(s); z.x0 = Math.min(z.x0, s.x); z.y0 = Math.min(z.y0, s.y); z.x1 = Math.max(z.x1, s.x); z.y1 = Math.max(z.y1, s.y);
+    }
+    const bx = list.reduce((a, s) => [Math.min(a[0], s.x), Math.min(a[1], s.y), Math.max(a[2], s.x), Math.max(a[3], s.y)], [L.cx - 250, L.cy - 96, L.cx + 250, L.cy + 10]), FIT = { x: bx[0] - 44, y: bx[1] - 44, w: bx[2] - bx[0] + 88, h: bx[3] - bx[1] + 88 };
+    // a grid of the seats, so that the seat under a pointer is found without asking the page
+    const CELL = 24, grid = new Map(); list.forEach((s) => { const k = `${Math.floor(s.x / CELL)},${Math.floor(s.y / CELL)}`; (grid.get(k) || grid.set(k, []).get(k)).push(s); });
+    const near = (px, py, rad) => { let best = null, bd = rad * rad; const cx = Math.floor(px / CELL), cy = Math.floor(py / CELL), n = Math.ceil(rad / CELL); for (let i = cx - n; i <= cx + n; i++) for (let j = cy - n; j <= cy + n; j++) for (const s of grid.get(`${i},${j}`) || []) { const d = (s.x - px) ** 2 + (s.y - py) ** 2; if (d <= bd) { bd = d; best = s; } } return best; };
+    const IC = (k) => `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${this.IC[k]}</svg>`;
+    const TOOLS = [['seat', 'صندلی', 'یکی یکی؛ روی صندلی بزن یا بکش تا چندتا رو با هم انتخاب کنی', '1'], ['row', 'ردیف', 'روی هر صندلیِ ردیف بزن تا کل ردیف انتخاب بشه (یا روی شماره‌ی ردیف)؛ بکشی چند ردیف می‌گیره', '2'], ['sec', 'بخش و طبقه', 'روی هر صندلیِ یه بخش یا طبقه بزن تا کلش انتخاب بشه (یا روی اسمش)', '3'], ['box', 'کادر', 'یه کادر بکش؛ همه‌ی صندلی‌های داخلش انتخاب می‌شن', '4'], ['free', 'آزاد', 'با انگشت یا ماوس دور هر چیزی که می‌خوای خط بکش', '5'], ['hand', 'جابه‌جایی', 'نقشه رو بکش و جابه‌جا کن (چرخ ماوس زوم می‌کنه)', '6']];
+    const box = document.createElement('div'); box.className = 'spx-full'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'قیمت تک‌صندلی');
+    box.innerHTML = `<header class="spx-top"><h2>${ico('tag')}قیمت تک‌صندلی<small>${esc(o.title || '')}</small></h2><p class="spx-stat" id="spxStat"></p>
+        <div class="spx-top-a"><span class="spx-dirty" id="spxDirty" hidden>ذخیره نشده</span><button type="button" class="chip" id="spxUndo">${ico('undo')}واگرد</button><button type="button" class="chip" id="spxCancel">انصراف</button><button type="button" class="buy" id="spxSave">${ico('check')}ذخیره</button></div></header>
+      <div class="spx-ask" id="spxAsk" hidden><span>تغییرها ذخیره نشده؛ ببندم و دور بریزمشون؟</span><button type="button" class="chip" id="spxYes">آره، ببند</button><button type="button" class="chip" id="spxNo">نه، برگرد</button></div>
+      <div class="spx-body">
+        <nav class="spx-tools" aria-label="ابزار انتخاب">${TOOLS.map(([k, t, h, kb], i) => `<button type="button" data-tool="${k}" aria-pressed="${i === 0}" title="${esc(h)} (${kb})">${IC(k)}<b>${t}</b></button>`).join('')}
+          <span class="spx-tsep" role="separator"></span>
+          <div class="spx-op" role="group" aria-label="افزودن یا کم‌کردن (برای کادر و آزاد)"><button type="button" data-op="add" aria-pressed="true" title="کادر و آزاد: به انتخاب اضافه کن (Alt = کم کن)">+<b>افزودن</b></button><button type="button" data-op="sub" aria-pressed="false" title="کادر و آزاد: از انتخاب کم کن">−<b>کم‌کردن</b></button></div>
+          <span class="spx-tsep" role="separator"></span>
+          <button type="button" data-z="in" aria-label="نزدیک‌تر" title="نزدیک‌تر"><span class="spx-zi">+</span><b>زوم</b></button><button type="button" data-z="out" aria-label="دورتر" title="دورتر"><span class="spx-zi">−</span><b>دورتر</b></button><button type="button" data-z="fit" title="همه‌ی نقشه"><span class="spx-zi">⤢</span><b>همه</b></button></nav>
+        <div class="spx-stage"><svg class="spx-map" id="spxMap" role="img" aria-label="نقشه‌ی سالن برای قیمت تک‌صندلی"></svg>
+          <p class="spx-hint" id="spxHint"></p><output class="spx-hov" id="spxHov" aria-live="off"></output>
+          <div class="spx-sel-bar" id="spxSelBar"><span id="spxN"></span><button type="button" class="chip" data-s="all">همه</button><button type="button" class="chip" data-s="inv">برعکس</button><button type="button" class="chip" data-s="none">هیچ</button></div></div>
+        <aside class="spx-panel" aria-label="قیمت">
+          <section class="spx-box spx-price"><h3>قیمت صندلی‌های انتخاب‌شده</h3><p class="spx-cur" id="spxCur"></p>
             <div class="spx-set"><span class="wz-in"><input id="spxIn" inputmode="numeric" dir="ltr" placeholder="قیمت" aria-label="قیمت صندلی‌های انتخاب‌شده"><small>تومان</small></span><button type="button" class="buy" id="spxSet">${ico('check')}بزن</button></div>
-            <div class="spx-chips" aria-label="قیمت ردیف‌ها">${classes.map((c) => `<button type="button" class="chip spx-tc" style="--c:${TIER[c].c}" data-set="${prices[c] || 0}"${prices[c] > 0 ? '' : ' disabled'}><i></i>${prices[c] > 0 ? money(prices[c]) : '—'}</button>`).join('')}</div>
-            <div class="spx-chips"><button type="button" class="chip" data-pct="10">+۱۰٪</button><button type="button" class="chip" data-pct="-10">−۱۰٪</button><button type="button" class="chip" data-add="100000">+۱۰۰٬۰۰۰</button><button type="button" class="chip" data-add="-100000">−۱۰۰٬۰۰۰</button></div>
+            <div class="spx-chips" aria-label="قیمت رده‌ها">${classes.map((c) => `<button type="button" class="chip spx-tc" style="--c:${TIER[c].c}" data-set="${prices[c] || 0}"${prices[c] > 0 ? '' : ' disabled'}><i></i>${prices[c] > 0 ? money(prices[c]) : '—'}</button>`).join('')}</div>
+            <div class="spx-chips"><button type="button" class="chip" data-pct="-20">−۲۰٪</button><button type="button" class="chip" data-pct="-10">−۱۰٪</button><button type="button" class="chip" data-pct="10">+۱۰٪</button><button type="button" class="chip" data-pct="20">+۲۰٪</button></div>
+            <div class="spx-chips"><button type="button" class="chip" data-add="-500000">−۵۰۰٬۰۰۰</button><button type="button" class="chip" data-add="-100000">−۱۰۰٬۰۰۰</button><button type="button" class="chip" data-add="100000">+۱۰۰٬۰۰۰</button><button type="button" class="chip" data-add="500000">+۵۰۰٬۰۰۰</button></div>
             <div class="spx-chips"><button type="button" class="chip" data-q="off">فروشی نیست</button><button type="button" class="chip" data-q="reset">${ico('undo')}قیمت ردیف</button></div></section>
+          <details class="spx-box" id="spxSecBox" open><summary>بخش‌ها و طبقه‌ها <b id="spxSecN"></b></summary><ul class="spx-secs" id="spxSecs"></ul></details>
+          <details class="spx-box" open><summary>قیمت‌های سالن <small>(بزن تا صندلی‌هاش انتخاب بشه)</small></summary><div class="spx-prices" id="spxPrices"></div></details>
           <details class="spx-box spx-list"><summary>صندلی‌های قیمت‌دار <b id="spxLn"></b></summary><ul id="spxLu"></ul></details>
-        </div>
-      </div>
-      ${o.note ? `<p class="bk-note">${ico('info')}${esc(o.note)}</p>` : ''}
-      <div class="evp-dlg-end spx-end"><button type="button" class="buy" id="spxSave">${ico('check')}ذخیره</button><button type="button" class="chip" id="spxUndo">${ico('undo')}واگرد</button><button type="button" class="chip" id="spxClear">برگردوندن همه به قیمت ردیف</button><span class="spx-dirty" id="spxDirty" hidden>ذخیره نشده</span><button type="button" class="chip" data-x>انصراف</button></div>`, 'قیمت تک‌صندلی');
-    const box = m.box, svg = $('#spxMap', box), r = P.real ? 8 : 9;
-    // the map: the stage, the sections' names, every seat a dot
+          <button type="button" class="chip spx-clear" id="spxClear">برگردوندن همه به قیمت ردیف</button>
+          ${o.note ? `<p class="bk-note">${ico('info')}${esc(o.note)}</p>` : ''}</aside>
+      </div>`;
+    ($('#app') || document.body).appendChild(box);
+    const prev = document.activeElement, svg = $('#spxMap', box);
+    // the map: the section boxes with their names, the stage, the numbers of the rows at both ends, then every seat
     const cx = L.cx, cy = L.cy, stage = L.stage === 'arc' ? `<path d="M ${cx - 230} ${cy - 96} H ${cx + 230} V ${cy - 20} Q ${cx} ${cy + 70} ${cx - 230} ${cy - 20} Z" class="hpm-st"/>` : `<rect x="${cx - 250}" y="${cy - 96}" width="500" height="96" rx="14" class="hpm-st"/>`;
-    const labels = L.secs.filter((z) => z.lp && z.seats.length && z.sec.k !== 'stand').map((z) => `<text x="${z.lp.x.toFixed(0)}" y="${z.lp.y.toFixed(0)}" text-anchor="middle" class="spx-zl">${esc(z.sec.t)}</text>`).join('');
-    svg.innerHTML = `${stage}<text x="${cx}" y="${cy - 40}" text-anchor="middle" class="hpm-w">صحنه</text>${labels}<g id="spxDots">${list.map((s) => `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${r}" data-k="${esc(s.key)}"/>`).join('')}</g><rect id="spxRect" class="spx-rect" hidden/>`;
+    const secBoxes = [...secs.values()].map((z) => `<g class="spx-sg" data-secg="${esc(z.zid)}"><rect x="${(z.x0 - 20).toFixed(0)}" y="${(z.y0 - 20).toFixed(0)}" width="${(z.x1 - z.x0 + 40).toFixed(0)}" height="${(z.y1 - z.y0 + 40).toFixed(0)}" rx="16"/><text x="${((z.x0 + z.x1) / 2).toFixed(0)}" y="${(z.y0 - 26).toFixed(0)}" text-anchor="middle" class="spx-zl" data-sec="${esc(z.zid)}">${esc(z.zone)}</text></g>`).join('');
+    const rowLabels = [...rows.values()].map((w) => `<text x="${(w.a.x - 17).toFixed(0)}" y="${(w.a.y + 3.5).toFixed(0)}" text-anchor="middle" class="spx-rl" data-row="${esc(w.k)}">${fa(w.row)}</text><text x="${(w.b.x + 17).toFixed(0)}" y="${(w.b.y + 3.5).toFixed(0)}" text-anchor="middle" class="spx-rl" data-row="${esc(w.k)}">${fa(w.row)}</text>`).join('');
+    svg.innerHTML = `<g>${stage}<text x="${cx}" y="${cy - 40}" text-anchor="middle" class="hpm-w">صحنه</text></g><g id="spxSecG">${secBoxes}</g><g id="spxRowG">${rowLabels}</g><g id="spxDots">${list.map((s) => `<circle cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${r}" data-k="${esc(s.key)}"/>`).join('')}</g><g id="spxNums" pointer-events="none"></g><rect id="spxRect" class="spx-rect" hidden/><polyline id="spxFree" class="spx-free" hidden/>`;
     const dot = new Map(); $$('#spxDots circle', svg).forEach((c) => dot.set(c.dataset.k, c));
-    const paint = (s) => { const c = dot.get(s.key); if (!c) return; const o2 = off(s), w = own(s); c.setAttribute('fill', o2 ? '#6b7280' : w ? TIER.S.c : TIER[s.cls].c); c.setAttribute('class', `${sel.has(s.key) ? 'sel ' : ''}${w ? 'cus ' : ''}${o2 ? 'off' : ''}`.trim()); c.setAttribute('opacity', o2 ? '.4' : w ? '1' : '.8'); };
-    list.forEach(paint);
-    // the window of the map (zoom and move)
-    let vb = { ...FIT }; const setVB = () => svg.setAttribute('viewBox', `${vb.x.toFixed(1)} ${vb.y.toFixed(1)} ${vb.w.toFixed(1)} ${vb.h.toFixed(1)}`); setVB();
-    const zoom = (f, px, py) => { const w = clamp(vb.w / f, FIT.w / 14, FIT.w * 1.3), k = w / vb.w, ax = px == null ? vb.x + vb.w / 2 : px, ay = py == null ? vb.y + vb.h / 2 : py; vb = { x: ax - (ax - vb.x) * k, y: ay - (ay - vb.y) * k, w, h: vb.h * k }; setVB(); };
+    // the colour of each price
+    let sig = '', colOf = () => '#888';
+    const palette = () => {
+      const ps = [...new Set(list.filter((s) => !off(s)).map(priceOf))].sort((a, b) => a - b), k = ps.join();
+      if (k === sig) return false; sig = k;
+      const m = new Map(ps.map((p, i) => [p, ps.length === 1 ? this.RAMP[3] : this.RAMP[Math.round(i * (this.RAMP.length - 1) / (ps.length - 1))]]));
+      colOf = (p) => m.get(p) || '#888'; return true;
+    };
+    const paint = (s) => { const c = dot.get(s.key); if (!c) return; const o2 = off(s); c.setAttribute('fill', o2 ? '#6b7280' : colOf(priceOf(s))); c.setAttribute('class', `${sel.has(s.key) ? 'sel ' : ''}${own(s) ? 'cus ' : ''}${o2 ? 'off' : ''}`.trim()); };
+    const paintAll = () => { palette(); list.forEach(paint); svg.classList.toggle('has-sel', sel.size > 0); };
+    // the window of the map: zoom (the wheel, the buttons) and move (the hand, the middle button, the space bar)
+    let vb = { ...FIT }; const setVB = () => { svg.setAttribute('viewBox', `${vb.x.toFixed(1)} ${vb.y.toFixed(1)} ${vb.w.toFixed(1)} ${vb.h.toFixed(1)}`); numbers(); };
+    const scale = () => { const b = svg.getBoundingClientRect(); return Math.min(b.width / vb.w, b.height / vb.h) || 1; };
+    const zoom = (f, px, py) => { const w = clamp(vb.w / f, FIT.w / 16, FIT.w * 1.4), k = w / vb.w, ax = px == null ? vb.x + vb.w / 2 : px, ay = py == null ? vb.y + vb.h / 2 : py; vb = { x: ax - (ax - vb.x) * k, y: ay - (ay - vb.y) * k, w, h: vb.h * k }; setVB(); };
     const at = (ev) => { const p = svg.createSVGPoint(); p.x = ev.clientX; p.y = ev.clientY; const q = p.matrixTransform(svg.getScreenCTM().inverse()); return { x: q.x, y: q.y }; };
+    // the numbers of the seats, only when they are big enough to read
+    let nf = 0; const numbers = () => { cancelAnimationFrame(nf); nf = requestAnimationFrame(() => { const g = $('#spxNums', svg); if (scale() < 1.9) { g.textContent = ''; return; } const x0 = vb.x - 20, x1 = vb.x + vb.w + 20, y0 = vb.y - 20, y1 = vb.y + vb.h + 20, vis = list.filter((s) => s.x > x0 && s.x < x1 && s.y > y0 && s.y < y1); g.innerHTML = vis.length > 700 ? '' : vis.map((s) => `<text x="${s.x.toFixed(1)}" y="${(s.y + 3.4).toFixed(1)}" text-anchor="middle" class="spx-sn">${fa(s.n)}</text>`).join(''); }); };
     $$('[data-z]', box).forEach((b) => b.addEventListener('click', () => { if (b.dataset.z === 'fit') { vb = { ...FIT }; setVB(); } else zoom(b.dataset.z === 'in' ? 1.5 : 1 / 1.5); }));
-    svg.addEventListener('wheel', (ev) => { ev.preventDefault(); const q = at(ev); zoom(ev.deltaY < 0 ? 1.2 : 1 / 1.2, q.x, q.y); }, { passive: false });
-    // the numbers on the side: what is chosen, the price of it, the prices that are in the hall, the list of the seats with a price of their own
+    svg.addEventListener('wheel', (ev) => { ev.preventDefault(); const q = at(ev); zoom(ev.deltaY < 0 ? 1.18 : 1 / 1.18, q.x, q.y); }, { passive: false });
+    // the numbers on the side: what is chosen, the price of it, the sections, the prices that are in the hall, the seats with a price of their own
     let dirty = false;
     const refresh = (full) => {
       const ks = [...sel].map((k) => byKey.get(k)), ps = [...new Set(ks.map((s) => (off(s) ? 'X' : priceOf(s))))];
-      $('#spxN', box).textContent = sel.size ? `${fa(sel.size)} صندلی انتخاب شده از ${fa(list.length)}` : `هنوز صندلی‌ای انتخاب نشده (${fa(list.length)} صندلی داره)`;
-      $('#spxCur', box).innerHTML = !sel.size ? '<small>اول چند تا صندلی انتخاب کن.</small>' : ps.length === 1 ? `الان: <b>${ps[0] === 'X' ? 'فروشی نیست' : `${money(ps[0])} تومان`}</b>` : `الان چند قیمته: از <b>${money(Math.min(...ps.filter((x) => x !== 'X')))}</b> تا <b>${money(Math.max(...ps.filter((x) => x !== 'X')))}</b>${ps.includes('X') ? ' و فروشی‌نیست' : ''}`;
+      const by = ks.reduce((m, s) => m.set(s.zone, (m.get(s.zone) || 0) + 1), new Map()), top = [...by].sort((a, b) => b[1] - a[1]);
+      $('#spxN', box).textContent = sel.size ? `${fa(sel.size)} صندلی انتخاب شده${top.length === 1 ? ` · ${top[0][0]}` : top.length ? ` · ${fa(top.length)} بخش` : ''}` : `صندلی‌ای انتخاب نشده · ${fa(list.length)} صندلی`;
+      $('#spxCur', box).innerHTML = !sel.size ? '<small>اول چند تا صندلی انتخاب کن (از نوار ابزار کنار نقشه).</small>' : ps.length === 1 ? `الان: <b>${ps[0] === 'X' ? 'فروشی نیست' : `${money(ps[0])} تومان`}</b>` : `الان چند قیمته: از <b>${money(Math.min(...ps.filter((x) => x !== 'X')))}</b> تا <b>${money(Math.max(...ps.filter((x) => x !== 'X')))}</b>${ps.includes('X') ? ' و فروشی‌نیست' : ''}`;
+      $$('.spx-secs [data-secp]', box).forEach((li) => { const z = secs.get(li.dataset.secp), n = z.seats.filter((s) => sel.has(s.key)).length; li.dataset.on = n === z.seats.length ? 'all' : n ? 'some' : ''; $('em', li).textContent = n ? fa(n) : ''; });
       if (!full) return;
-      const by = new Map(); list.forEach((s) => { const v = off(s) ? 'X' : priceOf(s); by.set(v, (by.get(v) || 0) + 1); });
-      $('#spxPrices', box).innerHTML = [...by].sort((a, b) => (a[0] === 'X') - (b[0] === 'X') || a[0] - b[0]).map(([v, n]) => `<button type="button" class="chip spx-pc" data-pr="${v}">${v === 'X' ? 'فروشی نیست' : money(v)}<small>${fa(n)}</small></button>`).join('');
-      $$('[data-pr]', box).forEach((b) => b.addEventListener('click', () => { sel.clear(); list.forEach((s) => { if ((off(s) ? 'X' : String(priceOf(s))) === b.dataset.pr) sel.add(s.key); }); list.forEach(paint); refresh(); }));
+      const by2 = new Map(); list.forEach((s) => { const v = off(s) ? 'X' : priceOf(s); by2.set(v, (by2.get(v) || 0) + 1); });
+      $('#spxPrices', box).innerHTML = [...by2].sort((a, b) => (a[0] === 'X') - (b[0] === 'X') || a[0] - b[0]).map(([v, n]) => `<button type="button" class="chip spx-pc" data-pr="${v}"><i style="background:${v === 'X' ? '#6b7280' : colOf(v)}"></i>${v === 'X' ? 'فروشی نیست' : money(v)}<small>${fa(n)}</small></button>`).join('');
       const mine = list.filter((s) => own(s) || off(s)), o2 = mine.filter(own), ps2 = list.filter((s) => !off(s)).map(priceOf);
       $('#spxLn', box).textContent = mine.length ? `(${fa(mine.length)})` : '';
-      $('#spxLeg', box).innerHTML = `<span><i style="background:${TIER.S.c}"></i>قیمت جدا: ${fa(o2.length)}</span><span><i style="background:#6b7280"></i>فروشی نیست: ${fa(mine.length - o2.length)}</span>${ps2.length ? `<span>از ${money(Math.min(...ps2))} تا ${money(Math.max(...ps2))} تومان</span>` : ''}`;
+      $('#spxStat', box).innerHTML = `<b>${fa(list.length)}</b> صندلی${o2.length ? ` · <b>${fa(o2.length)}</b> قیمت جدا` : ''}${mine.length - o2.length ? ` · <b>${fa(mine.length - o2.length)}</b> فروشی نیست` : ''}${ps2.length ? ` · از ${money(Math.min(...ps2))} تا ${money(Math.max(...ps2))} تومان` : ''}`;
       $('#spxLu', box).innerHTML = mine.slice(0, 150).map((s) => `<li data-k="${esc(s.key)}"><button type="button" class="spx-go" data-go>${esc(name(s))}</button>${off(s) ? '<em>فروشی نیست</em>' : `<span class="wz-in"><input dir="ltr" inputmode="numeric" value="${fmt(priceOf(s))}" aria-label="قیمت ${esc(name(s))}"><small>تومان</small></span>`}<button type="button" class="chip" data-rm aria-label="برگردوندن به قیمت ردیف">${ico('undo')}</button></li>`).join('') + (mine.length > 150 ? `<li class="spx-more">و ${fa(mine.length - 150)} صندلی دیگه (با «قیمت ردیف» برگردون)</li>` : '') || '<li class="spx-more">هنوز صندلی‌ای قیمت جدا نداره.</li>';
       $('#spxDirty', box).hidden = !dirty;
+      $$('[data-pr]', box).forEach((b) => b.addEventListener('click', () => { const keep = new Set(); list.forEach((s) => { if ((off(s) ? 'X' : String(priceOf(s))) === b.dataset.pr) keep.add(s.key); }); select([...keep], 'replace'); }));
     };
-    const snap = () => { undo.push(JSON.stringify(cur)); if (undo.length > 50) undo.shift(); };
+    // the list of sections and floors: a press chooses the whole of it (or takes it off)
+    $('#spxSecs', box).innerHTML = [...secs.values()].map((z) => { const ps = z.seats.map(priceOf); return `<li data-secp="${esc(z.zid)}"><button type="button"><span class="spx-sn1">${esc(z.zone)}</span><small>${fa(z.seats.length)} صندلی</small><em></em></button></li>`; }).join('');
+    $('#spxSecN', box).textContent = `(${fa(secs.size)})`;
+    // choosing: seats go in and out of `sel`; only the dots that changed are painted again
+    const select = (keys, how) => {
+      if (how === 'replace') { const old = [...sel]; sel.clear(); keys.forEach((k) => sel.add(k)); old.forEach((k) => paint(byKey.get(k))); keys.forEach((k) => paint(byKey.get(k))); }
+      else for (const k of keys) { const had = sel.has(k); if (how === 'add' && !had) sel.add(k); else if (how === 'sub' && had) sel.delete(k); else continue; paint(byKey.get(k)); }
+      svg.classList.toggle('has-sel', sel.size > 0); refresh();
+    };
+    const allIn = (seatsArr) => seatsArr.every((s) => sel.has(s.key));
+    const toggleUnit = (seatsArr) => select(seatsArr.map((s) => s.key), allIn(seatsArr) ? 'sub' : 'add');
+    const snap = () => { undo.push(JSON.stringify(cur)); if (undo.length > 60) undo.shift(); };
     // setting the price of some seats: f(seat) → a number, 'X', or null (back to the row's price)
     const apply = (keys, f) => {
       if (!keys.length) { toast('اول چند تا صندلی انتخاب کن.'); return; }
       snap(); dirty = true;
-      for (const k of keys) { const s = byKey.get(k), v = f(s); if (v === 'X') cur[k] = 'X'; else if (v == null || v <= 0 || Math.round(v) === s.base) delete cur[k]; else cur[k] = Math.round(v); paint(s); }
-      refresh(true);
+      for (const k of keys) { const s = byKey.get(k), v = f(s); if (v === 'X') cur[k] = 'X'; else if (v == null || v <= 0 || Math.round(v) === s.base) delete cur[k]; else cur[k] = Math.round(v); }
+      paintAll(); refresh(true);
     };
-    const toSel = (keys, add) => { if (!add) sel.clear(); keys.forEach((k) => sel.add(k)); list.forEach(paint); refresh(); };
-    // choosing: the pen (a press toggles, a drag does the same to what it passes), the frame, the hand
-    let tool = 'pen', down = null;
-    $$('[data-tool]', box).forEach((b) => b.addEventListener('click', () => { tool = b.dataset.tool; $$('[data-tool]', box).forEach((x) => x.setAttribute('aria-checked', String(x === b))); svg.dataset.tool = tool; }));
-    svg.dataset.tool = tool;
-    const rect = $('#spxRect', box);
+    // the pointer: what a press and a drag do depends on the tool
+    let tool = 'seat', op = 'add', down = null, hov = [], space = false;
+    const hint = () => { $('#spxHint', box).textContent = (TOOLS.find((t) => t[0] === tool) || [])[2] || ''; };
+    const setTool = (k) => { tool = k; svg.dataset.tool = k; $$('[data-tool]', box).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tool === k))); $$('[data-op]', box).forEach((b) => { b.disabled = k !== 'box' && k !== 'free'; }); hint(); clearHov(); };
+    $$('[data-tool]', box).forEach((b) => b.addEventListener('click', () => setTool(b.dataset.tool)));
+    $$('[data-op]', box).forEach((b) => b.addEventListener('click', () => { op = b.dataset.op; $$('[data-op]', box).forEach((x) => x.setAttribute('aria-pressed', String(x === b))); }));
+    const clearHov = () => { hov.forEach((c) => c.classList.remove('hov')); hov = []; $$('.spx-sg.hov', svg).forEach((g) => g.classList.remove('hov')); };
+    const showHov = (seatsArr, secId) => { clearHov(); hov = seatsArr.map((s) => dot.get(s.key)); hov.forEach((c) => c.classList.add('hov')); if (secId) { const g = svg.querySelector(`[data-secg="${CSS.escape(secId)}"]`); if (g) g.classList.add('hov'); } };
+    const hit = (p, ev) => near(p.x, p.y, (ev && ev.pointerType === 'touch' ? 2.4 : 1.7) * r);
+    const rect = $('#spxRect', box), free = $('#spxFree', box);
+    const inPoly = (x, y, pts) => { let c = false; for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) { const a = pts[i], b = pts[j]; if ((a.y > y) !== (b.y > y) && x < ((b.x - a.x) * (y - a.y)) / (b.y - a.y) + a.x) c = !c; } return c; };
+    // two fingers: zoom and move (a phone)
+    const ptrs = new Map(); let pinch = null, preSel = null;   // (preSel: the choice before the first finger acted, given back when a second finger turns it into a pinch)
     svg.addEventListener('pointerdown', (ev) => {
-      const hit = document.elementFromPoint(ev.clientX, ev.clientY);   // (what is under the pointer now: after a capture the event's own target is the map)
+      if (ev.button > 1) return;
+      ptrs.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      if (ptrs.size === 2) { const [a, c] = [...ptrs.values()]; down = null; if (preSel) { select([...preSel], 'replace'); preSel = null; } rect.hidden = true; free.hidden = true; svg.setPointerCapture(ev.pointerId); const mx = (a.x + c.x) / 2, my = (a.y + c.y) / 2; pinch = { d: Math.hypot(a.x - c.x, a.y - c.y) || 1, vb: { ...vb }, m0: at({ clientX: mx, clientY: my }) }; return; }
+      preSel = new Set(sel);
+      const lab = ev.target.closest && ev.target.closest('[data-row],[data-sec]');
       svg.setPointerCapture(ev.pointerId);
-      if (tool === 'pen') { const c = hit && hit.dataset && hit.dataset.k && dot.has(hit.dataset.k) ? hit : null; if (!c) { down = { t: 'none' }; return; } const k = c.dataset.k, add = !sel.has(k); down = { t: 'pen', add }; if (add) sel.add(k); else sel.delete(k); paint(byKey.get(k)); }
-      else if (tool === 'box') { const p = at(ev); down = { t: 'box', p, rm: ev.altKey }; rect.hidden = false; }
-      else down = { t: 'pan', x: ev.clientX, y: ev.clientY, vb: { ...vb } };
+      if (ev.button === 1 || tool === 'hand' || space) { down = { t: 'pan', x: ev.clientX, y: ev.clientY, vb: { ...vb } }; svg.classList.add('is-pan'); return; }
+      if (lab) { down = { t: 'none' }; toggleUnit(lab.dataset.row ? rows.get(lab.dataset.row).seats : secs.get(lab.dataset.sec).seats); return; }
+      const p = at(ev), s = hit(p, ev);
+      if (tool === 'seat') { if (!s) { down = { t: 'none' }; return; } down = { t: 'seat', add: !sel.has(s.key) }; select([s.key], down.add ? 'add' : 'sub'); }
+      else if (tool === 'row' || tool === 'sec') { if (!s) { down = { t: 'none' }; return; } const us = tool === 'row' ? rows.get(s.rk).seats : secs.get(s.zid).seats; down = { t: 'unit', add: !allIn(us), seen: new Set([tool === 'row' ? s.rk : s.zid]) }; select(us.map((q) => q.key), down.add ? 'add' : 'sub'); }
+      else if (tool === 'box') { down = { t: 'box', p0: p, sub: op === 'sub' || ev.altKey }; rect.hidden = false; rect.classList.toggle('is-sub', down.sub); }
+      else if (tool === 'free') { down = { t: 'free', pts: [p], sub: op === 'sub' || ev.altKey }; free.hidden = false; free.classList.toggle('is-sub', down.sub); free.setAttribute('points', `${p.x},${p.y}`); }
     });
     svg.addEventListener('pointermove', (ev) => {
-      if (!down) { const c = ev.target.closest && ev.target.closest('circle'); const hv = $('#spxHov', box); if (c) { const s = byKey.get(c.dataset.k); hv.textContent = `${name(s)} · ${off(s) ? 'فروشی نیست' : `${money(priceOf(s))} تومان`}`; } else hv.textContent = ''; return; }
-      if (down.t === 'pen') { const c = document.elementFromPoint(ev.clientX, ev.clientY); if (!c || !c.dataset || !c.dataset.k || !dot.has(c.dataset.k)) return; const k = c.dataset.k; if (sel.has(k) === down.add) return; if (down.add) sel.add(k); else sel.delete(k); paint(byKey.get(k)); }
-      else if (down.t === 'box') { const q = at(ev), a = down.p; rect.setAttribute('x', Math.min(a.x, q.x)); rect.setAttribute('y', Math.min(a.y, q.y)); rect.setAttribute('width', Math.abs(q.x - a.x)); rect.setAttribute('height', Math.abs(q.y - a.y)); }
-      else if (down.t === 'pan') { const b = svg.getBoundingClientRect(), k = down.vb.w / b.width; vb = { ...down.vb, x: down.vb.x - (ev.clientX - down.x) * k, y: down.vb.y - (ev.clientY - down.y) * k }; setVB(); }
+      if (ptrs.has(ev.pointerId)) ptrs.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      if (pinch && ptrs.size === 2) {
+        const [a, c] = [...ptrs.values()], f = (Math.hypot(a.x - c.x, a.y - c.y) || 1) / pinch.d, w = clamp(pinch.vb.w / f, FIT.w / 16, FIT.w * 1.4), k = w / pinch.vb.w;
+        vb = { x: pinch.vb.x, y: pinch.vb.y, w, h: pinch.vb.h * k }; svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+        const cm = at({ clientX: (a.x + c.x) / 2, clientY: (a.y + c.y) / 2 }); vb = { ...vb, x: vb.x + (pinch.m0.x - cm.x), y: vb.y + (pinch.m0.y - cm.y) }; setVB(); return;
+      }
+      if (!down) {
+        const p = at(ev), s = hit(p, ev), hv = $('#spxHov', box);
+        if (!s || tool === 'hand' || tool === 'box' || tool === 'free') { hv.textContent = ''; if (hov.length) clearHov(); return; }
+        hv.textContent = `${name(s)} · ${off(s) ? 'فروشی نیست' : `${money(priceOf(s))} تومان`}`;
+        if (tool === 'row') showHov(rows.get(s.rk).seats); else if (tool === 'sec') showHov(secs.get(s.zid).seats, s.zid); else showHov([s]);
+        return;
+      }
+      if (down.t === 'seat') { const s = hit(at(ev), ev); if (s && sel.has(s.key) !== down.add) select([s.key], down.add ? 'add' : 'sub'); }
+      else if (down.t === 'unit') { const s = hit(at(ev), ev); if (!s) return; const id = tool === 'row' ? s.rk : s.zid; if (down.seen.has(id)) return; down.seen.add(id); select((tool === 'row' ? rows.get(s.rk) : secs.get(s.zid)).seats.map((q) => q.key), down.add ? 'add' : 'sub'); }
+      else if (down.t === 'box') { const q = at(ev), a = down.p0; rect.setAttribute('x', Math.min(a.x, q.x)); rect.setAttribute('y', Math.min(a.y, q.y)); rect.setAttribute('width', Math.abs(q.x - a.x)); rect.setAttribute('height', Math.abs(q.y - a.y)); }
+      else if (down.t === 'free') { const q = at(ev), l = down.pts[down.pts.length - 1]; if ((q.x - l.x) ** 2 + (q.y - l.y) ** 2 > 9) { down.pts.push(q); free.setAttribute('points', down.pts.map((z) => `${z.x.toFixed(1)},${z.y.toFixed(1)}`).join(' ')); } }
+      else if (down.t === 'pan') { const k = 1 / scale(); vb = { ...down.vb, x: down.vb.x - (ev.clientX - down.x) * k, y: down.vb.y - (ev.clientY - down.y) * k }; setVB(); }
     });
     const end = (ev) => {
-      if (!down) return; const d = down; down = null;
-      if (d.t === 'box') { rect.hidden = true; const q = at(ev), x0 = Math.min(d.p.x, q.x), x1 = Math.max(d.p.x, q.x), y0 = Math.min(d.p.y, q.y), y1 = Math.max(d.p.y, q.y); list.forEach((s) => { if (s.x >= x0 && s.x <= x1 && s.y >= y0 && s.y <= y1) { if (d.rm) sel.delete(s.key); else sel.add(s.key); } }); list.forEach(paint); }
-      refresh();
+      ptrs.delete(ev.pointerId); if (pinch) { if (ptrs.size < 2) pinch = null; return; }
+      if (!down) return; const d = down; down = null; svg.classList.remove('is-pan');
+      if (d.t === 'box') { rect.hidden = true; const q = at(ev), x0 = Math.min(d.p0.x, q.x), x1 = Math.max(d.p0.x, q.x), y0 = Math.min(d.p0.y, q.y), y1 = Math.max(d.p0.y, q.y); if (x1 - x0 > 3 || y1 - y0 > 3) select(list.filter((s) => s.x >= x0 && s.x <= x1 && s.y >= y0 && s.y <= y1).map((s) => s.key), d.sub ? 'sub' : 'add'); }
+      else if (d.t === 'free') { free.hidden = true; if (d.pts.length > 2) select(list.filter((s) => inPoly(s.x, s.y, d.pts)).map((s) => s.key), d.sub ? 'sub' : 'add'); }
     };
     svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
-    svg.addEventListener('pointerleave', () => { if (!down) $('#spxHov', box).textContent = ''; });
-    // quick choices
-    $$('[data-s]', box).forEach((b) => b.addEventListener('click', () => {
-      const k = b.dataset.s, ks = [...sel].map((x) => byKey.get(x));
-      if (k === 'all') toSel(list.map((s) => s.key));
-      else if (k === 'none') toSel([]);
-      else if (k === 'inv') toSel(list.filter((s) => !sel.has(s.key)).map((s) => s.key));
-      else if (!ks.length) toast('اول یه صندلی انتخاب کن؛ بعد این دکمه‌ها کل ردیف یا بخششو هم می‌گیرن.');
-      else if (k === 'row') { const rows = new Set(ks.map((s) => `${s.zid}|${s.row}`)); toSel(list.filter((s) => rows.has(`${s.zid}|${s.row}`)).map((s) => s.key), true); }
-      else if (k === 'zone') { const zs = new Set(ks.map((s) => s.zid)); toSel(list.filter((s) => zs.has(s.zid)).map((s) => s.key), true); }
-      else if (k === 'same') { const vs = new Set(ks.map((s) => (off(s) ? 'X' : priceOf(s)))); toSel(list.filter((s) => vs.has(off(s) ? 'X' : priceOf(s))).map((s) => s.key), true); }
-    }));
-    $('#spxZone', box).addEventListener('change', (ev) => { const z = ev.target.value; if (z) toSel(list.filter((s) => s.zid === z).map((s) => s.key)); ev.target.value = ''; });
-    // the price
+    svg.addEventListener('pointerleave', () => { if (!down) { $('#spxHov', box).textContent = ''; clearHov(); } });
+    // quick choices, the sections' list, the price
+    $$('[data-s]', box).forEach((b) => b.addEventListener('click', () => { const k = b.dataset.s; if (k === 'all') select(list.map((s) => s.key), 'replace'); else if (k === 'none') select([], 'replace'); else select(list.filter((s) => !sel.has(s.key)).map((s) => s.key), 'replace'); }));
+    const secUl = $('#spxSecs', box);
+    secUl.addEventListener('click', (ev) => { const li = ev.target.closest('[data-secp]'); if (li) toggleUnit(secs.get(li.dataset.secp).seats); });
+    secUl.addEventListener('pointerover', (ev) => { const li = ev.target.closest('[data-secp]'); if (li) showHov(secs.get(li.dataset.secp).seats, li.dataset.secp); });
+    secUl.addEventListener('pointerleave', clearHov);
     const inp = $('#spxIn', box), setBtn = () => { const v = +enDigits(inp.value).replace(/\D/g, '') || 0; if (!v) { toast('قیمت رو بنویس.'); inp.focus(); return; } apply([...sel], () => v); };
     inp.addEventListener('input', () => { const v = +enDigits(inp.value).replace(/\D/g, '') || 0; inp.value = fmt(v); });
     inp.addEventListener('keydown', (ev) => { if (ev.key === 'Enter') { ev.preventDefault(); setBtn(); } });
@@ -14059,16 +14328,37 @@ const spx = {
     $$('[data-q]', box).forEach((b) => b.addEventListener('click', () => apply([...sel], () => (b.dataset.q === 'off' ? 'X' : null))));
     // the list of the seats with a price of their own: change one, take one back, or go to it
     const lu = $('#spxLu', box);
-    lu.addEventListener('click', (ev) => { const li = ev.target.closest('li[data-k]'); if (!li) return; const k = li.dataset.k; if (ev.target.closest('[data-rm]')) apply([k], () => null); else if (ev.target.closest('[data-go]')) { const s = byKey.get(k); toSel([k]); vb = { x: s.x - FIT.w / 12, y: s.y - FIT.h / 12, w: FIT.w / 6, h: FIT.h / 6 }; setVB(); } });
+    lu.addEventListener('click', (ev) => { const li = ev.target.closest('li[data-k]'); if (!li) return; const k = li.dataset.k; if (ev.target.closest('[data-rm]')) apply([k], () => null); else if (ev.target.closest('[data-go]')) { const s = byKey.get(k); select([k], 'replace'); vb = { x: s.x - FIT.w / 12, y: s.y - FIT.h / 12, w: FIT.w / 6, h: FIT.h / 6 }; setVB(); } });
     lu.addEventListener('change', (ev) => { const li = ev.target.closest('li[data-k]'); if (!li || !ev.target.matches('input')) return; const v = +enDigits(ev.target.value).replace(/\D/g, '') || 0; apply([li.dataset.k], () => v || null); });
     lu.addEventListener('input', (ev) => { if (ev.target.matches('input')) { const v = +enDigits(ev.target.value).replace(/\D/g, '') || 0; ev.target.value = fmt(v); } });
-    // undo, take everything back, save
-    const restore = (json) => { for (const k of Object.keys(cur)) delete cur[k]; Object.assign(cur, JSON.parse(json)); list.forEach(paint); refresh(true); };
-    $('#spxUndo', box).addEventListener('click', () => { if (!undo.length) { toast('چیزی برای واگرد نیست.'); return; } restore(undo.pop()); });
+    // undo, take everything back, save, close
+    const restore = (json) => { for (const k of Object.keys(cur)) delete cur[k]; Object.assign(cur, JSON.parse(json)); paintAll(); refresh(true); };
+    const doUndo = () => { if (!undo.length) { toast('چیزی برای واگرد نیست.'); return; } restore(undo.pop()); };
+    $('#spxUndo', box).addEventListener('click', doUndo);
     $('#spxClear', box).addEventListener('click', () => { if (!Object.keys(cur).length) return; snap(); dirty = true; restore('{}'); toast('همه به قیمت ردیف برگشتن؛ با «واگرد» برمی‌گرده.'); });
-    $('#spxSave', box).addEventListener('click', () => { const out = {}; for (const [k, v] of Object.entries(cur)) if (v === 'X' || (typeof v === 'number' && v > 0)) out[k] = v; o.save(out); m.shut(); toast(this.line(out) + '.'); });
-    refresh(true);
-    return m;
+    let unhook = () => {};
+    const shut = () => { unhook(); cancelAnimationFrame(nf); box.remove(); document.documentElement.classList.remove('spx-open'); if (prev && prev.focus) prev.focus(); };
+    const close = () => { if (dirty) { $('#spxAsk', box).hidden = false; $('#spxNo', box).focus(); } else shut(); };
+    $('#spxCancel', box).addEventListener('click', close);
+    $('#spxYes', box).addEventListener('click', shut); $('#spxNo', box).addEventListener('click', () => { $('#spxAsk', box).hidden = true; });
+    $('#spxSave', box).addEventListener('click', () => { const out = {}; for (const [k, v] of Object.entries(cur)) if (v === 'X' || (typeof v === 'number' && v > 0)) out[k] = v; o.save(out); shut(); toast(this.line(out) + '.'); });
+    const key = (ev) => {
+      const typing = ev.target && ev.target.matches && ev.target.matches('input, select, textarea');
+      if (ev.key === 'Escape') { ev.preventDefault(); if (!$('#spxAsk', box).hidden) $('#spxAsk', box).hidden = true; else if (sel.size && !typing) select([], 'replace'); else close(); return; }
+      if (typing) return;
+      if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'z') { ev.preventDefault(); doUndo(); }
+      else if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'a') { ev.preventDefault(); select(list.map((s) => s.key), 'replace'); }
+      else if (/^[1-6]$/.test(ev.key)) setTool(TOOLS[+ev.key - 1][0]);
+      else if (ev.key === ' ') { space = true; svg.classList.add('is-space'); ev.preventDefault(); }
+    };
+    const keyUp = (ev) => { if (ev.key === ' ') { space = false; svg.classList.remove('is-space'); } };
+    document.addEventListener('keydown', key, true); document.addEventListener('keyup', keyUp, true);
+    unhook = () => { document.removeEventListener('keydown', key, true); document.removeEventListener('keyup', keyUp, true); };
+    document.documentElement.classList.add('spx-open');
+    paintAll(); refresh(true); setTool('seat'); setVB();
+    if (MOTK()) gsap.fromTo(box, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power1.out' });
+    $('#spxSave', box).focus({ preventScroll: true });
+    return { box, shut };
   },
 
   // a show that is on the site: the admin's own change (an admin needs nobody's yes). Kept in the overlay (changes.js) and laid over the show on every visit
