@@ -2915,6 +2915,10 @@ html.spx-open, html.spx-open body { overflow: hidden; }
 .ad-loc-pick { display: flex; flex-wrap: wrap; align-items: center; gap: .6em 1em; }
 .ad-loc-t { font-size: 13px; font-variant-numeric: tabular-nums; color: rgba(var(--fg), .8); }
 .ad-man { padding: .6em .9em; border-radius: 12px; background: rgba(var(--fg), .04); }
+.ad-man summary, .spx-box summary { display: flex; align-items: center; gap: .5em; list-style: none; }   /* (no browser marker: our own chevron) */
+.ad-man summary::-webkit-details-marker, .spx-box summary::-webkit-details-marker { display: none; }
+.ad-man summary::after, .spx-box summary::after { content: '▾'; margin-inline-start: auto; opacity: .6; transition: transform .15s; }
+.ad-man[open] > summary::after, .spx-box[open] > summary::after { transform: rotate(180deg); }
 .ad-man summary { cursor: pointer; font-size: 13px; font-weight: var(--fwm); }
 .ad-man summary small { font-weight: 500; opacity: .65; }
 .ad-man[open] summary { margin-bottom: .7em; }
