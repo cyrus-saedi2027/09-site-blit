@@ -4362,8 +4362,9 @@ html.is-desk .dk-tabs::-webkit-scrollbar-thumb { background: rgba(255, 255, 255,
 @media (min-width: 1181px) { .rv-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); } }
 /* the seat page: the map panel is as tall as the column beside it (the cart, the overview, the prices), so no bare background is left under it; its picture sits in the middle of the room */
 @media (min-width: 1100px) {
-  .evp-in.bk .bk-map { align-self: stretch; grid-template-rows: auto auto minmax(0, 1fr); align-content: stretch; }
-  .evp-in.bk .bk-map .sm-view { display: grid; align-items: start; }
+  .evp-in.bk .bk-map { align-self: stretch; display: flex; flex-direction: column; }   /* (a column, not a grid: the block chips and the zone view come and go, and the room left over must go to the seats, not to a row of chips) */
+  .evp-in.bk .bk-map > * { flex: 0 0 auto; }
+  .evp-in.bk .bk-map .sm-view { display: grid; align-items: start; align-content: safe center; flex: 1 1 auto; min-height: 0; }
   .evp-in.bk .bk-map .sm-in { min-height: 0; }
 }
 

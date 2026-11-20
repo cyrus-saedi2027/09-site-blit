@@ -49,7 +49,7 @@ Real payment gateway · SMS gateway · database (everything lives in the browser
 
 ## Added in round AG (the owner's fifth message)
 - **Big halls open on zones** (an overview, a press on a zone shows its seats, a back button and chips): `parts9/seatmap.js` (`zoneBig`, `zoneDraw`, `blkOf`, `applyBlock`); admin switch «نقشه‌ی سالن‌های بزرگ» (`blit.zoneView`). Test: `tools/ag-zones-test.js`.
-- **Map block**: Google + OpenStreetMap + directions + copy + the written address (`locBlockHTML`). The real frames were **never** loaded on the machine that built this (no outside network): open the site on a machine with internet and look at a hall page with your own eyes.
+- **Map block**: Google + OpenStreetMap + directions + copy + the written address (`locBlockHTML`). Both real frames (Google, OpenStreetMap) were loaded and seen in a screenshot of the client's file opened from disk (`tools/ag-client-shot.js`); what was NOT tried is a network where Google is filtered (only simulated). Look at a hall page with your own eyes anyway.
 - **Two Iran Mall halls** (Arena Mall, Bam Arena) have **guessed** plans (`libSeedAG`): the melotik / fidibo pages returned HTTP 503 from there. Replace them in the admin's hall builder when you have the real seat maps.
 - The admin's rail now scrolls (the «طرح بلیط‌ها» and «بخشش» tabs were cut off at a short window); `desk.js` / `desk.css`.
 - The zone blocks of the real plans are computed from aisles and rows, not hand-drawn: some halls may need a hand-made cut (not done).
