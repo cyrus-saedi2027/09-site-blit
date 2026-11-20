@@ -1001,7 +1001,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-in.tkp { --fl: min(1340px, 100%); }
 .evp-in > :is(.tk-ok, .tk-grid, .tk-help) { width: 100%; max-width: var(--fl); justify-self: center; }
 /* every block of a purchase page is as wide as its content needs, and sits in the middle (round N): the window's whole width made frames of 1900 px with a line of words in them */
-.evp-in > :is(.evp-toprow, .evp-cols, .evp-more, .bk-hold, .bk-miss) { width: 100%; max-width: var(--fl); justify-self: center; }
+.evp-in > :is(.evp-toprow, .evp-cols, .bk-hold, .bk-miss) { width: 100%; max-width: var(--fl); justify-self: center; }
 /* the page in and out (a View Transition): the poster that was pressed flies, the rest cross-fades and rises a little */
 :root.vt-page::view-transition-old(root) { animation: vt-out .42s cubic-bezier(.4, 0, 1, 1) both; }
 :root.vt-page::view-transition-new(root) { animation: vt-in .62s cubic-bezier(.16, 1, .3, 1) both; }
@@ -1075,7 +1075,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-main { display: grid; gap: var(--gap); min-width: 0; }
 .evp-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap) * 1.6); display: grid; gap: var(--gap); min-width: 0; }
 @media (max-height: 800px) { .evp-side { position: static; } }   /* (the card and the prices are taller than a short window: they scroll with the page) */
-.evp-main > .panel, .evp-side > .panel, .evp-more { border-radius: calc(var(--r) * 1.3); }
+.evp-main > .panel, .evp-side > .panel { border-radius: calc(var(--r) * 1.3); }
 /* the information: three tabs (about, the place, the prices) in one panel; one is open at a time */
 .evp-info { padding: 0; overflow: hidden; }
 .evp-tabs { display: flex; gap: calc(var(--u) * .2); padding: calc(var(--u) * .5) calc(var(--u) * .8) 0; border-bottom: 1px solid rgba(var(--fg), .1); overflow-x: auto; scrollbar-width: none; }
@@ -1130,11 +1130,11 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .mp-zoom svg.i { width: 16px; height: 16px; }
 
 /* what the show is: its people as tags (as in the sample), a line in its colour, the words */
-.evp-more, .evp-prices { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
 .evp-pmap { position: relative; aspect-ratio: 16 / 9; margin: 0 0 calc(var(--u) * .9); border-radius: calc(var(--r) * .6); background: rgba(var(--fg), .035); overflow: hidden; }   /* the hall in the colours of its prices (page.js: priceMap) */
 .evp-pmap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.evp-main h2, .evp-side h2, .evp-more h2, .evp-pic h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
-.evp-main h2 svg.i, .evp-side h2 svg.i, .evp-more h2 svg.i, .evp-pic h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc); }
+.evp-prices { padding: calc(var(--u) * 1.3) calc(var(--u) * 1.5) calc(var(--u) * 1.4); }
+.evp-main h2, .evp-side h2, .evp-pic h2 { display: flex; align-items: center; gap: .55em; margin: 0 0 calc(var(--u) * .8); font-size: calc(max(16px, calc(var(--u) * 1.08)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
+.evp-main h2 svg.i, .evp-side h2 svg.i, .evp-pic h2 svg.i { width: 1.2em; height: 1.2em; color: var(--sc); }
 .evp-main h2 small, .evp-side h2 small, .evp-pic h2 small { margin-inline-start: auto; font-size: .72em; font-weight: var(--fwm); color: rgba(var(--fg), max(.6, var(--dmin))); }
 .evp-tags { display: flex; flex-wrap: wrap; gap: calc(var(--u) * .4); margin-bottom: calc(var(--u) * .7); }
 .evp-tags span { display: inline-flex; align-items: baseline; gap: .5em; padding: .35em .95em; border-radius: calc(var(--r) * .45); font-size: calc(max(13px, calc(var(--u) * .84)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); color: #fff; background: linear-gradient(to left, #8b5cf6, #ec4899); box-shadow: 0 8px 20px -12px #8b5cf6; }
@@ -1215,9 +1215,6 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-note { display: flex; align-items: flex-start; gap: .55em; margin: 0; font-size: calc(max(11.5px, calc(var(--u) * .72)) * var(--tx) * var(--tx-small)); line-height: 1.8; color: rgba(var(--fg), max(.64, var(--dmin))); }
 .evp-note svg.i { flex: none; width: 1.3em; height: 1.3em; margin-top: .2em; color: var(--sc); }
 .evp-note b { color: rgb(var(--fg)); font-weight: var(--fwb); }
-.evp-more .tkt-grid { --cols: 4; }
-.evp-more .tkt-grid > :nth-child(n+5) { display: none; }   /* one row: as many as there are columns */
-@media (min-width: 1600px) and (min-aspect-ratio: 5/4) { .evp-more .tkt-grid { --cols: 6; } .evp-more .tkt-grid > :nth-child(n+5) { display: block; } .evp-more .tkt-grid > :nth-child(n+7) { display: none; } }   /* (round Q: the row takes the whole width) */
 .evp > .evp-ft { flex: none; box-sizing: border-box; width: calc(100% - var(--pad-l) - var(--pad-r)); margin: 0 auto calc(var(--gap) * 2); }   /* the site's footer after the page's column, from edge to edge like the header (round Q) */
 @media (max-width: 1099px), (max-aspect-ratio: 5/4) { .evp:has(.bk-bar) > .evp-ft { margin-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } }   /* (the fixed bar of the seats' and the payment's pages must not cover the footer's last lines) */
 
@@ -1261,8 +1258,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
   .evp-cover.no-poster .evp-title { grid-column: 1; }
   .evp-tabp { padding: 16px; }
   .evp-facts { grid-template-columns: 1fr; }
-  .evp-book, .evp-more, .evp-prices { padding: 16px; }
-  .evp-more .tkt-grid { --cols: 2; }
+  .evp-book, .evp-prices { padding: 16px; }
   .ses-list { max-height: none; }
   .evp-cta { position: fixed; z-index: 35; inset-inline: 10px; bottom: max(10px, env(safe-area-inset-bottom)); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; padding-inline: 16px 8px; border-radius: var(--rb); background: var(--capsule); color: rgb(var(--fg)); box-shadow: 0 14px 34px -10px rgba(0, 0, 0, .6), inset 0 0 0 1px rgba(var(--fg), var(--bt-line-a)); }
   .evp-cta b { font-weight: var(--fwb); }
@@ -1818,6 +1814,9 @@ a.buy, a.chip { text-decoration: none; }
 .tf-in { position: absolute; top: 0; right: 0; box-sizing: border-box; transform-origin: top right; transform: scale(var(--k, 1)); }
 .tf-in u { text-decoration: none; font-size: .52em; font-weight: 700; margin-inline-start: .35em; opacity: .85; }
 .tf-acts { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.tf-nolink a { pointer-events: none; }
+.tf-site { max-width: 760px; margin-inline: auto; }
+.tf-qrc { max-width: 420px; }
 @media print { .tf-acts { display: none; } .tf-card { break-inside: avoid; } }
 
 /* ── the seat map (seatmap.js): the overview, the best seats, one section big; light on the browser (no per-seat transforms
@@ -2558,7 +2557,34 @@ button.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-
 .wz-saleat { max-width: 320px; margin-top: .8em; }
 .wz-saleat input { color-scheme: dark; }
 :root[data-mode="light"] .wz-saleat input { color-scheme: light; }
-.wz-price { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: calc(var(--u) * 1); align-items: start; }
+.wz-price { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: calc(var(--u) * 1); align-items: start; }
+/* the price step (round AD): numbers on top, the plan and the classes light each other, − and + beside every price, an advanced card, a clear income card */
+.wz-kpi { display: flex; flex-wrap: wrap; gap: .5em; margin-bottom: calc(var(--u) * .8); }
+.wz-kpi span { display: inline-flex; align-items: baseline; gap: .5em; padding: .45em .9em; border-radius: 999px; background: rgba(var(--fg), .06); font-size: 12.5px; color: rgba(var(--fg), .75); }
+.wz-kpi b { font-size: 15px; color: rgb(var(--fg)); font-variant-numeric: tabular-nums; }
+.wz-plan { padding: .6em; border-radius: 16px; background: rgba(var(--fg), .04); }
+.wz-plan .hpm path[data-t] { transition: opacity .15s; }
+.wz-plan .hpm[data-hl] path[data-t] { opacity: .18; }
+.wz-plan .hpm[data-hl="A"] path[data-t="A"], .wz-plan .hpm[data-hl="B"] path[data-t="B"], .wz-plan .hpm[data-hl="C"] path[data-t="C"], .wz-plan .hpm[data-hl="D"] path[data-t="D"], .wz-plan .hpm[data-hl="E"] path[data-t="E"], .wz-plan .hpm[data-hl="F"] path[data-t="F"], .wz-plan .hpm[data-hl="G"] path[data-t="G"], .wz-plan .hpm[data-hl="H"] path[data-t="H"], .wz-plan .hpm[data-hl="V"] path[data-t="V"] { opacity: 1; }
+.wz-tcol { display: grid; gap: .6em; min-width: 0; }
+.wz-ptool { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5em; font-size: 12.5px; color: rgba(var(--fg), .72); }
+.wz-tier .sw { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px color-mix(in oklab, var(--c) 24%, transparent); }
+.wz-tier { transition: background .15s, box-shadow .15s; }
+.wz-tier.is-hl, .wz-tier:focus-within { background: color-mix(in oklab, var(--c) 14%, rgba(var(--fg), .04)); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--c) 70%, transparent); }
+.wz-tz { display: grid; gap: .15em; min-width: 0; }
+.wz-tz small { font-size: 11.5px; color: rgba(var(--fg), .66); font-variant-numeric: tabular-nums; }
+.wz-pin { display: inline-flex; align-items: center; gap: .3em; direction: ltr; }
+.wz-stp { appearance: none; display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 10px; background: rgba(var(--fg), .09); color: inherit; font: 800 18px/1 var(--font); cursor: pointer; transition: background .12s, transform .12s; }
+.wz-stp:hover { background: rgba(var(--fg), .18); } .wz-stp:active { transform: scale(.92); }
+.wz-stp:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.wz-wk { display: flex; align-items: flex-start; gap: .7em; margin: calc(var(--u) * .7) 0 .4em; padding: .8em 1em; border-radius: 14px; background: rgba(var(--fg), .04); cursor: pointer; }
+.wz-wk input { margin-top: .25em; }
+.wz-wk span { display: grid; gap: .1em; } .wz-wk b { font-size: 13.5px; } .wz-wk small { font-size: 12px; color: rgba(var(--fg), .66); }
+.wz-adv { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8em 1.2em; margin-top: calc(var(--u) * .8); padding: .9em 1.1em; border-radius: 16px; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+.wz-adv > div { display: grid; gap: .25em; min-width: 0; flex: 1 1 260px; }
+.wz-adv .wz-h3 { margin: 0; } .wz-adv .wz-h3 em { font-style: normal; font-size: 11px; font-weight: 700; padding: .15em .6em; margin-inline-start: .5em; border-radius: 999px; background: rgba(var(--fg), .1); color: rgba(var(--fg), .7); }
+.wz-adv p { margin: 0; font-size: 13px; color: rgba(var(--fg), .85); } .wz-adv small { font-size: 12px; color: rgba(var(--fg), .6); }
+@media (max-width: 760px) { .wz-price { grid-template-columns: 1fr; } .wz-tier { grid-template-columns: auto minmax(0, 1fr); } .wz-pin { grid-column: 1 / -1; justify-content: space-between; } .wz-pin .wz-in { flex: 1; } .wz-pin .wz-in input { width: 100%; } }
 .wz-plan .hpm { height: auto; aspect-ratio: 4 / 3; }
 .wz-tiers { display: grid; gap: .5em; }
 .wz-tier { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .7em; padding: .55em .7em; border-radius: 12px; background: rgba(var(--fg), .04); }
@@ -2568,9 +2594,11 @@ button.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-
 .wz-in input { width: 8.5em; height: 38px; padding: 0 .7em; border-radius: 10px; border: 1px solid rgba(var(--fg), .18); background: var(--capsule); color: rgb(var(--fg)); font: 700 14px var(--font); text-align: left; }
 .wz-in input:focus { outline: none; border-color: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 30%, transparent); }
 .wz-in small { font-size: 11px; color: rgba(var(--fg), max(.55, var(--dmin))); }
-.wz-est { display: grid; gap: .1em; margin-top: calc(var(--u) * .8); padding: .9em 1em; border-radius: 14px; background: color-mix(in oklab, var(--viz-1) 10%, transparent); font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); }
-.wz-est b { font-size: calc(max(20px, calc(var(--u) * 1.4)) * var(--tx) * var(--tx-main)); font-weight: 900; }
-.wz-est small { color: rgba(var(--fg), .65); }
+.wz-est { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: .6em; margin-top: calc(var(--u) * .8); }
+.wz-est > div { display: grid; gap: .2em; padding: .85em 1em; border-radius: 14px; background: rgba(var(--fg), .05); }
+.wz-est > div:first-child { background: color-mix(in oklab, var(--viz-1) 14%, transparent); }
+.wz-est span { font-size: 12px; color: rgba(var(--fg), .7); } .wz-est b { font-size: 19px; font-weight: 900; font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) { .wz-est { grid-template-columns: 1fr 1fr; } .wz-est > div:first-child { grid-column: 1 / -1; } }
 .wz-sum { display: grid; gap: 2px; margin: 0; }
 .wz-sum > div { display: grid; grid-template-columns: 7em minmax(0, 1fr) auto; align-items: center; gap: 1em; padding: .7em .8em; border-radius: 10px; font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); }
 .wz-sum > div:nth-child(odd) { background: rgba(var(--fg), .035); }
@@ -2586,8 +2614,14 @@ button.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-
 .wz-msg a { color: inherit; font-weight: 700; }
 .wz-end { display: flex; justify-content: flex-end; margin-top: 1em; }
 .wz-end .buy:disabled { opacity: .45; cursor: not-allowed; }
-.wz-nav { display: flex; justify-content: space-between; align-items: center; }
+/* the wizard's bottom bar (round AD): it stays at the bottom of the scrolling frame, «قبلی» on the right, «بعدی» on the left (RTL), the step count between; nothing goes under it */
+.wz-nav { position: sticky; bottom: 10px; z-index: 6; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: .8em; margin-top: calc(var(--u) * .9); padding: .55em .65em; border-radius: 20px;
+  background: color-mix(in oklab, var(--capsule) 94%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 10px 30px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(var(--fg), .1); }
+.wz-nav > :first-child { justify-self: start; }
+.wz-nav > :last-child { justify-self: end; }
 .wz-nav .buy, .wz-nav .chip { gap: .45em; }
+.wz-nav-n { font-size: 12.5px; font-weight: 700; opacity: .7; white-space: nowrap; }
+@media (max-width: 640px) { .wz-nav { bottom: 6px; gap: .4em; padding: .45em .5em; } .wz-nav .buy { padding-inline: 1em; } .wz-nav-n { display: none; } .wz-nav { grid-template-columns: auto 1fr; } .wz-nav > :last-child { justify-self: end; } }
 
 /* discount codes, the promo, the printed cards */
 .cd-code { font: 700 13px ui-monospace, Menlo, monospace; letter-spacing: .06em; direction: ltr; unicode-bidi: isolate; }
@@ -2833,10 +2867,10 @@ html.spx-open, html.spx-open body { overflow: hidden; }
 .wz-c-t { display: grid; flex: 1; min-width: 0; }
 .wz-c-t b { font-size: 18px; font-weight: 800; }
 .wz-c-t small { font-size: 11.5px; opacity: .65; }
-.wz-nav { appearance: none; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 12px; background: rgba(var(--fg), .08); color: inherit; cursor: pointer; transition: background .15s; }
-.wz-nav:hover:not(:disabled) { background: rgba(var(--fg), .16); }
-.wz-nav:disabled { opacity: .3; cursor: default; }
-.wz-nav svg { width: 18px; height: 18px; }
+.wz-cm { appearance: none; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 12px; background: rgba(var(--fg), .08); color: inherit; cursor: pointer; transition: background .15s; }
+.wz-cm:hover:not(:disabled) { background: rgba(var(--fg), .16); }
+.wz-cm:disabled { opacity: .3; cursor: default; }
+.wz-cm svg { width: 18px; height: 18px; }
 .wz-c-wk { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; text-align: center; }
 .wz-c-wk i { font-style: normal; font-size: 11.5px; font-weight: 700; color: rgba(var(--fg), .6); }
 .wz-c-wk i:nth-child(6), .wz-c-wk i:nth-child(7) { color: color-mix(in oklab, #f59e0b 80%, rgb(var(--fg))); }
@@ -2868,10 +2902,45 @@ html.spx-open, html.spx-open body { overflow: hidden; }
 .wz-ch small { opacity: .6; }
 #wzTp { justify-self: start; }
 .wz-tc { display: inline-flex; align-items: center; gap: .3em; padding: .25em .3em .25em .8em; border-radius: 999px; font-size: 13.5px; }
-.wz-tc button { appearance: none; border: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(255, 255, 255, .25); color: inherit; font-size: 15px; line-height: 1; cursor: pointer; }
+.wz-tc button { appearance: none; border: 0; width: 26px; height: 26px; border-radius: 50%; background: rgba(255, 255, 255, .25); color: inherit; font-size: 15px; line-height: 1; cursor: pointer; }
+/* the banner choice (round AD): poster only by default; a switch opens the two banner frames with a soft unfold */
+.wz-bn { margin-top: calc(var(--u) * .9); border-radius: 18px; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); transition: background .35s, box-shadow .35s; overflow: clip; }
+.wz-bn.is-on { background: color-mix(in oklab, var(--viz-1) 9%, rgba(var(--fg), .04)); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--viz-1) 55%, transparent); }
+.wz-bn-sw { display: flex; align-items: flex-start; gap: .9em; padding: 1em 1.1em; cursor: pointer; }
+.wz-bn-sw > input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.wz-tg { flex: none; position: relative; width: 46px; height: 26px; margin-top: .15em; border-radius: 999px; background: rgba(var(--fg), .22); transition: background .3s; }
+.wz-tg b { position: absolute; top: 3px; inset-inline-start: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .35); transition: transform .38s cubic-bezier(.34, 1.56, .64, 1); }
+.wz-bn-sw > input:checked + .wz-tg { background: var(--viz-1); }
+.wz-bn-sw > input:checked + .wz-tg b { transform: translateX(-20px); }
+.wz-bn-sw > input:focus-visible + .wz-tg { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
+.wz-bn-t { display: grid; gap: .25em; min-width: 0; } .wz-bn-t b { font-size: 14.5px; } .wz-bn-t small { font-size: 12.5px; line-height: 1.8; color: rgba(var(--fg), .72); }
+.wz-bn-body { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .5s cubic-bezier(.2, .8, .2, 1), opacity .4s; }
+.wz-bn.is-on .wz-bn-body { grid-template-rows: 1fr; opacity: 1; }
+.wz-bn-in { min-height: 0; overflow: hidden; padding-inline: 1.1em; transform: translateY(-8px); transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.wz-bn.is-on .wz-bn-in { padding-bottom: 1.1em; transform: none; }
+@media (prefers-reduced-motion: reduce) { .wz-bn, .wz-tg, .wz-tg b, .wz-bn-body, .wz-bn-in { transition: none; } }
+.wz-ask.is-lock { opacity: .92; padding: 1em 1.1em; border-radius: 18px; background: rgba(var(--fg), .04); box-shadow: inset 0 0 0 1px dashed rgba(var(--fg), .2); }
+.ad-ha-in { display: grid; gap: .9em; }
+.ad-ha-l { display: flex; flex-wrap: wrap; align-items: center; gap: .5em; font-size: 12.5px; }
+.ad-ha-l .chip button { appearance: none; border: 0; background: transparent; color: inherit; font-size: 16px; line-height: 1; cursor: pointer; margin-inline-start: .4em; }
 .wz-go { display: grid; gap: 2px; justify-items: center; width: 100%; padding-block: .7em; }
 .wz-go small { font-size: 11px; font-weight: 500; opacity: .85; }
-.wz-go:disabled { opacity: .45; }
+/* the three steps of «سانس بساز» (round AD): days → hours → add; a finished step gets a tick */
+.wz-fl { list-style: none; display: grid; gap: .9em; margin: 0; padding: 0; }
+.wz-fl-i { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: .7em; align-items: start; }
+.wz-fl-i > i { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: rgba(var(--fg), .12); font-style: normal; font-size: 12.5px; font-weight: 800; }
+.wz-fl-i.is-done > i { background: var(--viz-1); color: #fff; }
+.wz-fl-i > div { display: grid; gap: .45em; min-width: 0; justify-items: start; }
+.wz-fl-i b { font-size: 13.5px; }
+.wz-fl-i small { font-size: 12px; opacity: .7; }
+.wz-fl-i .wz-go { justify-self: stretch; width: auto; }
+.wz-addh { appearance: none; display: inline-flex; align-items: center; gap: .35em; padding: .38em .85em .38em .7em; border: 1.5px dashed rgba(var(--fg), .4); border-radius: 999px; background: transparent; color: inherit; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s, border-color .15s; }
+.wz-addh:hover { background: rgba(var(--fg), .09); border-color: rgba(var(--fg), .7); }
+.wz-addh:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.wz-addh svg.i { width: 1em; height: 1em; }
+/* a main button that cannot be pressed yet is plain grey with its reason under it, never a faded red (round AD) */
+button.buy:disabled, button.buy[aria-disabled="true"] { background: rgba(var(--fg), .08); color: rgba(var(--fg), .62); box-shadow: inset 0 0 0 1px rgba(var(--fg), .2); opacity: 1; cursor: not-allowed; filter: none; transform: none; }
+button.buy:disabled:hover { filter: none; }
 .wz-lh { display: flex; align-items: center; justify-content: space-between; gap: .6em; }
 .wz-lh .wz-h3 { margin: 0; }
 .wz-sl { display: grid; gap: 8px; }
@@ -2955,6 +3024,11 @@ html.spx-open, html.spx-open body { overflow: hidden; }
 .mp-foot { display: flex; flex-wrap: wrap; align-items: center; gap: .4em 1.2em; padding: 8px 18px 12px; font-size: 13px; }
 .mp-foot output { font-variant-numeric: tabular-nums; font-weight: 700; }
 .mp-foot span { color: #f59e0b; }
+.mp-g { display: flex; flex: 1 1 320px; align-items: center; gap: .5em; margin-inline-start: auto; min-width: 0; }
+.mp-g .chip { flex: none; text-decoration: none; }
+.mp-g input { flex: 1; min-width: 0; height: 38px; padding: 0 .8em; border: 1px solid rgba(var(--fg), .2); border-radius: 11px; background: rgba(var(--fg), .06); color: inherit; font: inherit; font-size: 13px; }
+.mp-g input:focus { outline: none; border-color: var(--viz-1); box-shadow: 0 0 0 3px color-mix(in oklab, var(--viz-1) 30%, transparent); }
+.mp-top-a .buy:disabled { opacity: .45; cursor: not-allowed; }
 @media (max-width: 600px) { .mp-top { padding: 8px 12px; } .mp-top h2 small { display: none; } .mp-top-a { width: 100%; } .mp-top-a .buy { flex: 1; } }
 
 /* the admin's featured slots */
@@ -3304,7 +3378,7 @@ html.spx-open, html.spx-open body { overflow: hidden; }
 .cpn-code { font: 800 15px ui-monospace, Menlo, Consolas, monospace; letter-spacing: .05em; padding: 2px 9px; border-radius: 8px; background: rgba(var(--fg), .08); }
 .cpn-org { font-size: 14px; font-weight: 800; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cpn-top .st { margin-inline-start: auto; }
-.cpn-ic { all: unset; box-sizing: border-box; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; cursor: pointer; color: rgba(var(--fg), .7); transition: background-color .2s, transform .3s cubic-bezier(.34, 1.6, .5, 1); }
+.cpn-ic { all: unset; box-sizing: border-box; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; cursor: pointer; color: rgba(var(--fg), .7); transition: background-color .2s, transform .3s cubic-bezier(.34, 1.6, .5, 1); }
 .cpn-ic:hover { background: rgba(var(--fg), .1); color: rgb(var(--fg)); transform: scale(1.1); }
 .cpn-ic:active { transform: scale(.9); }
 .cpn-ic:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 1px; }
@@ -3594,7 +3668,7 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 .lc-td { color: rgba(var(--fg), .65); font-size: 11.5px; }
 .lc-tr { display: flex; align-items: center; gap: 7px; } .lc-tr i { width: 8px; height: 8px; border-radius: 2px; flex: none; } .lc-tr b { margin-inline-start: auto; font-weight: 800; padding-inline-start: 10px; }
 .lc-leg { margin-top: 10px; }
-.lc-lb { all: unset; display: inline-flex; align-items: center; gap: .5em; cursor: pointer; font-size: 12.5px; padding: 3px 6px; border-radius: 8px; }
+.lc-lb { all: unset; display: inline-flex; align-items: center; gap: .5em; cursor: pointer; font-size: 12.5px; min-height: 30px; padding: 3px 10px; border-radius: 10px; box-shadow: inset 0 0 0 1px rgba(var(--fg), .14); box-sizing: border-box; }
 .lc-lb:hover { background: rgba(var(--fg), .07); } .lc-lb:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 1px; }
 .lc-lb i { width: 14px; height: 4px; border-radius: 2px; background: var(--c); }
 .lc-lb[aria-pressed="false"] { opacity: .45; text-decoration: line-through; }
@@ -3748,6 +3822,30 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 .tf-gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 12px; }
 .tf-tile { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 4px; align-content: start; padding: 8px 8px 12px; border-radius: 16px; background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); transition: transform .28s cubic-bezier(.2, .8, .2, 1), box-shadow .25s, background .25s; }
 .tf-tile:hover { transform: translateY(-3px); }
+/* round AD: groups with a filter, a «بزرگ‌نمایی» on every tile, the site's own forms as real pictures */
+.tf-flt { display: flex; flex-wrap: wrap; gap: .4em; margin-bottom: 12px; }
+.tf-flt .chip[aria-pressed="true"] { background: var(--viz-1); color: #fff; box-shadow: none; }
+.tf-tw { position: relative; display: grid; min-width: 0; }
+.tf-tw[hidden] { display: none; }
+.tf-tw .tf-tile { align-content: start; height: 100%; padding-bottom: 46px; }
+.tf-zm { appearance: none; position: absolute; inset-inline: 12px; bottom: 10px; display: inline-flex; align-items: center; justify-content: center; gap: .4em; height: 32px; border: 0; border-radius: 10px; background: rgba(var(--fg), .1); color: inherit; font: 700 12.5px var(--font); cursor: pointer; transition: background .15s; }
+.tf-zm:hover { background: rgba(var(--fg), .2); } .tf-zm:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.tf-zm svg.i { width: 1.1em; height: 1.1em; }
+.tf-sc { position: relative; width: 100%; overflow: hidden; direction: rtl; pointer-events: none; }
+.tf-sc-in { position: absolute; top: 0; right: 0; width: calc(var(--nw) * 1px); transform-origin: top right; transform: scale(var(--k, 0)); }
+.tf-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 10px; }
+.tf-opts .wz-wk { margin: 0; }
+.tf-zoom { width: min(1180px, 96vw); max-height: 94vh; display: grid; }
+.tf-z { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 12px; min-height: 0; }
+.tf-z header { display: flex; align-items: center; justify-content: space-between; gap: 1em; padding-inline-end: 44px; }
+.tf-z header div { display: grid; gap: 2px; } .tf-z header b { font-size: 17px; } .tf-z header small { font-size: 12.5px; opacity: .7; }
+.tf-z-n { font-size: 12.5px; font-weight: 700; opacity: .7; white-space: nowrap; }
+.tf-z-st { display: grid; justify-items: center; align-content: start; overflow: auto; max-height: calc(94vh - 190px); padding: 14px; border-radius: 16px; background: repeating-conic-gradient(rgba(var(--fg), .05) 0 25%, transparent 0 50%) 0 0 / 18px 18px; outline: none; }
+.tf-z-st .tf-box, .tf-z-st .tf-sc { width: 100%; max-width: calc(var(--zw) * 1px * 1.6); }
+.tf-z-st .tf-sc { max-width: min(100%, calc(var(--zw) * 1px * 1.6)); }
+.tf-z-st.is-real { justify-items: start; }
+.tf-z-st.is-real .tf-box, .tf-z-st.is-real .tf-sc { width: calc(var(--zw) * 1px); max-width: none; flex: none; }
+.tf-z footer { display: flex; flex-wrap: wrap; align-items: center; gap: .5em; } .tf-z-sp { flex: 1; }
 .tf-tile[aria-checked="true"] { background: color-mix(in oklab, var(--viz-1) 14%, transparent); box-shadow: inset 0 0 0 2px var(--viz-1); }
 .tf-tile:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
 .tf-tile b { font-size: 13.5px; padding-inline: 4px; }
@@ -3842,8 +3940,6 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 .lx-route svg.i { width: 1.1em; height: 1.1em; }
 .lx-place .loc-map { flex: 1 1 auto; display: flex; flex-direction: column; margin-top: calc(var(--u) * 1.1); padding: 0; border: 0; border-radius: calc(var(--r) * .95); background: none; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; overflow: hidden; }
 .lx-place .lm-view { flex: 1 1 auto; height: auto; min-height: clamp(240px, 32svh, 400px); border-radius: inherit; box-shadow: inset 0 0 0 1px var(--lx-line); }
-.evp-in.lx .evp-more { padding: calc(var(--u) * 1.45) calc(var(--u) * 1.6) calc(var(--u) * 1.55); }
-.evp-in.lx .evp-more .lx-h { margin-bottom: calc(var(--u) * 1.1); }
 
 /* a narrower window: the booking card under the picture and the name; the information one under the other */
 @media (max-width: 1099px) {
@@ -3871,7 +3967,7 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
   .lx-title h1 { grid-column: 2; grid-row: 2; align-self: start; font-size: 20px; line-height: 1.5; max-width: none; }
   .lx-facts { grid-column: 1 / -1; grid-row: 3; flex-direction: column; gap: 10px; padding-top: 12px; }
   .lx-book { grid-column: 1 / -1; grid-row: 4; padding: 14px; }
-  .lx-info > .panel, .evp-in.lx .evp-more { padding: 16px; }
+  .lx-info > .panel { padding: 16px; }
   .lx-pr { grid-template-columns: minmax(0, 1fr); }
   .lx-ph { flex-wrap: wrap; }
   .lx-place .lm-view { min-height: 230px; }
@@ -8179,7 +8275,6 @@ const page = {
     }).join('') : `<p class="ses-none">${st.key === 'held' ? 'این برنامه برگزار شده و فروش بلیتش تمام شده.' : 'سانسی برای فروش باز نیست.'}</p>`;
     const anyOk = ses.some(canSes);
     const plan = tiers.map((t) => `<li style="--c:${t.c}"><i aria-hidden="true"></i><span>${esc(runName(t))}</span><b>${money(t.price)} <small>تومان</small></b><em aria-hidden="true" style="--w:${(t.price / tiers.reduce((m, x) => Math.max(m, x.price), 1)).toFixed(3)}"></em></li>`).join('');
-    const similar = LIST().filter((x) => x !== e && x.kind === e.kind && !['held', 'cancelled'].includes(statusOf(x).key)).sort((a, b) => (a.city === e.city ? 0 : 1) - (b.city === e.city ? 0 : 1) || Date.parse(a.startsAt) - Date.parse(b.startsAt)).slice(0, 6);
     const loc = h.hall ? locBlockHTML(h.hall, 'is-lx') : '';
     // the three facts of the show, under its name
     const fact = (ic, k, v) => `<div class="lx-fact"><span class="lx-fi" aria-hidden="true">${ico(ic)}</span><span><small>${k}</small><b>${v}</b></span></div>`;
@@ -8223,13 +8318,10 @@ const page = {
           ${loc}
         </section>` : ''}
       </div>
-      ${similar.length ? `<section class="evp-more panel evp-rise" aria-labelledby="evpMoreH"><h2 class="lx-h" id="evpMoreH">${ico(kindIcon)}${esc({ concert: 'کنسرت‌های دیگه', theatre: 'نمایش‌های دیگه', comedy: 'جُنگ‌ها و کمدی‌های دیگه' }[e.kind] || 'برنامه‌های دیگه')}</h2><div class="tkt-grid"></div></section>` : ''}
       <div class="evp-cta" aria-hidden="false"><span>از <b>${esc(dg(e.price))}</b> ${esc(TXT.unit)}</span><button type="button" class="buy" data-act="book">${ico('calendar')}انتخاب سانس</button></div>
     </div>`;
-    const grid = $('.evp-more .tkt-grid', this.el); if (grid) similar.forEach((x) => grid.appendChild(s2.card(x, false)));
     this.addFooter();
     this.priceMap(e, ses);
-    $$('.evp-more .tkt', this.el).forEach((c) => c.classList.add('is-in'));
     this.wire(e, ses);
     mountLocMaps(this.el);
     sale.tick();
@@ -8952,10 +9044,9 @@ const buy = {
     </article>`;
   },
   // the QR on its own, big, in the vertical pass (to show at the door; the white around it is for the scanner)
-  passOpen(o, e, x, i, { w, h }) {
-    if (!x) return;
+  passInner(o, e, x, i, { w, h }) {
     const pl = placeOf(e), ga = !!x.ga;
-    const m = desk.modal('tk-pass', `<div class="tp" style="--accent:${e.accent};--on-accent:${e.onAccent}">
+    return `<div class="tp" style="--accent:${e.accent};--on-accent:${e.onAccent}">
       <span class="tp-badge" aria-hidden="true">${ico(KIND_ICON[e.kind] || 'ticket')}</span>
       <div class="tp-in">
       <p class="tp-hint">این کد رو دم در نشون بده</p>
@@ -8966,7 +9057,11 @@ const buy = {
       <h2 class="tp-t">${esc(e.title)}</h2>
       <dl class="tp-facts"><div><dt>${ga ? 'نوع' : 'جا'}</dt><dd>${esc(ga ? `${x.zone} · ایستاده` : seatName(x))}</dd></div><div><dt>ساعت</dt><dd>${esc(w.tm)}</dd></div><div class="tp-w"><dt>سالن</dt><dd>${esc(h.name)}</dd></div></dl>
       </div>
-    </div>`, 'بلیت');
+    </div>`;
+  },
+  passOpen(o, e, x, i, { w, h }) {
+    if (!x) return;
+    const m = desk.modal('tk-pass', this.passInner(o, e, x, i, { w, h }), 'بلیت');
     { const d = $('.tp-div', m.box), inn = $('.tp-in', m.box); if (d && inn) inn.style.setProperty('--tp-y', `${d.offsetTop + 1}px`); }
     const q = $('.tp-qr', m.box); if (q && MOTK()) gsap.fromTo(q, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.7, ease: 'expo.out', delay: 0.1 });
   },
@@ -9028,7 +9123,7 @@ const tkx = {
   },
   // one ticket on a canvas, at twice its size (a clear picture on a phone); with `bg`, on a plain page colour (for the PDF)
   async draw(o, e, x, i, bg) {
-    { const id = tf.pick(e); if (id !== 'pass') return tf.canvas(id, tf.data(o, e, x, i), 2, bg); }   // a new design: HTML drawn into the canvas (tickfaces.js)
+    { const id = tf.pick(e); if (id !== 'pass' && TF_TPL[id]) return tf.canvas(id, tf.data(o, e, x, i), 2, bg); }   // a new design: HTML drawn into the canvas (tickfaces.js)
     const { W, H } = this, k = 2, cv = document.createElement('canvas'); cv.width = W * k; cv.height = H * k;
     const c = cv.getContext('2d'); c.scale(k, k); c.direction = 'rtl';
     try { await document.fonts.load('800 40px Vazirmatn'); await document.fonts.load('500 24px Vazirmatn'); } catch (err) { /* the fallback font is used */ }
@@ -10348,10 +10443,10 @@ const pw = {
   set(acc, p) { acc.salt = this.salt(); acc.hash = this.hash(acc.salt, String(p)); delete acc.demo; return acc; },
   bad(p, user) { p = String(p); if (p.length < 8) return 'رمز دست‌کم ۸ نویسه باشه.'; if (/^\d+$/.test(p)) return 'رمز فقط عدد نباشه.'; if (user && p.toLowerCase() === String(user).toLowerCase()) return 'رمز با نام کاربری یکی نباشه.'; return ''; },
 };
-const mkAcc = (s) => { const salt = `seed-${s.id}`; return { ...s, salt, hash: pw.hash(salt, s.demo), active: true, rights: { codes: true, staff: true, money: true, ana: true } }; };
+const mkAcc = (s) => { const salt = `seed-${s.id}`; return { ...s, salt, hash: pw.hash(salt, s.demo), active: true, rights: { codes: true, staff: true, money: true, ana: true, banner: true } }; };
 
 // what an organiser may be given besides the basics (their dashboard, their shows, a new show sent to the admin): the admin ticks these per organiser
-const ORG_RIGHTS = [['codes', 'کد تخفیف'], ['staff', 'کنترل‌چی‌ها'], ['money', 'فروش و تسویه (پول)'], ['ana', 'تحلیل و نمودارها']];
+const ORG_RIGHTS = [['codes', 'کد تخفیف'], ['staff', 'کنترل‌چی‌ها'], ['money', 'فروش و تسویه (پول)'], ['ana', 'تحلیل و نمودارها'], ['banner', 'بنر صفحه‌ی اول']];
 
 const admins = {
   KEY: 'blit.admins',
@@ -10374,7 +10469,7 @@ const orgs = {
   put(o) { const l = this.all(), i = l.findIndex((x) => x.id === o.id); if (i >= 0) l[i] = o; else l.push(o); this.save(l); },
   del(id) { this.save(this.all().filter((x) => x.id !== id)); const ow = store.get('blit.owners', {}); LIST().forEach((e) => { if (this.ownerOf(e) === id) ow[e.id] = ''; }); store.set('blit.owners', ow); },
   cur() { return this.get(dsess.orgId()) || this.all()[0]; },
-  rights(o) { return { codes: true, staff: true, money: true, ana: true, ...(o && o.rights) }; },
+  rights(o) { return { codes: true, staff: true, money: true, ana: true, banner: true, ...(o && o.rights) }; },
   // whose a show is: what the admin gave (blit.owners), the organiser who made it, a show of the demo's first account, else spread over the three first accounts; the admin's own shows are the site's
   ownerOf(e) {
     const ow = store.get('blit.owners', {}); if (ow[e.id] !== undefined) return ow[e.id];
@@ -10511,6 +10606,7 @@ const orgDesk = {
     const paint = () => {
       const q = lnorm(this.f.q), list = orgs.all().filter((o) => (!this.f.st || (this.f.st === 'off') === (o.active === false)) && (!q || lnorm(`${o.name} ${o.who} ${o.user}`).includes(q)));
       $('#ogGrid', el).innerHTML = list.map((o) => this.card(o)).join('') || `<p class="dk-empty">${l.length ? 'چیزی پیدا نشد.' : 'هنوز تهیه‌کننده‌ای نیست؛ اولی رو بساز.'}</p>`;
+      $$('[data-og-more]', el).forEach((bt) => desk.menuBtn(bt, () => { const card = bt.closest('.og-card'), o = orgs.get(card.dataset.id), off = !!(o && o.active === false), go = (a) => () => card.querySelector(`[data-a="${a}"]`).click(); return [{ t: 'رمز تازه', ic: 'key', d: 'یه رمز تازه می‌سازه', on: go('pass') }, { t: off ? 'باز کردن حساب' : 'بستن حساب', ic: off ? 'check' : 'lock', d: off ? 'دوباره وارد بشه' : 'دیگه نمی‌تونه وارد بشه', on: go('toggle') }, { sep: true }, { t: 'حذف تهیه‌کننده', ic: 'x', danger: true, on: go('del') }]; }));
       if (MOTK()) gsap.from($$('.og-card', el), { y: 14, opacity: 0, duration: 0.45, ease: 'expo.out', stagger: 0.05, clearProps: 'transform,opacity' });
     };
     paint();
@@ -10533,7 +10629,7 @@ const orgDesk = {
       <header><span class="dk-av" aria-hidden="true">${esc(o.name.slice(0, 1))}</span><div><b>${esc(o.name)}</b><small>${esc(o.who)} · ${esc(maskPhone(o.phone))}</small></div><em class="st" data-tone="${off ? 'bad' : 'good'}">${off ? 'بسته' : 'فعال'}</em></header>
       <dl class="og-st"><div><dt>نام کاربری</dt><dd dir="ltr"><code>${esc(o.user)}</code></dd></div><div><dt>برنامه‌ها</dt><dd>${fa(b.shows)}${b.wait ? `<small> (${fa(b.wait)} در صف)</small>` : ''}</dd></div><div><dt>فروش ۳۰ روز</dt><dd>${short(b.sales30)}<small> تومان</small></dd></div><div><dt>آخرین ورود</dt><dd>${o.last ? esc(ago(o.last)) : 'هنوز وارد نشده'}</dd></div></dl>
       <p class="og-rights">${ORG_RIGHTS.map(([k, t]) => `<em class="chip${r[k] ? '' : ' is-no'}">${r[k] ? ico('check') : ico('x')}${esc(t)}</em>`).join('')}</p>
-      <footer><button type="button" class="chip" data-a="view">${ico('arrow-ul')}دیدن پنل</button><button type="button" class="chip" data-a="edit">${ico('sliders')}ویرایش</button><button type="button" class="chip" data-a="pass">${ico('key')}رمز تازه</button><button type="button" class="chip" data-a="toggle">${ico(off ? 'check' : 'lock')}${off ? 'باز کردن' : 'بستن'}</button><button type="button" class="chip gt-ic" data-a="del" aria-label="حذف ${esc(o.name)}" title="حذف">${ico('x')}</button></footer></article>`;
+      <footer><button type="button" class="chip" data-a="view">${ico('arrow-ul')}دیدن پنل</button><button type="button" class="chip" data-a="edit">${ico('sliders')}ویرایش</button><button type="button" class="chip" data-og-more aria-label="کارهای بیشتر برای ${esc(o.name)}">${ico('sliders')}بیشتر</button><span hidden><button type="button" data-a="pass">رمز تازه</button><button type="button" data-a="toggle">${off ? 'باز کردن' : 'بستن'}</button><button type="button" data-a="del">حذف</button></span></footer></article>`;
   },
   // the user name and the password to give them (the password is seen only now)
   cred(o, p, title) {
@@ -11065,6 +11161,8 @@ const isoDay = (t) => TEHRAN_DAY.format(new Date(t));
 const atOf = (day, hm) => Date.parse(`${day}T${hm}:00+03:30`);
 // the sessions of a draft: a list of 'YYYY-MM-DDTHH:MM' (Tehran), any day with any hours; a draft made when it was days × hours is read as all its pairs
 const sesOf = (d) => { if (!Array.isArray(d.ses)) d.ses = (d.days || []).flatMap((day) => (d.times || []).map((hm) => `${day}T${hm}`)).sort(); return d.ses; };
+// a banner (the top of the home page) is a choice made with a switch; a draft made before the switch, with a banner, is read as «on»
+const bannerOn = (d) => d.bannerOn === true || (d.bannerOn == null && !!(d.banner || d.bannerM));
 const sesTimes = (d) => sesOf(d).map((x) => atOf(x.slice(0, 10), x.slice(11, 16))).sort((p, q) => p - q);
 const WZ_JP = new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-latn', { timeZone: 'Asia/Tehran', year: 'numeric', month: 'numeric', day: 'numeric' });
 const WZ_MON = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
@@ -11088,7 +11186,7 @@ function miniPlan(key, prices) {
   }
   const stand = L.secs.filter((z) => z.sec.k === 'stand' && z.shapes[0]).map((z) => { const p = z.shapes[0], t = z.sec.runs[0][2]; return `<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="20" fill="${TIER[t].c}" opacity=".55"/>`; }).join('');
   const cx = L.cx, cy = L.cy, st = L.stage === 'arc' ? `<path d="M ${cx - 230} ${cy - 96} H ${cx + 230} V ${cy - 20} Q ${cx} ${cy + 70} ${cx - 230} ${cy - 20} Z" class="hpm-st"/>` : `<rect x="${cx - 250}" y="${cy - 96}" width="500" height="96" rx="14" class="hpm-st"/>`;
-  return `<svg class="hpm" viewBox="0 0 ${L.W} ${L.H}" aria-hidden="true">${st}${stand}${Object.entries(by).map(([t, d]) => `<path d="${d.join('')}" fill="${TIER[t].c}"${prices && !prices[t] ? ' opacity=".25"' : ''}/>`).join('')}</svg>`;
+  return `<svg class="hpm" viewBox="0 0 ${L.W} ${L.H}" aria-hidden="true">${st}${stand}${Object.entries(by).map(([t, d]) => `<path data-t="${t}" d="${d.join('')}" fill="${TIER[t].c}"${prices && !prices[t] ? ' opacity=".25"' : ''}/>`).join('')}</svg>`;
 }
 // a draft as a show of the list (for the card beside the steps, and on the site once the admin has said yes)
 function draftEvent(d) {
@@ -11098,8 +11196,8 @@ function draftEvent(d) {
     startsAt: new Date(ts[0] || Date.now() + 7 * DAY).toISOString(), endsAt: ts.length > 1 ? new Date(ts[ts.length - 1]).toISOString() : undefined, price: priceText(low < Infinity ? low : KIND_BASE[d.kind] || 500000),
     prices: d.prices, seatTier: d.seatTier, sess: ts, badge: d.status === 'live' ? 'تازه' : '', status: d.saleAt && Date.parse(d.saleAt) > Date.now() ? 'soon' : 'normal', saleAt: d.saleAt || undefined,
     poster: { src: d.poster || '', w: 2, h: 3, ...(d.posterFit || {}) }, ver: 0 };
-  if (d.banner) e.banner = { src: d.banner, thumb: d.banner, w: 2000, h: 1000, ...(d.bannerFit || {}), custom: true };
-  if (d.bannerM) e.bannerM = { src: d.bannerM, w: 1080, h: 1440, ...(d.bannerMFit || {}) };
+  if (d.banner && bannerOn(d)) e.banner = { src: d.banner, thumb: d.banner, w: 2000, h: 1000, ...(d.bannerFit || {}), custom: true };
+  if (d.bannerM && bannerOn(d)) e.bannerM = { src: d.bannerM, w: 1080, h: 1440, ...(d.bannerMFit || {}) };
   if (d.hall) bindHall(e, d.hall, d.hallLay);
   e.title = `${e.type} ${e.name}`;
   setPal(e, d.pal || 'violet'); e.w = when(e);
@@ -11107,7 +11205,17 @@ function draftEvent(d) {
   return e;
 }
 // the shows the admin said yes to are on the site (the list is drawn after this)
-drafts.all().filter((d) => d.status === 'live').forEach((d) => MORE.push(draftEvent(d)));
+// a show goes to the top of the home page (the hero) with its banner: at the start, or live from the admin's tab «محتوای صفحه‌ی اصلی»
+function heroAttach(e, a, live) {
+  e.banner = { src: a.banner, thumb: a.banner, w: 2000, h: 1000, ...(a.bannerFit || {}), custom: true };
+  if (a.bannerM) e.bannerM = { src: a.bannerM, w: 1080, h: 1440, ...(a.bannerMFit || {}) };
+  e.layout = 'bar'; e.fp = null; e.venueKeep = true; e.ver = 0;
+  const i = MORE.indexOf(e); if (i >= 0) MORE.splice(i, 1);
+  e.orig = origOf(e); EVENTS.push(e);
+  if (live) { root.style.setProperty('--n', Math.min(EVENTS.length, VIS)); cards.add(e, EVENTS.length - 1); s2.refresh(); hd.refreshCats(); look.sizesTick(); }
+}
+drafts.all().filter((d) => d.status === 'live').forEach((d) => { const e = draftEvent(d); if (d.banner && bannerOn(d)) heroAttach(e, d, false); else MORE.push(e); });
+store.get('blit.heroAdds', []).forEach((a) => { const e = MORE.find((x) => x.id === a.id); if (e && a.banner) heroAttach(e, a, false); });
 
 const wizard = {
   d: null, step: 0,
@@ -11132,7 +11240,7 @@ const wizard = {
       <ol class="wz-steps panel evp-rise" style="--cur:${i}">${WZ_STEPS.map((n, k) => `<li${k === i ? ' aria-current="step"' : ''}${k < i ? ' class="is-done"' : ''}><button type="button" data-step="${k}"${this.lock && k < 5 ? ' disabled' : ''}><span class="n">${k < i ? ico('check') : fa(k + 1)}</span>${esc(n)}</button></li>`).join('')}<i class="bar" aria-hidden="true"></i></ol>
       <div class="dk-cols dk-cols-r wz-cols"><section class="panel dk-box wz-body evp-rise" id="wzBody" aria-label="${esc(WZ_STEPS[i])}"></section>
         <aside class="wz-side"><section class="panel dk-box wz-prev evp-rise"><h2>${ico('ticket')}تو لیست این‌طوری دیده می‌شه</h2><div class="wz-card" id="wzCard"></div><ul class="wz-check" id="wzCheck"></ul></section></aside></div>
-      ${this.lock ? '' : `<div class="wz-nav evp-rise">${i > 0 ? `<button type="button" class="chip" id="wzBack">${ico('arrow-r')}قبلی</button>` : '<span></span>'}${i < 5 ? `<button type="button" class="buy" id="wzNext">بعدی: ${esc(WZ_STEPS[i + 1])}${ico('arrow-l')}</button>` : ''}</div>`}`;
+      ${this.lock ? '' : `<div class="wz-nav evp-rise" role="navigation" aria-label="قدم‌ها">${i > 0 ? `<button type="button" class="chip" id="wzBack">${ico('arrow-r')}قبلی</button>` : '<span></span>'}<span class="wz-nav-n" aria-live="polite">قدم ${fa(i + 1)} از ${fa(6)}</span>${i < 5 ? `<button type="button" class="buy" id="wzNext">بعدی: ${esc(WZ_STEPS[i + 1])}${ico('arrow-l')}</button>` : '<span></span>'}</div>`}`;
     this[`s${i}`]($('#wzBody', el));
     this.preview(true);
     $$('[data-step]', el).forEach((b) => b.addEventListener('click', () => this.go(+b.dataset.step)));
@@ -11187,11 +11295,14 @@ const wizard = {
   /* 2. the pictures: the poster, and the two banners (options); each in a frame of its fixed shape, placed by hand */
   s1(b) {
     const d = this.d;
+    const canBn = this.adm || orgs.rights(orgs.cur()).banner !== false, on0 = bannerOn(d);
     const NONE = { poster: 'بدون پوستر، یه پوستر موقت از اسم و رنگ برنامه کشیده می‌شه.', banner: 'بدون بنر دسکتاپ، برنامه تو بالای صفحه‌ی اصلی نمی‌آد.', mobile: 'بدون بنر موبایل، تو موبایل بنر دسکتاپش به شکل عمودی ۳ به ۴ بریده می‌شه.' };
     const slot = (kind, key, opt) => `<section class="wz-slot" data-kind="${kind}">${framer.row(kind, kind, { filled: !!d[key], opt, drop: `data-drop="${kind}"`, input: `data-kind="${kind}"`, none: NONE[kind], actions: `<label class="chip wz-swap">${ico('upload')}عوض کردن<input type="file" accept="image/*" data-kind="${kind}"></label><button type="button" class="chip" data-rm="${kind}">${ico('x')}برداشتن</button>` })}</section>`;
     b.innerHTML = `<h2>${ico('upload')}تصویرها</h2><p class="bk-lead">هر تصویر یه اندازه‌ی ثابت داره و کادرش رو پر می‌کنه. تصویر رو که گذاشتی، تو کادر بکشش تا همون بخشی که می‌خوای دیده بشه بمونه؛ با نوار یا چرخ ماوس هم بزرگش کن. بدون پوستر، یه پوستر موقت از اسم و رنگ ساخته می‌شه.</p>
-      <div class="wz-slots">${slot('poster', 'poster', false)}${this.adm ? `${slot('banner', 'banner', true)}${slot('mobile', 'bannerM', true)}` : ''}</div>
-      ${this.adm ? '' : `<label class="wz-ask"><input type="checkbox" id="wzHero"${d.heroAsk ? ' checked' : ''}><span>دوست دارم برنامه‌ام تو بنر بالای صفحه‌ی اول هم بیاد<small>بنر صفحه‌ی اول رو فقط مدیر سایت می‌ذاره. این رو تیک بزنی، مدیر موقع بررسی می‌بینه و اگه خواست برای بنر باهات هماهنگ می‌کنه.</small></span></label>`}
+      <div class="wz-slots">${slot('poster', 'poster', false)}</div>
+      ${canBn ? `<section class="wz-bn${on0 ? ' is-on' : ''}" id="wzBn"><label class="wz-bn-sw"><input type="checkbox" id="wzBnOn" role="switch"${on0 ? ' checked' : ''}><i class="wz-tg" aria-hidden="true"><b></b></i><span class="wz-bn-t"><b>برنامه‌ام تو بنر بالای صفحه‌ی اول هم بیاد</b><small>${this.adm ? 'پوستر کارت و صفحه‌ی برنامه‌ست و همیشه هست. اگه این رو روشن کنی، دو تا بنر هم می‌ذاری (دسکتاپ و موبایل) و برنامه با اسم، تاریخ، سالن و دکمه‌ی خرید، بالای صفحه‌ی اول سایت می‌آد.' : 'پوستر کارت و صفحه‌ی برنامه‌ست و همیشه هست. اگه این رو روشن کنی، دو تا بنر هم می‌ذاری (دسکتاپ و موبایل) و بعد از تأیید مدیر، برنامه‌ات با اسم، تاریخ، سالن و دکمه‌ی خرید بالای صفحه‌ی اول سایت می‌آد.'}</small></span></label>
+        <div class="wz-bn-body" id="wzBnBody"${on0 ? '' : ' inert'}><div class="wz-bn-in"><div class="wz-slots">${slot('banner', 'banner', true)}${slot('mobile', 'bannerM', true)}</div></div></div></section>`
+      : `<label class="wz-ask is-lock"><input type="checkbox" id="wzHero"${d.heroAsk ? ' checked' : ''}><span>دوست دارم برنامه‌ام تو بنر بالای صفحه‌ی اول هم بیاد<small>گذاشتن بنر برای حساب شما بسته‌ست. این رو تیک بزنی، مدیر موقع بررسی می‌بینه و اگه خواست بنر رو خودش از «محتوای صفحه‌ی اصلی» برات می‌ذاره (اطلاعات برنامه همون که خودت نوشتی).</small></span></label>`}
       <h3 class="wz-h3">رنگ برنامه <small>(برای پوستر موقت و دکمه‌ها)</small></h3>
       <div class="wz-pal" role="radiogroup" aria-label="رنگ">${Object.entries(PALETTE).slice(0, 14).map(([k, p]) => `<button type="button" role="radio" data-pal="${k}" aria-checked="${d.pal === k}" style="--c:${p.accent}" aria-label="${esc(p.label)}"></button>`).join('')}</div>`;
     const KEYS = { poster: ['poster', 'posterFit', 1000, 1500], banner: ['banner', 'bannerFit', 1280, 640], mobile: ['bannerM', 'bannerMFit', 800, 1067] };
@@ -11212,6 +11323,7 @@ const wizard = {
     // the frames: the picture where it was placed; every change is kept with the draft and shown in the card at once
     $$('.fr', b).forEach((fr) => { const [key, fit] = KEYS[fr.dataset.kind], f = d[fit] || {}; framer.mount(fr, { src: d[key], fx: f.fx, fy: f.fy, fz: f.fz, onChange: (v) => { d[fit] = v; this.save(true); this.preview(true); } }); });
     { const hb = $('#wzHero', b); if (hb) hb.addEventListener('change', () => { d.heroAsk = hb.checked; this.save(true); }); }
+    { const sw = $('#wzBnOn', b); if (sw) sw.addEventListener('change', () => { d.bannerOn = sw.checked; const sec = $('#wzBn', b), body = $('#wzBnBody', b); sec.classList.toggle('is-on', sw.checked); if (sw.checked) body.removeAttribute('inert'); else body.setAttribute('inert', ''); this.save(true); this.preview(true); }); }
     $$('[data-pal]', b).forEach((x) => x.addEventListener('click', () => { d.pal = x.dataset.pal; $$('[data-pal]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); this.preview(true); }));
   },
 
@@ -11267,13 +11379,15 @@ const wizard = {
     let view = cal.months[0].days.filter((x) => okDay(x.k)).length < 5 ? 1 : 0, last = null, drag = null, cur = 20 * 60 + 30, armed = false, editKey = null; const pick = new Set(); let times = ['20:30'];
     b.innerHTML = `<h2>${ico('calendar')}سانس‌ها<small id="wzSum"></small></h2>
       <div class="wz-pl">
-        <section class="wz-c" aria-label="تقویم"><div class="wz-c-head"><button type="button" class="wz-nav" id="wzPrev" aria-label="ماه قبل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button><div class="wz-c-t"><b id="wzMon"></b><small>روزها رو بزن یا بکش</small></div><button type="button" class="wz-nav" id="wzNext2" aria-label="ماه بعد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5L8.5 12l6.5 6.5"/></svg></button><button type="button" class="chip" id="wzNow">امروز</button><button type="button" class="chip" id="wzQ">انتخاب سریع</button></div>
+        <section class="wz-c" aria-label="تقویم"><div class="wz-c-head"><button type="button" class="wz-cm" id="wzPrev" aria-label="ماه قبل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button><div class="wz-c-t"><b id="wzMon"></b><small>روزها رو بزن یا بکش</small></div><button type="button" class="wz-cm" id="wzNext2" aria-label="ماه بعد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5L8.5 12l6.5 6.5"/></svg></button><button type="button" class="chip" id="wzNow">امروز</button><button type="button" class="chip" id="wzQ">انتخاب سریع</button></div>
           <div class="wz-c-wk" aria-hidden="true">${[['شنبه', 'ش'], ['یکشنبه', 'ی'], ['دوشنبه', 'د'], ['سه‌شنبه', 'س'], ['چهارشنبه', 'چ'], ['پنجشنبه', 'پ'], ['جمعه', 'ج']].map(([f, sh]) => `<i><span class="f">${f}</span><span class="s">${sh}</span></i>`).join('')}</div>
           <div class="wz-c-grid" id="wzGrid" role="group" aria-label="روزهای ماه"></div></section>
-        <section class="wz-t" aria-label="ساعت‌ها"><h3>ساعت‌ها</h3>
-          <div class="wz-ch" id="wzCh" aria-label="ساعت‌های انتخاب‌شده"></div>
-          <button type="button" class="chip" id="wzTp">${ico('plus')}ساعت</button>
-          <button type="button" class="buy wz-go" id="wzGo"></button></section>
+        <section class="wz-t" aria-label="ساعت‌ها و افزودن سانس"><h3>سانس بساز</h3>
+          <ol class="wz-fl">
+            <li class="wz-fl-i" id="wzFl1"><i aria-hidden="true">۱</i><div><b>روزها</b><small id="wzFl1t"></small></div></li>
+            <li class="wz-fl-i" id="wzFl2"><i aria-hidden="true">۲</i><div><b>ساعت‌ها</b><div class="wz-ch" id="wzCh" aria-label="ساعت‌های انتخاب‌شده"></div><button type="button" class="wz-addh" id="wzTp">${ico('plus')}ساعت دیگه</button></div></li>
+            <li class="wz-fl-i" id="wzFl3"><i aria-hidden="true">۳</i><div><b>اضافه کن</b><button type="button" class="buy wz-go" id="wzGo"></button></div></li>
+          </ol></section>
       </div>
       <div class="wz-lh"><h3 class="wz-h3">سانس‌های برنامه <small id="wzCnt"></small></h3><button type="button" class="chip" id="wzClr">پاک کردن همه</button></div>
       <div class="wz-sl" id="wzList"></div>
@@ -11313,7 +11427,12 @@ const wizard = {
       $('#wzCh', b).innerHTML = times.length ? times.map((h) => `<span class="wz-tc"><b>${fa(h)}</b><button type="button" data-tx="${h}" aria-label="برداشتن ساعت ${fa(h)}">×</button></span>`).join('') : '<small>هنوز ساعتی انتخاب نشده.</small>';
       paintBtn();
     };
-    const paintBtn = () => { const g = $('#wzGo', b), n = pick.size * times.length; g.disabled = !n; g.innerHTML = n ? `${ico('plus')}${fa(n)} سانس اضافه کن<small>${fa(pick.size)} روز × ${fa(times.length)} ساعت</small>` : `${ico('plus')}سانس اضافه کن<small>${pick.size ? 'یه ساعت هم انتخاب کن' : 'اول از تقویم روز انتخاب کن'}</small>`; };
+    const paintBtn = () => {
+      const g = $('#wzGo', b), n = pick.size * times.length; g.disabled = !n;
+      g.innerHTML = n ? `${ico('plus')}${fa(n)} سانس اضافه کن<small>${fa(pick.size)} روز × ${fa(times.length)} ساعت</small>` : `${ico('plus')}سانس اضافه کن<small>${pick.size ? 'یه ساعت هم انتخاب کن' : 'اول از تقویم روز انتخاب کن'}</small>`;
+      $('#wzFl1t', b).textContent = pick.size ? `${fa(pick.size)} روز انتخاب شده` : 'از تقویم بزن یا بکش'; $('#wzFl1', b).classList.toggle('is-done', pick.size > 0);
+      $('#wzFl2', b).classList.toggle('is-done', times.length > 0); $('#wzFl3', b).classList.toggle('is-done', n > 0);
+    };
     $('#wzCh', b).addEventListener('click', (ev) => { const x = ev.target.closest('[data-tx]'); if (x) { times = times.filter((h) => h !== x.dataset.tx); paintTimes(); } });
     $('#wzTp', b).setAttribute('aria-haspopup', 'dialog'); $('#wzTp', b).setAttribute('aria-expanded', 'false');
     $('#wzTp', b).addEventListener('click', (ev) => {
@@ -11372,23 +11491,59 @@ const wizard = {
     if (!hall) { b.innerHTML = `<h2>${ico('tag')}قیمت‌ها</h2><p class="bk-lead">اول سالن رو انتخاب کن؛ قیمت‌ها روی پلان همون سالن گذاشته می‌شن.</p><button type="button" class="chip" data-step="2">${ico('pin')}انتخاب سالن</button>`; $('[data-step]', b).addEventListener('click', () => this.go(2)); return; }
     const h = hallInfo(hall, d.hallLay), PPl = planByKey(h.plan), used = tiersUsed(h.plan), base = KIND_BASE[d.kind] || 500000, low = TIER[used.filter((t) => t !== 'V').pop() || used[used.length - 1]].k;
     used.forEach((t) => { if (!(d.prices[t] > 0)) d.prices[t] = Math.round(base * TIER[t].k / low / 1e4) * 1e4; });
+    // how many seats each class has (the same rule as the little plan)
+    const PPc = planByKey(h.plan), LAY = hallLayout(PPc), cnt = {};
+    for (const z of LAY.secs) {
+      if (z.sec.k === 'stand') { const t = z.sec.runs[0][2]; cnt[t] = (cnt[t] || 0) + z.sec.cap; continue; }
+      for (const q of z.seats) { const t = z.sec.k === 'grid' ? zoneCls(PPc, q.zi) : (z.sec.runs.find(([x, y]) => q.row >= x && q.row <= y) || [0, 0, 'D'])[2]; if (t !== 'X') cnt[t] = (cnt[t] || 0) + 1; }
+    }
+    const cap = used.reduce((n, t) => n + (cnt[t] || 0), 0), pt = (v) => (v ? fa(Number(v).toLocaleString('en-US')).replace(/,/g, '٬') : '');
+    const row = (t) => `<div class="wz-tier" data-tier="${t}" style="--c:${TIER[t].c}"><i class="sw" aria-hidden="true"></i><div class="wz-tz"><b>${esc(tierZones(h.plan, t).join('، '))}</b><small id="wzTs-${t}"></small></div>
+        <div class="wz-pin"><button type="button" class="wz-stp" data-s="-1" data-for="${t}" aria-label="ارزون‌تر">−</button><span class="wz-in"><input data-t="${t}" inputmode="numeric" dir="ltr" value="${pt(d.prices[t])}" aria-label="قیمت ${esc(tierZones(h.plan, t).join('، '))}"><small>تومان</small></span><button type="button" class="wz-stp" data-s="1" data-for="${t}" aria-label="گرون‌تر">+</button></div></div>`;
     b.innerHTML = `<h2>${ico('tag')}قیمت‌ها<small>${esc(h.name)}</small></h2>
-      <div class="wz-price"><div class="wz-plan">${miniPlan(h.plan, d.prices)}</div>
-        <div class="wz-tiers">${used.map((t) => `<label class="wz-tier" style="--c:${TIER[t].c}"><i aria-hidden="true"></i><span><b>${esc(tierZones(h.plan, t).join('، '))}</b></span><span class="wz-in"><input data-t="${t}" inputmode="numeric" dir="ltr" value="${fa(Number(d.prices[t]).toLocaleString('en-US')).replace(/,/g, '٬')}" aria-label="قیمت ${esc(tierZones(h.plan, t).join('، '))}"><small>تومان</small></span></label>`).join('')}</div></div>
-      <label class="wz-sw"><input type="checkbox" id="wzWk"${d.weekend ? ' checked' : ''}><span>سانس‌های پنجشنبه و جمعه ۱۰٪ گرون‌تر <small>(قیمت جدا برای هر سانس)</small></span></label>
+      <div class="wz-kpi" id="wzKpi" aria-live="polite"></div>
+      <div class="wz-price"><div class="wz-plan" aria-label="پلان سالن؛ روی هر رنگ که بری قیمتش روشن می‌شه">${miniPlan(h.plan, d.prices)}</div>
+        <div class="wz-tcol"><div class="wz-ptool"><span>قیمت هر رده رو بنویس، یا با ${fa('−')} و ${fa('+')} عوض کن.</span><button type="button" class="chip" id="wzQk">${ico('sliders')}کارهای سریع</button></div>
+          <div class="wz-tiers">${used.map(row).join('')}</div></div></div>
+      <label class="wz-wk"><input type="checkbox" id="wzWk"${d.weekend ? ' checked' : ''}><span><b>پنجشنبه و جمعه ۱۰٪ گرون‌تر</b><small id="wzWkS">قیمت جدا برای هر سانس؛ لازم نیست جدا وارد کنی.</small></span></label>
       <p class="bk-note">${ico('info')}مالیات بر ارزش افزوده (۱۰٪) جدا به خریدار اضافه می‌شه. کارمزد بلیت ${pct(FEE)} از فروشه.</p>
-      <h3 class="wz-h3">قیمت و قفل تک‌صندلی‌ها <small>(اختیاری: صندلی ویژه، تخفیفی، یا سهمیه‌ی مهمان که قفل می‌شه)</small></h3>
-      <div class="wz-sp"><p id="wzSpSum"></p><button type="button" class="buy" id="wzSpOpen">${ico('tag')}قیمت و قفل صندلی‌ها</button></div>
+      <section class="wz-adv" aria-labelledby="wzAdvH"><div><h3 class="wz-h3" id="wzAdvH">قیمت و قفل تک‌صندلی‌ها <em>اختیاری</em></h3><p id="wzSpSum"></p><small>صندلی ویژه، تخفیفی، یا سهمیه‌ی مهمان که قفل می‌شه.</small></div><button type="button" class="buy" id="wzSpOpen">${ico('tag')}قیمت و قفل صندلی‌ها</button></section>
       <div class="wz-est" id="wzEst"></div>`;
+    const step = (t, k) => { const v = +d.prices[t] || 0, st = v >= 2e6 ? 1e5 : 5e4; set(t, Math.max(0, Math.round((v + k * st) / 1e4) * 1e4)); };
+    const money = (v) => short(v);
     const est = () => {
       const PP = planByKey(h.plan); let one = 0;
       for (const z of hallLayout(PP).secs) if (z.sec.k === 'stand') one += z.sec.cap * (d.prices[z.sec.runs[0][2]] || 0);
       for (const q of spx.seats(PP, d.prices).list) one += spx.priceIn(d.seatTier, q, d.prices);
-      const n = Math.max(1, sesOf(d).length), all = one * n * (d.weekend ? 1.04 : 1);
-      $('#wzEst', b).innerHTML = `<span>اگه همه‌ی ${fa(n)} سانس پر بشه</span><b>${short(all)} تومان</b><small>سهم شما بعد از کارمزد: ${short(all * (1 - FEE))} تومان</small>`;
+      const n = Math.max(1, sesOf(d).length), all = one * n * (d.weekend ? 1.04 : 1), pr = used.map((t) => +d.prices[t] || 0).filter((x) => x > 0);
+      $('#wzEst', b).innerHTML = `<div><span>اگه همه‌ی ${fa(n)} سانس پر بشه</span><b>${short(all)} تومان</b></div><div><span>سهم شما بعد از کارمزد</span><b>${short(all * (1 - FEE))} تومان</b></div><div><span>میانگین هر بلیت</span><b>${cap ? short(one / cap) : '—'} تومان</b></div>`;
+      $('#wzKpi', b).innerHTML = `<span><b>${fa(cap.toLocaleString('en-US'))}</b>صندلی تو ${fa(used.length)} رده</span><span><b>${pr.length ? money(Math.min(...pr)) : '—'}</b>ارزان‌ترین</span><span><b>${pr.length ? money(Math.max(...pr)) : '—'}</b>گران‌ترین</span>`;
+      used.forEach((t) => { const e = $(`#wzTs-${t}`, b); if (e) e.textContent = `${fa((cnt[t] || 0).toLocaleString('en-US'))} صندلی${d.prices[t] > 0 ? ` · ${short((cnt[t] || 0) * d.prices[t])} تومان` : ' · قیمت نداره'}`; });
+      const top = pr.length ? Math.max(...pr) : 0; $('#wzWkS', b).textContent = top ? `مثلاً گران‌ترین رده: ${short(top)} ← ${short(Math.round(top * 1.1 / 1e4) * 1e4)} تومان. قیمت جدا برای هر سانس لازم نیست.` : 'قیمت جدا برای هر سانس لازم نیست.';
     };
-    $$('.wz-tiers [data-t]', b).forEach((x) => x.addEventListener('input', () => { const v = +enDigits(x.value).replace(/\D/g, '') || 0; d.prices[x.dataset.t] = v; x.value = v ? fa(v.toLocaleString('en-US')).replace(/,/g, '٬') : ''; const svg = miniPlan(h.plan, d.prices); $('.wz-plan', b).innerHTML = svg; est(); this.preview(); }));
+    // one place that changes a price: the input, the map and the numbers follow
+    function set(t, v) { d.prices[t] = v; const x = $(`.wz-tiers [data-t="${t}"]`, b); if (x && document.activeElement !== x) x.value = pt(v); $('.wz-plan', b).innerHTML = miniPlan(h.plan, d.prices); est(); wz.preview(); }
+    const wz = this;
+    $$('.wz-tiers [data-t]', b).forEach((x) => x.addEventListener('input', () => { const v = +enDigits(x.value).replace(/\D/g, '') || 0; x.value = pt(v); set(x.dataset.t, v); }));
+    $$('.wz-stp', b).forEach((x) => x.addEventListener('click', () => step(x.dataset.for, +x.dataset.s)));
     $('#wzWk', b).addEventListener('change', (ev) => { d.weekend = ev.target.checked; est(); });
+    // the map and the rows light each other
+    const hl = (t) => { $$('.wz-tier', b).forEach((r) => r.classList.toggle('is-hl', r.dataset.tier === t)); const m = $('.wz-plan .hpm', b); if (m) { if (t) m.dataset.hl = t; else delete m.dataset.hl; } };
+    $('.wz-plan', b).addEventListener('pointermove', (ev) => { const t = ev.target.closest && ev.target.closest('path[data-t]'); hl(t ? t.dataset.t : ''); });
+    $('.wz-plan', b).addEventListener('pointerleave', () => hl(''));
+    $('.wz-plan', b).addEventListener('click', (ev) => { const t = ev.target.closest && ev.target.closest('path[data-t]'); if (t) { const x = $(`.wz-tiers [data-t="${t.dataset.t}"]`, b); if (x) x.focus(); } });
+    $$('.wz-tier', b).forEach((r) => { r.addEventListener('pointerenter', () => hl(r.dataset.tier)); r.addEventListener('pointerleave', () => hl('')); r.addEventListener('focusin', () => hl(r.dataset.tier)); r.addEventListener('focusout', () => hl('')); });
+    // quick things for all the classes at once
+    desk.menuBtn($('#wzQk', b), () => {
+      const all = (f) => () => { used.forEach((t) => { const v = +d.prices[t] || 0; if (v > 0) d.prices[t] = Math.max(0, f(v, t)); }); used.forEach((t) => { const x = $(`.wz-tiers [data-t="${t}"]`, b); if (x) x.value = pt(d.prices[t]); }); $('.wz-plan', b).innerHTML = miniPlan(h.plan, d.prices); est(); wz.preview(); };
+      const r10 = (v) => Math.round(v / 1e4) * 1e4, cheap = Math.min(...used.map((t) => +d.prices[t] || Infinity).filter(isFinite)), low = TIER[used.filter((t) => t !== 'V').pop() || used[used.length - 1]].k;
+      return [
+        { t: 'همه ۱۰٪ گرون‌تر', ic: 'up', on: all((v) => r10(v * 1.1)) }, { t: 'همه ۱۰٪ ارزون‌تر', ic: 'down', on: all((v) => r10(v * 0.9)) },
+        { sep: true },
+        { t: 'پله‌ای از روی ارزان‌ترین', d: 'بقیه‌ی رده‌ها رو به نسبت رده‌ی ارزان می‌سازه', ic: 'sliders', on: all((v, t) => (isFinite(cheap) ? r10(cheap * TIER[t].k / low) : v)) },
+        { t: 'برگردوندن به قیمت پیشنهادی', ic: 'undo', on: () => { const bs = KIND_BASE[d.kind] || 500000; used.forEach((t) => { d.prices[t] = Math.round(bs * TIER[t].k / low / 1e4) * 1e4; const x = $(`.wz-tiers [data-t="${t}"]`, b); if (x) x.value = pt(d.prices[t]); }); $('.wz-plan', b).innerHTML = miniPlan(h.plan, d.prices); est(); wz.preview(); } },
+      ];
+    });
     est();
     const sum = () => { $('#wzSpSum', b).textContent = spx.line(d.seatTier); };
     sum();
@@ -11404,7 +11559,7 @@ const wizard = {
       ${d.status === 'rejected' ? `<p class="wz-msg is-bad">${ico('info')}مدیر این برنامه رو برگردوند: «${esc(d.note || 'بدون توضیح')}». درستش کن و دوباره بفرست.</p>` : d.status === 'review' ? `<p class="wz-msg">${ico('clock')}فرستاده شد ${esc(ago(d.sent || d.at))}؛ مدیر بررسیش می‌کنه. تا اون موقع روی سایت نیست.</p>` : d.status === 'live' ? `<p class="wz-msg is-ok">${ico('check')}مدیر تأیید کرد؛ برنامه روی سایته. <a href="#/e/${esc(encodeURIComponent(d.id))}">صفحه‌ی برنامه</a></p>` : ''}
       <dl class="wz-sum">
         ${row(0, 'برنامه', `${esc(d.type)} «${esc(d.title || '—')}» · ${esc(d.kind === 'comedy' ? 'جُنگ و کمدی' : KIND_T[d.kind])} · ${esc(cityName(d.cs) || d.city || '')} · ${fa(d.dur)} دقیقه · ${esc(d.age)}`)}
-        ${row(1, 'تصویرها', `${d.poster ? 'پوستر گذاشته شد' : 'پوستر موقت (از اسم و رنگ)'}${this.adm ? ` · ${d.banner ? 'بنر دسکتاپ' : 'بدون بنر دسکتاپ'} · ${d.bannerM ? 'بنر موبایل' : 'بدون بنر موبایل'}` : d.heroAsk ? ' · می‌خواد تو بنر صفحه‌ی اول باشه' : ''}`)}
+        ${row(1, 'تصویرها', `${d.poster ? 'پوستر گذاشته شد' : 'پوستر موقت (از اسم و رنگ)'}${bannerOn(d) && (this.adm || orgs.rights(orgs.cur()).banner !== false) ? ` · تو بنر صفحه‌ی اول: ${d.banner ? 'بنر دسکتاپ' : 'بدون بنر دسکتاپ (بدونش نمی‌آد)'} · ${d.bannerM ? 'بنر موبایل' : 'بدون بنر موبایل'}` : d.heroAsk ? ' · می‌خواد تو بنر صفحه‌ی اول باشه' : ' · فقط پوستر'}`)}
         ${row(2, 'سالن', h ? `${esc(h.name)} · ${esc(h.city)}${hall0.lay.length > 1 ? ` · ${esc(layName(hall0, d.hallLay | 0))}` : ''} · ${money(h.cap)} صندلی` : '<b class="neg">انتخاب نشده</b>')}
         ${row(3, 'سانس‌ها', n ? `${fa(n)} سانس در ${fa(nd)} روز، از ${esc(dayOf(ts[0]))} تا ${esc(dayOf(ts[n - 1]))}${d.sale === 'at' && d.saleAt ? ` · شروع فروش ${esc(dayOf(Date.parse(d.saleAt)))} ${esc(F.time.format(new Date(d.saleAt)))}` : ' · فروش بلافاصله بعد از تأیید'}` : '<b class="neg">هنوز سانسی نیست</b>')}
         ${row(4, 'قیمت‌ها', h ? tiersUsed(h.plan).map((t) => `<span class="wz-pt" style="--c:${TIER[t].c}"><i></i>${d.prices[t] ? money(d.prices[t]) : '—'}</span>`).join('') + (d.weekend ? ' · آخر هفته ۱۰٪ بیشتر' : '') + (() => { const c = spx.count(d.seatTier); return c.own || c.off ? ` · ${spx.line(d.seatTier)}` : ''; })() : '—')}
@@ -12021,14 +12176,19 @@ ${d.bar(100, 40, "#1c1b1a")}
    ════════════════════════════════════════════════════════════════ */
 const tf = {
   DESIGNS: [
-    { id: 'pass', t: 'بلیت سایت', d: 'کارت دو تکه با پوستر و استاب تیره', k: 'سازگار با همه' },
-    { id: 'n1', t: 'کنسرت · کلاسیک', d: 'سیاه و سفید، بارکد و پوستر برنامه', k: 'کنسرت' },
-    { id: 'n2', t: 'کنسرت · صحنه', d: 'نور صحنه و تماشاگرها، کرم و صورتی', k: 'کنسرت' },
-    { id: 'n3', t: 'تئاتر · پرده', d: 'پرده‌ی قرمز و طلایی', k: 'تئاتر' },
-    { id: 'n4', t: 'کنسرت · مشکی', d: 'مشکی با نوشته‌ی درشت', k: 'کنسرت' },
-    { id: 'n5', t: 'تئاتر · کرم', d: 'کرم و خط کتیبه‌ای، ردیف صندلی‌ها', k: 'تئاتر' },
-    { id: 'n6', t: 'استندآپ · قرمز', d: 'قرمز و نوشته‌ی درشت', k: 'استندآپ و جُنگ' },
+    { id: 'pass', g: 'site', t: 'بلیت دوتکه‌ی سایت', d: 'طرح همیشگی سایت: پوستر، مشخصات و استاب QR', k: 'سازگار با همه' },
+    { id: 'card', g: 'site', t: 'کارت رزرو', d: 'کارت کوچیک رنگی با ساعت، مبلغ، کد و روز', k: 'سایت' },
+    { id: 'qr', g: 'site', t: 'کد QR بزرگ', d: 'فقط QR درشت و مشخصات، برای نشون‌دادن دم در', k: 'سایت' },
+    { id: 'n1', g: 'concert', t: 'کنسرت · کلاسیک', d: 'سیاه و سفید، بارکد و پوستر برنامه', k: 'کنسرت' },
+    { id: 'n2', g: 'concert', t: 'کنسرت · صحنه', d: 'نور صحنه و تماشاگرها، کرم و صورتی', k: 'کنسرت' },
+    { id: 'n3', g: 'theatre', t: 'تئاتر · پرده', d: 'پرده‌ی قرمز و طلایی', k: 'تئاتر' },
+    { id: 'n4', g: 'concert', t: 'کنسرت · مشکی', d: 'مشکی با نوشته‌ی درشت', k: 'کنسرت' },
+    { id: 'n5', g: 'theatre', t: 'تئاتر · کرم', d: 'کرم و خط کتیبه‌ای، ردیف صندلی‌ها', k: 'تئاتر' },
+    { id: 'n6', g: 'comedy', t: 'استندآپ · قرمز', d: 'قرمز و نوشته‌ی درشت', k: 'استندآپ و جُنگ' },
   ],
+  GROUPS: [['all', 'همه'], ['site', 'طرح‌های خود سایت'], ['concert', 'کنسرت'], ['theatre', 'تئاتر'], ['comedy', 'استندآپ و جُنگ']],
+  // what a ticket shows (the admin's two switches, for every design)
+  OPT: { name: true, price: true },
   KINDS: [['concert', 'کنسرت‌ها'], ['theatre', 'تئاترها'], ['comedy', 'جُنگ و کمدی']],
   // the default is «auto»: every kind its own design (the stage for a concert, the curtain for a play, the red one for a comedy); the admin may name one design for all, or one for a kind or a show
   AUTO: { concert: 'n2', theatre: 'n3', comedy: 'n6' },
@@ -12040,7 +12200,7 @@ const tf = {
     { id: 'receipts', t: 'پیگیری خرید · فهرست خریدها', d: 'همه‌ی خریدهای یه شماره؛ ممکنه بلند بشه، برای همین پیش‌فرضش کارت کوچیکه', def: 'card' },
   ],
   // ── the choice ──
-  set() { const s = store.get('blit.ticketDesign', null) || {}; return { def: s.def === 'auto' || this.has(s.def) ? s.def : this.DEF.def, kind: Object.assign({}, s.kind || {}), show: Object.assign({}, s.show || {}), spot: Object.assign({}, s.spot || {}) }; },
+  set() { const s = store.get('blit.ticketDesign', null) || {}; return { def: s.def === 'auto' || this.has(s.def) ? s.def : this.DEF.def, kind: Object.assign({}, s.kind || {}), show: Object.assign({}, s.show || {}), spot: Object.assign({}, s.spot || {}), opt: Object.assign({}, this.OPT, s.opt || {}) }; },
   save(s) { store.set('blit.ticketDesign', s); },
   has(id) { return this.DESIGNS.some((d) => d.id === id); },
   // the design a show's tickets have: the show's own choice, else its kind's, else the default; '' means «follow the kind»
@@ -12050,7 +12210,7 @@ const tf = {
   phone() { return window.matchMedia && window.matchMedia('(max-width: 760px)').matches; },
   // what a place shows for a show: 'card' (the booking card) or a design; a phone, and the site's own pass, keep the card
   spotVal(id) { const sp = this.SPOTS.find((x) => x.id === id), v = this.set().spot[id]; return v === 'card' || v === 'same' || (v && this.has(v) && v !== 'pass') ? v : sp.def; },
-  spotPick(id, e) { if (this.phone()) return 'card'; const v = this.spotVal(id); if (v === 'card') return 'card'; const d = v === 'same' ? this.pick(e) : v; return d === 'pass' || !this.has(d) ? 'card' : d; },
+  spotPick(id, e) { if (this.phone()) return 'card'; const v = this.spotVal(id); if (v === 'card') return 'card'; const d = v === 'same' ? this.pick(e) : v; return d === 'pass' || d === 'qr' || !this.has(d) ? 'card' : d; },
   // a purchase as its ticket (the first seat's), a link to the ticket page, with the number of tickets, the sum and the state under it; '' when the place keeps the card
   orderFace(o, e, spot) {
     const id = this.spotPick(spot, e); if (id === 'card' || !o.seats || !o.seats.length) return '';
@@ -12086,11 +12246,11 @@ const tf = {
     const S = (v) => esc(String(v));
     const d = {
       title: S(e.title), t1: S(t1), t2: t2 ? S(t2) : '&nbsp;', kind: S(e.type), kindLine: S(this.KLINE[e.kind] || e.type), city: S(pl.city || e.city), hall: S(h.name), venue: S(`${h.name}${pl.city ? ` · ${pl.city}` : ''}`),
-      buyer: S(o.name || 'مهمان'), zone: S(x.zone), row: ga ? '—' : fa(x.row), seat: ga ? 'ایستاده' : fa(x.n), rowSeat: S(ga ? `${x.zone} · ایستاده` : `ردیف ${fa(x.row)} · صندلی ${fa(x.n)}`),
+      buyer: S(this.set().opt.name ? o.name || 'مهمان' : '—'), zone: S(x.zone), row: ga ? '—' : fa(x.row), seat: ga ? 'ایستاده' : fa(x.n), rowSeat: S(ga ? `${x.zone} · ایستاده` : `ردیف ${fa(x.row)} · صندلی ${fa(x.n)}`),
       weekday: S(F.week.format(t)), dayNum: fa(F.day.format(t)), month: S(F.month.format(t)), dayMonth: S(`${F.day.format(t)} ${F.month.format(t)}`), date: S(`${F.day.format(t)} ${F.month.format(t)} ${this.year.format(t)}`),
       dateLong: S(`${F.week.format(t)} ${F.day.format(t)} ${F.month.format(t)} ${this.year.format(t)}`), year: S(this.year.format(t)),
       time: S(F.time.format(t)), doors: S(F.time.format(new Date(+t - 60 * 6e4))), door: fa(1 + (seedOf(`${o.sid}${x.zone}`) % 3)), dur: fa(`${Math.floor(dur / 60)}:${String(dur % 60).padStart(2, '0')}`),
-      price: S(money(x.price)), code: S(o.code), no: fa(String(seq).padStart(4, '0')), host: S(typeof lab !== 'undefined' ? lab.host() : 'blit.example'), note: S(this.NOTE[e.kind] || this.NOTE._),
+      price: S(this.set().opt.price ? money(x.price) : '—'), code: S(o.code), no: fa(String(seq).padStart(4, '0')), host: S(typeof lab !== 'undefined' ? lab.host() : 'blit.example'), note: S(this.NOTE[e.kind] || this.NOTE._),
       strip: Array.from({ length: 12 }, (_, k) => fa(String(start + k).padStart(2, '0'))), hi: ga ? -1 : seatNo - start,
       qr: (size, fg) => `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="display:block">${cs.qr(q, size * 0.04, size * 0.04, size * 0.92, fg)}</svg>`,
       bar: (w, hh, fg, vert) => {
@@ -12130,18 +12290,56 @@ const tf = {
         const go = () => { const k = b.clientWidth / +b.style.getPropertyValue('--w'); b.style.setProperty('--k', k.toFixed(4)); b.style.height = `${(b.clientWidth * +b.style.getPropertyValue('--h') / +b.style.getPropertyValue('--w')).toFixed(1)}px`; this.fit(b); };
         go(); if (window.ResizeObserver && !b._ro) { b._ro = new ResizeObserver(() => go()); b._ro.observe(b); }
       });
+      $$('.tf-sc', root).forEach((s) => {
+        const inn = s.firstElementChild, nw = +s.dataset.nw, go = () => { const k = s.clientWidth / nw; inn.style.setProperty('--k', k.toFixed(4)); s.style.height = `${(inn.offsetHeight * k).toFixed(1)}px`; };
+        go(); if (window.ResizeObserver && !s._ro) { s._ro = new ResizeObserver(() => go()); s._ro.observe(s); }
+      });
     });
   },
   // ── the ticket page's card: the design, and the buttons under it ──
   card(o, e, x, i, ctx) {
     const id = this.pick(e);
     if (id === 'pass' || this.phone()) return buy.passHTML(o, e, x, i, ctx);
+    if (id === 'card') return `<article class="tf-card tf-site evp-rise" data-design="card"><div class="tf-nolink">${orderCardHTML(o, e)}</div>${this.acts(i)}</article>`;
+    if (id === 'qr') return `<article class="tf-card tf-site tf-qrc evp-rise" data-design="qr">${buy.passInner(o, e, x, i, ctx)}${this.acts(i, true)}</article>`;
+    return `<article class="tf-card evp-rise" data-design="${id}">${this.html(id, this.data(o, e, x, i))}${this.acts(i)}</article>`;
+  },
+  // the buttons under a ticket (the QR button only when the ticket does not already show it big)
+  acts(i, noQr) {
     const n = i + 1;
-    return `<article class="tf-card evp-rise" data-design="${id}">${this.html(id, this.data(o, e, x, i))}<div class="tf-acts" role="group" aria-label="بلیت ${fa(n)}">
-      <button type="button" class="chip" data-pass="${i}">${ico('ticket')}کد QR بزرگ</button>
+    return `<div class="tf-acts" role="group" aria-label="بلیت ${fa(n)}">${noQr ? '' : `<button type="button" class="chip" data-pass="${i}">${ico('ticket')}کد QR بزرگ</button>`}
       <button type="button" class="chip" data-sv="img" data-i="${i}" aria-label="ذخیره‌ی تصویر بلیت ${fa(n)}">${ico('upload')}تصویر</button>
       <button type="button" class="chip" data-sv="pdf" data-i="${i}" aria-label="ذخیره‌ی PDF بلیت ${fa(n)}">${ico('upload')}PDF</button>
-      <button type="button" class="chip" data-sv="share" data-i="${i}" aria-label="اشتراک بلیت ${fa(n)}">${ico('share')}اشتراک</button></div></article>`;
+      <button type="button" class="chip" data-sv="share" data-i="${i}" aria-label="اشتراک بلیت ${fa(n)}">${ico('share')}اشتراک</button></div>`;
+  },
+  // a design as a small picture for the admin: the new ones are boxes of their own size; the site's three forms are the real markup, scaled to the width they are given
+  // (a picture only: no buttons or links inside it, so it can sit in a tile that is itself a button)
+  scaled(html, nw) { const mute = html.replace(/<(\/?)(button|a)\b/g, '<$1span').replace(/ href="[^"]*"/g, ''); return `<div class="tf-sc" data-nw="${nw}" style="--nw:${nw}"><div class="tf-sc-in">${mute}</div></div>`; },
+  preview(id, sh, sm) {
+    if (TF_TPL[id]) return this.html(id, sm.d);
+    const { a, src } = artOf(sh), ps = clamp((a && (a.nat || (a.w && a.h && a.w / a.h))) || 0.75, 0.6, 1).toFixed(4), ctx = { w: whenOf({ t: sm.o.t }), h: hallOf(sh), src, ps };
+    if (id === 'pass') return this.scaled(buy.passHTML(sm.o, sh, sm.x, 0, ctx), 960);
+    if (id === 'card') return this.scaled(`<div class="tf-nolink">${orderCardHTML(sm.o, sh)}</div>`, 560);
+    return this.scaled(buy.passInner(sm.o, sh, sm.x, 0, ctx), 340);
+  },
+  natW(id) { return TF_TPL[id] ? this.size(id).w : { pass: 960, card: 560, qr: 340 }[id]; },
+  // a design, big: a window with the design as large as the screen allows («اندازه‌ی واقعی» shows it at its own size), arrows to the next and the one before, and «choose it»
+  enlarge(id, ctx) {
+    const list = ctx.list; let k = Math.max(0, list.indexOf(id)); const sm = this.sample(ctx.sh);
+    const m = desk.modal('tf-zoom', `<div class="tf-z"><header><div><b id="tfzT"></b><small id="tfzD"></small></div><span id="tfzN" class="tf-z-n"></span></header>
+      <div class="tf-z-st" id="tfzS" tabindex="0" aria-label="پیش‌نمایش بزرگ؛ با فلش‌ها بین طرح‌ها برو"></div>
+      <footer><button type="button" class="chip" data-zn="1" aria-label="طرح بعدی">${ico('arrow-l')}بعدی</button><button type="button" class="chip" data-zn="-1" aria-label="طرح قبلی">${ico('arrow-r')}قبلی</button><button type="button" class="chip" id="tfzR" aria-pressed="false">${ico('search')}اندازه‌ی واقعی</button><span class="tf-z-sp"></span><button type="button" class="buy" id="tfzK">${ico('check')}انتخاب برای همه</button></footer></div>`, 'پیش‌نمایش طرح بلیت');
+    const st = $('#tfzS', m.box);
+    const paint = () => {
+      const dz = this.DESIGNS.find((x) => x.id === list[k]); $('#tfzT', m.box).textContent = dz.t; $('#tfzD', m.box).textContent = dz.d; $('#tfzN', m.box).textContent = `${fa(k + 1)} از ${fa(list.length)}`;
+      st.style.setProperty('--zw', this.natW(dz.id)); st.innerHTML = this.preview(dz.id, ctx.sh, sm); this.mount(m.box); $('#tfzK', m.box).disabled = false;
+    };
+    const go = (d) => { k = (k + d + list.length) % list.length; paint(); };
+    $$('[data-zn]', m.box).forEach((b) => b.addEventListener('click', () => go(+b.dataset.zn)));
+    $('#tfzR', m.box).addEventListener('click', (ev) => { const on = st.classList.toggle('is-real'); ev.currentTarget.setAttribute('aria-pressed', String(on)); this.mount(m.box); });
+    $('#tfzK', m.box).addEventListener('click', () => { const pick = list[k]; m.shut(); ctx.onPick(pick); });
+    m.box.addEventListener('keydown', (ev) => { if (ev.key === 'ArrowLeft') { ev.preventDefault(); go(1); } else if (ev.key === 'ArrowRight') { ev.preventDefault(); go(-1); } });
+    paint(); st.focus({ preventScroll: true });
   },
   // ── a download: the design on a canvas (scale: 2 = twice its size); `bg` paints the see-through round it (the PDF) ──
   async canvas(id, d, scale = 2, bg) {
@@ -12162,20 +12360,23 @@ const tf = {
   // a sample ticket of a show, for the previews
   sample(e) {
     const hs = hallOf(e), t = new Date(); t.setDate(t.getDate() + 3); t.setHours(21, 0, 0, 0);
-    const x = { zone: 'پارتر', row: 5, n: 12, key: 'p-5-12', price: 850000, c: '#8b5cf6' }, o = { code: 'BL-7Q2M-K4XR', sid: `${e.id}-1`, t: +t, name: 'سارا احمدی', seats: [x] };
+    const x = { zone: 'پارتر', row: 5, n: 12, key: 'p-5-12', price: 850000, c: '#8b5cf6' }, o = { code: 'BL-7Q2M-K4XR', sid: `${e.id}-1`, t: +t, name: 'سارا احمدی', seats: [x], total: x.price };
     return { o, x, d: (this.data(o, e, x, 0)) };
   },
   // ── the admin's tab «طرح بلیت‌ها»: see them all, choose for the kinds, for one show; the picture they use ──
   adminDesk(el) {
     const shows = LIST(), e = shows[0];
-    let sh = e;
+    let sh = e, flt = 'all';
     const draw = () => {
       const s = this.set(), cur = this.pick(sh), sm = this.sample(sh);
       el.innerHTML = `${desk.head('طرح بلیت‌ها', 'بلیت هر برنامه با طرحی که اینجا انتخاب می‌کنی نشون داده می‌شه: صفحه‌ی بلیت بعد از پرداخت، عکس و PDF و اشتراک. روی گوشی صفحه‌ی بلیت همون بلیت عمودی سایت می‌مونه (خوانا و راحت برای نشون‌دادن دم در) ولی عکس و PDF همین طرحه.')}
       <div class="tf-ad">
         <section class="panel dk-box evp-rise" aria-labelledby="tfH1"><h2 id="tfH1">${ico('ticket')}همه‌ی طرح‌ها</h2><p class="bk-lead">روی یه طرح بزن تا بلیت همه‌ی برنامه‌ها اون بشه (جز اونایی که پایین‌تر براشون طرح جدا گذاشتی). پیش‌نمایش با برنامه‌ی «${esc(sh.title)}» ساخته شده.</p>
-          <div class="tf-gal" role="radiogroup" aria-label="طرح پیش‌فرض"><button type="button" role="radio" class="tf-tile" data-tile="auto" aria-checked="${s.def === 'auto'}"><span class="tf-pv tf-auto">${['concert', 'theatre', 'comedy'].map((k) => `<span><i>${this.KINDS.find((x) => x[0] === k)[1]}</i><b>${this.DESIGNS.find((d) => d.id === this.AUTO[k]).t}</b></span>`).join('')}</span><b>خودکار · هر نوع برنامه یه طرح</b><small>کنسرت صحنه، تئاتر پرده، جُنگ قرمز</small></button>${this.DESIGNS.map((dz) => `<button type="button" role="radio" class="tf-tile" data-tile="${dz.id}" aria-checked="${s.def === dz.id}"><span class="tf-pv">${dz.id === 'pass' ? `<span class="tf-ps">${ico('ticket')}<b>بلیت سایت</b><small>${esc(sh.title)}</small></span>` : this.html(dz.id, sm.d)}</span><b>${dz.t}</b><small>${dz.d}</small></button>`).join('')}</div>
+          <div class="tf-flt" role="group" aria-label="نمایش طرح‌ها">${this.GROUPS.map(([g, t]) => `<button type="button" class="chip" data-flt="${g}" aria-pressed="${flt === g}">${t}</button>`).join('')}</div>
+          <div class="tf-gal" role="radiogroup" aria-label="طرح پیش‌فرض"><div class="tf-tw"${flt === 'all' ? '' : ' hidden'}><button type="button" role="radio" class="tf-tile" data-tile="auto" aria-checked="${s.def === 'auto'}"><span class="tf-pv tf-auto">${['concert', 'theatre', 'comedy'].map((k) => `<span><i>${this.KINDS.find((x) => x[0] === k)[1]}</i><b>${this.DESIGNS.find((d) => d.id === this.AUTO[k]).t}</b></span>`).join('')}</span><b>خودکار · هر نوع برنامه یه طرح</b><small>کنسرت صحنه، تئاتر پرده، جُنگ قرمز</small></button></div>${this.DESIGNS.map((dz) => `<div class="tf-tw" data-g="${dz.g}"${flt === 'all' || flt === dz.g ? '' : ' hidden'}><button type="button" role="radio" class="tf-tile" data-tile="${dz.id}" aria-checked="${s.def === dz.id}"><span class="tf-pv">${this.preview(dz.id, sh, sm)}</span><b>${dz.t}</b><small>${dz.d}</small></button><button type="button" class="tf-zm" data-zm="${dz.id}" aria-label="بزرگ‌نمایی طرح ${esc(dz.t)}">${ico('search')}بزرگ‌نمایی</button></div>`).join('')}</div>
         </section>
+        <section class="panel dk-box evp-rise" aria-labelledby="tfHo"><h2 id="tfHo">${ico('eye')}چی روی بلیت باشه</h2><p class="bk-lead">این دو تا برای همه‌ی طرح‌ها هست: صفحه‌ی بلیت، عکس، PDF و پیش‌نمایش‌ها.</p>
+          <div class="tf-opts"><label class="wz-wk"><input type="checkbox" data-opt="name"${s.opt.name ? ' checked' : ''}><span><b>اسم خریدار</b><small>اگه خاموش باشه به‌جاش یه خط تیره می‌آد (برای بلیت‌هایی که دست‌به‌دست می‌شن)</small></span></label><label class="wz-wk"><input type="checkbox" data-opt="price"${s.opt.price ? ' checked' : ''}><span><b>مبلغ بلیت</b><small>اگه خاموش باشه قیمت روی بلیت نوشته نمی‌شه (مثلاً بلیت هدیه)</small></span></label></div></section>
         <section class="panel dk-box evp-rise" aria-labelledby="tfH2"><h2 id="tfH2">${ico('sliders')}برای هر نوع برنامه</h2><p class="bk-lead">برای کنسرت‌ها، تئاترها یا جُنگ‌ها یه طرح جدا بذار؛ «همون پیش‌فرض» یعنی همون طرحی که بالا انتخاب کردی.</p>
           <div class="tf-kinds">${this.KINDS.map(([k, t]) => `<label class="bk-fld"><span>${t}</span><select data-kind="${k}"><option value=""${s.kind[k] ? '' : ' selected'}>همون پیش‌فرض (${this.followName(k)})</option>${this.DESIGNS.map((dz) => `<option value="${dz.id}"${s.kind[k] === dz.id ? ' selected' : ''}>${dz.t}</option>`).join('')}</select></label>`).join('')}</div>
         </section>
@@ -12192,6 +12393,9 @@ const tf = {
       this.mount(el);
       const note = (t) => { toast(t); auditLog(t); };
       $$('[data-tile]', el).forEach((b) => b.addEventListener('click', () => { const v = this.set(); v.def = b.dataset.tile; this.save(v); note(`طرح پیش‌فرض بلیت: ${v.def === 'auto' ? 'خودکار (هر نوع برنامه یه طرح)' : this.DESIGNS.find((dz) => dz.id === v.def).t}`); draw(); }));
+      $$('[data-flt]', el).forEach((b) => b.addEventListener('click', () => { flt = b.dataset.flt; draw(); }));
+      $$('[data-zm]', el).forEach((b) => b.addEventListener('click', () => this.enlarge(b.dataset.zm, { list: this.DESIGNS.filter((dz) => flt === 'all' || dz.g === flt).map((dz) => dz.id), sh, onPick: (id) => { const v = this.set(); v.def = id; this.save(v); note(`طرح پیش‌فرض بلیت: ${this.DESIGNS.find((dz) => dz.id === id).t}`); draw(); } })));
+      $$('[data-opt]', el).forEach((c) => c.addEventListener('change', () => { const v = this.set(); v.opt[c.dataset.opt] = c.checked; this.save(v); note(`${c.dataset.opt === 'name' ? 'اسم خریدار' : 'مبلغ'} روی بلیت: ${c.checked ? 'نشون داده می‌شه' : 'نشون داده نمی‌شه'}`); draw(); }));
       $$('[data-kind]', el).forEach((s2) => s2.addEventListener('change', () => { const v = this.set(), k = s2.dataset.kind; v.kind[k] = s2.value; this.save(v); note(`طرح بلیت ${this.KINDS.find((x) => x[0] === k)[1]}: ${s2.value ? this.DESIGNS.find((dz) => dz.id === s2.value).t : 'همون پیش‌فرض'}`); draw(); }));
       $$('[data-spot]', el).forEach((s2) => s2.addEventListener('change', () => { const v = this.set(), k = s2.dataset.spot, sp = this.SPOTS.find((x) => x.id === k); v.spot[k] = s2.value; this.save(v); note(`بلیت تو «${sp.t}»: ${s2.value === 'card' ? 'کارت رزرو کوچیک' : s2.value === 'same' ? 'همون طرح صفحه‌ی بلیت' : this.DESIGNS.find((dz) => dz.id === s2.value).t}`); draw(); }));
       $('#tfShow', el).addEventListener('change', (ev) => { sh = shows.find((x) => x.id === ev.target.value) || sh; draw(); });
@@ -12740,8 +12944,9 @@ const codes = {
           <div class="cpn-body"><div class="cpn-top"><b class="cpn-org">${esc(g.org)}</b><em class="st" data-tone="${s[1]}">${esc(s[0])}</em><button type="button" class="cpn-ic cpn-tg" data-tg aria-expanded="false" aria-label="جزئیات ${esc(g.org)}">${ico('down')}</button></div>
             <div class="cpn-meter"><span class="dk-meter" style="--p:${p.toFixed(3)}"><i></i></span><small>${money(g.used)} از ${money(g.n)} کد مصرف شده · ${money(g.v * (g.n - g.used))} تومان مونده</small></div>
             <div class="cpn-meta"><span>${ico('clock')}${esc(dayOf(g.until))} · ${esc(daysLeft(g.until))}</span><span>${ico('bag')}ساخته‌شده ${esc(dayOf(g.at))}</span></div></div>
-          <div class="cpn-acts"><button type="button" class="chip" data-gprint="${esc(g.batch)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-gview="${esc(g.batch)}">${ico('search')}کدها</button><button type="button" class="chip" data-gcsv="${esc(g.batch)}">${lab.dn()}فایل کدها</button><button type="button" class="chip" data-gext="${esc(g.batch)}">${ico('clock')}تمدید</button><button type="button" class="chip" data-goff="${esc(g.batch)}" aria-pressed="${!g.off}">${ico(g.off ? 'play' : 'pause')}${g.off ? 'فعال کن' : 'غیرفعال کن'}</button></div>${gmore(g, used)}</article>`; }).join('');
+          <div class="cpn-acts"><button type="button" class="chip" data-gprint="${esc(g.batch)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-gview="${esc(g.batch)}">${ico('search')}کدها</button><button type="button" class="chip" data-gm aria-label="کارهای بیشتر برای این دسته">${ico('sliders')}بیشتر</button><span hidden><button type="button" data-gcsv="${esc(g.batch)}">فایل کدها</button><button type="button" data-gext="${esc(g.batch)}">تمدید</button><button type="button" data-goff="${esc(g.batch)}">${g.off ? 'فعال کن' : 'غیرفعال کن'}</button></span></div>${gmore(g, used)}</article>`; }).join('');
       const live = l.find((g) => giftState(g)[1] === 'good'), ready = live && admin.giftCodes(live).find((x) => !used.has(x));
+      $$('[data-gm]', el).forEach((bt) => desk.menuBtn(bt, () => { const art = bt.closest('article'), g = giftList().find((x) => x.batch === art.dataset.g), go = (k) => () => art.querySelector(`[data-${k}]`).click(); return [{ t: 'فایل کدها', ic: 'copy', d: 'همه‌ی کدهای این دسته تو یه فایل', on: go('gcsv') }, { t: 'تمدید', ic: 'clock', d: 'مهلت مصرف رو بیشتر کن', on: go('gext') }, { sep: true }, { t: g && g.off ? 'فعال کن' : 'غیرفعال کن', ic: g && g.off ? 'play' : 'pause', d: g && g.off ? 'دوباره قابل مصرف بشه' : 'تا وقتی فعال نکنی مصرف نمی‌شه', danger: !(g && g.off), on: go('goff') }]; }));
       $('#gfTry', el).innerHTML = ready ? `${ico('info')}برای آزمایش: کد <code dir="ltr">${esc(ready)}</code> رو تو «کیف پول من» بزن.` : '';
     };
     paint(); sum();
@@ -13112,7 +13317,33 @@ const admin = {
   // the home page's featured slots (the hero): each one's banner, layout, colour and label; editing opens the settings on the page
   content(el) {
     el.innerHTML = `${desk.head('محتوای صفحه‌ی اصلی', 'جایگاه ویژه‌ی بالای صفحه: شش اجرا، هر کدوم با بنر، چیدمان، رنگ و برچسب خودش. «ویرایش» پنجره‌ی تنظیمات همون جایگاه رو روی خود صفحه باز می‌کنه تا نتیجه رو همون لحظه ببینی (بنر تازه، رنگ، نوشته‌ها، شروع فروش).')}
+      <section class="panel dk-box evp-rise ad-ha" aria-labelledby="haH"><h2 id="haH">${ico('spark')}برنامه‌ی موجود رو بذار تو بنر<small>اطلاعاتش از خود برنامه می‌آد</small></h2>
+        <p class="bk-lead">یه برنامه‌ی روی سایت رو انتخاب کن (اسم، تاریخ، سالن و قیمتش همون که هست) و فقط بنرها رو بده: دسکتاپ و موبایل. با «بذار تو بنر» بالای صفحه‌ی اول می‌آد. برای تهیه‌کننده‌هایی که اجازه‌ی بنر ندارن هم از همین‌جا می‌ذاری.</p>
+        <div class="ad-ha-in"><label class="bk-fld"><span>برنامه</span><select id="haShow"><option value="">یه برنامه انتخاب کن…</option>${MORE.filter((x) => !x.draft || true).map((x) => `<option value="${esc(x.id)}">${esc(x.title)} · ${esc(x.city || '')}</option>`).join('')}</select></label>
+          <div class="wz-slots" id="haSlots"></div>
+          <div class="ad-actions"><button type="button" class="buy" id="haGo" disabled>${ico('check')}بذار تو بنر</button><span class="ad-txt-st" id="haMsg" aria-live="polite"></span></div>
+          ${store.get('blit.heroAdds', []).length ? `<div class="ad-ha-l"><b>این‌جا تو بنر گذاشتی:</b>${store.get('blit.heroAdds', []).map((a) => { const x = showById(a.id); return `<span class="chip">${esc(x ? x.title : a.id)}<button type="button" data-hrm="${esc(a.id)}" aria-label="برداشتن از بنر">×</button></span>`; }).join('')}</div>` : ''}</div></section>
       <section class="panel dk-box evp-rise"><h2>${ico('sliders')}جایگاه‌ها<small>به ترتیب نمایش</small></h2><ol class="ad-slots">${EVENTS.map((e, i) => { const s = statusOf(e), b = e.banner || {}; return `<li><span class="ad-n">${fa(i + 1)}</span><figure class="ad-ban" style="--accent:${e.accent}"><img src="${esc(b.fake || b.thumb || b.src || '')}" alt="" loading="lazy"></figure><span class="dk-staff-t"><b>${esc(e.title)}</b><small>${esc(e.venue)} · ${esc(e.layout === 'text' ? 'عکس و متن' : 'بنر با نوشته')}</small><span>${s.label ? `<em class="st" data-tone="${s.tone}">${esc(s.label)}</em>` : '<em class="st" data-tone="good">در حال فروش</em>'}<i class="ad-sw" style="--c:${e.accent}" title="${esc((PALETTE[e.pal] || {}).label || '')}"></i></span></span><button type="button" class="chip" data-edit="${i}">${ico('sliders')}ویرایش</button></li>`; }).join('')}</ol><div class="ad-addslot"><label class="chip ad-up">${ico('plus')}جایگاه تازه از یه بنر<input type="file" accept="image/*" id="adNewSlot"></label><small>بنر دسکتاپ (${fa(2000)}×${fa(1000)}) رو بده؛ بعدش با «ویرایش» بنر موبایل و جای هر تصویر رو تنظیم کن.</small></div></section>`;
+    // the existing show → the banner: the two pictures, placed in their frames (the same frames as the wizard's)
+    { const st = { banner: '', bannerFit: null, bannerM: '', bannerMFit: null }, KEYS = { banner: ['banner', 'bannerFit', 1280, 640], mobile: ['bannerM', 'bannerMFit', 800, 1067] }, host = $('#haSlots', el), go = $('#haGo', el);
+      const slot = (kind, key) => `<section class="wz-slot" data-kind="${kind}">${framer.row(kind, kind, { filled: !!st[key], opt: true, drop: `data-drop="${kind}"`, input: `data-kind="${kind}"`, none: kind === 'banner' ? 'بدون بنر دسکتاپ نمی‌آد.' : 'بدون بنر موبایل، تو موبایل بنر دسکتاپ بریده می‌شه.', actions: `<label class="chip wz-swap">${ico('upload')}عوض کردن<input type="file" accept="image/*" data-kind="${kind}"></label><button type="button" class="chip" data-rm="${kind}">${ico('x')}برداشتن</button>` })}</section>`;
+      const sync = () => { go.disabled = !($('#haShow', el).value && st.banner); $('#haMsg', el).textContent = !$('#haShow', el).value ? 'اول برنامه رو انتخاب کن.' : !st.banner ? 'بنر دسکتاپ لازمه.' : ''; };
+      const draw = () => {
+        host.innerHTML = slot('banner', 'banner') + slot('mobile', 'bannerM'); sync();
+        const take = (kind, f) => { if (!f || !/^image\//.test(f.type)) { toast('یه فایل تصویری انتخاب کن.'); return; } const [key, fit, mw, mh] = KEYS[kind], im = new Image(), u = URL.createObjectURL(f); im.onload = () => { const k = Math.min(1, mw / im.naturalWidth, mh / im.naturalHeight), c = document.createElement('canvas'); c.width = Math.round(im.naturalWidth * k); c.height = Math.round(im.naturalHeight * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); st[key] = c.toDataURL('image/jpeg', 0.84); st[fit] = null; URL.revokeObjectURL(u); draw(); }; im.onerror = () => toast('این تصویر خونده نشد.'); im.src = u; };
+        $$('input[type="file"][data-kind]', host).forEach((x) => x.addEventListener('change', (ev) => take(x.dataset.kind, ev.target.files[0])));
+        $$('[data-drop]', host).forEach((z) => { z.addEventListener('dragover', (ev) => { ev.preventDefault(); z.classList.add('is-over'); }); z.addEventListener('dragleave', () => z.classList.remove('is-over')); z.addEventListener('drop', (ev) => { ev.preventDefault(); z.classList.remove('is-over'); take(z.dataset.drop, ev.dataTransfer.files[0]); }); });
+        $$('[data-rm]', host).forEach((x) => x.addEventListener('click', () => { const [key, fit] = KEYS[x.dataset.rm]; st[key] = ''; st[fit] = null; draw(); }));
+        $$('.fr', host).forEach((fr) => { const [key, fit] = KEYS[fr.dataset.kind], f = st[fit] || {}; framer.mount(fr, { src: st[key], fx: f.fx, fy: f.fy, fz: f.fz, onChange: (v) => { st[fit] = v; } }); });
+      };
+      draw(); $('#haShow', el).addEventListener('change', sync);
+      go.addEventListener('click', () => {
+        const id = $('#haShow', el).value, e = MORE.find((x) => x.id === id); if (!e || !st.banner) return;
+        const a = { id, banner: st.banner, bannerFit: st.bannerFit, bannerM: st.bannerM, bannerMFit: st.bannerMFit }, adds = store.get('blit.heroAdds', []).filter((x) => x.id !== id); adds.push(a); store.set('blit.heroAdds', adds);
+        heroAttach(e, a, true); auditLog(`برنامه‌ی «${e.title}» تو بنر صفحه‌ی اول گذاشته شد`); toast(`«${e.title}» حالا تو بنر بالای صفحه‌ی اوله.`); this.content(el);
+      });
+      $$('[data-hrm]', el).forEach((x) => x.addEventListener('click', () => { store.set('blit.heroAdds', store.get('blit.heroAdds', []).filter((a) => a.id !== x.dataset.hrm)); auditLog('یه برنامه از بنر صفحه‌ی اول برداشته شد'); toast('برداشته شد؛ با تازه‌کردن صفحه از بنر می‌ره.'); this.content(el); }));
+    }
     $('#adNewSlot', el).addEventListener('change', async (ev) => { const f = ev.target.files[0]; ev.target.value = ''; if (f) { await panel.addFile(f); this.content(el); toast('جایگاه تازه ساخته شد؛ آخر فهرسته.'); } });
     $$('.ad-ban img', el).forEach((im) => { im.onerror = () => { im.onerror = null; im.style.visibility = 'hidden'; }; });
     $$('[data-edit]', el).forEach((b) => b.addEventListener('click', () => { const i = +b.dataset.edit; page.close({ then: () => { go(i, 'user'); setTimeout(() => { panel.open(true); panel.tab('slot'); }, 350); } }); }));
@@ -13528,7 +13759,7 @@ const adminGeo = {
     drawMap();
     $('#ahPick', el).addEventListener('click', () => {
       const nm0 = $('#ahN', el).value.trim(), p0 = readLoc(true);
-      mp.pick({ title: nm0 || (h && h.name) || 'سالن', q: `${nm0} ${cityName(getCity())}`.trim(), loc: p0 || null, onPick: (la, lo) => { lat.value = String(la); lng.value = String(lo); readLoc(); drawMap(); if (!isNew) $('#ahLocSave', el).click(); else toast('موقعیت گذاشته شد؛ با «ثبت سالن» ذخیره می‌شه.'); } });
+      mp.pick({ title: nm0 || (h && h.name) || 'سالن', q: `${nm0} ${cityName(getCity())}`.trim(), alt: [nm0, cityName(getCity())], loc: p0 || null, onPick: (la, lo) => { lat.value = String(la); lng.value = String(lo); readLoc(); drawMap(); if (!isNew) $('#ahLocSave', el).click(); else toast('موقعیت گذاشته شد؛ با «ثبت سالن» ذخیره می‌شه.'); } });
     });
     if (!isNew) {
       $('#ahLocSave', el).addEventListener('click', () => { const p = readLoc(); if (!p) { if (p === null) { msg.className = 'ad-txt-st is-bad'; msg.textContent = 'مختصات رو بنویس، یا «برداشتن موقعیت» رو بزن.'; } return; } libSet.hall(h.id, { loc: [p.lat, p.lng] }); auditLog(`موقعیت سالن «${h.name}» ثبت شد`); toast('موقعیت ثبت شد؛ نقشه تو صفحه‌ی سالن و برنامه‌ها اومد.'); this.edit(el, h.id); });
@@ -13625,17 +13856,40 @@ const adminGeo = {
 };
 /* ════════════════════════════════════════════════════════════════
    choosing a hall's position on a real map (round AC). The admin presses one button; a whole-screen map opens (OpenStreetMap's tiles, drawn here, no library: pan by dragging, the wheel or the
-   buttons zoom, two fingers on a phone), with a search box (Nominatim: the hall's name and city are searched when it opens). The pin stays in the middle: the admin moves the map under it (a press
+   buttons zoom, two fingers on a phone), with a search box (the hall's name and city are searched when it opens: Photon first, then Nominatim, then Open-Meteo; the first that answers with something wins; see FINDERS). The pin stays in the middle: the admin moves the map under it (a press
    on the map also brings that point to the middle) and presses «تأیید»; the numbers go into the hall's form. This is the admin's tool only: the public pages still show Google's own map in a frame
    (hallslib.js). Needs the internet; without it the admin is told so and can still write the numbers (the form keeps them under «وارد کردن دستی»).
+   Round AD, tested with the real network: from a page opened as a LOCAL FILE (no Referer) Nominatim answers 429 with no CORS header, so the search never worked there; Photon and Open-Meteo do answer
+   (and Photon finds halls by name). The tiles work from a file. A Google Maps link or «lat, lng» can be pasted at the bottom: the map goes there (no key, no service needed).
    ════════════════════════════════════════════════════════════════ */
 const mp = {
   T: 256,
   px(lat, lng, z) { const s = this.T * 2 ** z, sin = Math.sin((lat * Math.PI) / 180); return { x: ((lng + 180) / 360) * s, y: (0.5 - Math.log((1 + sin) / (1 - sin)) / (4 * Math.PI)) * s }; },
   ll(x, y, z) { const s = this.T * 2 ** z, n = Math.PI - (2 * Math.PI * y) / s; return { lat: (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n))), lng: (x / s) * 360 - 180 }; },
   TILE: (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`,
-  FIND: (q) => `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=ir&accept-language=fa&q=${encodeURIComponent(q)}`,
-  // o = { title, q (what to search when it opens), loc ({lat, lng} the hall has now), onPick(lat, lng) }
+  // the search: free public services, tried in turn; the first one that answers with something inside Iran wins. Each get() makes {lat, lon, name, sub, big} (big: a city or area, so a wider zoom)
+  FINDERS: [
+    { id: 'photon', url: (q) => `https://photon.komoot.io/api/?limit=6&bbox=44,25,63.5,39.8&q=${encodeURIComponent(q)}`,
+      get: (j) => (j.features || []).filter((f) => f.geometry && f.geometry.coordinates).map((f) => { const p = f.properties || {}, c = f.geometry.coordinates; return { lat: +c[1], lon: +c[0], name: p.name || p.street || p.city || p.county || '', sub: [p.name && p.street ? p.street : '', p.district, p.city || p.county, p.state].filter(Boolean).join('، '), big: /^(country|state|county|city|town|village|district|locality)$/.test(p.type || '') }; }) },
+    { id: 'nominatim', url: (q) => `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&countrycodes=ir&accept-language=fa&q=${encodeURIComponent(q)}`,
+      get: (j) => (Array.isArray(j) ? j : []).map((x) => ({ lat: +x.lat, lon: +x.lon, name: String(x.display_name || '').split('،').slice(0, 2).join('،'), sub: String(x.display_name || '').split('،').slice(2, 5).join('،'), big: /city|town|village|state|county/.test(`${x.addresstype || ''}${x.type || ''}`) })) },
+    { id: 'meteo', url: (q) => `https://geocoding-api.open-meteo.com/v1/search?count=6&language=fa&country_code=IR&name=${encodeURIComponent(q)}`,
+      get: (j) => (j.results || []).map((r) => ({ lat: +r.latitude, lon: +r.longitude, name: r.name || '', sub: [r.admin2, r.admin1].filter(Boolean).join('، '), big: true })) },
+  ],
+  // → { list, via, reached }: reached = at least one service answered (so «nothing found» is told apart from «no internet»)
+  async find(q) {
+    let reached = false;
+    for (const f of this.FINDERS) {
+      try {
+        const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000); let r; try { r = await fetch(f.url(q), { signal: ctl.signal }); } finally { clearTimeout(to); }
+        if (!r.ok) continue; const j = await r.json(); reached = true;
+        const list = f.get(j).filter((x) => isFinite(x.lat) && isFinite(x.lon) && inIran({ lat: x.lat, lng: x.lon }));
+        if (list.length) return { list, via: f.id, reached };
+      } catch (err) { /* the next service */ }
+    }
+    return { list: [], via: '', reached };
+  },
+  // o = { title, q (what to search when it opens), alt ([other searches to try when q finds nothing: the name alone, the city alone]), loc ({lat, lng} the hall has now), onPick(lat, lng) }
   pick(o) {
     const T = this.T, c = { lat: 32.4, lng: 53.7 }; let z = 5;
     if (o.loc) { c.lat = o.loc.lat; c.lng = o.loc.lng; z = 17; }
@@ -13648,7 +13902,8 @@ const mp = {
           <div class="mp-res" id="mpRes" hidden role="listbox" aria-label="نتیجه‌های جستجو"></div>
           <p class="mp-off" id="mpOff" hidden>نقشه بارگذاری نشد؛ اینترنت یا دسترسی به سرور نقشه رو چک کن. می‌تونی مختصات رو دستی هم بنویسی.</p>
           <span class="mp-attr">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></span></div></div>
-      <footer class="mp-foot"><output id="mpOut" dir="ltr"></output><span id="mpMsg" aria-live="polite"></span></footer>`;
+      <footer class="mp-foot"><output id="mpOut" dir="ltr"></output><span id="mpMsg" aria-live="polite"></span>
+        <div class="mp-g"><a class="chip" id="mpG" target="_blank" rel="noopener" href="#">${ico('route')}باز کردن تو گوگل‌مپ</a><input id="mpLink" dir="ltr" type="text" inputmode="text" autocomplete="off" placeholder="لینک گوگل‌مپ یا مختصات رو اینجا بچسبون" aria-label="لینک گوگل‌مپ یا مختصات"></div></footer>`;
     ($('#app') || document.body).appendChild(box); const prev = document.activeElement;
     const map = $('#mpMap', box), layer = $('#mpTiles', box), res = $('#mpRes', box), tiles = new Map(); let loaded = 0, failed = 0;
     const draw = () => {
@@ -13660,8 +13915,8 @@ const mp = {
         im.style.transform = `translate(${Math.round(tx * T - cp.x + W / 2)}px, ${Math.round(ty * T - cp.y + Hh / 2)}px)`;
       }
       for (const [k, im] of tiles) if (!need.has(k)) { im.remove(); tiles.delete(k); }
-      const here = inIran({ lat: c.lat, lng: c.lng }); $('#mpOk', box).disabled = !here;
-      $('#mpOut', box).textContent = `${c.lat.toFixed(6)} , ${c.lng.toFixed(6)}  ·  z${z}`; $('#mpMsg', box).textContent = here ? '' : 'این نقطه تو ایران نیست؛ نقشه رو به سمت ایران ببر.';
+      const here = inIran({ lat: c.lat, lng: c.lng }), close = z >= 13; $('#mpOk', box).disabled = !(here && close);
+      $('#mpOut', box).textContent = `${c.lat.toFixed(6)} , ${c.lng.toFixed(6)}  ·  z${z}`; $('#mpMsg', box).textContent = !here ? 'این نقطه تو ایران نیست؛ نقشه رو به سمت ایران ببر.' : !close ? 'نقشه رو نزدیک کن (جستجو یا + ) تا ساختمون رو بشه دقیق گذاشت.' : '';
     };
     const moveTo = (lat, lng, zz) => { c.lat = clamp(lat, -84, 84); c.lng = ((lng + 540) % 360) - 180; if (zz != null && zz !== z) { z = zz; tiles.forEach((im) => im.remove()); tiles.clear(); } draw(); };
     const zoomAt = (dz, mx, my) => {
@@ -13693,17 +13948,24 @@ const mp = {
     // the search
     const search = async (q, auto) => {
       q = q.trim(); if (!q) return; res.hidden = false; res.innerHTML = '<p class="mp-r-n">در حال جستجو…</p>';
-      try {
-        const r = await fetch(this.FIND(q), { headers: { Accept: 'application/json' } }); if (!r.ok) throw new Error('http'); const j = await r.json();
-        if (!box.isConnected) return;
-        if (!j.length) { res.innerHTML = '<p class="mp-r-n">چیزی پیدا نشد؛ اسم شهر یا خیابون رو هم بنویس.</p>'; return; }
-        res.innerHTML = j.map((x, i) => `<button type="button" role="option" data-i="${i}"><b>${esc(String(x.display_name || '').split('،').slice(0, 2).join('،'))}</b><small>${esc(String(x.display_name || '').split('،').slice(2, 5).join('،'))}</small></button>`).join('');
-        const go = (x) => { res.hidden = true; moveTo(+x.lat, +x.lon, /city|town|village|state|county/.test(`${x.addresstype || ''}${x.type || ''}`) ? 13 : 17); };
-        res.onclick = (ev) => { const b = ev.target.closest('[data-i]'); if (b) go(j[+b.dataset.i]); };
-        go(j[0]); res.hidden = false;   // (the map goes to the first answer; the others stay listed)
-      } catch (err) { if (box.isConnected) res.innerHTML = '<p class="mp-r-n">جستجو انجام نشد؛ اینترنت رو چک کن.</p>'; }
+      const tries = [q]; if (auto) (o.alt || []).forEach((x) => { x = String(x || '').trim(); if (x && !tries.includes(x)) tries.push(x); });
+      let hit = null, reached = false, k = 0;
+      for (const t of tries) { const r = await this.find(t); if (!box.isConnected) return; reached = reached || r.reached; if (r.list.length) { hit = { ...r, t, k }; break; } k++; }
+      if (!hit) { res.innerHTML = reached ? '<p class="mp-r-n">چیزی پیدا نشد؛ اسم شهر یا خیابون رو هم بنویس، یا نقشه رو بکش و روی ساختمون بذار، یا لینک گوگل‌مپ رو پایین بچسبون.</p>' : '<p class="mp-r-n">جستجو انجام نشد؛ اینترنت رو چک کن. می‌تونی نقشه رو بکشی یا لینک گوگل‌مپ رو پایین بچسبونی.</p>'; return; }
+      const j = hit.list;
+      res.innerHTML = (hit.k ? `<p class="mp-r-n">«${esc(tries[0])}» رو پیدا نکردم؛ «${esc(hit.t)}» رو نشون می‌دم. نقشه رو بکش و روی ساختمون بذار.</p>` : '') + j.map((x, i) => `<button type="button" role="option" data-i="${i}"><b>${esc(x.name)}</b><small>${esc(x.sub)}</small></button>`).join('');
+      const go = (x) => { res.hidden = true; moveTo(x.lat, x.lon, x.big ? 13 : 17); };
+      res.onclick = (ev) => { const bt = ev.target.closest('[data-i]'); if (bt) go(j[+bt.dataset.i]); };
+      go(j[0]); res.hidden = false;   // (the map goes to the first answer; the others stay listed)
     };
     $('#mpForm', box).addEventListener('submit', (ev) => { ev.preventDefault(); search($('#mpQ', box).value, false); });
+    const gl = $('#mpG', box); gl.addEventListener('click', () => { gl.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent($('#mpQ', box).value.trim() || o.q || 'ایران')}`; });
+    const paste = () => {
+      const v = $('#mpLink', box).value.trim(); if (!v) return; const m = $('#mpMsg', box), pt = parseLatLng(v);
+      if (pt && inIran(pt)) { moveTo(pt.lat, pt.lng, 17); m.textContent = 'مختصات از لینک خونده شد؛ اگه درسته «تأیید این نقطه» رو بزن.'; return; }
+      m.textContent = /goo\.gl|maps\.app/i.test(v) ? 'لینک کوتاه رو نمی‌شه خوند؛ لینک کامل (از نوار آدرس گوگل‌مپ) یا مختصات رو بچسبون.' : pt ? 'این نقطه تو ایران نیست.' : 'مختصاتی تو این نوشته پیدا نشد؛ لینک کامل گوگل‌مپ یا «عرض, طول» بچسبون.';
+    };
+    $('#mpLink', box).addEventListener('input', paste); $('#mpLink', box).addEventListener('paste', () => setTimeout(paste, 0));
     // closing, confirming, the keyboard
     const key = (ev) => {
       if (ev.key === 'Escape') { ev.preventDefault(); shut(); return; }
