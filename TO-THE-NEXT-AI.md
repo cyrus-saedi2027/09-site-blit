@@ -39,10 +39,17 @@ Real payment gateway · SMS gateway · database (everything lives in the browser
 - `q-test.js` and `poster-test.js` are stale (they look for markup that was removed in round S); the rest of `final-checks-ad.sh` is green.
 
 ## 4. Files to read, in order
-`START-HERE.md` → `repo/ui-reference/BRIEF.md` → `repo/ui-reference/01-hero/v9/SPEC.md` (§10.24 is the latest) → `repo/ui-reference/HANDOFF.md` → `repo/server/README.md` + `LOADTEST.md` + `ساده.md`.
+`START-HERE.md` → `repo/ui-reference/BRIEF.md` → `repo/ui-reference/01-hero/v9/SPEC.md` (§10.26 is the latest) → `repo/ui-reference/HANDOFF.md` → `repo/server/README.md` + `LOADTEST.md` + `ساده.md`.
 
 ## Added in round AF (the owner's fourth message)
 - **The single-seat rule** is in `ui-reference/01-hero/v9` (the site, in `parts9/buy.js` between `orphan:begin` and `orphan:end`) and in `server/orphan.js` (generated from it; the real shop must call `orphanCheck` where a hold is asked for). Test: `tools/af-orphan-test.js`.
 - **Bare patches** (a page where one side ends and only the background shows) are the owner's pet hate. `tools/af-gap-audit.js` finds them; `sfill` (in `parts9/more.js`) mends the common ones. Run it after any layout change.
 - **Sessions** (wizard step 4) are one line to add and one list; **halls**: «ساخت سریع» plus six sample big halls; tests `af-sessions-test`, `af-hall-test`.
 - Still to do (the owner said so): more halls and a still easier hall system (he finds it «complicated»); every panel still deserves a look from a first-time user's eyes.
+
+## Added in round AG (the owner's fifth message)
+- **Big halls open on zones** (an overview, a press on a zone shows its seats, a back button and chips): `parts9/seatmap.js` (`zoneBig`, `zoneDraw`, `blkOf`, `applyBlock`); admin switch «نقشه‌ی سالن‌های بزرگ» (`blit.zoneView`). Test: `tools/ag-zones-test.js`.
+- **Map block**: Google + OpenStreetMap + directions + copy + the written address (`locBlockHTML`). The real frames were **never** loaded on the machine that built this (no outside network): open the site on a machine with internet and look at a hall page with your own eyes.
+- **Two Iran Mall halls** (Arena Mall, Bam Arena) have **guessed** plans (`libSeedAG`): the melotik / fidibo pages returned HTTP 503 from there. Replace them in the admin's hall builder when you have the real seat maps.
+- The admin's rail now scrolls (the «طرح بلیط‌ها» and «بخشش» tabs were cut off at a short window); `desk.js` / `desk.css`.
+- The zone blocks of the real plans are computed from aisles and rows, not hand-drawn: some halls may need a hand-made cut (not done).

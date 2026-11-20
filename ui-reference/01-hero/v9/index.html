@@ -1329,6 +1329,19 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
   .evp-cols.is-stack { grid-template-columns: minmax(0, 1fr); }
   .evp-cols.is-stack > .evp-side { position: static; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
 }
+/* the map block's second way, its bar and the address under it (round AG) */
+.lm-g, .lm-o { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; border: 0; display: block; }
+.lm-g[hidden], .lm-o[hidden] { display: none; }
+.lm-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: calc(var(--u) * .7) calc(var(--u) * .9) 0; }
+.lm-seg { flex: none; }
+.lm-seg button { min-height: 34px; padding-inline: 14px; font-size: 12.5px; }
+.lm-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.lm-links .chip { min-height: 34px; font-size: 12.5px; }
+.lm-addr { display: flex; align-items: flex-start; gap: .55em; margin: calc(var(--u) * .7) calc(var(--u) * .9) 0; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-small)); line-height: 1.9; }
+.lm-addr svg.i { flex: none; width: 1.2em; height: 1.2em; margin-top: .3em; color: var(--sc, currentColor); }
+.lm-addr b { font-weight: var(--fwb); }
+.lm-xy { margin: 2px calc(var(--u) * .9) 0; font-size: 11.5px; color: rgba(var(--fg), max(.62, var(--dmin))); font-variant-numeric: tabular-nums; text-align: start; }
+.lm-hint { margin: calc(var(--u) * .5) calc(var(--u) * .9) calc(var(--u) * .8); font-size: 11.5px; line-height: 1.8; color: rgba(var(--fg), max(.62, var(--dmin))); }
 
 /* ── steps 2–4 of a purchase: the seats, the booking and payment, the tickets (buy.js); the same panels and themes ── */
 .steps li a { display: inline-flex; align-items: center; gap: .5em; color: inherit; text-decoration: none; }
@@ -1999,6 +2012,37 @@ a.buy, a.chip { text-decoration: none; }
 @keyframes smCoach { 0% { box-shadow: inset 0 0 0 1.5px var(--c), 0 0 0 0 color-mix(in oklab, var(--c) 80%, transparent); } 70%, 100% { box-shadow: inset 0 0 0 1.5px var(--c), 0 0 0 13px transparent; } }
 @keyframes smFinger { 0%, 100% { translate: 5px 7px; scale: 1; } 42% { translate: 0 0; scale: .8; } 55% { translate: 0 0; scale: .8; } }
 @media (prefers-reduced-motion: reduce) { .sm-s.is-coach { animation: none; box-shadow: inset 0 0 0 1.5px var(--c), 0 0 0 5px color-mix(in oklab, var(--c) 45%, transparent); } .sm-s.is-coach::after { animation: none; translate: 2px 3px; } }
+/* a big hall opens on its zones: the sections as big areas with their name and the free seats; a press opens one; «همه‌ی بخش‌ها» comes back */
+.sm-zv { display: grid; gap: calc(var(--u) * .8); }
+.sm-zv[hidden] { display: none; }
+.sm-zv-h { display: grid; gap: 2px; }
+.sm-zv-h b { font-size: calc(max(16px, calc(var(--u) * 1.05)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.sm-zv-h small { font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.66, var(--dmin))); line-height: 1.8; }
+.sm-zmap { position: relative; width: 100%; aspect-ratio: var(--oa, 2); max-height: min(70vh, 780px); min-height: 260px; border-radius: calc(var(--r) * .8); background: radial-gradient(120% 55% at 50% 0%, color-mix(in oklab, var(--sc) 10%, transparent), transparent 62%), rgba(var(--fg), .03); overflow: hidden; touch-action: manipulation; }
+.sm-zmap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.sm-ztip { position: absolute; z-index: 2; transform: translate(-50%, -100%); display: grid; gap: 1px; padding: 6px 10px; border-radius: 10px; background: rgba(10, 10, 16, .92); color: #fff; font-size: 12px; line-height: 1.6; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s; }
+.sm-ztip.is-on { opacity: 1; }
+.sm-ztip b { font-weight: 800; }
+.sm-zl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 8px; }
+.sm-zb { all: unset; box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 1px 10px; width: 100%; padding: 10px 12px; border-radius: 14px; background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .1); cursor: pointer; transition: background-color .2s, box-shadow .2s, transform .2s var(--ease); }
+.sm-zb > i { grid-row: 1 / span 2; width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px color-mix(in oklab, var(--c) 28%, transparent); }
+.sm-zb > b { font-size: calc(max(13.5px, calc(var(--u) * .86)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); line-height: 1.5; }
+.sm-zb > small { font-size: calc(max(12px, calc(var(--u) * .76)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.66, var(--dmin))); line-height: 1.6; }
+.sm-zb > em { grid-column: 2; font-style: normal; font-size: 11.5px; font-weight: 700; color: #b45309; }
+:root[data-mode="dark"] .sm-zb > em { color: #fbbf24; }
+.sm-zb:hover { background: rgba(var(--fg), .09); box-shadow: inset 0 0 0 1.5px var(--c); transform: translateY(-1px); }
+.sm-zb:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.sm-zb.is-out { opacity: .55; }
+.sm-back { margin-inline-end: auto; flex: none; }
+.sm-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+@media (max-width: 760px) { .sm-zmap { min-height: 220px; } .sm-zl { grid-template-columns: 1fr 1fr; } }
+/* a big section cut into blocks: chips to go from block to block; the seats of the other blocks are hidden */
+.sm-blks { display: flex; flex-wrap: wrap; gap: 6px; }
+.sm-blks[hidden] { display: none; }
+.sm-blks .chip { min-height: 34px; gap: .5em; font-size: 12.5px; }
+.sm-blks .chip small { opacity: .75; font-size: 11px; }
+.sm-s.is-off { visibility: hidden; pointer-events: none; }
+.is-off-row { display: none !important; }
 
 /* ── the other pages (pages.js): their head, boxes, the purchase tracking, the questions, the sign-in window, the phone's menu ── */
 .pg-head { display: flex; align-items: center; gap: calc(var(--u) * 1); padding: calc(var(--u) * .85) calc(var(--u) * 1.4); border-radius: calc(var(--r) * 1.3); }
@@ -3995,6 +4039,16 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 .hb-card:not(.is-closed) .hb-tg svg.i { transform: rotate(180deg); }
 .hb-card.is-closed .hb-body { display: none; }
 @media (max-width: 640px) { .hb-q-go { width: 100%; margin-inline-start: 0; justify-content: center; } }
+/* the rail's tabs: when they do not fit the window (a laptop) they scroll inside the rail; a fade at the edge and a slim bar say so, so no tab is lost behind the foot */
+html.is-desk .dk-tabs { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .28) transparent; }
+html.is-desk .dk-tabs::-webkit-scrollbar { display: block; width: 6px; height: 6px; }
+html.is-desk .dk-tabs::-webkit-scrollbar-track { background: transparent; }
+html.is-desk .dk-tabs::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .26); border-radius: 6px; }
+@media (max-height: 720px) { html.is-desk .dk-tabs a, html.is-desk .dk-foot a, html.is-desk .dk-tg, html.is-desk .dk-logo, html.is-desk .dk-who { height: 36px; } html.is-desk .dk-ind { min-height: 36px; } }
+.ad-sn { display: grid; gap: 8px; margin-top: 12px; }
+.ad-sn-g { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 8px 12px; }
+.ad-sn-g .bk-fld span { font-size: 11.5px; opacity: .75; }
+#ahSnSave { margin-top: 14px; display: inline-flex; align-items: center; gap: .5em; }
 
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
@@ -4309,7 +4363,7 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 /* the seat page: the map panel is as tall as the column beside it (the cart, the overview, the prices), so no bare background is left under it; its picture sits in the middle of the room */
 @media (min-width: 1100px) {
   .evp-in.bk .bk-map { align-self: stretch; grid-template-rows: auto auto minmax(0, 1fr); align-content: stretch; }
-  .evp-in.bk .bk-map .sm-view { display: grid; align-items: center; }
+  .evp-in.bk .bk-map .sm-view { display: grid; align-items: start; }
   .evp-in.bk .bk-map .sm-in { min-height: 0; }
 }
 
@@ -5126,10 +5180,11 @@ function sanitizeLib(j) {
     if ('loc' in x) h.loc = pt(x.loc);
     const z = {}; Object.entries(obj(x.zones)).forEach(([n, c]) => { if (typeof c === 'string' && c.length === 1 && CLS_OK.includes(c)) z[n] = c; }); if (Object.keys(z).length) h.zones = z;
     const al = arr(x.addLay).filter(okLay).map(lay); if (al.length) h.addLay = al;
+    const sn = {}; Object.entries(obj(x.sn)).forEach(([li, m]) => { const o = {}; Object.entries(obj(m)).forEach(([si, t]) => { if (typeof t === 'string' && t.trim() && t.length < 60) o[si] = t.trim(); }); if (Object.keys(o).length) sn[li] = o; }); if (Object.keys(sn).length) h.sn = sn;
     halls[k] = h;
   });
   const hallNew = arr(j.hallNew).filter((h) => h && str(h.id) && str(h.name) && str(h.city)).map((h) => { const l = arr(h.lay).filter(okLay).map(lay); return { id: h.id, slug: h.id, name: h.name, addr: typeof h.addr === 'string' ? h.addr : '', city: h.city, loc: pt(h.loc), cap: 0, ty: [], z: [], sb: [], alias: [], lay: l.length ? l : [{ n: 'چیدمان اصلی', p: { shape: 'fan', rows: 10, seats: 14, blocks: 2, grow: false, balcony: 0, boxes: 0, tables: 0, stand: 0 } }] }; });
-  return { v: 1, cities, cityNew, halls, hallNew, seq: Number.isInteger(j.seq) && j.seq >= 0 ? j.seq : 0, seedBig: j.seedBig ? 1 : 0 };
+  return { v: 1, cities, cityNew, halls, hallNew, seq: Number.isInteger(j.seq) && j.seq >= 0 ? j.seq : 0, seedBig: j.seedBig ? 1 : 0, seedAG: j.seedAG ? 1 : 0 };
 }
 const lib = {
   v: 0, fns: [], o: null,
@@ -5249,7 +5304,7 @@ function planOfHall(h, i = 0) {
     const raw = hallLayoutsRaw(h)[ix];
     if (raw) {
       const hasStage = raw.S.some((s) => s[3].some((r) => r[0].some((t) => t[0] === 6 && t[1].t === 'stage')));
-      plan = { real: true, hall: h.id, lay: ix, stage: hasStage ? 'arc' : 'rect', zones: h.z, secs: raw.S.map(([label, sym, notes, rows], si) => ({ id: `s${si}`, t: label, k: 'grid', sym: !!sym, notes: notes || [], rows, runs: [] })) };
+      plan = { real: true, hall: h.id, lay: ix, stage: hasStage ? 'arc' : 'rect', zones: h.z, secs: raw.S.map(([label, sym, notes, rows], si) => ({ id: `s${si}`, t: ((lib.o.halls[String(h.id)] || {}).sn || {})[ix] && ((lib.o.halls[String(h.id)] || {}).sn || {})[ix][si] || label, k: 'grid', sym: !!sym, notes: notes || [], rows, runs: [] })) };
     }
   }
   if (!plan) plan = PLANS['fan-m'];
@@ -5289,10 +5344,19 @@ function bindHall(e, id, lay = 0) {
 const NO_TILES = /[?&]notiles/.test(location.search);   // for the tests: no outside page is asked
 const gmapSrc = (p) => `https://www.google.com/maps?q=${p.lat},${p.lng}&z=16&hl=fa&output=embed`;
 const gmapLink = (p) => `https://www.google.com/maps?q=${p.lat},${p.lng}`;
+// (the owner, round AG: «the maps do not show in the local file»: so a second way, OpenStreetMap, beside Google's — in a country where Google's map is filtered only the second shows — and under the map the address,
+//  «open in Google Maps», directions and the point's numbers; a map that has not loaded after 8 seconds gives way to the second one by itself)
+const osmSrc = (p) => `https://www.openstreetmap.org/export/embed.html?bbox=${(p.lng - 0.006).toFixed(5)},${(p.lat - 0.0042).toFixed(5)},${(p.lng + 0.006).toFixed(5)},${(p.lat + 0.0042).toFixed(5)}&layer=mapnik&marker=${p.lat},${p.lng}`;
+const gmapDir = (p) => `https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`;
 function locBlockHTML(h, cls = '') {
   const p = hallLoc(h); if (!p) return '';
+  const addr = (h.addr || '').trim(), lx = /\bis-lx\b/.test(cls);
   return `<section class="evp-map panel loc-map evp-rise${cls ? ' ' + cls : ''}" data-hall="${esc(h.id)}" data-lat="${p.lat}" data-lng="${p.lng}" aria-label="موقعیت ${esc(h.name)}">
-    <div class="lm-view"><div class="lm-fb" aria-hidden="true"><i class="lm-ring"></i><i class="lm-ring r2"></i><i class="lm-ring r3"></i><span class="lm-pin">${ico('pin')}</span></div><iframe class="lm-g" title="موقعیت ${esc(h.name)} روی گوگل مپ" data-src="${esc(gmapSrc(p))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><a class="lm-open" href="${esc(gmapLink(p))}" target="_blank" rel="noopener" hidden>${ico('pin')}<span>باز کردن در Google Maps</span></a></div>
+    <div class="lm-view"><div class="lm-fb" aria-hidden="true"><i class="lm-ring"></i><i class="lm-ring r2"></i><i class="lm-ring r3"></i><span class="lm-pin">${ico('pin')}</span></div><iframe class="lm-g" title="موقعیت ${esc(h.name)} روی گوگل مپ" data-src="${esc(gmapSrc(p))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><iframe class="lm-o" title="موقعیت ${esc(h.name)} روی OpenStreetMap" data-src="${esc(osmSrc(p))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" hidden></iframe><a class="lm-open" href="${esc(gmapLink(p))}" target="_blank" rel="noopener" hidden>${ico('pin')}<span>باز کردن در Google Maps</span></a></div>
+    <div class="lm-bar"><div class="bk-seg lm-seg" role="radiogroup" aria-label="نوع نقشه"><button type="button" role="radio" data-lm="g" aria-checked="true">گوگل‌مپ</button><button type="button" role="radio" data-lm="o" aria-checked="false">OpenStreetMap</button></div>
+      <span class="lm-links"><a class="chip" href="${esc(gmapLink(p))}" target="_blank" rel="noopener">${ico('pin')}باز کردن در گوگل‌مپ</a><a class="chip" href="${esc(gmapDir(p))}" target="_blank" rel="noopener">${ico('route')}مسیریابی</a><button type="button" class="chip" data-lmcopy="${p.lat}, ${p.lng}">${ico('copy')}کپی مختصات</button></span></div>
+    ${lx ? '' : `${addr ? `<p class="lm-addr">${ico('pin')}<span><b>نشانی:</b> ${esc(addr)}</span></p>` : ''}<p class="lm-xy" dir="ltr">${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</p>`}
+    <p class="lm-hint">اگه نقشه‌ی گوگل نیومد (فیلتر یا اینترنت ضعیف)، «OpenStreetMap» رو بزن یا «باز کردن در گوگل‌مپ».</p>
   </section>`;
 }
 // a frame gets its address when its block is near the screen (the page does not ask Google for a map nobody scrolled to). Where the page may not frame Google (the preview's), the block
@@ -5308,8 +5372,11 @@ function mountLocMaps(root) {
   }
   $$('.loc-map', root).forEach((el) => {
     if (el.dataset.mounted) return; el.dataset.mounted = '1';
+    $$('[data-lm]', el).forEach((b) => b.addEventListener('click', () => { const o = b.dataset.lm === 'o', g = $('.lm-g', el), q = $('.lm-o', el); $$('[data-lm]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); if (o && q && !q.getAttribute('src') && !NO_TILES) q.src = q.dataset.src; if (g) g.hidden = o; if (q) q.hidden = !o; }));
+    $$('[data-lmcopy]', el).forEach((b) => b.addEventListener('click', () => { const t = b.dataset.lmcopy; try { navigator.clipboard.writeText(t).then(() => toast('مختصات کپی شد.'), () => toast(t)); } catch (err) { toast(t); } }));
     const f = $('.lm-g', el); if (!f || NO_TILES) return;
-    const set = () => { f.src = f.dataset.src; }, go = () => { if (window.requestIdleCallback) requestIdleCallback(set, { timeout: 2500 }); else setTimeout(set, 600); };   // (after the page has settled: Google's map is heavy)
+    f.addEventListener('load', () => { f.dataset.loaded = '1'; });
+    const set = () => { f.src = f.dataset.src; setTimeout(() => { if (!f.dataset.loaded && !f.hidden) { const ob = $('[data-lm="o"]', el); if (ob && ob.getAttribute('aria-checked') !== 'true') ob.click(); } }, 8000); }, go = () => { if (window.requestIdleCallback) requestIdleCallback(set, { timeout: 2500 }); else setTimeout(set, 600); };   // (after the page has settled: Google's map is heavy)
     if ('IntersectionObserver' in window) { const io = new IntersectionObserver((en) => { if (en.some((x) => x.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: '200px' }); io.observe(el); } else go();
   });
 }
@@ -5330,7 +5397,7 @@ const libSet = {
   hall(id, patch) {
     const h = hallById(id); if (!h) return false;
     if (h.custom) { const n = lib.o.hallNew.find((x) => x.id === h.id); if (!n) return false; ['name', 'addr', 'city'].forEach((k) => { if (patch[k] != null) n[k] = patch[k]; }); if ('loc' in patch) n.loc = patch.loc; if (patch.zones) lib.o.halls[h.id] = { ...(lib.o.halls[h.id] || {}), zones: { ...((lib.o.halls[h.id] || {}).zones || {}), ...patch.zones } }; }
-    else { const x = lib.o.halls[h.id] = { ...(lib.o.halls[h.id] || {}) }; ['name', 'addr', 'city'].forEach((k) => { if (patch[k] != null) x[k] = patch[k]; }); if ('loc' in patch) { if (patch.loc === undefined) delete x.loc; else x.loc = patch.loc; } if (patch.zones) x.zones = { ...(x.zones || {}), ...patch.zones }; }
+    else { const x = lib.o.halls[h.id] = { ...(lib.o.halls[h.id] || {}) }; ['name', 'addr', 'city'].forEach((k) => { if (patch[k] != null) x[k] = patch[k]; }); if ('loc' in patch) { if (patch.loc === undefined) delete x.loc; else x.loc = patch.loc; } if (patch.zones) x.zones = { ...(x.zones || {}), ...patch.zones }; if (patch.sn) { x.sn = { ...(x.sn || {}) }; Object.entries(patch.sn).forEach(([li, m]) => { x.sn[li] = { ...(x.sn[li] || {}) }; Object.entries(m).forEach(([si, t]) => { if (t) x.sn[li][si] = t; else delete x.sn[li][si]; }); if (!Object.keys(x.sn[li]).length) delete x.sn[li]; }); if (!Object.keys(x.sn).length) delete x.sn; } }
     lib.save(); return true;
   },
   hallAdd({ name, addr = '', city, loc = null, lay }) {
@@ -8223,6 +8290,17 @@ function libSeedBig() {
 }
 libSeedBig();
 
+/* ───── round AG: the two halls of Iran Mall that were not designed (Arena Mall and Bam Arena). Their real seat maps could not be read (the sellers' pages did not answer), so each gets a FIRST plan made by the quick
+   builder, named «چیدمان تقریبی»; the admin replaces it with the real one in the hall builder. They sit at Iran Mall's point (the library's own hall there). ───── */
+function libSeedAG() {
+  if (!lib.o || lib.o.seedAG) return; lib.o.seedAG = 1;
+  const im = hallById('184'), loc = im && im.loc ? [im.loc[0], im.loc[1]] : [35.755359, 51.189605], addr = 'تهران، اتوبان شهید خرازی (انتهای اتوبان همت غرب)، مرکز تجاری ایران‌مال';
+  const HS = [['سالن آرنامال ایران‌مال', { kind: 'arena', cap: 2600, floors: 1, pit: 0.2 }], ['سالن بام آرنا ایران‌مال', { kind: 'arena', cap: 1800, floors: 1, pit: 0.45 }]];
+  lib.batch(() => { for (const [name, q] of HS) libSet.hallAdd({ name, addr, city: 'tehran', loc, lay: [{ n: 'چیدمان تقریبی (جایگزین کن)', b: hbQuick(q) }] }); });
+  lib.save();
+}
+libSeedAG();
+
 /* ════════════════════════════════════════════════════════════════
    the show's page: the first of the four steps of a purchase (choose the session → the seats → book and pay → the ticket),
    after the owner's sample: the steps, a cover with the poster, the facts (the days, the time and how long, the hall and its
@@ -9580,7 +9658,13 @@ Object.assign(buy, {
         ${this.tabsHTML()}
         <ul class="st-legend sm-legend" aria-label="راهنمای صندلی‌ها"><li><i class="lg mine" aria-hidden="true"></i><b>انتخاب تو</b></li><li><i class="lg held" aria-hidden="true"></i><b>در حال پرداخت دیگران</b></li><li><i class="lg sold" aria-hidden="true"></i><b>فروخته شده</b></li><li><i class="lg off" aria-hidden="true"></i><b>غیرقابل فروش</b></li></ul>
         <div class="bk-filter"><span class="bk-fl">${ico('tag')}قیمت‌ها</span><div class="bk-chips" role="group" aria-label="فیلتر قیمت"><button type="button" class="chip" data-t="" aria-pressed="${!this.tiers.size}">همه</button>${tiers.map((t) => `<button type="button" class="chip tier" data-t="${t.t}" style="--c:${t.c}" aria-pressed="${this.tiers.has(t.t)}"><i aria-hidden="true"></i>${money(t.price)}</button>`).join('')}</div></div></div>
-      <div class="sm-head"><div><b id="smTitle"></b><small id="smSub"></small></div><span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span></div>
+      <div class="sm-head"><button type="button" class="chip sm-back" id="smBack" hidden>${ico('arrow-r')}همه‌ی بخش‌ها</button><div><b id="smTitle"></b><small id="smSub"></small></div><span class="bk-live" aria-live="off"><i aria-hidden="true"></i><b>زنده</b><span class="bk-watch"></span></span></div>
+      <div class="sm-blks" id="smBlk" role="group" aria-label="بلوک‌های این بخش" hidden></div>
+      <div class="sm-zv" id="smZv" hidden>
+        <div class="sm-zv-h"><b>بخش‌های سالن</b><small>روی هر بخش بزن؛ صندلی‌هاش باز می‌شن و می‌تونی انتخاب کنی. هر وقت خواستی برگرد و بخش دیگه‌ای رو ببین.</small></div>
+        <div class="sm-zmap" id="smZmap" style="--oa:${clamp(this.plan.W / this.plan.H || 2, 1.15, 2.4).toFixed(3)}" role="img" aria-label="نقشه‌ی بخش‌های سالن؛ روی هر بخش بزن، یا از فهرست زیرش یکی رو انتخاب کن"><canvas></canvas><span class="sm-ztip" id="smZtip" aria-hidden="true"></span></div>
+        <ul class="sm-zl" id="smZl" aria-label="فهرست بخش‌های سالن"></ul>
+      </div>
       <div class="sm-view" id="smView"><div class="sm-in" id="smIn"></div></div>
       <div class="sm-tip" id="smTip" hidden></div>`;
   },
@@ -9604,6 +9688,123 @@ Object.assign(buy, {
     const ys = this.flat.map((p) => p.y); this.y0 = Math.min(...ys); this.y1 = Math.max(...ys);
     if (!(this.zone >= 0 && L.secs[this.zone])) { const i = L.secs.findIndex((z) => (z.ga ? z.ga.left > 0 : z.seats.some((p) => p.st === 'free'))); this.zone = Math.max(0, i); }
     this.renderSection(this.zone, false);   // (the overview is drawn in the next frame)
+    // a big hall (the admin's «blit.zoneView»: auto from 700 seats, always, or off) opens on its zones; with seats already chosen it opens on the section of the first of them
+    this.big = this.zoneBig();
+    const mine = [...this.cart.keys()].find((k) => !k.startsWith('ga:')), mz = mine ? L.secs.findIndex((z) => z.seats.some((p) => p.key === mine)) : -1;
+    if (this.big && mz >= 0 && mz !== this.zone) this.renderSection(mz, false);
+    const bk = $('#smBack', page.el); if (bk) bk.hidden = !this.big;
+    L.secs.forEach((z) => { delete z._col; }); this.zlist = null; if (this.big) this.zlistBuild();
+    this.showZones(this.big && !this.cart.size); this.applyBlock();
+  },
+  zoneCfg() { const c = store.get('blit.zoneView', null) || {}; return { mode: ['auto', 'always', 'off'].includes(c.mode) ? c.mode : 'auto', min: Number.isFinite(+c.min) && c.min !== '' && c.min != null ? clamp(Math.round(+c.min), 0, 100000) : 700 }; },
+  zoneBig() {
+    const L = this.plan, c = this.zoneCfg(); if (!L || c.mode === 'off' || !(L.secs.length > 1 || L.secs.some((z) => this.blkOf(z)))) return false; if (c.mode === 'always') return true;   // (a hall of one big section has zones when the section is cut into blocks)
+    const n = L.secs.reduce((a, z) => a + (z.ga ? z.sec.cap || 0 : z.seats.length), 0); return n >= c.min;
+  },
+  // the zone view: the whole hall with its sections as big areas (a press opens one) and a list of them under it
+  showZones(on) {
+    const el = page.el, zv = $('#smZv', el); if (!zv) return; this.zv = !!on; this.zh = -1;
+    zv.hidden = !on; const head = $('.sm-head', el), view = $('#smView', el); if (head) head.hidden = !!on; if (view) view.hidden = !!on;
+    const bk = $('#smBack', el); if (bk) bk.hidden = !!on || !this.big;
+    { const bc = $('#smBlk', el); if (bc) bc.hidden = !!on || !bc.innerHTML; }
+    if (on) { this.zoneList(); this.zoneSoon(); requestAnimationFrame(() => this.zoneDraw()); }
+  },
+  // ── blocks: a big section (more than 240 seats) is cut into blocks by its aisles (and into a front and a back part when a block is still big), so the zone view shows many areas, each with
+  //    a few seats. A real plan's rows are cut by aisles into runs (rid ends in the run's number), a designed plan's rows into the blocks of `sec.seats`. Column 0 is the right one.
+  blkOf(z) {
+    if (z._blk !== undefined) return z._blk;
+    z._blk = null; if (z.ga || !z.seats || z.seats.length <= 240 || !['grid', 'fan', 'rect'].includes(z.sec.k)) return null;
+    const col = new Map();
+    if (z.sec.k === 'grid') { for (const p of z.seats) col.set(p.key, p.rid == null ? 0 : (+String(p.rid).split('.').pop().replace(/\D/g, '') || 1) - 1); }
+    else { const cum = new Map(); for (const p of z.seats) { let c = cum.get(p.row); if (!c) { const bl = typeof z.sec.seats === 'function' ? z.sec.seats(p.row - 1) : [999]; let t = 0; c = bl.map((n) => (t += n)); cum.set(p.row, c); } let j = c.findIndex((t) => p.n <= t); if (j < 0) j = c.length - 1; col.set(p.key, j); } }
+    const S = Math.max(...col.values()) + 1, groups = new Map(); for (const p of z.seats) { const c = Math.min(col.get(p.key), 5); if (!groups.has(c)) groups.set(c, []); groups.get(c).push(p); }
+    const cn = groups.size, cname = (c) => (cn === 2 ? ['راست', 'چپ'][[...groups.keys()].sort().indexOf(c)] : cn === 3 ? ['راست', 'وسط', 'چپ'][[...groups.keys()].sort().indexOf(c)] : `بلوک ${fa([...groups.keys()].sort().indexOf(c) + 1)}`);
+    const out = [];
+    for (const c of [...groups.keys()].sort()) {
+      const ps = groups.get(c).slice().sort((p, q) => p.y - q.y || p.x - q.x), nb = clamp(Math.ceil(ps.length / 260), 1, 3), BN = nb === 3 ? ['جلو', 'وسط', 'عقب'] : nb === 2 ? ['جلو', 'عقب'] : [''];
+      // the bands cut at row boundaries: the seats are in rows of the same y (rounded); a band takes whole rows until it holds its share
+      const rows = new Map(); for (const p of ps) { const y = Math.round(p.y); if (!rows.has(y)) rows.set(y, []); rows.get(y).push(p); }
+      const ys = [...rows.keys()].sort((p, q) => p - q), share = ps.length / nb; let cur = [], k = 0;
+      const flush = () => { if (!cur.length) return; const lab = [cn > 1 ? cname(c) : '', BN[Math.min(k, BN.length - 1)]].filter(Boolean).join(' · ') || z.sec.t; out.push({ lab, seats: cur, keys: new Set(cur.map((p) => p.key)) }); cur = []; k++; };
+      for (const y of ys) { cur.push(...rows.get(y)); if (cur.length >= share && k < nb - 1) flush(); }
+      flush();
+    }
+    if (out.length < 2) return null;
+    out.forEach((q) => { q.b = [Math.min(...q.seats.map((p) => p.x)) - 10, Math.min(...q.seats.map((p) => p.y)) - 10, Math.max(...q.seats.map((p) => p.x)) + 10, Math.max(...q.seats.map((p) => p.y)) + 10]; });
+    return (z._blk = out);
+  },
+  // the zone view's entries: a section, or each block of a big section (i: its section, k: the block or -1)
+  zlistBuild() {
+    const L = this.plan, out = [];
+    L.secs.forEach((z, i) => { const bl = this.blkOf(z); if (bl) bl.forEach((q, k) => out.push({ i, k, lab: q.lab, sec: z.sec.t, seats: q.seats, keys: q.keys, b: q.b, z })); else out.push({ i, k: -1, lab: z.sec.t, sec: z.sec.t, z, b: z.b, seats: z.ga ? null : z.seats, keys: null }); });
+    this.zlist = out; return out;
+  },
+  entCol(e) {
+    if (e._col) return e._col; if (e.z.ga) return (e._col = e.z.ga.c);
+    const m = new Map(); for (const p of e.seats) m.set(p.c, (m.get(p.c) || 0) + 1); return (e._col = [...m.entries()].sort((p, q) => q[1] - p[1]).map((x) => x[0])[0] || '#8b5cf6');
+  },
+  entFree(e) { return e.z.ga ? Math.max(0, e.z.ga.left - [...this.cart.values()].filter((x) => x.ga && x.zid === e.z.sec.id).length) : e.seats.filter((p) => p.st === 'free' && !this.cart.has(p.key)).length; },
+  entMine(e) { return e.z.ga ? [...this.cart.values()].filter((x) => x.ga && x.zid === e.z.sec.id).length : e.seats.filter((p) => this.cart.has(p.key)).length; },
+  entPrice(e) { const pr = e.z.ga ? [e.z.ga.price] : [...new Set(e.seats.map((p) => p.price))].sort((p, q) => p - q); return pr.length > 1 ? `${money(pr[0])} تا ${money(pr[pr.length - 1])}` : money(pr[0] || 0); },
+  zoneList() {
+    const ul = $('#smZl', page.el); if (!ul || !this.plan) return; const Z = this.zlist || this.zlistBuild();
+    ul.innerHTML = Z.map((e, n) => {
+      const free = this.entFree(e), mine = this.entMine(e);
+      return `<li><button type="button" class="sm-zb${free ? '' : ' is-out'}" data-zi="${n}" style="--c:${this.entCol(e)}"><i aria-hidden="true"></i><b>${esc(e.k >= 0 ? `${e.sec} · ${e.lab}` : e.lab)}</b><small>${free ? `${fa(free)} آزاد` : 'تمام شد'} · ${this.entPrice(e)} تومان</small>${mine ? `<em>${fa(mine)} انتخاب تو</em>` : ''}</button></li>`;
+    }).join('');
+  },
+  zoneSoon() { if (this.zRaf) return; this.zRaf = requestAnimationFrame(() => { this.zRaf = 0; this.zoneDraw(); }); },
+  zoneDraw() {
+    const host = $('#smZmap', page.el), cv = host && $('canvas', host); if (!cv || !this.plan || !this.zv) return;
+    const L = this.plan, Z = this.zlist || this.zlistBuild(), dpr = Math.min(2, devicePixelRatio || 1), cw = host.clientWidth, ch = host.clientHeight; if (!cw || !ch) return;
+    if (cv.width !== Math.round(cw * dpr) || cv.height !== Math.round(ch * dpr)) { cv.width = Math.round(cw * dpr); cv.height = Math.round(ch * dpr); }
+    const x = cv.getContext('2d'), k = Math.min(cw / L.W, ch / L.H) * 0.97, ox = (cw - L.W * k) / 2, oy = (ch - L.H * k) / 2; this.zT = { k, ox, oy };
+    const fg = getComputedStyle(page.el.querySelector('.bk') || page.el).getPropertyValue('--fg').trim() || '255, 255, 255', dark = fg.split(',').map(Number)[0] > 128;
+    x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, cw, ch); x.save(); x.translate(ox, oy); x.scale(k, k);
+    const cx = L.cx, cy = L.cy; x.fillStyle = `rgba(${fg}, .16)`; x.beginPath();
+    if (L.stage === 'arc') { x.moveTo(cx - 230, cy - 96); x.lineTo(cx + 230, cy - 96); x.lineTo(cx + 230, cy - 20); x.quadraticCurveTo(cx, cy + 70, cx - 230, cy - 20); x.closePath(); } else { const w = L.stage === 'wide' ? 330 : 250; x.roundRect(cx - w, cy - 96, w * 2, L.stage === 'wide' ? 110 : 96, 14); }
+    x.fill(); x.font = `800 ${13 / k}px Vazirmatn, Tahoma, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = `rgba(${fg}, .55)`; x.fillText('صحنه', cx, cy - 56);
+    const tiers = this.tiers, r = 8.5, FF = 'Vazirmatn, Tahoma, sans-serif';
+    Z.forEach((e, n) => {
+      const b = e.b; if (!b) return; const pad = e.k >= 0 ? 4 : 12, X = b[0] - pad, Y = b[1] - pad, W = b[2] - b[0] + pad * 2, H = b[3] - b[1] + pad * 2, col = this.entCol(e), free = this.entFree(e), hov = n === this.zh, out = free === 0;
+      const dim = tiers.size && !(e.z.ga ? tiers.has(e.z.ga.t) : e.seats.some((p) => tiers.has(p.t))), live = !out && !dim;
+      x.fillStyle = col; x.globalAlpha = live ? (hov ? 0.36 : 0.16) : 0.08; x.beginPath(); x.roundRect(X, Y, W, H, e.k >= 0 ? 12 : 22); x.fill();
+      x.globalAlpha = live ? 1 : 0.4; x.strokeStyle = col; x.lineWidth = (hov ? 3.4 : 1.8) / k; x.stroke();
+      if (!e.z.ga) { x.globalAlpha = live ? 0.9 : 0.3; x.fillStyle = col; x.beginPath(); for (const p of e.seats) if (p.st === 'free' && !this.cart.has(p.key)) x.rect(p.x - r, p.y - r, r * 2, r * 2); x.fill(); x.fillStyle = `rgba(${fg}, .22)`; x.beginPath(); for (const p of e.seats) if (p.st !== 'free' || this.cart.has(p.key)) x.rect(p.x - r, p.y - r, r * 2, r * 2); x.fill(); }
+      x.globalAlpha = 1;
+      // the name and how many are free, on a small plate in the middle (as big as fits, not under 9 px)
+      const zw = W * k; let fs = 13.5; x.font = `800 ${fs / k}px ${FF}`; const nm = e.lab, sub = out ? 'تمام شد' : `${fa(free)} آزاد`;
+      while (fs > 9 && x.measureText(nm).width * k > zw - 10) { fs -= 0.5; x.font = `800 ${fs / k}px ${FF}`; }
+      if (x.measureText(nm).width * k <= zw - 8 && H * k > 32) {
+        const tw = Math.max(x.measureText(nm).width, x.measureText(sub).width * 0.82) + 12 / k, th = (fs * 2.35) / k, mx = (b[0] + b[2]) / 2, my = (b[1] + b[3]) / 2;
+        x.fillStyle = dark ? 'rgba(10, 10, 16, .82)' : 'rgba(255, 255, 255, .92)'; x.beginPath(); x.roundRect(mx - tw / 2, my - th / 2, tw, th, 8 / k); x.fill();
+        x.fillStyle = dark ? '#fff' : '#111'; x.font = `800 ${fs / k}px ${FF}`; x.fillText(nm, mx, my - (fs * 0.5) / k);
+        x.fillStyle = out ? (dark ? '#a1a1aa' : '#71717a') : dark ? '#e5e5ea' : '#3f3f46'; x.font = `700 ${(fs * 0.82) / k}px ${FF}`; x.fillText(sub, mx, my + (fs * 0.62) / k);
+      }
+      const mine = this.entMine(e); if (mine) { const bx = b[2] + pad - 4, by = b[1] - pad + 4, br = 11 / k; x.fillStyle = '#f59e0b'; x.beginPath(); x.arc(bx, by, br, 0, Math.PI * 2); x.fill(); x.fillStyle = '#1c1100'; x.font = `800 ${12 / k}px ${FF}`; x.fillText(fa(mine), bx, by + 0.5 / k); }
+    });
+    // the name of a section that is cut into blocks, above it
+    L.secs.forEach((z) => { const bl = z._blk; if (!bl || !z.b) return; x.fillStyle = `rgba(${fg}, .72)`; x.font = `800 ${12 / k}px ${FF}`; x.textBaseline = 'bottom'; x.fillText(z.sec.t, (z.b[0] + z.b[2]) / 2, z.b[1] - 8); x.textBaseline = 'middle'; });
+    x.restore();
+  },
+  zoneAt(ev) {
+    const host = $('#smZmap', page.el), T = this.zT; if (!host || !T || !this.zlist) return -1;
+    const r = host.getBoundingClientRect(), hx = (ev.clientX - r.left - T.ox) / T.k, hy = (ev.clientY - r.top - T.oy) / T.k; let best = -1, ba = Infinity;
+    this.zlist.forEach((e, n) => { const b = e.b; if (!b) return; const pd = e.k >= 0 ? 4 : 12; if (hx >= b[0] - pd && hx <= b[2] + pd && hy >= b[1] - pd && hy <= b[3] + pd) { const a = (b[2] - b[0]) * (b[3] - b[1]); if (a < ba) { ba = a; best = n; } } });
+    return best;
+  },
+  // the section on show is cut to one block: the seats of the others are hidden (and the rows with none), the block comes to the middle; chips go from block to block
+  applyBlock() {
+    const el = page.el, box = $('#smIn', el), view = $('#smView', el), chips = $('#smBlk', el), z = this.plan && this.plan.secs[this.zone]; if (!box || !z) return;
+    const bl = this.big ? this.blkOf(z) : null, k = bl && bl[this.blk] ? this.blk : -1, keys = k >= 0 ? bl[k].keys : null;
+    if (chips) {
+      if (bl) { chips.hidden = !!this.zv; chips.innerHTML = `<button type="button" class="chip" data-bk="-1" aria-pressed="${k < 0}">کل بخش</button>` + bl.map((q, j) => `<button type="button" class="chip" data-bk="${j}" aria-pressed="${j === k}">${esc(q.lab)}<small>${fa(q.seats.filter((p) => p.st === 'free' && !this.cart.has(p.key)).length)}</small></button>`).join(''); }
+      else { chips.hidden = true; chips.innerHTML = ''; }
+    }
+    $$('.sm-s', box).forEach((b) => b.classList.toggle('is-off', !!keys && !keys.has(b.dataset.k)));
+    $$('.sm-r, .sm-blk, .sm-row', box).forEach((r) => r.classList.toggle('is-off-row', !!keys && !r.querySelector('.sm-s:not(.is-off)')));
+    const t = $('#smTitle', el); if (t) t.textContent = k >= 0 ? `${z.sec.t} · ${bl[k].lab}` : z.sec.t;
+    if (keys && view) requestAnimationFrame(() => { const vis = [...box.querySelectorAll('.sm-s:not(.is-off)')]; if (!vis.length) return; const rs = vis.map((b) => b.getBoundingClientRect()), l = Math.min(...rs.map((q) => q.left)), rr = Math.max(...rs.map((q) => q.right)), vr = view.getBoundingClientRect(); view.scrollLeft += (l + rr) / 2 - (vr.left + vr.width / 2); this.pos = null; this.vpDraw(); });
   },
   focusZone(i) { if (this.plan && this.plan.secs[i]) this.renderSection(i, true); },
   seatBtn(p, cy) {
@@ -9627,9 +9828,9 @@ Object.assign(buy, {
     return table(z.sec.rows, true);
   },
   // one section, big
-  renderSection(i, anim) {
+  renderSection(i, anim, k = -1) {
     const el = page.el, z = this.plan.secs[i], box = $('#smIn', el), view = $('#smView', el); if (!z || !box) return;
-    this.zone = i;
+    this.zone = i; this.blk = k; if (this.zv) this.showZones(false);
     $$('.bk-seg [data-z]', el).forEach((x) => x.setAttribute('aria-selected', String(+x.dataset.z === i)));
     if (this.groups) { const gi = this.groups.findIndex((g) => g.idx.includes(i)); $$('.sm-gtabs [data-g]', el).forEach((x) => x.setAttribute('aria-selected', String(+x.dataset.g === gi))); $$('.sm-stabs [data-z]', el).forEach((x) => { x.hidden = +x.dataset.gi !== gi; }); }
     const prices = [...new Set((z.ga ? [z.ga.price] : z.seats.map((p) => p.price)))].sort((a, b) => a - b);
@@ -9668,6 +9869,8 @@ Object.assign(buy, {
     // a section wider than the panel opens at its middle (the best seats); the rows nearest the stage at the top
     requestAnimationFrame(() => { if (!view.isConnected) return; this.fitSeats(view, box); view.scrollTop = 0; view.scrollLeft = Math.max(0, (view.scrollWidth - view.clientWidth) / 2); this.vpDraw(); this.coach(); });
     if (anim && MOTK()) box.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.22,1,.36,1)' });
+    this.applyBlock(); requestAnimationFrame(() => { if (view.isConnected && this.zone === i) this.applyBlock(); });
+    if (anim && this.big) { const mp = $('.bk-map', el); if (mp) { const q = mp.getBoundingClientRect(); if (q.top < 0 || q.top > innerHeight * 0.55) mp.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' }); } }
     this.miniSoon();
   },
   // a seat is as big as it can be (34 px at most) while the widest row still fits the panel: on a mouse it shrinks to 26 px rather than make the buyer scroll sideways (a touch screen keeps its big seats and scrolls)
@@ -9765,7 +9968,7 @@ Object.assign(buy, {
     this.cartPaint(e, s);
   },
   // the overview: the whole hall on a canvas, a dot per seat in its state; the section on show framed, the others quieter
-  miniSoon() { if (this.miniRaf) return; this.miniRaf = requestAnimationFrame(() => { this.miniRaf = 0; this.miniDraw(); }); },
+  miniSoon() { if (this.miniRaf) return; this.miniRaf = requestAnimationFrame(() => { this.miniRaf = 0; this.miniDraw(); if (this.zv) this.zoneDraw(); }); },
   miniDraw() {
     const host = $('.sm-mini', page.el), cv = host && $('canvas', host); if (!cv || !this.plan) return;
     const L = this.plan, dpr = Math.min(2, devicePixelRatio || 1), cw = host.clientWidth, ch = host.clientHeight; if (!cw || !ch) return;
@@ -9842,6 +10045,17 @@ Object.assign(buy, {
   // the map's wiring: the tabs (wired in wireSeats), the overview, the seats (one listener), the best seats, the keys
   wireMap(e, s) {
     const el = page.el, host = $('.sm-mini', el), tip = $('.sm-mini-tip', el), box = $('#smIn', el), view = $('#smView', el), stip = $('#smTip', el);
+    { const zm = $('#smZmap', el), zt = $('#smZtip', el), zl = $('#smZl', el), bk = $('#smBack', el);
+      const bc = $('#smBlk', el); if (bc) bc.addEventListener('click', (ev) => { const b = ev.target.closest('[data-bk]'); if (!b) return; this.blk = +b.dataset.bk; this.applyBlock(); });
+      if (bk) bk.addEventListener('click', () => { this.showZones(true); const m = $('#smZv', el); if (m && m.scrollIntoView) m.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' }); });
+      if (zl) { zl.addEventListener('click', (ev) => { const b = ev.target.closest('[data-zi]'), e2 = b && this.zlist && this.zlist[+b.dataset.zi]; if (e2) this.renderSection(e2.i, true, e2.k); });
+        zl.addEventListener('pointerover', (ev) => { const b = ev.target.closest('[data-zi]'); const i = b ? +b.dataset.zi : -1; if (i !== this.zh) { this.zh = i; this.zoneSoon(); } }); zl.addEventListener('pointerleave', () => { if (this.zh !== -1) { this.zh = -1; this.zoneSoon(); } }); }
+      if (zm) {
+        zm.addEventListener('click', (ev) => { const n = this.zoneAt(ev), e2 = n >= 0 && this.zlist[n]; if (e2) this.renderSection(e2.i, true, e2.k); });
+        zm.addEventListener('pointermove', (ev) => { const i = this.zoneAt(ev); zm.style.cursor = i >= 0 ? 'pointer' : 'default'; if (i !== this.zh) { this.zh = i; this.zoneSoon(); }
+          if (zt) { if (i < 0) { zt.classList.remove('is-on'); } else { const q = this.zlist[i], f = this.entFree(q); zt.innerHTML = `<b>${esc(q.k >= 0 ? `${q.sec} · ${q.lab}` : q.lab)}</b>${f ? `${fa(f)} آزاد` : 'تمام شد'}`; const r = zm.getBoundingClientRect(); zt.style.left = `${clamp(ev.clientX - r.left, 70, r.width - 70)}px`; zt.style.top = `${Math.max(8, ev.clientY - r.top - 12)}px`; zt.classList.add('is-on'); } } });
+        zm.addEventListener('pointerleave', () => { this.zh = -1; if (zt) zt.classList.remove('is-on'); this.zoneSoon(); });
+        if (typeof ResizeObserver !== 'undefined') { if (this._zro) this._zro.disconnect(); this._zro = new ResizeObserver(() => this.zoneSoon()); this._zro.observe(zm); } } }
     host.addEventListener('click', (ev) => {
       if (this.dragged) { this.dragged = false; return; }
       const i = this.miniAt(ev); if (i < 0) return;
@@ -11213,6 +11427,7 @@ const desk = {
       </aside>
       <div class="dk-main" id="dkMain"></div></div></div>`;
     this.rail($('.dk', page.el), v.kind); selUI.start();
+    { const tb = $('.dk-tabs', page.el); if (tb) { sfade.watch(tb); const cur = $('[aria-current="page"]', tb); if (cur) tb.scrollTop = Math.max(0, cur.offsetTop - 60); sfade.upd(tb); } }
     { const who = $('.dk-who', page.el); who.addEventListener('click', () => deskAuth.account()); who.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); deskAuth.account(); } }); }
     tab.render.call(D, $('#dkMain', page.el), v);
     { const as = v.kind === 'org' && dsess.viewAs(); if (as) { const bar = document.createElement('div'); bar.className = 'da-as evp-rise'; bar.innerHTML = `${ico('eye')}<span>داری پنل «${esc(as.name)}» رو همون‌طور که خودش می‌بینه می‌بینی.</span><button type="button" class="chip">${ico('arrow-r')}برگشت به پنل مدیر</button>`; $('button', bar).addEventListener('click', () => { dsess.patch({ as: '' }); location.hash = '#/admin/orgs'; }); $('#dkMain', page.el).prepend(bar); } }
@@ -13726,10 +13941,16 @@ const admin = {
         <form class="rc-row" id="adCat"><label class="bk-fld"><span>دسته‌ی تازه</span><input name="t" placeholder="مثلاً: ویژه‌ی کودکان" required></label><button type="submit" class="chip">${ico('plus')}افزودن</button></form></section>
       <section class="panel dk-box evp-rise"><h2>${ico('shield')}تنظیمات خرید</h2>
         <h3 class="wz-h3">تأیید موبایل با کد پیامکی موقع خرید</h3><div class="bk-seg" role="radiogroup" aria-label="تأیید موبایل">${[['off', 'خاموش'], ['busy', 'فقط اجراهای پرطرفدار'], ['always', 'همیشه']].map(([k, t]) => `<button type="button" role="radio" data-otp="${k}" aria-checked="${store.get('blit.otpMode', 'busy') === k}">${t}</button>`).join('')}</div>
+        <h3 class="wz-h3">نقشه‌ی سالن‌های بزرگ <small>(اول بخش‌ها، بعد صندلی‌ها)</small></h3><p class="bk-lead">تو سالن بزرگ مشتری اول نقشه‌ی بخش‌ها رو می‌بینه (هر بخش با اسم و تعداد جای خالی)؛ روی یه بخش می‌زنه و صندلی‌هاش باز می‌شن، و با «همه‌ی بخش‌ها» برمی‌گرده. «خودکار» یعنی از این تعداد صندلی به بالا.</p>
+        <div class="bk-seg" role="radiogroup" aria-label="نقشه‌ی بخش‌ها">${[['auto', 'خودکار'], ['always', 'همه‌ی سالن‌ها'], ['off', 'خاموش']].map(([k, t]) => `<button type="button" role="radio" data-zm="${k}" aria-checked="${buy.zoneCfg().mode === k}">${t}</button>`).join('')}</div>
+        <label class="bk-fld wz-orl"><span>«خودکار»: سالنی که <b>این‌قدر صندلی یا بیشتر</b> داره اول بخش‌ها رو نشون می‌ده</span><input type="number" id="zmMin" min="0" max="100000" step="50" inputmode="numeric" value="${buy.zoneCfg().min}" style="max-width:140px"></label>
         <h3 class="wz-h3">صندلی تکی <small>(وقتی انتخاب خریدار یه صندلی تنها می‌ذاره)</small></h3><p class="bk-lead">تو نقشه‌ی سالن اگه خریدار جوری صندلی بگیره که یه صندلی تنها وسط یا کنار ردیف بمونه (که دیگه کسی فقط همون رو نمی‌خره)، بهش هشدار داده می‌شه. «جلوگیری» یعنی تا درستش نکنه نمی‌تونه ادامه بده؛ «فقط هشدار» یعنی هشدار می‌گیره ولی می‌تونه ادامه بده.</p>
         <div class="bk-seg" role="radiogroup" aria-label="صندلی تکی">${[['block', 'جلوگیری'], ['warn', 'فقط هشدار'], ['off', 'خاموش']].map(([k, t]) => `<button type="button" role="radio" data-om="${k}" aria-checked="${orphanCfg(store.get('blit.orphan', null)).mode === k}">${t}</button>`).join('')}</div>
         <label class="bk-fld wz-orl"><span>وقتی تعداد صندلی‌های خالیِ کل سالن <b>این‌قدر یا کمتر</b> شد، این قانون خاموش می‌شه (آخرین صندلی‌ها دیگه مهم نیستن)</span><input type="number" id="omLast" min="0" max="50" step="1" inputmode="numeric" value="${orphanCfg(store.get('blit.orphan', null)).last}" style="max-width:120px"></label>
         <h3 class="wz-h3">صف انتظار هوشمند <small>(محافظ سایت و خرید)</small></h3><p class="bk-lead">وقتی تعداد خریدارها از ظرفیت (مثلاً ۱۰۰۰ نفر هم‌زمان) بیشتر شد، بقیه تو صف می‌ایستن و هر کدوم می‌بینه «الان N نفر از ظرفیت تو مرحله‌ی خرید هستن، جلوی تو N نفره»؛ هر کی تموم کرد نفر بعدی وارد می‌شه. تا ظرفیت پر نشده هم هر خریدار شماره‌ش رو یه لحظه می‌بینه («تو نفر N از ۱۰۰۰») و خودکار رد می‌شه؛ کسی معطل نمی‌شه. این‌جا (نمونه) صف شبیه‌سازی می‌شه؛ صف واقعی تو پوشه‌ی <code dir="ltr">server/</code> ساخته و با ۱۰۰ هزار نفر تست شده. <a href="#" id="qSee">دیدن صفحه‌ی صف</a></p><div class="bk-seg" role="radiogroup" aria-label="صف انتظار">${[['off', 'خاموش'], ['hot', 'فقط اجراهای پرطرفدار'], ['always', 'همه‌ی اجراها']].map(([k, t]) => `<button type="button" role="radio" data-qm="${k}" aria-checked="${store.get('blit.queueMode', 'always') === k}">${t}</button>`).join('')}</div></section></div>`;
+    { const zs = (patch) => { store.set('blit.zoneView', { ...buy.zoneCfg(), ...patch }); toast('ذخیره شد.'); };
+      $$('[data-zm]', el).forEach((b) => b.addEventListener('click', () => { zs({ mode: b.dataset.zm }); $$('[data-zm]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`نقشه‌ی بخش‌ها: ${b.textContent}`); }));
+      const zi = $('#zmMin', el); if (zi) zi.addEventListener('change', () => { const v = Math.max(0, Math.min(100000, Math.round(+zi.value || 0))); zi.value = v; zs({ min: v }); }); }
     { const save = (patch) => { const c = orphanCfg(store.get('blit.orphan', null)); store.set('blit.orphan', { ...c, ...patch }); };
       $$('[data-om]', el).forEach((b) => b.addEventListener('click', () => { save({ mode: b.dataset.om }); $$('[data-om]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`صندلی تکی: ${b.textContent}`); toast('ذخیره شد.'); }));
       const li = $('#omLast', el); if (li) li.addEventListener('change', () => { const v = Math.max(0, Math.min(50, Math.round(+li.value || 0))); li.value = v; save({ last: v }); toast('ذخیره شد.'); }); }
@@ -14050,6 +14271,7 @@ const adminGeo = {
             <label class="bk-fld"><span>عرض جغرافیایی (lat)</span><input id="ahLat" dir="ltr" inputmode="decimal" autocomplete="off"></label><label class="bk-fld"><span>طول جغرافیایی (lng)</span><input id="ahLng" dir="ltr" inputmode="decimal" autocomplete="off"></label></div></details>
           <div class="ad-actions">${isNew ? '' : `<button type="button" class="buy" id="ahLocSave">${ico('check')}ذخیره‌ی موقعیت</button><button type="button" class="chip" id="ahLocDel">${ico('x')}برداشتن موقعیت</button><button type="button" class="chip" id="ahLocUndo" hidden>${ico('undo')}برگردوندن به موقعیت اولیه‌ی بسته</button>`}</div></section>
         <section class="panel dk-box evp-rise" aria-labelledby="ahLayH"><h2 id="ahLayH">${ico('ruler')}چیدمان صندلی‌ها<small>${isNew ? '' : fa(lay0.length)}</small></h2><div id="ahLay"></div></section>
+        ${isNew || h.custom ? '' : `<section class="panel dk-box evp-rise" aria-labelledby="ahSecH" id="ahSecBox"><h2 id="ahSecH">${ico('grid')}اسم بخش‌های نقشه<small>همون‌طور که مشتری می‌بینه</small></h2><div id="ahSecs"></div></section>`}
         ${isNew ? '' : `<section class="panel dk-box evp-rise" aria-labelledby="ahZoneH" id="ahZoneBox"><h2 id="ahZoneH">${ico('tag')}رده‌ی قیمت هر ناحیه</h2><div id="ahZones"></div></section>`}
       </div><aside class="evp-side">
         ${isNew ? `<section class="panel dk-box evp-rise"><h2>${ico('check')}ثبت سالن</h2><p class="bk-lead">اسم، شهر و یه چیدمان کافیه؛ موقعیت و بقیه‌ی چیزها رو بعداً هم می‌شه گذاشت.</p><button type="button" class="buy" id="ahCreate" disabled>${ico('check')}ثبت سالن تو کتابخانه</button></section>`
@@ -14106,6 +14328,7 @@ const adminGeo = {
     }
     this.layouts(el, h, isNew);
     if (!isNew) this.zones(el, h);
+    if (!isNew && !h.custom) this.secNames(el, h);
     if (!isNew) {
       const rs = $('#ahReset', el); if (rs) rs.addEventListener('click', () => { const m = desk.modal('ad-no', `<h2>${ico('undo')}برگردوندن «${esc(h.name)}»</h2><p class="bk-lead">اسم، نشانی، شهر، موقعیت و رده‌ی ناحیه‌ها به مقدارهای بسته‌ی سالن‌ها برمی‌گردن. چیدمان‌هایی که خودت اضافه کردی می‌مونن.</p><div class="evp-dlg-end"><button type="button" class="buy" id="ahRy">${ico('undo')}برگردون</button><button type="button" class="chip" data-x>انصراف</button></div>`, 'برگردوندن سالن'); $('#ahRy', m.box).addEventListener('click', () => { libSet.hallReset(h.id); auditLog(`سالن «${h.name}» به مقدار اولیه برگشت`); m.shut(); toast('برگشت.'); this.edit(el, h.id); }); });
       $('#ahDel', el).addEventListener('click', () => this.hallDelete(el, h));
@@ -14157,6 +14380,17 @@ const adminGeo = {
       const show = () => { const x = hallById(sel.value); pv.innerHTML = miniPlan(planKeyOf(x, +ls.value || 0)); };
       sel.addEventListener('change', fill); ls.addEventListener('change', show); fill();
       $('#ahCy', m.box).addEventListener('click', () => { const x = hallById(sel.value), i = +ls.value || 0; libSet.layAdd(h.id, { n: `${layName(x, i) || x.name} (کپی)`, copy: { hall: x.id, lay: i } }); auditLog(`چیدمان «${x.name}» برای سالن «${h.name}» کپی شد`); m.shut(); toast('چیدمان اضافه شد.'); this.edit(el, h.id); });
+    });
+  },
+  // the names of the sections of a package hall's map: the buyer's zone view and tabs show these (empty = the original name)
+  secNames(el, h) {
+    const box = $('#ahSecs', el), sec = $('#ahSecBox', el); if (!box || !sec) return;
+    const raw = hallLayoutsRaw(h), sn = (lib.o.halls[String(h.id)] || {}).sn || {};
+    if (!raw.length) { sec.hidden = true; return; }
+    box.innerHTML = `<p class="bk-lead">اسم هر بخش تو نقشه‌ی خریدار؛ مثلاً «همکف راست» یا «بالکن غربی». خالی بذاری اسم اصلی می‌مونه.</p>` + raw.map((L, li) => `<div class="ad-sn"><h3 class="wz-h3">${esc(layName(h, li) || `چیدمان ${fa(li + 1)}`)}</h3><div class="ad-sn-g">${L.S.map(([label], si) => `<label class="bk-fld"><span>${esc(label)}</span><input data-sn="${li}:${si}" value="${esc((sn[li] || {})[si] || '')}" placeholder="${esc(label)}" maxlength="50"></label>`).join('')}</div></div>`).join('') + `<button type="button" class="buy" id="ahSnSave">${ico('check')}ذخیره‌ی اسم‌ها</button>`;
+    $('#ahSnSave', box).addEventListener('click', () => {
+      const patch = {}; $$('[data-sn]', box).forEach((i) => { const [li, si] = i.dataset.sn.split(':'); (patch[li] = patch[li] || {})[si] = i.value.trim(); });
+      libSet.hall(h.id, { sn: patch }); auditLog(`اسم بخش‌های نقشه‌ی سالن «${h.name}» عوض شد`); toast('ذخیره شد؛ تو نقشه‌ی خریدار همین اسم‌ها دیده می‌شن.');
     });
   },
   // the zones of a hall's real map: the price class of each (the buyer's colours and the shows' prices follow it; X: outside the capacity, not for sale)
