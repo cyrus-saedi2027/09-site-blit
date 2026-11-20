@@ -105,6 +105,21 @@
 html, body { margin: 0; }
 html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; }
+/* the scrollbars inside the site: a slim rounded thumb with air around it, thicker and darker under the pointer (a list that has more
+   below fades out at that edge: data-fade, set by sfade). Firefox gets the thin standard one. The desks hide theirs (html.is-desk below). */
+:where(*) { scrollbar-width: thin; scrollbar-color: rgba(var(--fg), .34) transparent; }
+@supports selector(::-webkit-scrollbar) {
+  :where(*) { scrollbar-width: auto; scrollbar-color: auto; }
+  :where(*)::-webkit-scrollbar { width: 14px; height: 14px; }
+  :where(*)::-webkit-scrollbar-track { background: transparent; margin: 8px; }
+  :where(*)::-webkit-scrollbar-thumb { min-height: 44px; min-width: 44px; border: 4px solid transparent; border-radius: 99px; background-color: rgba(var(--fg), .3); background-clip: content-box; transition: background-color .2s; }
+  :where(*)::-webkit-scrollbar-thumb:hover { border-width: 3px; background-color: rgba(var(--fg), .52); }
+  :where(*)::-webkit-scrollbar-thumb:active { background-color: var(--sc, rgb(var(--fg))); }
+  :where(*)::-webkit-scrollbar-corner { background: transparent; }
+}
+[data-fade][data-sc="b"] { -webkit-mask-image: linear-gradient(#000 calc(100% - 28px), transparent); mask-image: linear-gradient(#000 calc(100% - 28px), transparent); }
+[data-fade][data-sc="t"] { -webkit-mask-image: linear-gradient(transparent, #000 28px); mask-image: linear-gradient(transparent, #000 28px); }
+[data-fade][data-sc="m"] { -webkit-mask-image: linear-gradient(transparent, #000 28px, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(transparent, #000 28px, #000 calc(100% - 28px), transparent); }
 body { background: var(--bg); color: rgb(var(--fg)); font-family: var(--font); font-size: calc(max(13px, calc(var(--u) * .8)) * var(--tx)); line-height: 1.7; -webkit-font-smoothing: antialiased; }
 [hidden] { display: none !important; }
 button { font: inherit; color: inherit; }
@@ -1175,7 +1190,7 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .evp-rules a { color: var(--sc); font-weight: var(--fwb); text-decoration: underline; text-underline-offset: .25em; text-decoration-thickness: 1.5px; }
 .evp-rules.is-shake { animation: shake .55s cubic-bezier(.36, .07, .19, .97); box-shadow: inset 0 0 0 1.5px #f43f5e; }
 @keyframes shake { 15%, 85% { transform: translateX(-2px); } 30%, 70% { transform: translateX(4px); } 45%, 55% { transform: translateX(-6px); } }
-.ses-list { display: grid; gap: calc(var(--u) * .45); max-height: min(42vh, calc(var(--u) * 21)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 3px; margin: -3px; }
+.ses-list { display: grid; grid-auto-rows: max-content; align-content: start; gap: calc(var(--u) * .45); max-height: min(42vh, calc(var(--u) * 21)); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 3px; margin: -3px; }
 .ses { --sw: max(68px, calc(var(--u) * 4.2)); --nr: 8px; position: relative; display: grid; grid-template-columns: var(--sw) minmax(0, 1fr) auto; align-items: center; gap: 0 calc(var(--u) * .8); padding-inline-end: calc(var(--u) * .85); min-height: max(66px, calc(var(--u) * 4.1)); border-radius: calc(var(--r) * .8); background: rgba(var(--fg), .045); box-shadow: inset 0 0 0 1.5px rgba(var(--fg), .15); overflow: hidden; cursor: pointer; animation: ses-in .7s var(--ease) both; animation-delay: var(--d, 0s); transition: background-color .3s, box-shadow .3s;
   -webkit-mask: radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat;
   mask: radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 0, transparent 96%, #000 100%) top / 100% 51% no-repeat, radial-gradient(circle var(--nr) at calc(100% - var(--sw)) 100%, transparent 96%, #000 100%) bottom / 100% 51% no-repeat; }
@@ -1185,13 +1200,13 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .ses[aria-disabled="true"] { cursor: not-allowed; }
 .ses[aria-disabled="true"] .ses-body, .ses[aria-disabled="true"] .ses-radio { opacity: .72; }
 .ses:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: -5px; }
-.ses-stub { display: grid; justify-items: center; align-content: center; gap: .02em; align-self: stretch; padding: .6em .4em; color: #fff; background: #1c1828; line-height: 1.35; }   /* (one colour, so a checker can read the white on it) */
+.ses-stub { display: grid; justify-items: center; align-content: center; gap: 0; align-self: stretch; padding: .45em .4em; color: #fff; background: #1c1828; line-height: 1.25; }   /* (one colour, so a checker can read the white on it) */
 .ses-stub > * { background: #1c1828; }   /* (the same colour under each word: a checker never has to guess the ground) */
 .ses-stub b { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); font-weight: var(--fwm); opacity: .92; }
-.ses-stub strong { font-size: calc(max(22px, calc(var(--u) * 1.5)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ses-stub strong { font-size: calc(max(22px, calc(var(--u) * 1.5)) * var(--tx) * var(--tx-main)); font-weight: 900; line-height: 1.05; font-variant-numeric: tabular-nums; }
 .ses-stub span { font-size: calc(max(12px, calc(var(--u) * .74)) * var(--tx) * var(--tx-small)); opacity: .92; }
-.ses-body { display: grid; gap: .3em; min-width: 0; padding-block: .6em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
-.ses-time { display: inline-flex; align-items: center; gap: .45em; font-size: calc(max(15px, calc(var(--u) * .96)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
+.ses-body { display: flex; flex-wrap: wrap; align-items: center; align-content: center; gap: .2em .9em; min-width: 0; padding-block: .5em; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); }
+.ses-time { flex: 1 0 100%; display: inline-flex; align-items: center; gap: .45em; font-size: calc(max(15px, calc(var(--u) * .96)) * var(--tx) * var(--tx-main)); font-weight: var(--fwb); }
 .ses-time svg.i { width: 1.15em; height: 1.15em; color: var(--sc); }
 .ses-st { display: inline-flex; align-items: center; gap: .4em; font-weight: var(--fwb); }
 .ses-st svg.i { width: 1.25em; height: 1.25em; padding: .12em; border-radius: 50%; color: #fff; stroke-width: 2.6; }
@@ -1303,6 +1318,17 @@ div.s2-empty p { margin: 0; max-width: 46ch; line-height: 1.9; }
 .tk-tips svg.i { width: 52%; height: 52%; }
 @media (max-width: 900px) { .tk-tips { grid-template-columns: 1fr; } }
 .evp-in:not(.evp-show) .evp-same .hl-list { flex: 1 1 0; }
+/* a short side column grows to the main one (sfill.cols): its last panel takes the rest, so no bare patch is left beside the page */
+@media (min-width: 1100px) {
+  .evp-side.is-fill { position: static; align-self: stretch; display: flex; flex-direction: column; }
+  .evp-side.is-fill > .panel:last-child { flex: 1 1 auto; }
+}
+.evp-side.is-fill > .panel:last-child { display: flex; flex-direction: column; }
+.evp-side.is-fill > .panel:last-child > :last-child { margin-block: auto; }
+@media (min-width: 1100px) {
+  .evp-cols.is-stack { grid-template-columns: minmax(0, 1fr); }
+  .evp-cols.is-stack > .evp-side { position: static; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
+}
 
 /* ── steps 2–4 of a purchase: the seats, the booking and payment, the tickets (buy.js); the same panels and themes ── */
 .steps li a { display: inline-flex; align-items: center; gap: .5em; color: inherit; text-decoration: none; }
@@ -1819,6 +1845,23 @@ a.buy, a.chip { text-decoration: none; }
 .tf-qrc { max-width: 420px; }
 @media print { .tf-acts { display: none; } .tf-card { break-inside: avoid; } }
 
+/* the single-seat warning: in the cart (amber, calm, with the two ways out) and on the map (the lonely seat is ringed and breathes) */
+.bk-orph { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; padding: 12px 12px 12px 14px; border-radius: 16px; background: color-mix(in oklab, #f59e0b 14%, transparent); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, #f59e0b 60%, transparent); }
+.bk-orph[hidden] { display: none; }
+.bk-orph[data-mode="block"] { background: color-mix(in oklab, #f59e0b 18%, transparent); }
+.bk-orph-ic { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #f59e0b; color: #1c1100; }
+.bk-orph-ic svg.i { width: 17px; height: 17px; stroke-width: 2.6; }
+.bk-orph b { display: block; font-size: 13.5px; font-weight: var(--fwb); line-height: 1.7; }
+.bk-orph p { margin: 2px 0 8px; font-size: 12.5px; line-height: 1.85; color: rgba(var(--fg), .82); }
+.bk-orph-a { display: flex; flex-wrap: wrap; gap: 6px; }
+.bk-orph-a .chip { min-height: 34px; padding-inline: 12px; font-size: 12.5px; }
+.bk-orph.is-shake { animation: shake .55s cubic-bezier(.36, .07, .19, .97); }
+.bk-sum2.is-warn { color: #d97706; font-weight: var(--fwb); }
+:root[data-mode="dark"] .bk-sum2.is-warn { color: #fbbf24; }
+.sm-s.is-orph, .seat.is-orph { outline: 2px dashed #f59e0b; outline-offset: 2px; animation: orphBreath 1.25s ease-in-out infinite alternate; z-index: 2; }
+@keyframes orphBreath { from { outline-color: rgba(245, 158, 11, .35); } to { outline-color: #f59e0b; } }
+@media (prefers-reduced-motion: reduce) { .sm-s.is-orph, .seat.is-orph { animation: none; } }
+
 /* ── the seat map (seatmap.js): the overview, the best seats, one section big; light on the browser (no per-seat transforms
    that change, no custom properties animated, one composited container) ── */
 .bk-map { grid-template-rows: none; gap: calc(var(--u) * .6); }
@@ -2173,6 +2216,14 @@ a.buy, a.chip { text-decoration: none; }
 .tf-oc-m b { font-weight: 700; }
 .tf-oc-m span[dir="ltr"] { margin-inline-start: auto; font-variant-numeric: tabular-nums; letter-spacing: .04em; opacity: .75; }
 .tf-oc.is-past .tf-box { filter: grayscale(.85); opacity: .72; }
+/* the account page before sign-in: three doors under the card, so the page is not a card in an empty room */
+.ac-doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--gap); }
+.ac-door { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 4px 14px; padding: calc(var(--u) * 1.3); text-decoration: none; color: inherit; transition: transform .25s var(--ease), box-shadow .25s; }
+.ac-door .sec-ic { grid-row: 1 / span 2; }
+.ac-door b { font-size: 15px; font-weight: var(--fwb); }
+.ac-door small { font-size: 12.5px; line-height: 1.8; color: rgba(var(--fg), max(.66, var(--dmin))); }
+.ac-door:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(0, 0, 0, .6); }
+.ac-door:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 3px; }
 
 /* ── the entry control (gate.js): the start (session, door, code) and the scanning (camera, the answer, the numbers, the log) ── */
 .gt { --ok: #22c55e; --bad: #f43f5e; --warn: #f59e0b; }
@@ -2357,7 +2408,7 @@ a.buy, a.chip { text-decoration: none; }
 .dk-live i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: gtPing 2s ease-out infinite; }
 .dk-sub { margin: calc(var(--u) * .4) calc(var(--u) * .3) 0; font-size: calc(max(15px, calc(var(--u) * 1)) * var(--tx) * var(--tx-main)); font-weight: 800; }
 .dk-sub small { font-weight: var(--fwm); color: rgba(var(--fg), max(.55, var(--dmin))); }
-.dk-cols { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: var(--gap); align-items: start; }
+.dk-cols { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: var(--gap); align-items: stretch; }
 .dk-cols-r { grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); }
 .dk-stack { display: grid; gap: var(--gap); }
 .dk-box { padding: calc(var(--u) * 1.2) calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); min-width: 0; }
@@ -3876,6 +3927,75 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 .tf-auto span { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 12px; background: rgba(var(--fg), .07); padding: 7px 10px; border-radius: 9px; }
 .tf-auto i { font-style: normal; opacity: .75; } .tf-auto b { font-weight: 800; }
 
+/* the session step, made simple: one line to add, one list */
+.wz-add { display: grid; grid-template-columns: minmax(0, 1.5fr) auto minmax(0, 1fr) auto; gap: 12px; align-items: end; padding: 14px; border-radius: 18px; background: rgba(var(--fg), .045); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); }
+.wz-af { display: grid; gap: 6px; min-width: 0; }
+.wz-af > span { font-size: 12px; font-weight: 700; color: rgba(var(--fg), .66); }
+.wz-day, .wz-add select { appearance: none; -webkit-appearance: none; display: flex; align-items: center; gap: .6em; width: 100%; min-height: 46px; padding: 0 14px; border: 0; border-radius: 14px; background: rgba(var(--fg), .075); box-shadow: inset 0 0 0 1px rgba(var(--fg), .16); color: rgb(var(--fg)); font: inherit; font-size: 14px; cursor: pointer; transition: background-color .2s, box-shadow .2s; }
+.wz-day:hover, .wz-add select:hover, .wz-hm select:hover { background: rgba(var(--fg), .12); }
+.wz-day b { flex: 1; text-align: start; font-weight: 700; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wz-day svg.i { width: 1.2em; height: 1.2em; flex: none; opacity: .75; }
+.wz-day[aria-expanded="true"] { box-shadow: inset 0 0 0 2px var(--viz-1); }
+.wz-day:focus-visible, .wz-add select:focus-visible, .wz-hm select:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.wz-hm { display: inline-flex; align-items: center; gap: 4px; direction: ltr; }
+.wz-hm i { font-style: normal; font-weight: 800; opacity: .7; }
+.wz-hm select { width: auto; min-width: 62px; justify-content: center; text-align: center; padding: 0 10px; direction: ltr; font-variant-numeric: tabular-nums; font-weight: 700; }
+.wz-rep { padding-inline-end: 10px; }
+.wz-add .wz-go { display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: .55em; min-height: 46px; padding: 0 22px; white-space: nowrap; }
+.wz-add .wz-go svg.i { width: 1.2em; height: 1.2em; flex: none; }
+.wz-hint { margin: 10px 4px 14px; font-size: 12.5px; color: rgba(var(--fg), .66); min-height: 1.6em; }
+.wz-pcal { width: min(330px, calc(100vw - 32px)); gap: 10px; padding: 8px; }
+.wz-pcal .wz-d { aspect-ratio: 1; border-radius: 12px; }
+.wz-multi { display: flex; align-items: center; gap: .6em; padding: 8px 10px; border-radius: 12px; background: rgba(var(--fg), .05); font-size: 13px; cursor: pointer; }
+.wz-multi input { position: absolute; opacity: 0; pointer-events: none; }
+.wz-multi .box { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; box-shadow: inset 0 0 0 2px rgba(var(--fg), .4); color: transparent; flex: none; transition: background-color .2s, color .2s, box-shadow .2s; }
+.wz-multi .box svg.i { width: 14px; height: 14px; stroke-width: 3.4; }
+.wz-multi input:checked + .box { background: var(--viz-1); color: #fff; box-shadow: none; }
+.wz-multi input:focus-visible + .box { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.wz-sl2 { display: grid; align-content: start; max-height: min(52vh, 440px); overflow-y: auto; overscroll-behavior: contain; padding: 4px; border-radius: 16px; background: rgba(var(--fg), .035); box-shadow: inset 0 0 0 1px rgba(var(--fg), .08); }
+.wz-sr { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; gap: 10px; padding: 6px 10px; min-height: 48px; border-radius: 12px; }
+.wz-sr.is-first:not(:first-child) { margin-top: 4px; box-shadow: 0 -1px 0 rgba(var(--fg), .1); border-top-left-radius: 0; border-top-right-radius: 0; }
+.wz-sr:hover { background: rgba(var(--fg), .06); }
+.wz-sr.is-new { animation: wz-new 1.6s var(--ease); }
+@keyframes wz-new { 0% { background: color-mix(in oklab, var(--viz-1) 28%, transparent); } 100% { background: transparent; } }
+.wz-sr.is-past { opacity: .55; }
+.wz-sr-d { font-weight: 700; font-size: 14px; }
+.wz-sr-p { font-size: 11.5px; opacity: .8; }
+.wz-hm-s select { min-height: 36px; min-width: 54px; padding: 0 8px; border-radius: 10px; font-size: 13.5px; }
+.wz-sr-x { appearance: none; display: grid; place-items: center; width: 34px; height: 34px; border: 0; border-radius: 10px; background: transparent; color: rgba(var(--fg), .6); cursor: pointer; transition: background-color .2s, color .2s; }
+.wz-sr-x:hover { background: color-mix(in oklab, #f43f5e 18%, transparent); color: #f43f5e; }
+.wz-sr-x:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 1px; }
+.wz-sr-x svg.i { width: 16px; height: 16px; }
+.wz-empty { display: flex; align-items: center; justify-content: center; gap: .7em; margin: 0; padding: 26px 14px; text-align: center; font-size: 13.5px; color: rgba(var(--fg), .68); }
+.wz-empty svg.i { width: 1.4em; height: 1.4em; flex: none; opacity: .7; }
+@media (max-width: 900px) { .wz-add { grid-template-columns: minmax(0, 1fr) auto; } .wz-add .wz-go { grid-column: 1 / -1; } }
+@media (max-width: 520px) { .wz-add { grid-template-columns: minmax(0, 1fr); } .wz-sr { grid-template-columns: minmax(0, 1fr) auto auto; } .wz-sr-d { grid-column: 1 / -1; } .wz-sr:not(.is-first) .wz-sr-d { display: none; } }
+/* the hall builder: the quick builder on top, the templates in a closed list, the section cards that fold */
+.hb-quick { display: grid; gap: 12px; padding: 16px; border-radius: 18px; background: color-mix(in oklab, var(--viz-1) 9%, rgba(var(--fg), .04)); box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--viz-1) 40%, transparent); margin-bottom: 14px; }
+.hb-q-h { display: grid; gap: 2px; }
+.hb-q-h b { display: flex; align-items: center; gap: .5em; font-size: 16px; font-weight: 800; }
+.hb-q-h b svg.i { width: 1.15em; height: 1.15em; padding: .25em; border-radius: 8px; background: var(--viz-1); color: #fff; box-sizing: content-box; }
+.hb-q-h small { font-size: 12.5px; color: rgba(var(--fg), .7); }
+.hb-q-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: end; }
+.hb-q-row .hb-f { min-width: 0; }
+.hb-q-row input[type="number"] { width: 130px; min-height: 44px; padding: 0 12px; border: 0; border-radius: 12px; background: rgba(var(--fg), .075); box-shadow: inset 0 0 0 1px rgba(var(--fg), .16); color: rgb(var(--fg)); font: inherit; font-size: 15px; font-weight: 800; text-align: center; }
+.hb-q-row input[type="number"]:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
+.hb-q-go { display: inline-flex; align-items: center; gap: .5em; min-height: 46px; padding: 0 26px; margin-inline-start: auto; }
+.hb-q-go svg.i { width: 1.2em; height: 1.2em; }
+.hb-q-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.hb-q-chips .chip { min-height: 32px; font-size: 12.5px; }
+.hb-tpls > summary { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 12px; background: rgba(var(--fg), .05); cursor: pointer; list-style: none; font-size: 13.5px; font-weight: 700; }
+.hb-tpls > summary::-webkit-details-marker { display: none; }
+.hb-tpls > summary small { font-weight: 500; opacity: .7; }
+.hb-tpls > summary svg.i { width: 1.1em; height: 1.1em; transition: transform .2s; }
+.hb-tpls[open] > summary svg.i { transform: rotate(180deg); }
+.hb-tpls > .hb-tpl { margin-top: 10px; }
+.hb-tg svg.i { transition: transform .2s; }
+.hb-card.is-closed .hb-tg svg.i { transform: rotate(0); }
+.hb-card:not(.is-closed) .hb-tg svg.i { transform: rotate(180deg); }
+.hb-card.is-closed .hb-body { display: none; }
+@media (max-width: 640px) { .hb-q-go { width: 100%; margin-inline-start: 0; justify-content: center; } }
+
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
    one frame, one rhythm of spaces, calm panels with a fine light on their edge, headings with a small icon chip, big pictures instead of many small boxes.
@@ -3918,6 +4038,12 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 .lx-book { align-self: center; max-height: var(--ph); overflow: auto; gap: calc(var(--u) * .85); padding: calc(var(--u) * 1.3); border-radius: calc(var(--r) * 1.15); color: rgb(var(--fg)); background: var(--bg-panel, var(--capsule)); box-shadow: inset 0 0 0 1px rgba(var(--fg), .14), 0 18px 40px -30px rgba(0, 0, 0, .5); }
 .lx-book .lx-h { margin: 0; }
 .lx-book .ses-list { max-height: min(40vh, calc(var(--u) * 17)); }
+@media (min-width: 1100px) {
+  .lx-book { display: flex; flex-direction: column; overflow: hidden; }
+  .lx-book > * { flex: none; }
+  .lx-book > .ses-list { flex: 1 1 auto; min-height: calc(var(--u) * 9.5); max-height: none; padding-inline: 3px; }
+  .lx-book > .evp-act { padding-top: calc(var(--u) * .9); border-top: 1px solid rgba(var(--fg), .1); }
+}
 .lx-book::before { content: ""; position: absolute; top: 0; inset-inline: 14%; height: 2px; border-radius: 0 0 3px 3px; background: linear-gradient(90deg, transparent, var(--sc), transparent); opacity: .9; pointer-events: none; }
 
 .lx-info { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: stretch; }
@@ -3948,7 +4074,7 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 
 /* a narrower window: the booking card under the picture and the name; the information one under the other */
 @media (max-width: 1099px) {
-  .lx-book .ses-list { max-height: none; }
+  .lx-book .ses-list { max-height: min(56vh, 430px); }
   .lx-stage { --ph: clamp(300px, 46vw, 430px); grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: calc(var(--u) * 1.6) 18px; min-height: 0; padding: 14px; }
   .lx-book { max-height: none; overflow: visible; }
   .lx-title { align-self: center; }
@@ -3960,7 +4086,7 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 @media (min-width: 761px) and (max-width: 1099px) {
   .lx-book { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); column-gap: 20px; align-items: start; }
   .lx-book > :is(.evp-bh, .evp-sale) { grid-column: 1 / -1; }
-  .lx-book > .ses-list { grid-column: 1; grid-row: span 3; max-height: none; }
+  .lx-book > .ses-list { grid-column: 1; grid-row: span 3; max-height: min(62vh, 520px); }
   .lx-book > :is(.evp-act, .evp-note) { grid-column: 2; }
   .lx-book > .ses-list:has(.ses-none) { grid-column: 1 / -1; grid-row: auto; }
 }
@@ -4180,6 +4306,12 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 .rv-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .rv-btns .buy { flex: 1 1 auto; }
 @media (min-width: 1181px) { .rv-side { position: sticky; top: calc(var(--pad-t) + var(--nav-h) + var(--gap)); } }
+/* the seat page: the map panel is as tall as the column beside it (the cart, the overview, the prices), so no bare background is left under it; its picture sits in the middle of the room */
+@media (min-width: 1100px) {
+  .evp-in.bk .bk-map { align-self: stretch; grid-template-rows: auto auto minmax(0, 1fr); align-content: stretch; }
+  .evp-in.bk .bk-map .sm-view { display: grid; align-items: center; }
+  .evp-in.bk .bk-map .sm-in { min-height: 0; }
+}
 
 /* ── laptops and tablets ───────────────────────────────────────── */
 @media (max-width: 1100px) {
@@ -4583,7 +4715,7 @@ html:not(.show-notes) .notes { display: none; }
           <div class="ft-col">
             <h4><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>دسته‌بندی‌ها</h4>
             <ul>
-              <li><a href="#s2Secs" data-go="soon">به‌زودی (پیش‌فروش)</a></li>
+              <li><a href="#s2Secs" data-go="soon">به‌زودی</a></li>
               <li><a href="#s2Secs" data-go="concert">کنسرت‌ها</a></li>
               <li><a href="#s2Secs" data-go="theatre">تئاترها</a></li>
               <li><a href="#s2Secs" data-go="comedy">جُنگ و کمدی</a></li>
@@ -4997,7 +5129,7 @@ function sanitizeLib(j) {
     halls[k] = h;
   });
   const hallNew = arr(j.hallNew).filter((h) => h && str(h.id) && str(h.name) && str(h.city)).map((h) => { const l = arr(h.lay).filter(okLay).map(lay); return { id: h.id, slug: h.id, name: h.name, addr: typeof h.addr === 'string' ? h.addr : '', city: h.city, loc: pt(h.loc), cap: 0, ty: [], z: [], sb: [], alias: [], lay: l.length ? l : [{ n: 'چیدمان اصلی', p: { shape: 'fan', rows: 10, seats: 14, blocks: 2, grow: false, balcony: 0, boxes: 0, tables: 0, stand: 0 } }] }; });
-  return { v: 1, cities, cityNew, halls, hallNew, seq: Number.isInteger(j.seq) && j.seq >= 0 ? j.seq : 0 };
+  return { v: 1, cities, cityNew, halls, hallNew, seq: Number.isInteger(j.seq) && j.seq >= 0 ? j.seq : 0, seedBig: j.seedBig ? 1 : 0 };
 }
 const lib = {
   v: 0, fns: [], o: null,
@@ -5313,7 +5445,7 @@ const LOOK_DEF = {
   dims: false,
 };
 const TXT_DEF = {
-  brand: 'بلیت', cats: 'کنسرت، تئاتر، جُنگ و کمدی، به‌زودی (پیش‌فروش)', login: 'ورود | ثبت‌نام',
+  brand: 'بلیت', cats: 'کنسرت، تئاتر، جُنگ و کمدی، به‌زودی', login: 'ورود | ثبت‌نام',
   search: 'جستجوی اجرا، هنرمند یا سالن…',
   buy: 'خرید بلیت', priceLab: 'قیمت از', venueLab: 'مکان', unit: 'تومان',
 };
@@ -5470,7 +5602,7 @@ const KINDS = [
   { id: 'comedy', label: 'جُنگ و کمدی', type: 'کمدی' },
 ];
 const CAT_LABEL = { concert: 'کنسرت‌ها', theatre: 'تئاترها', comedy: 'جُنگ و کمدی' };
-const SOON_LABEL = 'به‌زودی (پیش‌فروش)';
+const SOON_LABEL = 'به‌زودی';
 // «concert:tehran» (an old link, from when the cities split the kinds) is «concert»
 const catKey = (k) => { const s = String(k || ''); return s === 'soon' || s === 'all' ? s : s.split(/[:-]/)[0]; };
 const catOf = (e) => e.kind || 'theatre';
@@ -5620,6 +5752,42 @@ MORE.forEach((e) => { bindHall(e, e.hall); setPal(e, e.pal); e.w = when(e); });
 const LIST = () => (LOOK.listFill ? EVENTS.concat(MORE) : EVENTS);
 // a hall or a city renamed by the admin: the shows in it say so
 lib.on(() => EVENTS.concat(MORE).forEach((e) => { if (e.hall != null) bindHall(e, e.hall, e.hallLay); }));
+
+/* a list that scrolls fades at the edge that has more behind it (data-fade, data-sc = t | b | m); sfade.watch(el) switches it on */
+const sfade = {
+  upd(el) { const t = el.scrollTop > 2, b = el.scrollHeight - el.clientHeight - el.scrollTop > 2; const v = t && b ? 'm' : t ? 't' : b ? 'b' : ''; if (el.dataset.sc !== v) { if (v) el.dataset.sc = v; else delete el.dataset.sc; } },
+  watch(el) { if (!el) return el; el.setAttribute('data-fade', ''); if (!this.ro && typeof ResizeObserver !== 'undefined') this.ro = new ResizeObserver((es) => es.forEach((x) => this.upd(x.target))); if (this.ro) this.ro.observe(el); this.upd(el); requestAnimationFrame(() => this.upd(el)); return el; },
+};
+document.addEventListener('scroll', (ev) => { const el = ev.target; if (el && el.nodeType === 1 && el.hasAttribute('data-fade')) sfade.upd(el); }, true);
+
+/* no bare patches (the owner: «یهو یه تیکه خالی میشه یه سمت و پس‌زمینه‌ست فقط»):
+   sfill.grid  — a grid of cards: fewer cards than columns are centred at their own width, an unfinished last row is centred under the others;
+   sfill.cols  — a page of a main column and a short side column: the side column grows to the main one's height when it is not much shorter (its last panel takes the rest) */
+const sfill = {
+  grid(g) {
+    if (!g || g._fill) return g; g._fill = true; const run = () => this.balance(g);
+    if (typeof ResizeObserver !== 'undefined') new ResizeObserver(run).observe(g); requestAnimationFrame(run); return g;
+  },
+  balance(g) {
+    const kids = [...g.children].filter((k) => k.offsetParent !== null); if (!kids.length || !(g.clientWidth > 0)) return;
+    kids.forEach((k) => { k.style.translate = ''; }); g.style.removeProperty('grid-template-columns'); g.style.justifyContent = '';
+    const cs = getComputedStyle(g), cols = cs.gridTemplateColumns.split(' ').length, n = kids.length, cw = kids[0].getBoundingClientRect().width, gap = parseFloat(cs.columnGap) || 0;
+    if (cols < 2 || !cw) return;
+    if (n < cols) { g.style.gridTemplateColumns = `repeat(${n}, ${cw}px)`; g.style.justifyContent = 'center'; return; }
+    const r = n % cols; if (!r) return; const dx = ((cols - r) / 2) * (cw + gap) * (cs.direction === 'rtl' ? -1 : 1);
+    kids.slice(n - r).forEach((k) => { k.style.translate = `${dx}px 0`; });
+  },
+  cols(host) {
+    const run = () => $$('.evp-cols', host).forEach((c) => {
+      if (c.classList.contains('bk-cols') || c.closest('.bk')) return;
+      const m = c.querySelector(':scope > .evp-main'), s = c.querySelector(':scope > .evp-side'); if (!m || !s) return;
+      s.classList.remove('is-fill'); c.classList.remove('is-stack'); if (getComputedStyle(c).gridTemplateColumns.split(' ').length < 2) return;
+      const d = m.offsetHeight - s.offsetHeight; if (d > 60 && d <= 520) s.classList.add('is-fill'); else if (d > 520) c.classList.add('is-stack');   // (much shorter: it goes under the main column, its panels side by side)
+    });
+    requestAnimationFrame(run); setTimeout(run, 500); setTimeout(run, 1600);
+    if (typeof ResizeObserver !== 'undefined' && host) { if (host._fillRo) host._fillRo.disconnect(); const ro = host._fillRo = new ResizeObserver(() => { clearTimeout(ro._t); ro._t = setTimeout(run, 120); }); $$('.evp-main', host).forEach((x) => ro.observe(x)); }
+  },
+};
 /* ════════════════════════════════════════════════════════════════
    round T: placing a picture in its fixed frame («چیدن تصویر»). Every picture has one fixed shape on the site (the poster 2 : 3, the desktop banner 2 : 1,
    the mobile banner 3 : 4, upright) and always fills it; whoever adds a program drags the picture inside a big frame of that shape to choose what stays in view, and
@@ -7073,7 +7241,7 @@ const smoothScroll = {
    a bar of the categories that follows the page and shows where you are (a pill slides to the section in view), then one
    section for each category and the footer. Every section is a panel of its own, with its own colour and icon, a head (the
    name, how many shows, the days they cover, a city filter where the cities differ) and its posters; a section with many
-   shows shows two rows and opens the rest on a press. «به‌زودی (پیش‌فروش)» has wide tickets with a big countdown. A show whose
+   shows shows two rows and opens the rest on a press. «به‌زودی» has wide tickets with a big countdown. A show whose
    sale hasn't started is in its category and also in the presale. The panels, gaps, margins, radii and colours are the hero's
    own, so the look's settings (and the theme) change this too. A poster opens the show's page (page.js).
    ════════════════════════════════════════════════════════════════ */
@@ -7838,6 +8006,36 @@ function bFromP(p) {
   return { v: 1, stage: fan ? 'arc' : p.stand ? 'wide' : 'rect', secs };
 }
 const hbSeat = (o) => ({ id: hbId(), kind: 'seat', shape: 'fan', rows: 10, first: 14, grow: 0.5, blocks: 3, aisle: 'm', gap: 'auto', cls: { mode: 'thirds', c: 'A' }, ...o });
+
+/* ───── the quick builder: a hall from its capacity (the owner: «سیستم ساخت سالن حرفه‌ای‌تر و بشدت راحت‌تر»). The numbers are fitted: the rows, the seats of the first row and how much each row widens
+   give the capacity asked (within a few percent); a floor of more than 1 800 seats is cut into parts so that no section is too big to draw; the prices are cut by floor ───── */
+const hbFa = (n) => String(n).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
+const HB_SPLIT = { 1: [1], 2: [0.7, 0.3], 3: [0.58, 0.26, 0.16], 4: [0.46, 0.24, 0.17, 0.13] };
+function hbFit(cap, shape) {
+  const R = clamp(Math.round(Math.sqrt(cap / 2.4)), 3, 40), avg = cap / R;
+  if (shape === 'rect') return { rows: R, first: clamp(Math.round(avg), 2, 80), grow: 0 };
+  let best = null;
+  for (const g of [0, 0.5, 1, 2, 3]) { const first = clamp(Math.round(avg - (g * (R - 1)) / 2), 4, 80), tot = first * R + (g * R * (R - 1)) / 2, err = Math.abs(tot - cap) + (g > 1 ? 2 : 0); if (!best || err < best.err) best = { rows: R, first, grow: g, err }; }
+  return best;
+}
+function hbQuick({ kind = 'hall', cap = 600, floors = 1, pit = 0 }) {
+  cap = clamp(Math.round(cap) || 600, 20, 30000); floors = clamp(floors | 0 || 1, 1, 4);
+  const secs = [], stage = kind === 'rect' ? 'rect' : kind === 'arena' ? 'wide' : 'arc', shape = kind === 'hall' ? 'fan' : 'rect'; let seated = cap;
+  if (kind === 'arena') {
+    const pc = Math.round((cap * (pit || 0)) / 10) * 10;
+    if (pc >= 20) { secs.push({ id: hbId(), kind: 'stand', t: 'ایستاده (جلوی صحنه)', cap: pc, c: 'B' }); seated = cap - pc; }
+    const side = Math.min(2300, Math.round(seated * 0.16));   // (a side stand is at most 40 rows of 60)
+    if (side >= 40) { for (const [t, sd] of [['سکوی راست', 'r'], ['سکوی چپ', 'l']]) { const f = hbFit(side, 'rect'); secs.push({ id: hbId(), kind: 'side', t, side: sd, rows: Math.min(40, f.rows), first: Math.min(60, f.first), grow: 0, blocks: 1, aisle: 'm', cls: { mode: 'thirds', c: 'B' } }); } seated -= 2 * side; }
+  }
+  HB_SPLIT[floors].forEach((w, fi) => {
+    const part = Math.max(10, Math.round(seated * w)), P = Math.max(1, Math.ceil(part / 1800));
+    for (let i = 0; i < P; i++) {
+      const c = Math.round(part / P), f = hbFit(c, shape), mx = f.first + f.grow * (f.rows - 1), B = mx <= 14 ? 1 : mx <= 30 ? 2 : mx <= 50 ? 3 : mx <= 70 ? 4 : 5;
+      secs.push(hbSeat({ t: HB_FLOORS[fi] + (P > 1 ? ` ${hbFa(i + 1)}` : ''), shape, rows: f.rows, first: f.first, grow: f.grow, blocks: B, gap: fi || i ? 'big' : 'auto', cls: fi === 0 && i === 0 ? { mode: 'thirds', c: 'A' } : { mode: 'one', c: HB_CLS[Math.min(8, 2 + fi + (i ? 1 : 0))] } }));
+    }
+  });
+  return { v: 1, stage, secs };
+}
 const HB_TPL = {
   classic: { t: 'تالار کلاسیک (لژ و دو بالکن)', b: { v: 1, stage: 'arc', secs: [hbSeat({ t: 'پارتر', rows: 14, first: 12, grow: 1 }), { id: hbId(), kind: 'box', t: 'لژها', side: 'both', n: 5, per: 4, c: 'A' }, hbSeat({ t: 'بالکن اول', rows: 5, first: 20, grow: 1, gap: 'big', cls: { mode: 'one', c: 'C' } }), hbSeat({ t: 'بالکن دوم', rows: 4, first: 24, grow: 1, cls: { mode: 'one', c: 'D' } })] } },
   rect: { t: 'سالن مستطیل (همکف و بالکن)', b: { v: 1, stage: 'rect', secs: [hbSeat({ t: 'همکف', shape: 'rect', rows: 12, first: 16, grow: 0, blocks: 2 }), hbSeat({ t: 'بالکن', shape: 'rect', rows: 4, first: 20, grow: 0, blocks: 2, gap: 'big', cls: { mode: 'one', c: 'D' } })] } },
@@ -7847,6 +8045,9 @@ const HB_TPL = {
   cabaret: { t: 'کافه‌تئاتر (میز و ردیف)', b: { v: 1, stage: 'rect', secs: [{ id: hbId(), kind: 'table', t: 'میزها', n: 15, per: 6, c1: 'A', c2: 'B' }, hbSeat({ t: 'پشت میزها', shape: 'rect', rows: 6, first: 20, grow: 0, blocks: 2, cls: { mode: 'one', c: 'C' } })] } },
   arena: { t: 'ورزشگاه (ایستاده و سکوهای کنار)', b: { v: 1, stage: 'wide', secs: [{ id: hbId(), kind: 'stand', t: 'ایستاده (جلوی صحنه)', cap: 1200, c: 'B' }, { id: hbId(), kind: 'side', t: 'سکوی راست', side: 'r', rows: 7, first: 16, grow: 0, blocks: 1, aisle: 'm', cls: { mode: 'custom', c: 'A', list: [[3, 'A'], [7, 'C']] } }, { id: hbId(), kind: 'side', t: 'سکوی چپ', side: 'l', rows: 7, first: 16, grow: 0, blocks: 1, aisle: 'm', cls: { mode: 'custom', c: 'A', list: [[3, 'A'], [7, 'C']] } }, hbSeat({ t: 'سکوی روبه‌رو', rows: 6, first: 14, grow: 1, gap: 'big', cls: { mode: 'one', c: 'D' } })] } },
   floors: { t: 'سالن چندطبقه (چهار طبقه و لژ)', b: { v: 1, stage: 'arc', secs: [hbSeat({ t: 'همکف', rows: 12, first: 12, grow: 1 }), { id: hbId(), kind: 'box', t: 'لژها', side: 'both', n: 4, per: 4, c: 'A' }, hbSeat({ t: 'طبقه‌ی اول', rows: 6, first: 20, grow: 1, gap: 'big', cls: { mode: 'one', c: 'C' } }), hbSeat({ t: 'طبقه‌ی دوم', rows: 5, first: 24, grow: 1, gap: 'big', cls: { mode: 'one', c: 'D' } }), hbSeat({ t: 'طبقه‌ی سوم', rows: 4, first: 28, grow: 1, gap: 'big', cls: { mode: 'one', c: 'E' } })] } },
+  big1500: { t: 'سالن همایش ۱٬۵۰۰ نفری (دو طبقه)', b: hbQuick({ kind: 'hall', cap: 1500, floors: 2 }) },
+  big5000: { t: 'سالن بزرگ ۵٬۰۰۰ نفری (سه طبقه)', b: hbQuick({ kind: 'rect', cap: 5000, floors: 3 }) },
+  stadium: { t: 'ورزشگاه ۱۵٬۰۰۰ نفری (ایستاده و سکوها)', b: hbQuick({ kind: 'arena', cap: 15000, floors: 2, pit: 0.22 }) },
   blank: { t: 'از صفر', b: { v: 1, stage: 'arc', secs: [] } },
 };
 const hbClone = (b) => JSON.parse(JSON.stringify(b));
@@ -7876,9 +8077,20 @@ function hallBuilderUI(root, onChange = () => {}, init = null) {
     return `<div class="hb-g">${num(s, 'cap', 'ظرفیت (نفر)', 1, 30000, 50)}${clsSel(s.c || 'B', 'c', 'رده')}</div>`;
   };
   const card = (s, i) => `<article class="hb-card" data-id="${esc(s.id)}"><header><span class="hb-n" aria-hidden="true">${fa(i + 1)}</span><label class="hb-name"><span class="sr">اسم بخش</span><input data-k="t" value="${esc(s.t || '')}" maxlength="40" placeholder="اسم بخش" autocomplete="off"></label><em class="hb-kind">${HB_KINDS[s.kind]}</em><b class="hb-sum" aria-live="polite"></b>
-      <span class="hb-act"><button type="button" class="chip gt-ic" data-mv="-1" aria-label="بالا">${ico('up')}</button><button type="button" class="chip gt-ic" data-mv="1" aria-label="پایین">${ico('down')}</button><button type="button" class="chip gt-ic" data-dup aria-label="کپی">${ico('copy')}</button><button type="button" class="chip gt-ic" data-del aria-label="حذف">${ico('x')}</button></span></header><div class="hb-body">${body(s)}</div></article>`;
+      <button type="button" class="chip gt-ic hb-tg" data-tg aria-expanded="true" aria-label="باز و بسته کردن این بخش">${ico('down')}</button><span class="hb-act"><button type="button" class="chip gt-ic" data-mv="-1" aria-label="بالا">${ico('up')}</button><button type="button" class="chip gt-ic" data-mv="1" aria-label="پایین">${ico('down')}</button><button type="button" class="chip gt-ic" data-dup aria-label="کپی">${ico('copy')}</button><button type="button" class="chip gt-ic" data-del aria-label="حذف">${ico('x')}</button></span></header><div class="hb-body">${body(s)}</div></article>`;
   root.innerHTML = `<div class="hb">
-    <div class="hb-top"><div class="hb-f"><span>شروع از یه قالب آماده <small>(بعدش هر چی خواستی عوضش کن)</small></span><div class="hb-tpl">${Object.entries(HB_TPL).map(([k, v]) => `<button type="button" class="chip" data-tpl="${k}">${esc(v.t)}</button>`).join('')}</div></div>
+    <section class="hb-quick" aria-labelledby="hbQh">
+      <div class="hb-q-h"><b id="hbQh">${ico('plus')}ساخت سریع</b><small>ظرفیت رو بنویس؛ سالن خودش چیده می‌شه. بعدش اگه خواستی ریزتر عوضش کن.</small></div>
+      <div class="hb-q-row">
+        <div class="hb-f"><span>شکل سالن</span><div class="bk-seg hb-seg" role="radiogroup" aria-label="شکل سالن">${[['hall', 'تالار قوسی'], ['rect', 'سالن صاف'], ['arena', 'ورزشگاه']].map(([v, l], i) => `<button type="button" role="radio" data-qk="${v}" aria-checked="${i === 0}">${l}</button>`).join('')}</div></div>
+        <div class="hb-f"><span>ظرفیت (نفر)</span><input type="number" id="hbQcap" inputmode="numeric" min="20" max="30000" step="10" value="600" aria-label="ظرفیت"></div>
+        <div class="hb-f"><span>تعداد طبقه</span><div class="bk-seg hb-seg" role="radiogroup" aria-label="تعداد طبقه">${[1, 2, 3, 4].map((n) => `<button type="button" role="radio" data-qf="${n}" aria-checked="${n === 1}">${fa(n)}</button>`).join('')}</div></div>
+        <div class="hb-f hb-q-pit" hidden><span>ایستاده جلوی صحنه</span><div class="bk-seg hb-seg" role="radiogroup" aria-label="ایستاده جلوی صحنه">${[[0, 'نداره'], [0.22, '۲۰٪'], [0.35, '۳۵٪']].map(([v, l]) => `<button type="button" role="radio" data-qp="${v}" aria-checked="${v === 0.22}">${l}</button>`).join('')}</div></div>
+        <button type="button" class="buy hb-q-go" id="hbQgo">${ico('check')}<span>بساز</span></button>
+      </div>
+      <div class="hb-q-chips" role="group" aria-label="ظرفیت‌های رایج">${[300, 600, 1200, 3000, 6000, 15000, 25000].map((n) => `<button type="button" class="chip" data-qc="${n}">${money(n)}</button>`).join('')}</div>
+    </section>
+    <div class="hb-top"><details class="hb-tpls hb-f"><summary><span>یا از یه قالب آماده شروع کن <small>(${fa(Object.keys(HB_TPL).length)} مدل)</small></span>${ico('down')}</summary><div class="hb-tpl">${Object.entries(HB_TPL).map(([k, v]) => `<button type="button" class="chip" data-tpl="${k}">${esc(v.t)}</button>`).join('')}</div></details>
       <div class="hb-f"><span>شکل صحنه</span><div class="bk-seg hb-seg" role="radiogroup" aria-label="شکل صحنه">${[['arc', 'قوسی'], ['rect', 'صاف'], ['wide', 'پهن']].map(([v, l]) => `<button type="button" role="radio" data-stage="${v}" aria-checked="${st.stage === v}">${l}</button>`).join('')}</div></div></div>
     <div class="hb-main"><div class="hb-l"><div id="hbL" class="hb-secs"></div>
       <div class="hb-add"><span>اضافه کن:</span>${Object.entries(HB_KINDS).map(([k, t]) => `<button type="button" class="chip" data-add="${k}">${ico('plus')}${t}</button>`).join('')}<button type="button" class="chip hb-floor" data-floor>${ico('plus')}طبقه‌ی تازه</button></div></div>
@@ -7918,7 +8130,12 @@ function hallBuilderUI(root, onChange = () => {}, init = null) {
     onChange(last);
   };
   let tt = 0; const soon = () => { clearTimeout(tt); tt = setTimeout(refresh, 90); };
-  const draw = () => { list.innerHTML = st.secs.map(card).join('') || '<p class="hb-empty">هنوز بخشی نیست؛ یه قالب آماده بذار یا از پایین بخش اضافه کن.</p>'; refresh(); };
+  const opened = new Set();   // with more than three sections only the opened ones show their fields (the summary line is always there)
+  const draw = () => {
+    list.innerHTML = st.secs.map(card).join('') || '<p class="hb-empty">هنوز بخشی نیست؛ ظرفیت رو بنویس و «بساز» رو بزن، یا از یه قالب آماده شروع کن.</p>';
+    if (st.secs.length > 3) { if (!st.secs.some((s) => opened.has(s.id)) && st.secs[0]) opened.add(st.secs[0].id); $$('.hb-card', list).forEach((c) => { const o = opened.has(c.dataset.id); c.classList.toggle('is-closed', !o); const t = $('[data-tg]', c); if (t) t.setAttribute('aria-expanded', String(o)); }); }
+    refresh();
+  };
   draw();
   // a value written with a dot path (cls.c) into the section
   const put = (s, k, v) => { if (k.startsWith('cls.')) { s.cls = s.cls || { mode: 'one', c: 'B' }; s.cls[k.slice(4)] = v; } else s[k] = v; };
@@ -7934,6 +8151,7 @@ function hallBuilderUI(root, onChange = () => {}, init = null) {
   list.addEventListener('click', (ev) => {
     const el = ev.target.closest('button'); if (!el) return; const card = el.closest('.hb-card'); if (!card) return; const s = secOf(card.dataset.id), i = st.secs.indexOf(s); if (!s) return;
     const again = () => { const keep = card.dataset.id; draw(); const c = $(`.hb-card[data-id="${keep}"]`, list); if (c && MOTK()) gsap.from($('.hb-body', c), { opacity: 0.4, y: 6, duration: 0.3, ease: 'expo.out', clearProps: 'opacity,transform' }); };
+    if (el.dataset.tg != null) { const o = opened.has(s.id) || (st.secs.length <= 3 && !card.classList.contains('is-closed')); if (o) opened.delete(s.id); else opened.add(s.id); card.classList.toggle('is-closed', o); el.setAttribute('aria-expanded', String(!o)); return; }
     if (el.dataset.st) { const k = el.dataset.k, inp = $(`input[data-k="${k}"]`, card), v = clamp((+inp.value || 0) + +el.dataset.st, +inp.dataset.min, +inp.dataset.max); inp.value = v; s[k] = v; refresh(); return; }
     if (el.dataset.v != null && el.dataset.k) { const raw = el.dataset.v, v = /^-?[\d.]+$/.test(raw) ? +raw : raw; s[el.dataset.k] = v; $$(`[data-k="${el.dataset.k}"]`, el.parentElement).forEach((x) => x.setAttribute('aria-checked', String(x === el))); refresh(); return; }
     if (el.dataset.cm) { const c = s.cls = s.cls || { mode: 'one', c: 'B' }; c.mode = el.dataset.cm; if (c.mode === 'custom' && !(c.list || []).length) c.list = [[Math.max(1, Math.round((s.rows | 0) / 2)), c.c || 'A'], [s.rows | 0, hbNext(c.c || 'A')]]; if (c.mode === 'thirds' && c.c === 'B' && s.kind === 'seat') c.c = 'A'; again(); return; }
@@ -7951,12 +8169,27 @@ function hallBuilderUI(root, onChange = () => {}, init = null) {
   });
   $('.hb-add', root).addEventListener('click', (ev) => {
     const a = ev.target.closest('[data-add]'), f = ev.target.closest('[data-floor]');
-    if (a) { const s = mk(a.dataset.add); st.secs.push(s); draw(); const c = $(`.hb-card[data-id="${s.id}"]`, list); if (c) { c.scrollIntoView({ block: 'nearest', behavior: MOTK() ? 'smooth' : 'auto' }); const inp = $('input[data-k="t"]', c); inp.focus(); inp.select(); if (MOTK()) gsap.from(c, { opacity: 0, y: 14, duration: 0.4, ease: 'expo.out', clearProps: 'opacity,transform' }); } }
+    if (a) { const s = mk(a.dataset.add); opened.add(s.id); st.secs.push(s); draw(); const c = $(`.hb-card[data-id="${s.id}"]`, list); if (c) { c.scrollIntoView({ block: 'nearest', behavior: MOTK() ? 'smooth' : 'auto' }); const inp = $('input[data-k="t"]', c); inp.focus(); inp.select(); if (MOTK()) gsap.from(c, { opacity: 0, y: 14, duration: 0.4, ease: 'expo.out', clearProps: 'opacity,transform' }); } }
     if (f) {   // a new floor: another seated section behind the last, a little wider, the next price class
       const seats = st.secs.filter((s) => s.kind === 'seat'), l = seats[seats.length - 1], used = new Set(seats.map((s) => s.t)), nm = HB_FLOORS.find((q) => !used.has(q)) || `طبقه‌ی ${fa(seats.length + 1)}`;
       const lc = l && l.cls ? ((l.cls.mode === 'custom' ? (l.cls.list || [])[(l.cls.list || []).length - 1] : null) || [0, l.cls.mode === 'thirds' ? hbNext(hbNext(l.cls.c || 'A')) : l.cls.c || 'B'])[1] : 'C';
       const s = hbSeat({ t: nm, shape: l ? l.shape : 'fan', rows: l ? Math.max(3, Math.min(8, (l.rows | 0) - 2)) : 6, first: l ? (l.first | 0) + 4 : 16, grow: l ? l.grow : 1, blocks: l ? l.blocks : 3, aisle: l ? l.aisle : 'm', gap: 'big', cls: { mode: 'one', c: hbNext(lc) } });
-      st.secs.push(s); draw(); const c = $(`.hb-card[data-id="${s.id}"]`, list); if (c) { c.scrollIntoView({ block: 'nearest', behavior: MOTK() ? 'smooth' : 'auto' }); if (MOTK()) gsap.from(c, { opacity: 0, y: 14, duration: 0.4, ease: 'expo.out', clearProps: 'opacity,transform' }); }
+      opened.add(s.id); st.secs.push(s); draw(); const c = $(`.hb-card[data-id="${s.id}"]`, list); if (c) { c.scrollIntoView({ block: 'nearest', behavior: MOTK() ? 'smooth' : 'auto' }); if (MOTK()) gsap.from(c, { opacity: 0, y: 14, duration: 0.4, ease: 'expo.out', clearProps: 'opacity,transform' }); }
+    }
+  });
+  // the quick builder: the kind, the capacity, the floors → the sections, fitted
+  const qs = { kind: 'hall', floors: 1, pit: 0.22 };
+  $('.hb-quick', root).addEventListener('click', (ev) => {
+    const mark = (sel, el) => $$(sel, root).forEach((x) => x.setAttribute('aria-checked', String(x === el)));
+    const k = ev.target.closest('[data-qk]'), f = ev.target.closest('[data-qf]'), p = ev.target.closest('[data-qp]'), c = ev.target.closest('[data-qc]'), go = ev.target.closest('#hbQgo');
+    if (k) { qs.kind = k.dataset.qk; mark('[data-qk]', k); $('.hb-q-pit', root).hidden = qs.kind !== 'arena'; if (qs.kind === 'arena' && +$('#hbQcap', root).value < 3000) $('#hbQcap', root).value = 15000; }
+    if (f) { qs.floors = +f.dataset.qf; mark('[data-qf]', f); }
+    if (p) { qs.pit = +p.dataset.qp; mark('[data-qp]', p); }
+    if (c) { $('#hbQcap', root).value = c.dataset.qc; }
+    if (go) {
+      const cap = clamp(Math.round(+$('#hbQcap', root).value) || 0, 20, 30000), b = hbQuick({ kind: qs.kind, cap, floors: qs.floors, pit: qs.kind === 'arena' ? qs.pit : 0 });
+      $('#hbQcap', root).value = cap; st.stage = b.stage; st.secs = b.secs; opened.clear(); $$('[data-stage]', root).forEach((x) => x.setAttribute('aria-checked', String(x.dataset.stage === st.stage)));
+      draw(); toast(`سالن ساخته شد: حدود ${money(last.cap || cap)} جا؛ هر بخش رو اگه خواستی ریزتر عوض کن.`);
     }
   });
   return { get: () => last };
@@ -7980,6 +8213,15 @@ function hallDesigner(root, onChange = () => {}, init = null) {
   $$('[data-m]', root).forEach((bt) => bt.addEventListener('click', () => { mode = bt.dataset.m; $$('[data-m]', root).forEach((x) => x.setAttribute('aria-checked', String(x === bt))); $('.hd-b', root).hidden = mode !== 'b'; $('.hd-t', root).hidden = mode !== 't'; mount(mode); emit(); }));
   return { get: () => (mode === 'b' ? ui.b : ui.t).get() };
 }
+
+/* ───── the sample big halls: once, the first time the site opens, a few halls from 800 to 25 000 seats are put in the library (made by the quick builder; the admin may rename or delete them). Their names say they are samples. ───── */
+function libSeedBig() {
+  if (!lib.o || lib.o.seedBig) return; lib.o.seedBig = 1;
+  const HS = [['تالار نمونه‌ی ۸۰۰ نفری', 'tehran', { kind: 'hall', cap: 800, floors: 1 }], ['سالن همایش نمونه‌ی ۱٬۵۰۰ نفری', 'mashhad', { kind: 'hall', cap: 1500, floors: 2 }], ['سالن اجلاس نمونه‌ی ۳٬۰۰۰ نفری', 'isfahan', { kind: 'rect', cap: 3000, floors: 2 }], ['سالن ورزشی نمونه‌ی ۶٬۰۰۰ نفری', 'shiraz', { kind: 'arena', cap: 6000, floors: 1, pit: 0.2 }], ['ورزشگاه نمونه‌ی ۱۵٬۰۰۰ نفری', 'tehran', { kind: 'arena', cap: 15000, floors: 2, pit: 0.22 }], ['ورزشگاه بزرگ نمونه‌ی ۲۵٬۰۰۰ نفری', 'tehran', { kind: 'arena', cap: 25000, floors: 3, pit: 0.25 }]];
+  lib.batch(() => { for (const [name, city, q] of HS) libSet.hallAdd({ name, addr: '', city, lay: [{ n: 'چیدمان اصلی', b: hbQuick(q) }] }); });
+  lib.save();
+}
+libSeedBig();
 
 /* ════════════════════════════════════════════════════════════════
    the show's page: the first of the four steps of a purchase (choose the session → the seats → book and pay → the ticket),
@@ -8305,7 +8547,7 @@ const page = {
             <label class="evp-rules${acc ? ' is-on' : ''}"><input type="checkbox" id="evpRules"${acc ? ' checked' : ''}><span class="box" aria-hidden="true">${ico('check')}</span><span class="rt"><a href="#" data-act="rules">قوانین خرید</a> رو خوندم و می‌پذیرم.</span></label>
             <button type="button" class="buy evp-go" data-go="map">${ico('grid')}<span>انتخاب صندلی روی نقشه</span></button>
           </div>` : ''}
-          <p class="evp-note">${ico('shield')}<span>قیمت‌ها بدون ۱۰٪ مالیات بر ارزش افزوده‌ان${open && anyOk ? `؛ صندلی‌ها ${fa(HOLD_MIN)} دقیقه برات نگه داشته می‌شن` : ''}.</span></p>
+          <p class="evp-note">${ico('shield')}<span>قیمت‌ها بدون ۱۰٪ مالیات${open && anyOk ? ` · نگه‌داری ${fa(HOLD_MIN)} دقیقه` : ''}</span></p>
         </section>
       </section>
       <div class="lx-info${loc ? '' : ' no-place'}">
@@ -8358,7 +8600,7 @@ const page = {
     });
     // the buy panel: a night (the first with seats is chosen already) and the button to the map, where the buyer chooses the seats. The rules come when they are
     // needed: a press on the button before they are accepted opens them, and «می‌پذیرم و ادامه» goes on with it
-    const list = $('.ses-list', el), chk = $('#evpRules', el);
+    const list = sfade.watch($('.ses-list', el)), chk = $('#evpRules', el);
     let pick = this.pick;
     const can = (c) => c && c.getAttribute('aria-disabled') !== 'true';
     const paint = () => {
@@ -8453,7 +8695,7 @@ const page = {
     $$('.evp-ft', host).forEach((x) => x.remove());
     const c = ft.cloneNode(true); c.removeAttribute('id'); c.removeAttribute('data-rv'); c.classList.remove('rv-wait', 'is-in'); c.classList.add('evp-ft'); c.style.cssText = '';
     ['bk', 'bk-narrow', 'tkp'].forEach((k) => { if (col.classList.contains(k)) c.classList.add(k); });
-    host.appendChild(c); this.wireFooter(c);
+    host.appendChild(c); this.wireFooter(c); sfill.cols(host);
   },
   wireFooter(ft) {
     $$('[data-go]', ft).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); const k = a.dataset.go; if (k === 'top') scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' }); else this.close({ then: () => s2.go(k) }); }));
@@ -8504,6 +8746,58 @@ function stepsHTML(cur, e, s, seats) {
 // bought in this browser are sold. A standing area keeps a number of places left
 // one seat's own price or «not for sale», from the organiser or the admin (spx in seatprice.js): a number is the seat's price, 'X' is off, an older 'V' is the special-seat tier
 const seatOv = (p, ov, tiers) => { if (ov === 'X') p.st = 'off'; else if (ov === 'V') { const v = tiers.find((x) => x.t === 'V'); if (v) Object.assign(p, { t: 'V', c: v.c, price: v.price }); } else if (typeof ov === 'number' && ov > 0) Object.assign(p, { t: 'S', c: TIER.S.c, price: ov, own: true }); };
+/* orphan:begin ─ the single-seat rule. Pure (no page): the same text is server/orphan.js, made by tools/af-orphan-sync.py.
+   A buyer's choice must not leave ONE free seat alone in its row (between his seats, a sold / held / not-for-sale seat, an aisle or the end of the row)
+   because nobody can buy a single seat later. Only seats the choice has just made lonely count (a seat that was alone before is not his fault). */
+// the runs: each list is the seats of one row that touch each other, in order. An aisle, a row label or the row's end cuts a run.
+// Boxes, tables and areas sold by number have no rows: no run.
+function orphanRuns(L) {
+  const runs = [];
+  for (const z of L.secs) {
+    const k = z.sec.k;
+    if (z.sec.sym || !z.seats.length) continue;
+    if (k === 'grid') {   // a real plan: a run of seat cells of one row has an id (rid); the cell index (ci) orders it
+      const by = new Map();
+      for (const p of z.seats) { if (p.rid == null) continue; let g = by.get(p.rid); if (!g) by.set(p.rid, g = []); g.push(p); }
+      for (const g of by.values()) { g.sort((a, b) => a.ci - b.ci); if (g.length > 1) runs.push(g); }
+    } else if (k === 'fan' || k === 'rect') {   // a designed plan: a row is the seats with one `row`, in the order of `n`; a gap wider than one seat is an aisle
+      const by = new Map();
+      for (const p of z.seats) { let g = by.get(p.row); if (!g) by.set(p.row, g = []); g.push(p); }
+      for (const g of by.values()) {
+        g.sort((a, b) => a.n - b.n);
+        const d = []; for (let i = 1; i < g.length; i++) d.push(Math.hypot(g[i].x - g[i - 1].x, g[i].y - g[i - 1].y));
+        const pitch = d.length ? Math.min(...d) : 0; let cur = [g[0]];
+        for (let i = 1; i < g.length; i++) { if (d[i - 1] > pitch * 1.5) { if (cur.length > 1) runs.push(cur); cur = []; } cur.push(g[i]); }
+        if (cur.length > 1) runs.push(cur);
+      }
+    }
+  }
+  return runs;
+}
+// the seats that the choice `sel` (a Set of keys) leaves alone. Seat: { key, st: 'free' | 'sold' | 'held' | 'off' }
+function orphanSeats(runs, sel) {
+  const out = [], free = (p) => !!p && p.st === 'free' && !sel.has(p.key);
+  for (const run of runs) {
+    for (let i = 0; i < run.length; i++) {
+      const p = run[i]; if (!free(p)) continue;
+      const a = i > 0 ? run[i - 1] : null, b = i < run.length - 1 ? run[i + 1] : null;
+      if (free(a) || free(b)) continue;   // a free neighbour: not alone (two together can still be sold)
+      if ((a && sel.has(a.key)) || (b && sel.has(b.key))) out.push(p);   // alone, and a seat of his is next to it
+    }
+  }
+  return out;
+}
+// how many seats of the whole hall are free (the rule is off when only the last few are left)
+const orphanFree = (L) => { let n = 0; for (const p of L.by.values()) if (p.st === 'free') n++; return n; };
+// the setting: mode off | warn | block (default), and «last»: with this many seats or fewer left in the whole hall the rule is off
+function orphanCfg(raw) { const c = raw || {}; return { mode: ['off', 'warn', 'block'].includes(c.mode) ? c.mode : 'block', last: Number.isFinite(+c.last) && c.last !== '' && c.last != null ? Math.max(0, Math.min(50, Math.round(+c.last))) : 3 }; }
+// the whole check for a plan and a choice: the lonely seats (an empty list when the rule is off or the hall is almost sold out)
+function orphanCheck(L, sel, cfg) {
+  if (!cfg || cfg.mode === 'off' || !sel.size) return [];
+  if (orphanFree(L) <= cfg.last) return [];
+  return orphanSeats(L.runs || (L.runs = orphanRuns(L)), sel);
+}
+/* orphan:end */
 function seatPlan(e, s) {
   const tiers = tiersOf(e), R = rngOf(seedOf(s.id + ':seats')), mine = new Set(store.get('blit.taken', {})[s.id] || []), P = planOf(e);
   const sold = clamp(1 - s.seats, 0.04, 0.96), L = hallLayout(P), ys = L.secs.flatMap((z) => z.seats.map((p) => p.y)), y0 = Math.min(...ys), y1 = Math.max(...ys);
@@ -8590,7 +8884,7 @@ const buy = {
     document.title = `انتخاب صندلی · ${e.title} · بلیت`;
     const key = `${e.id}|${s.id}`;
     if (this.cartKey !== key) { this.cart = new Map(); this.cartKey = key; this.zone = -1; this.tiers = new Set(); }
-    this.plan = seatPlan(e, s);
+    this.plan = seatPlan(e, s); this._orph = null; this._orphSet = null; this.lastPick = null;
     const hold = this.holdFor(e, s);
     // a hold that is still running (back from the payment): its seats are yours again
     if (hold) { this.cart = new Map(); hold.items.forEach((x) => { const y = this.find(x.key); if (y) { y.st = 'free'; this.cart.set(y.key, y); } else if (x.ga) this.cart.set(x.key, x); }); }
@@ -8617,6 +8911,7 @@ const buy = {
             ${hold ? `<p class="bk-held">${ico('clock')}رزرو تا <b data-hold>--:--</b></p>` : ''}
             <ul class="bk-list"></ul>
             <div class="bk-total"><span>جمع، بدون مالیات</span><b class="bk-sum"></b></div>
+            <div class="bk-orph" id="bkOrph" role="alert" hidden></div>
             <button type="button" class="buy bk-go" disabled>${ico('arrow-l')}<span class="bk-go-t">ادامه و رزرو صندلی‌ها</span></button>
             <ul class="bk-facts" aria-label="شرایط رزرو"><li>${ico('clock')}<span><b>${fa(HOLD_MIN)} دقیقه</b> نگه‌داری صندلی‌ها</span></li><li>${ico('ticket')}<span>تا <b>${fa(MAX_SEATS)} صندلی</b> در هر خرید</span></li><li>${ico('shield')}<span>پرداخت امن بانکی</span></li></ul>
           </section>
@@ -8652,6 +8947,7 @@ const buy = {
     });
     const go = () => {
       if (!this.cart.size) return;
+      if (this.orphBlocked()) { this.orphNudge(); return; }
       store.sset('blit.hold', { eid: e.id, sid: s.id, items: [...this.cart.values()].map(item), until: (this.holdFor(e, s) || {}).until || Date.now() + HOLD_MIN * 6e4 });
       this.expired = false;
       page.go(`#/e/${encodeURIComponent(e.id)}/s/${encodeURIComponent(s.id)}/pay`);
@@ -8728,9 +9024,11 @@ const buy = {
     $('.bk-sum', el).textContent = `${money(sum)} تومان`;
     $('.bk-count2', el).textContent = n ? `${fa(n)} صندلی` : 'صندلی انتخاب نشده';
     $('.bk-sum2', el).textContent = n ? `${money(sum)} تومان` : '';
-    const go = $('.bk-go', el), was = go.classList.contains('is-ready');
-    go.disabled = !n; $('.bk-go2', el).disabled = !n;
-    $('.bk-go-t', go).textContent = n ? `ادامه با ${fa(n)} ${items.some((x) => x.ga) && !items.some((x) => !x.ga) ? 'بلیت' : 'صندلی'}` : 'ادامه و رزرو صندلی‌ها';
+    this.orphRefresh(e, s);
+    const go = $('.bk-go', el), was = go.classList.contains('is-ready'), lone = this.orphBlocked();
+    go.disabled = !n || lone; $('.bk-go2', el).disabled = !n || lone;
+    $('.bk-go-t', go).textContent = lone ? 'اول صندلی تکی رو درست کن' : n ? `ادامه با ${fa(n)} ${items.some((x) => x.ga) && !items.some((x) => !x.ga) ? 'بلیت' : 'صندلی'}` : 'ادامه و رزرو صندلی‌ها';
+    { const sm = $('.bk-sum2', el); if (sm) { sm.classList.toggle('is-warn', !!(this._orph && this._orph.length)); if (this._orph && this._orph.length) sm.textContent = 'صندلی تکی می‌مونه'; } }
     go.classList.toggle('is-ready', !!n);
     if (n && !was && MOTK()) { go.classList.remove('is-pulse'); void go.offsetWidth; go.classList.add('is-pulse'); }   // (the first seat: the button says it can go on)
     this.priceFree();
@@ -9310,7 +9608,7 @@ Object.assign(buy, {
   focusZone(i) { if (this.plan && this.plan.secs[i]) this.renderSection(i, true); },
   seatBtn(p, cy) {
     const mine = this.cart.has(p.key), st = mine ? 'mine' : p.st, dim = !mine && this.tiers.size && !this.tiers.has(p.t);
-    return `<button type="button" class="sm-s${dim ? ' is-dim' : ''}" data-k="${p.key}" data-st="${st}" style="--c:${p.c}${cy ? `;--cy:${cy.toFixed(1)}px` : ''}" tabindex="-1" aria-pressed="${mine}"${st === 'free' || st === 'mine' ? '' : ' aria-disabled="true"'} aria-label="${esc(seatName(p))}، ${esc(money(p.price))} تومان">${fa(p.n)}</button>`;
+    return `<button type="button" class="sm-s${dim ? ' is-dim' : ''}${this._orphSet && this._orphSet.has(p.key) ? ' is-orph' : ''}" data-k="${p.key}" data-st="${st}" style="--c:${p.c}${cy ? `;--cy:${cy.toFixed(1)}px` : ''}" tabindex="-1" aria-pressed="${mine}"${st === 'free' || st === 'mine' ? '' : ' aria-disabled="true"'} aria-label="${esc(seatName(p))}، ${esc(money(p.price))} تومان">${fa(p.n)}</button>`;
   },
   // a real plan's section: its table of rows of cells (seat, aisle, row label, text, stage, blocks inside blocks), the first cell on the right;
   // the sizes are the seat's own (--smz), the turns and shifts of a block are the package's, scaled to it
@@ -9388,6 +9686,7 @@ Object.assign(buy, {
     const mine = this.cart.has(x.key), st = mine ? 'mine' : x.st, dim = !mine && this.tiers.size && !this.tiers.has(x.t);
     if (b.dataset.st !== st) b.dataset.st = st;
     b.classList.toggle('is-dim', !!dim);
+    b.classList.toggle('is-orph', !!(this._orphSet && this._orphSet.has(x.key)));
     b.setAttribute('aria-pressed', String(mine));
     if (st === 'free' || st === 'mine') b.removeAttribute('aria-disabled'); else b.setAttribute('aria-disabled', 'true');
   },
@@ -9418,9 +9717,37 @@ Object.assign(buy, {
     else if (x.st === 'off') { toast('این صندلی برای فروش نیست.'); return; }
     else if (this.tiers.size && !this.tiers.has(x.t)) { toast('این صندلی تو قیمتی که انتخاب کردی نیست.'); return; }
     else if (this.cart.size >= MAX_SEATS) { toast(`هر خرید تا ${fa(MAX_SEATS)} صندلی.`); return; }
-    else { this.cart.set(x.key, x); this.coachOff(true); if (MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
+    else { this.cart.set(x.key, x); this.lastPick = x.key; this.coachOff(true); if (MOTK()) { b.classList.remove('is-pop'); void b.offsetWidth; b.classList.add('is-pop'); } }
     this.paintOne(b); this.miniSoon(); this.cartPaint(e, s);
   },
+  // ── the single-seat rule: after every change of the choice the lonely seats are found again, marked on the map and told in the cart
+  orphans() { return this.plan && !this.expired ? orphanCheck(this.plan, new Set([...this.cart.keys()].filter((k) => !k.startsWith('ga:'))), orphanCfg(store.get('blit.orphan', null))) : []; },
+  orphBlocked() { return orphanCfg(store.get('blit.orphan', null)).mode === 'block' && !!(this._orph && this._orph.length); },
+  orphRefresh(e, s) {
+    const before = this._orphSet || new Set(), now = this.orphans(), set = new Set(now.map((p) => p.key)); this._orph = now; this._orphSet = set;
+    for (const k of new Set([...before, ...set])) { const el = this.seatEl(k); if (el) this.paintOne(el); }
+    const box = $('#bkOrph', page.el); if (!box) return;
+    const fresh = now.filter((p) => !before.has(p.key)).length;
+    if (!now.length) { box.hidden = true; box.innerHTML = ''; return; }
+    const cfg = orphanCfg(store.get('blit.orphan', null)), nm = now.slice(0, 2).map((p) => seatName(p)).join(' و ') + (now.length > 2 ? ` و ${fa(now.length - 2)} صندلی دیگه` : '');
+    box.hidden = false; box.dataset.mode = cfg.mode;
+    box.innerHTML = `<span class="bk-orph-ic" aria-hidden="true">${ico('info')}</span><div><b>${now.length === 1 ? 'با این انتخاب یه صندلی تکی می‌مونه' : `با این انتخاب ${fa(now.length)} صندلی تکی می‌مونه`}</b><p>${esc(nm)} خالی می‌مونه و بعدش کسی نمی‌تونه فقط همون رو بخره. ${cfg.mode === 'block' ? 'یه جور دیگه انتخاب کن.' : 'بهتره یه جور دیگه انتخاب کنی.'}</p><div class="bk-orph-a"><button type="button" class="chip" data-orph="add">${ico('plus')}${now.length === 1 ? 'اون صندلی رو هم بگیر' : 'اون‌ها رو هم بگیر'}</button><button type="button" class="chip" data-orph="undo">${ico('x')}آخرین صندلی رو بردار</button></div></div>`;
+    $$('[data-orph]', box).forEach((x) => x.addEventListener('click', () => this.orphFix(e, s, x.dataset.orph)));
+    if (fresh && MOTK()) { box.classList.remove('is-shake'); void box.offsetWidth; box.classList.add('is-shake'); }
+    if (fresh) toast(now.length === 1 ? 'با این انتخاب یه صندلی تکی می‌مونه؛ یه جور دیگه انتخاب کن.' : `با این انتخاب ${fa(now.length)} صندلی تکی می‌مونه؛ یه جور دیگه انتخاب کن.`);
+  },
+  orphFix(e, s, what) {
+    if (what === 'add') {
+      const add = (this._orph || []).filter((p) => !this.cart.has(p.key));
+      if (this.cart.size + add.length > MAX_SEATS) { toast(`با اون‌ها از ${fa(MAX_SEATS)} صندلی بیشتر می‌شه؛ یه جور دیگه انتخاب کن.`); return; }
+      add.forEach((p) => { this.cart.set(p.key, p); this.lastPick = p.key; });
+    } else {
+      const k = this.cart.has(this.lastPick) ? this.lastPick : [...this.cart.keys()].filter((x) => !x.startsWith('ga:')).pop();
+      if (k) this.cart.delete(k); this.lastPick = null;
+    }
+    this.paintSeats(); this.cartPaint(e, s);
+  },
+  orphNudge() { const b = $('#bkOrph', page.el); if (!b) return; b.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' }); b.classList.remove('is-shake'); void b.offsetWidth; b.classList.add('is-shake'); toast('اول صندلی تکی رو درست کن.'); },
   // standing places: as many as you add, of the area's price
   addGA(e, s, zid, d) {
     const z = this.plan.secs.find((x) => x.sec.id === zid); if (!z || !z.ga) return;
@@ -9650,7 +9977,7 @@ const pages = {
     return `<nav class="evp-crumb evp-rise" aria-label="مسیر"><a href="#" data-home>${ico('arrow-r')}همه‌ی برنامه‌ها</a><span aria-hidden="true">/</span><b>${esc(t)}</b></nav>
       <section class="panel pg-head evp-rise"><span class="sec-ic" aria-hidden="true">${ico(icon)}</span><div><h1>${esc(t)}</h1>${lead ? `<p>${esc(lead)}</p>` : ''}</div>${extra}</section>`;
   },
-  grid(list) { const g = document.createElement('div'); g.className = 'tkt-grid'; list.forEach((e) => g.appendChild(s2.card(e, false))); return g; },
+  grid(list) { const g = document.createElement('div'); g.className = 'tkt-grid'; list.forEach((e) => g.appendChild(s2.card(e, false))); return sfill.grid(g); },
   wrap(cls, html, sc) { page.el.innerHTML = `<div class="evp-in pg ${cls}"${sc ? ` style="--sc-d:${sc[0]};--sc-l:${sc[1]}"` : ''}>${html}</div>`; return $('.evp-in', page.el); },
 
   /* ───── «پیگیری خرید»: by the code, or by the mobile and an SMS code (or at once when signed in) ───── */
@@ -11366,8 +11693,8 @@ const wizard = {
     $('#wzAsk', b).addEventListener('click', (ev) => { ev.preventDefault(); toast('درخواست افزودن سالن برای مدیر فرستاده شد.'); });
   },
 
-  /* 4. the sessions: a Persian month calendar (a press, a drag or a range chooses days; «quick choice» in a menu), the hours (the chosen ones, «+ ساعت» opens the common hours and a stepper), «add», and the list of every
-        session of the show (a press on an hour opens its − / +; a day has «+ ساعت» and a menu: copy, remove), when the sale starts */
+  /* 4. the sessions, made simple (the owner: «ساده باشه، فقط راحت سانس اضافه کنه»): ONE line to add (the day, the hour, a repeat if wanted, «افزودن سانس»), under it the list of every session
+        (each hour can be changed or removed on the spot), then when the sale starts. The day button opens a small month; «چند روز با هم» there lets many days be chosen for one hour. */
   s3(b) {
     const d = this.d, ses = sesOf(d), DAYMS = 864e5, tk = isoDay(Date.now()), today0 = atOf(tk, '12:00');
     const jp = (t) => { const o = {}; for (const q of WZ_JP.formatToParts(new Date(t))) if (q.type !== 'literal') o[q.type] = +q.value; return o; };
@@ -11379,114 +11706,90 @@ const wizard = {
       cal = this._cal = { k: tk, months: months.slice(0, 14) };
     }
     const flat = cal.months.flatMap((g) => g.days), okDay = (k) => k > tk;
-    const hm2 = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`, mins = (hm) => +hm.slice(0, 2) * 60 + +hm.slice(3);
-    const PRE = ['16:00', '17:30', '19:00', '20:00', '20:30', '21:00', '21:30', '22:30'];
-    let view = cal.months[0].days.filter((x) => okDay(x.k)).length < 5 ? 1 : 0, last = null, drag = null, cur = 20 * 60 + 30, armed = false, editKey = null; const pick = new Set(); let times = ['20:30'];
+    const two = (n) => String(n).padStart(2, '0'), dayName = (t) => `${F.week.format(t)} ${F.day.format(t)} ${F.month.format(t)}`;
+    let view = cal.months[0].days.filter((x) => okDay(x.k)).length < 5 ? 1 : 0, multi = false, drag = null, armed = false, hh = this._wzH ?? 20, mm = this._wzM ?? 30, rep = 0; const pick = new Set([(flat.find((x) => okDay(x.k)) || flat[0]).k]);
+    const hOpts = (v) => Array.from({ length: 24 }, (_, i) => `<option value="${i}"${i === v ? ' selected' : ''}>${fa(two(i))}</option>`).join('');
+    const mOpts = (v) => { const L = Array.from({ length: 12 }, (_, i) => i * 5); if (!L.includes(v)) L.push(v), L.sort((x, y) => x - y); return L.map((m) => `<option value="${m}"${m === v ? ' selected' : ''}>${fa(two(m))}</option>`).join(''); };
     b.innerHTML = `<h2>${ico('calendar')}سانس‌ها<small id="wzSum"></small></h2>
-      <div class="wz-pl">
-        <section class="wz-c" aria-label="تقویم"><div class="wz-c-head"><button type="button" class="wz-cm" id="wzPrev" aria-label="ماه قبل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button><div class="wz-c-t"><b id="wzMon"></b><small>روزها رو بزن یا بکش</small></div><button type="button" class="wz-cm" id="wzNext2" aria-label="ماه بعد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5L8.5 12l6.5 6.5"/></svg></button><button type="button" class="chip" id="wzNow">امروز</button><button type="button" class="chip" id="wzQ">انتخاب سریع</button></div>
-          <div class="wz-c-wk" aria-hidden="true">${[['شنبه', 'ش'], ['یکشنبه', 'ی'], ['دوشنبه', 'د'], ['سه‌شنبه', 'س'], ['چهارشنبه', 'چ'], ['پنجشنبه', 'پ'], ['جمعه', 'ج']].map(([f, sh]) => `<i><span class="f">${f}</span><span class="s">${sh}</span></i>`).join('')}</div>
-          <div class="wz-c-grid" id="wzGrid" role="group" aria-label="روزهای ماه"></div></section>
-        <section class="wz-t" aria-label="ساعت‌ها و افزودن سانس"><h3>سانس بساز</h3>
-          <ol class="wz-fl">
-            <li class="wz-fl-i" id="wzFl1"><i aria-hidden="true">۱</i><div><b>روزها</b><small id="wzFl1t"></small></div></li>
-            <li class="wz-fl-i" id="wzFl2"><i aria-hidden="true">۲</i><div><b>ساعت‌ها</b><div class="wz-ch" id="wzCh" aria-label="ساعت‌های انتخاب‌شده"></div><button type="button" class="wz-addh" id="wzTp">${ico('plus')}ساعت دیگه</button></div></li>
-            <li class="wz-fl-i" id="wzFl3"><i aria-hidden="true">۳</i><div><b>اضافه کن</b><button type="button" class="buy wz-go" id="wzGo"></button></div></li>
-          </ol></section>
-      </div>
+      <section class="wz-add" aria-label="افزودن سانس">
+        <div class="wz-af"><span id="wzDayL">روز</span><button type="button" class="wz-day" id="wzDay" aria-haspopup="dialog" aria-expanded="false" aria-labelledby="wzDayL wzDayT">${ico('calendar')}<b id="wzDayT"></b>${ico('down')}</button></div>
+        <div class="wz-af"><span id="wzHmL">ساعت</span><div class="wz-hm" role="group" aria-labelledby="wzHmL"><select id="wzHH" aria-label="ساعت">${hOpts(hh)}</select><i aria-hidden="true">:</i><select id="wzMM" aria-label="دقیقه">${mOpts(mm)}</select></div></div>
+        <div class="wz-af"><span id="wzRepL">تکرار</span><select id="wzRep" class="wz-rep" aria-labelledby="wzRepL"><option value="0">فقط همین روز</option><option value="3">هر هفته، ۴ هفته</option><option value="7">هر هفته، ۸ هفته</option><option value="11">هر هفته، ۱۲ هفته</option></select></div>
+        <button type="button" class="buy wz-go" id="wzGo">${ico('plus')}<span>افزودن سانس</span></button>
+      </section>
+      <p class="wz-hint" id="wzHint" aria-live="polite"></p>
       <div class="wz-lh"><h3 class="wz-h3">سانس‌های برنامه <small id="wzCnt"></small></h3><button type="button" class="chip" id="wzClr">پاک کردن همه</button></div>
-      <div class="wz-sl" id="wzList"></div>
+      <div class="wz-sl2" id="wzList" role="list" aria-label="سانس‌های برنامه"></div>
       <h3 class="wz-h3">شروع فروش</h3>
       <div class="bk-seg" role="radiogroup" aria-label="شروع فروش"><button type="button" role="radio" data-sale="now" aria-checked="${d.sale === 'now'}">همین که مدیر تأیید کرد</button><button type="button" role="radio" data-sale="at" aria-checked="${d.sale === 'at'}">زمان مشخص (با شمارش معکوس)</button></div>
       <label class="bk-fld wz-saleat" ${d.sale === 'at' ? '' : 'hidden'}><span>شروع فروش</span><input type="datetime-local" id="wzSaleAt" value="${esc(d.saleLocal || '')}" dir="ltr"></label>`;
-    const grid = $('#wzGrid', b), cnt = () => { const m = new Map(); ses.forEach((x) => m.set(x.slice(0, 10), (m.get(x.slice(0, 10)) || 0) + 1)); return m; };
-    const dayName = (t) => `${F.week.format(t)} ${F.day.format(t)} ${F.month.format(t)}`;
-    // the month
-    const paintCal = () => {
-      const g = cal.months[view], off = wd(g.days[0].t), c = cnt();
-      $('#wzMon', b).textContent = `${WZ_MON[g.m - 1]} ${fa(g.y)}`; $('#wzPrev', b).disabled = view === 0; $('#wzNext2', b).disabled = view === cal.months.length - 1;
-      grid.innerHTML = '<span></span>'.repeat(off) + g.days.map((x) => `<button type="button" class="wz-d${pick.has(x.k) ? ' is-sel' : ''}${c.has(x.k) ? ' has' : ''}${wd(x.t) === 6 ? ' is-fri' : wd(x.t) === 5 ? ' is-thu' : ''}${x.k === tk ? ' is-today' : ''}" data-day="${x.k}"${okDay(x.k) ? '' : ' disabled'} aria-pressed="${pick.has(x.k)}" aria-label="${esc(dayName(x.t))}${c.has(x.k) ? `، ${fa(c.get(x.k))} سانس` : ''}"><b>${fa(x.jd)}</b>${c.has(x.k) ? `<i>${fa(c.get(x.k))}</i>` : ''}</button>`).join('');
+    const list = sfade.watch($('#wzList', b));
+    const dayT = (k) => { const x = flat.find((y) => y.k === k); return x ? dayName(x.t) : k; };
+    const paintHint = () => {
+      const days = [...pick].sort(), n = days.length * (rep + 1), hm = `${two(hh)}:${two(mm)}`;
+      $('#wzDayT', b).textContent = !days.length ? 'یه روز انتخاب کن' : days.length === 1 ? dayT(days[0]) : `${fa(days.length)} روز انتخاب شده`;
+      $('#wzGo', b).disabled = !days.length; $('#wzGo span', b).textContent = n > 1 ? `افزودن ${fa(n)} سانس` : 'افزودن سانس';
+      $('#wzHint', b).textContent = !days.length ? 'اول روز رو انتخاب کن.' : n === 1 ? `الان اضافه می‌شه: ${dayT(days[0])}، ساعت ${fa(hm)}` : `الان ${fa(n)} سانس اضافه می‌شه، همه ساعت ${fa(hm)}${rep ? ` (هر هفته تا ${fa(rep + 1)} هفته)` : ''}`;
     };
-    const cell = (k) => grid.querySelector(`[data-day="${k}"]`);
-    const setDays = (keys, on) => { for (const k of keys) { if (!okDay(k)) continue; if (on) pick.add(k); else pick.delete(k); const e = cell(k); if (e) { e.classList.toggle('is-sel', on); e.setAttribute('aria-pressed', String(on)); } } paintBtn(); };
-    const range = (a, c, on) => { const i = flat.findIndex((x) => x.k === a), j = flat.findIndex((x) => x.k === c); if (i < 0 || j < 0) return; setDays(flat.slice(Math.min(i, j), Math.max(i, j) + 1).map((x) => x.k), on); };
-    grid.addEventListener('pointerdown', (ev) => { const e = ev.target.closest('[data-day]'); if (!e || e.disabled) return; ev.preventDefault(); const k = e.dataset.day; if (ev.shiftKey && last) range(last, k, true); else { drag = { add: !pick.has(k) }; setDays([k], drag.add); } last = k; try { grid.setPointerCapture(ev.pointerId); } catch (err) { /* nothing */ } });
-    grid.addEventListener('pointermove', (ev) => { if (!drag) return; const c = document.elementFromPoint(ev.clientX, ev.clientY), e = c && c.closest && c.closest('[data-day]'); if (!e || e.disabled || !grid.contains(e)) return; const k = e.dataset.day; if (pick.has(k) !== drag.add) { setDays([k], drag.add); last = k; } });
-    const endDrag = () => { drag = null; }; grid.addEventListener('pointerup', endDrag); grid.addEventListener('pointercancel', endDrag);
-    grid.addEventListener('click', (ev) => { if (ev.detail !== 0) return; const e = ev.target.closest('[data-day]'); if (e && !e.disabled) { setDays([e.dataset.day], !pick.has(e.dataset.day)); last = e.dataset.day; } });
-    $('#wzPrev', b).addEventListener('click', () => { view = Math.max(0, view - 1); paintCal(); });
-    $('#wzNext2', b).addEventListener('click', () => { view = Math.min(cal.months.length - 1, view + 1); paintCal(); });
-    $('#wzNow', b).addEventListener('click', () => { view = cal.months[0].days.filter((x) => okDay(x.k)).length < 5 ? 1 : 0; paintCal(); });
-    // the quick choice, in a menu
-    const quick = (q) => () => {
-      const g = cal.months[view];
-      if (q === 'none') { setDays([...pick], false); return; }
-      if (q === 'week') setDays(flat.filter((y) => okDay(y.k)).slice(0, 7).map((y) => y.k), true);
-      else if (q === 'end') { const ks = g.days.filter((y) => wd(y.t) >= 5).map((y) => y.k); if (!ks.some(okDay)) toast('تو این ماه پنجشنبه یا جمعه‌ی آینده نیست.'); setDays(ks, true); }
-      else if (q === 'month') setDays(g.days.map((y) => y.k), true);
-      else if (q === 'rep') { if (!pick.size) { toast('اول چند روز انتخاب کن؛ بعد این گزینه همون روزها رو تا ۴ هفته تکرار می‌کنه.'); return; } const add = []; for (const k of [...pick]) { const i = flat.findIndex((y) => y.k === k); for (const w of [7, 14, 21]) if (flat[i + w]) add.push(flat[i + w].k); } setDays(add, true); }
-    };
-    desk.menuBtn($('#wzQ', b), () => [{ t: 'هفته‌ی آینده', d: 'هفت روز بعد', on: quick('week') }, { t: 'پنجشنبه و جمعه‌های این ماه', on: quick('end') }, { t: 'همه‌ی روزهای این ماه', on: quick('month') }, { t: 'تکرار ۴ هفته‌ای انتخاب‌ها', d: 'همون روزها، سه هفته‌ی بعدش هم', on: quick('rep') }, { sep: 1 }, { t: 'پاک کردن انتخاب', ic: 'x', on: quick('none') }], { label: 'انتخاب سریع روزها' });
-    // the hours: what is chosen, and «+ ساعت» opens the common hours and a stepper
-    const paintTimes = () => {
-      $('#wzCh', b).innerHTML = times.length ? times.map((h) => `<span class="wz-tc"><b>${fa(h)}</b><button type="button" data-tx="${h}" aria-label="برداشتن ساعت ${fa(h)}">×</button></span>`).join('') : '<small>هنوز ساعتی انتخاب نشده.</small>';
-      paintBtn();
-    };
-    const paintBtn = () => {
-      const g = $('#wzGo', b), n = pick.size * times.length; g.disabled = !n;
-      g.innerHTML = n ? `${ico('plus')}${fa(n)} سانس اضافه کن<small>${fa(pick.size)} روز × ${fa(times.length)} ساعت</small>` : `${ico('plus')}سانس اضافه کن<small>${pick.size ? 'یه ساعت هم انتخاب کن' : 'اول از تقویم روز انتخاب کن'}</small>`;
-      $('#wzFl1t', b).textContent = pick.size ? `${fa(pick.size)} روز انتخاب شده` : 'از تقویم بزن یا بکش'; $('#wzFl1', b).classList.toggle('is-done', pick.size > 0);
-      $('#wzFl2', b).classList.toggle('is-done', times.length > 0); $('#wzFl3', b).classList.toggle('is-done', n > 0);
-    };
-    $('#wzCh', b).addEventListener('click', (ev) => { const x = ev.target.closest('[data-tx]'); if (x) { times = times.filter((h) => h !== x.dataset.tx); paintTimes(); } });
-    $('#wzTp', b).setAttribute('aria-haspopup', 'dialog'); $('#wzTp', b).setAttribute('aria-expanded', 'false');
-    $('#wzTp', b).addEventListener('click', (ev) => {
+    // the small month under the day button
+    $('#wzDay', b).addEventListener('click', (ev) => {
       const btn = ev.currentTarget; if (btn.getAttribute('aria-expanded') === 'true') { $$('.dk-menu').forEach((x) => x._close && x._close()); return; }
-      const el = document.createElement('div'); el.className = 'wz-pp'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'انتخاب ساعت');
-      el.innerHTML = `<p class="wz-pp-h">ساعت‌های رایج</p><div class="wz-pre" role="group">${PRE.map((h) => `<button type="button" class="chip" data-hm="${h}" aria-pressed="${times.includes(h)}">${fa(h)}</button>`).join('')}</div>
-        <p class="wz-pp-h">ساعت دلخواه</p><div class="wz-step" role="group" aria-label="ساعت دلخواه"><button type="button" class="chip" data-st="-60" aria-label="یک ساعت زودتر">−۱ ساعت</button><button type="button" class="chip" data-st="-15" aria-label="یک ربع زودتر">−۱۵</button><output id="wzTv" aria-live="polite">${fa(hm2(cur))}</output><button type="button" class="chip" data-st="15" aria-label="یک ربع دیرتر">+۱۵</button><button type="button" class="chip" data-st="60" aria-label="یک ساعت دیرتر">+۱ ساعت</button></div>
-        <div class="wz-pp-a"><button type="button" class="chip" id="wzTadd">${ico('plus')}این ساعت رو هم بذار</button><button type="button" class="buy" id="wzTdone">تموم</button></div>`;
-      const close = desk.pop(btn, el, { label: 'ساعت‌ها' });
-      $$('[data-hm]', el).forEach((x) => x.addEventListener('click', () => { const h = x.dataset.hm, i = times.indexOf(h); if (i >= 0) times.splice(i, 1); else times.push(h); times.sort(); x.setAttribute('aria-pressed', String(i < 0)); paintTimes(); }));
-      $$('[data-st]', el).forEach((x) => x.addEventListener('click', () => { cur = clamp(cur + +x.dataset.st, 0, 23 * 60 + 45); $('#wzTv', el).textContent = fa(hm2(cur)); }));
-      $('#wzTadd', el).addEventListener('click', () => { const h = hm2(cur); if (!times.includes(h)) { times.push(h); times.sort(); } paintTimes(); toast(`ساعت ${fa(h)} گذاشته شد.`); });
-      $('#wzTdone', el).addEventListener('click', () => { close(); btn.focus(); });
+      const el = document.createElement('div'); el.className = 'wz-pp wz-pcal'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'انتخاب روز');
+      el.innerHTML = `<div class="wz-c-head"><button type="button" class="wz-cm" id="wzPrev" aria-label="ماه قبل"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5.5l6.5 6.5L9 18.5"/></svg></button><div class="wz-c-t"><b id="wzMon"></b></div><button type="button" class="wz-cm" id="wzNext2" aria-label="ماه بعد"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5L8.5 12l6.5 6.5"/></svg></button></div>
+        <div class="wz-c-wk" aria-hidden="true">${['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'].map((x) => `<i>${x}</i>`).join('')}</div>
+        <div class="wz-c-grid" id="wzGrid" role="group" aria-label="روزهای ماه"></div>
+        <label class="wz-multi"><input type="checkbox" id="wzMulti"${multi ? ' checked' : ''}><span class="box" aria-hidden="true">${ico('check')}</span><span>چند روز با هم (برای یه ساعت)</span></label>`;
+      drag = null; const close = desk.pop(btn, el, { label: 'روز سانس' }), grid = $('#wzGrid', el), cnt = () => { const m = new Map(); ses.forEach((x) => m.set(x.slice(0, 10), (m.get(x.slice(0, 10)) || 0) + 1)); return m; };
+      const paint = () => {
+        const g = cal.months[view], off = wd(g.days[0].t), c = cnt();
+        $('#wzMon', el).textContent = `${WZ_MON[g.m - 1]} ${fa(g.y)}`; $('#wzPrev', el).disabled = view === 0; $('#wzNext2', el).disabled = view === cal.months.length - 1;
+        grid.innerHTML = '<span></span>'.repeat(off) + g.days.map((x) => `<button type="button" class="wz-d${pick.has(x.k) ? ' is-sel' : ''}${c.has(x.k) ? ' has' : ''}${wd(x.t) === 6 ? ' is-fri' : wd(x.t) === 5 ? ' is-thu' : ''}${x.k === tk ? ' is-today' : ''}" data-day="${x.k}"${okDay(x.k) ? '' : ' disabled'} aria-pressed="${pick.has(x.k)}" aria-label="${esc(dayName(x.t))}${c.has(x.k) ? `، ${fa(c.get(x.k))} سانس` : ''}"><b>${fa(x.jd)}</b>${c.has(x.k) ? `<i>${fa(c.get(x.k))}</i>` : ''}</button>`).join('');
+      };
+      const choose = (k, on) => { if (!okDay(k)) return; if (!multi) { drag = null; pick.clear(); pick.add(k); paintHint(); close(); btn.focus(); return; } if (on) pick.add(k); else if (pick.size > 1) pick.delete(k); const e = grid.querySelector(`[data-day="${k}"]`); if (e) { e.classList.toggle('is-sel', pick.has(k)); e.setAttribute('aria-pressed', String(pick.has(k))); } paintHint(); };
+      grid.addEventListener('pointerdown', (ev) => { const e = ev.target.closest('[data-day]'); if (!e || e.disabled) return; ev.preventDefault(); const k = e.dataset.day; drag = { add: !pick.has(k) }; choose(k, drag.add); if (multi) { try { grid.setPointerCapture(ev.pointerId); } catch (err) { /* nothing */ } } });
+      grid.addEventListener('pointermove', (ev) => { if (!drag || !multi || !ev.buttons) { drag = null; return; } const c = document.elementFromPoint(ev.clientX, ev.clientY), e = c && c.closest && c.closest('[data-day]'); if (!e || e.disabled || !grid.contains(e)) return; const k = e.dataset.day; if (pick.has(k) !== drag.add) choose(k, drag.add); });
+      const endDrag = () => { drag = null; }; grid.addEventListener('pointerup', endDrag); grid.addEventListener('pointercancel', endDrag);
+      grid.addEventListener('click', (ev) => { if (ev.detail !== 0) return; const e = ev.target.closest('[data-day]'); if (e && !e.disabled) choose(e.dataset.day, !pick.has(e.dataset.day)); });
+      $('#wzPrev', el).addEventListener('click', () => { view = Math.max(0, view - 1); paint(); });
+      $('#wzNext2', el).addEventListener('click', () => { view = Math.min(cal.months.length - 1, view + 1); paint(); });
+      $('#wzMulti', el).addEventListener('change', (e2) => { multi = e2.target.checked; if (!multi && pick.size > 1) { const f = [...pick].sort()[0]; pick.clear(); pick.add(f); } paint(); paintHint(); });
+      paint(); const sel = [...pick].sort()[0], gi = cal.months.findIndex((g) => g.days.some((x) => x.k === sel)); if (gi >= 0 && gi !== view) { view = gi; paint(); }
     });
-    // the list of sessions: every day with its hours
+    $('#wzHH', b).addEventListener('change', (ev) => { hh = this._wzH = +ev.target.value; paintHint(); });
+    $('#wzMM', b).addEventListener('change', (ev) => { mm = this._wzM = +ev.target.value; paintHint(); });
+    $('#wzRep', b).addEventListener('change', (ev) => { rep = +ev.target.value; paintHint(); });
     const sum = () => {
       const n = ses.length, days = new Set(ses.map((x) => x.slice(0, 10))), ts = sesTimes(d);
       $('#wzSum', b).textContent = n ? `${fa(n)} سانس · ${fa(days.size)} روز · از ${dayOf(ts[0])} تا ${dayOf(ts[n - 1])}` : 'هنوز سانسی نیست';
       $('#wzCnt', b).textContent = n ? `(${fa(n)})` : ''; $('#wzClr', b).hidden = !n; this.preview();
     };
-    const paintList = () => {
-      const by = new Map(); ses.slice().sort().forEach((x) => { const k = x.slice(0, 10); (by.get(k) || by.set(k, []).get(k)).push(x.slice(11, 16)); });
-      $('#wzList', b).innerHTML = by.size ? [...by].map(([k, hs]) => { const t = atOf(k, '12:00'), past = atOf(k, hs[hs.length - 1]) < Date.now(); return `<div class="wz-sg${past ? ' is-past' : ''}" data-d="${k}"><div class="wz-sg-h"><b>${esc(dayName(t))}</b><small>${past ? 'گذشته' : `${fa(hs.length)} سانس`}</small><span class="wz-sg-a"><button type="button" class="chip" data-dp title="یه سانس دیگه تو همین روز">${ico('plus')}ساعت</button><button type="button" class="chip" data-dm aria-label="کارهای این روز" aria-haspopup="menu" aria-expanded="false">⋯</button></span></div><div class="wz-sg-t">${hs.map((h) => `<span class="wz-sc${editKey === `${k}T${h}` ? ' is-ed' : ''}" data-s="${k}T${h}"><button type="button" class="t" data-ed aria-label="ویرایش ساعت ${fa(h)}">${fa(h)}</button><span class="ed"><button type="button" data-sm="-15" aria-label="یک ربع زودتر">−</button><button type="button" data-sm="15" aria-label="یک ربع دیرتر">+</button></span><button type="button" class="x" data-sx aria-label="حذف سانس ${fa(h)}">×</button></span>`).join('')}</div></div>`; }).join('') : '<p class="wz-empty">هنوز سانسی نیست. از تقویم روز انتخاب کن، ساعت بذار و «سانس اضافه کن» رو بزن.</p>';
+    // the list: every session on a line (the day once for its hours), the hour changes on the spot, a × removes
+    const paintList = (flash) => {
+      const rows = ses.slice().sort(); let prev = '';
+      list.innerHTML = rows.length ? rows.map((x) => {
+        const k = x.slice(0, 10), h = +x.slice(11, 13), m = +x.slice(14, 16), t = atOf(k, '12:00'), past = atOf(k, x.slice(11, 16)) < Date.now(), first = k !== prev; prev = k;
+        return `<div class="wz-sr${first ? ' is-first' : ''}${past ? ' is-past' : ''}${flash && flash.has(x) ? ' is-new' : ''}" role="listitem" data-s="${x}"><span class="wz-sr-d">${first ? esc(dayName(t)) : ''}</span><div class="wz-hm wz-hm-s" role="group" aria-label="ساعت سانس ${esc(dayName(t))}"><select data-sh aria-label="ساعت">${hOpts(h)}</select><i aria-hidden="true">:</i><select data-sm aria-label="دقیقه">${mOpts(m)}</select></div>${past ? '<small class="wz-sr-p">گذشته</small>' : ''}<button type="button" class="wz-sr-x" data-sx aria-label="حذف این سانس">${ico('x')}</button></div>`;
+      }).join('') : `<p class="wz-empty">${ico('calendar')}<span>هنوز سانسی نیست. روز و ساعت رو انتخاب کن و «افزودن سانس» رو بزن.</span></p>`;
+      sfade.upd(list);
     };
-    const redo = () => { ses.sort(); d.ses = ses; paintCal(); paintList(); sum(); };
+    const redo = (flash) => { ses.sort(); d.ses = ses; paintList(flash); sum(); };
     $('#wzGo', b).addEventListener('click', () => {
-      const n0 = ses.length; for (const k of [...pick].sort()) for (const h of times) { const x = `${k}T${h}`; if (!ses.includes(x)) ses.push(x); }
-      const add = ses.length - n0, skipped = pick.size * times.length - add; pick.clear(); redo(); paintBtn();
-      toast(add ? `${fa(add)} سانس اضافه شد${skipped ? ` (${fa(skipped)} تاش از قبل بود)` : ''}.` : 'همه‌ی این سانس‌ها از قبل بودن.');
+      const hm = `${two(hh)}:${two(mm)}`, add = new Set(); let skipped = 0;
+      for (const k of [...pick].sort()) for (let w = 0; w <= rep; w++) { const i = flat.findIndex((y) => y.k === k), y = w ? flat[i + 7 * w] : flat[i]; if (!y || !okDay(y.k)) continue; const x = `${y.k}T${hm}`; if (ses.includes(x)) skipped++; else { ses.push(x); add.add(x); } }
+      redo(add);
+      toast(add.size ? `${fa(add.size)} سانس اضافه شد${skipped ? ` (${fa(skipped)} تاش از قبل بود)` : ''}.` : 'این سانس از قبل هست.');
+      const first = [...add].sort()[0]; if (first) { const e = list.querySelector(`[data-s="${first}"]`); if (e) e.scrollIntoView({ block: 'nearest' }); }
     });
-    $('#wzList', b).addEventListener('click', (ev) => {
-      const g = ev.target.closest('[data-d]'); if (!g) return; const k = g.dataset.d, c = ev.target.closest('[data-s]'), hs = ses.filter((x) => x.startsWith(k)).map((x) => x.slice(11, 16)).sort();
-      if (ev.target.closest('[data-ed]')) { editKey = editKey === c.dataset.s ? null : c.dataset.s; paintList(); }
-      else if (ev.target.closest('[data-sx]')) { ses.splice(ses.indexOf(c.dataset.s), 1); editKey = null; redo(); }
-      else if (ev.target.closest('[data-sm]')) { const old = c.dataset.s, nm = clamp(mins(old.slice(11)) + +ev.target.closest('[data-sm]').dataset.sm, 0, 23 * 60 + 45), nx = `${k}T${hm2(nm)}`; if (nx === old) return; if (ses.includes(nx)) { toast('این ساعت تو همین روز از قبل هست.'); return; } ses[ses.indexOf(old)] = nx; editKey = nx; redo(); }
-      else if (ev.target.closest('[data-dp]')) { let m = clamp(mins(hs[hs.length - 1]) + 150, 0, 23 * 60 + 45); while (ses.includes(`${k}T${hm2(m)}`) && m > 0) m -= 15; if (!ses.includes(`${k}T${hm2(m)}`)) { ses.push(`${k}T${hm2(m)}`); editKey = `${k}T${hm2(m)}`; redo(); } }
-      else if (ev.target.closest('[data-dm]')) {
-        const btn = ev.target.closest('[data-dm]'); if (btn.getAttribute('aria-expanded') === 'true') { $$('.dk-menu').forEach((x) => x._close && x._close()); return; }
-        desk.menu(btn, [
-          { t: 'کپی به روزهای انتخابی', d: 'ساعت‌های این روز رو بذار تو روزهایی که تو تقویم انتخاب کردی', ic: 'copy', on: () => { const ks = [...pick].filter((y) => y !== k); if (!ks.length) { toast('اول تو تقویم روزهایی رو که می‌خوای این ساعت‌ها رو داشته باشن انتخاب کن.'); return; } let add = 0; for (const y of ks) for (const h of hs) if (!ses.includes(`${y}T${h}`)) { ses.push(`${y}T${h}`); add++; } pick.clear(); redo(); paintBtn(); toast(`${fa(add)} سانس تو ${fa(ks.length)} روز اضافه شد.`); } },
-          { sep: 1 },
-          { t: 'حذف این روز', ic: 'x', danger: true, on: () => { for (let i = ses.length - 1; i >= 0; i--) if (ses[i].startsWith(k)) ses.splice(i, 1); editKey = null; redo(); } },
-        ], { label: 'کارهای این روز' });
-      }
+    list.addEventListener('change', (ev) => {
+      const r = ev.target.closest('[data-s]'); if (!r) return; const old = r.dataset.s, k = old.slice(0, 10), h = +$('[data-sh]', r).value, m = +$('[data-sm]', r).value, nx = `${k}T${two(h)}:${two(m)}`;
+      if (nx === old) return; if (ses.includes(nx)) { toast('این ساعت تو همین روز از قبل هست.'); $('[data-sh]', r).value = +old.slice(11, 13); $('[data-sm]', r).value = +old.slice(14, 16); return; }
+      ses[ses.indexOf(old)] = nx; redo(new Set([nx])); const e = list.querySelector(`[data-s="${nx}"] [data-sh]`); if (e) e.focus();
     });
-    $('#wzClr', b).addEventListener('click', (ev) => { if (!armed) { armed = true; ev.currentTarget.textContent = 'مطمئنی؟ دوباره بزن'; setTimeout(() => { armed = false; const e = $('#wzClr', b); if (e) e.textContent = 'پاک کردن همه'; }, 3200); return; } armed = false; ses.length = 0; editKey = null; redo(); ev.currentTarget.textContent = 'پاک کردن همه'; });
+    list.addEventListener('click', (ev) => { const x = ev.target.closest('[data-sx]'); if (!x) return; const r = x.closest('[data-s]'); ses.splice(ses.indexOf(r.dataset.s), 1); redo(); });
+    $('#wzClr', b).addEventListener('click', (ev) => { if (!armed) { armed = true; ev.currentTarget.textContent = 'مطمئنی؟ دوباره بزن'; setTimeout(() => { armed = false; const e = $('#wzClr', b); if (e) e.textContent = 'پاک کردن همه'; }, 3200); return; } armed = false; ses.length = 0; redo(); ev.currentTarget.textContent = 'پاک کردن همه'; });
     $$('[data-sale]', b).forEach((x) => x.addEventListener('click', () => { d.sale = x.dataset.sale; $$('[data-sale]', b).forEach((y) => y.setAttribute('aria-checked', String(y === x))); $('.wz-saleat', b).hidden = d.sale !== 'at'; if (d.sale === 'now') d.saleAt = ''; this.preview(); }));
     $('#wzSaleAt', b).addEventListener('change', (ev) => { d.saleLocal = ev.target.value; const t = Date.parse(`${ev.target.value}:00+03:30`); d.saleAt = Number.isFinite(t) ? new Date(t).toISOString() : ''; this.preview(); });
-    paintCal(); paintTimes(); paintList(); sum();
+    paintList(); paintHint(); sum();
   },
 
   /* 5. the prices, per tier of the hall's plan */
@@ -13418,12 +13721,18 @@ const admin = {
   // the categories (the kinds, and the presale; a new one by label) and two settings of the checkout
   site(el) {
     const extra = store.get('blit.cats', []);
-    el.innerHTML = `${desk.head('دسته‌ها و تنظیمات', 'دسته‌ها از نوع برنامه ساخته می‌شن: کنسرت‌ها، تئاترها و جُنگ و کمدی، و «به‌زودی (پیش‌فروش)» برای برنامه‌هایی که فروششون هنوز شروع نشده. شهر دسته نیست؛ خریدار شهرش رو با یه فیلتر انتخاب می‌کنه و اینکه کدوم شهرها تو اون فیلتر باشن رو تو تب «شهرها» تعیین می‌کنی.')}
+    el.innerHTML = `${desk.head('دسته‌ها و تنظیمات', 'دسته‌ها از نوع برنامه ساخته می‌شن: کنسرت‌ها، تئاترها و جُنگ و کمدی، و «به‌زودی» برای برنامه‌هایی که فروششون هنوز شروع نشده. شهر دسته نیست؛ خریدار شهرش رو با یه فیلتر انتخاب می‌کنه و اینکه کدوم شهرها تو اون فیلتر باشن رو تو تب «شهرها» تعیین می‌کنی.')}
       <div class="dk-cols dk-cols-r"><section class="panel dk-box evp-rise"><h2>${ico('grid')}دسته‌ها</h2><ul class="ad-cats">${SEC_ORDER.map((k) => `<li><span class="sec-ic" style="--sc:${secColor(k)[0]}" aria-hidden="true">${ico(iconOfCat(k))}</span><b>${esc(catName(k))}</b><small>${fa(LIST().filter((e) => inCat(e, k)).length)} برنامه · خودکار</small></li>`).join('')}${extra.map((c) => `<li><span class="sec-ic" aria-hidden="true">${ico('tag')}</span><b>${esc(c.t)}</b><small>با برچسب «${esc(c.tag)}» · دستی</small></li>`).join('')}</ul>
         <form class="rc-row" id="adCat"><label class="bk-fld"><span>دسته‌ی تازه</span><input name="t" placeholder="مثلاً: ویژه‌ی کودکان" required></label><button type="submit" class="chip">${ico('plus')}افزودن</button></form></section>
       <section class="panel dk-box evp-rise"><h2>${ico('shield')}تنظیمات خرید</h2>
         <h3 class="wz-h3">تأیید موبایل با کد پیامکی موقع خرید</h3><div class="bk-seg" role="radiogroup" aria-label="تأیید موبایل">${[['off', 'خاموش'], ['busy', 'فقط اجراهای پرطرفدار'], ['always', 'همیشه']].map(([k, t]) => `<button type="button" role="radio" data-otp="${k}" aria-checked="${store.get('blit.otpMode', 'busy') === k}">${t}</button>`).join('')}</div>
+        <h3 class="wz-h3">صندلی تکی <small>(وقتی انتخاب خریدار یه صندلی تنها می‌ذاره)</small></h3><p class="bk-lead">تو نقشه‌ی سالن اگه خریدار جوری صندلی بگیره که یه صندلی تنها وسط یا کنار ردیف بمونه (که دیگه کسی فقط همون رو نمی‌خره)، بهش هشدار داده می‌شه. «جلوگیری» یعنی تا درستش نکنه نمی‌تونه ادامه بده؛ «فقط هشدار» یعنی هشدار می‌گیره ولی می‌تونه ادامه بده.</p>
+        <div class="bk-seg" role="radiogroup" aria-label="صندلی تکی">${[['block', 'جلوگیری'], ['warn', 'فقط هشدار'], ['off', 'خاموش']].map(([k, t]) => `<button type="button" role="radio" data-om="${k}" aria-checked="${orphanCfg(store.get('blit.orphan', null)).mode === k}">${t}</button>`).join('')}</div>
+        <label class="bk-fld wz-orl"><span>وقتی تعداد صندلی‌های خالیِ کل سالن <b>این‌قدر یا کمتر</b> شد، این قانون خاموش می‌شه (آخرین صندلی‌ها دیگه مهم نیستن)</span><input type="number" id="omLast" min="0" max="50" step="1" inputmode="numeric" value="${orphanCfg(store.get('blit.orphan', null)).last}" style="max-width:120px"></label>
         <h3 class="wz-h3">صف انتظار هوشمند <small>(محافظ سایت و خرید)</small></h3><p class="bk-lead">وقتی تعداد خریدارها از ظرفیت (مثلاً ۱۰۰۰ نفر هم‌زمان) بیشتر شد، بقیه تو صف می‌ایستن و هر کدوم می‌بینه «الان N نفر از ظرفیت تو مرحله‌ی خرید هستن، جلوی تو N نفره»؛ هر کی تموم کرد نفر بعدی وارد می‌شه. تا ظرفیت پر نشده هم هر خریدار شماره‌ش رو یه لحظه می‌بینه («تو نفر N از ۱۰۰۰») و خودکار رد می‌شه؛ کسی معطل نمی‌شه. این‌جا (نمونه) صف شبیه‌سازی می‌شه؛ صف واقعی تو پوشه‌ی <code dir="ltr">server/</code> ساخته و با ۱۰۰ هزار نفر تست شده. <a href="#" id="qSee">دیدن صفحه‌ی صف</a></p><div class="bk-seg" role="radiogroup" aria-label="صف انتظار">${[['off', 'خاموش'], ['hot', 'فقط اجراهای پرطرفدار'], ['always', 'همه‌ی اجراها']].map(([k, t]) => `<button type="button" role="radio" data-qm="${k}" aria-checked="${store.get('blit.queueMode', 'always') === k}">${t}</button>`).join('')}</div></section></div>`;
+    { const save = (patch) => { const c = orphanCfg(store.get('blit.orphan', null)); store.set('blit.orphan', { ...c, ...patch }); };
+      $$('[data-om]', el).forEach((b) => b.addEventListener('click', () => { save({ mode: b.dataset.om }); $$('[data-om]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`صندلی تکی: ${b.textContent}`); toast('ذخیره شد.'); }));
+      const li = $('#omLast', el); if (li) li.addEventListener('change', () => { const v = Math.max(0, Math.min(50, Math.round(+li.value || 0))); li.value = v; save({ last: v }); toast('ذخیره شد.'); }); }
     { const see = $('#qSee', el); if (see) see.addEventListener('click', (ev) => { ev.preventDefault(); const e = LIST().find((x) => sessionsOf(x).length); if (e) { store.sset('blit.qpass', null); location.hash = queue.url(e, sessionsOf(e)[0].id); } }); }
     $$('[data-qm]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.queueMode', b.dataset.qm); $$('[data-qm]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`صف انتظار مجازی: ${b.textContent}`); toast(`صف انتظار مجازی: ${b.textContent}.`); }));
     $$('[data-otp]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.otpMode', b.dataset.otp); $$('[data-otp]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`تأیید موبایل موقع خرید: ${b.textContent}`); toast(`تأیید موبایل موقع خرید: ${b.textContent}.`); }));
@@ -14526,6 +14835,9 @@ const account = {
     const u = userOf();
     if (!u) {
       const box = pages.wrap('pg-ac', `${pages.head('حساب من', 'users', 'با شماره‌ی موبایل و یه کد پیامکی وارد شو؛ رمز و فرم ثبت‌نام لازم نیست.')}<section class="panel pg-box evp-rise ac-in"><p class="bk-lead">بلیت‌هات، یادآوری‌ها و کیف پولت اینجاست. بدون ورود هم می‌تونی بلیت بخری و با کد پیگیری پیداش کنی.</p><button type="button" class="buy" id="acIn">${ico('users')}ورود یا ثبت‌نام</button> <a class="chip" href="#/receipts">${ico('search')}پیگیری با کد</a></section>`);
+      const doors = [['ticket', 'بلیت‌های من', 'همه‌ی بلیت‌های خریده‌شده با QR، تو یه جا.'], ['bag', 'پیگیری خرید', 'با کد پیگیری یا شماره‌ی موبایل، بدون ورود.', '#/receipts'], ['tag', 'کیف پول', 'شارژ و خرید سریع‌تر، با کد هدیه.', '#/wallet']];
+      box.insertAdjacentHTML('beforeend', `<section class="ac-doors evp-rise" aria-label="بعد از ورود">${doors.map(([ic, t, d, h]) => `<a class="panel ac-door" href="${h || '#'}" data-door="${h ? '' : 'in'}"><span class="sec-ic" aria-hidden="true">${ico(ic)}</span><b>${t}</b><small>${d}</small></a>`).join('')}</section>`);
+      $$('[data-door="in"]', box).forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); auth.open(); }));
       $('#acIn', box).addEventListener('click', () => auth.open());
       return;
     }
@@ -15349,7 +15661,7 @@ if (reduceMotion) { state.userPaused = true; const a = $('#autoBtn'); a.setAttri
 })();
 
 // test hook for local checks only (?debug in the URL)
-if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, lab, cs, tf, wallet, orgs, admins, dsess, deskAuth, selUI, orgDesk, ana, pw, sha256, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, planFromBuilder, hallDesigner, bFromP, HB_TPL, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
+if (/[?&]debug/.test(location.search)) window.__hero = { sdock, lib, libSet, libCheck, hallsAll, hallById, hallsOfCity, citiesAll, cityBySlug, cityByName, citySearch, hallsDeleted, citiesDeleted, planByKey, planOfHall, planKeyOf, hallLoc, locBlockHTML, layoutCap, sectionsInfo, bindHall, hallLayout, stage, cards, timer, panel, look, hd, s2, page, dots, buy, orphanRuns, orphanSeats, orphanCheck, orphanCfg, orphanFree, pages, auth, gate, qrText, qrSVG, desk, org, admin, wizard, codes, lab, cs, tf, wallet, orgs, admins, dsess, deskAuth, selUI, orgDesk, ana, pw, sha256, drafts, hallsPage, queue, sessionsOf, seatPlan, notif, account, changes, tour, CODES, PLANS, buildPlan, planFromText, planToText, planFromBuilder, hallDesigner, bFromP, HB_TPL, modeFx, fx, scrollFx, dims, geom, UI, PRESETS, FONTS, LOOK, TXT, LOOK_DEF, TXT_DEF, EVENTS, PALETTE, ZOOM, state, go, next, prev, rebuild, suggestPalette, when, statusOf, catOf, catCount, KINDS, CAT_LABEL, geo, csOf, inCity, catKey, cityPick, citiesShown, PROVS, provOf, cityName, hallFull, hallCard, hallInfo, tiersOf, sale, buyHTML, LIST, MORE, secId };
 })();
 </script>
 <script>

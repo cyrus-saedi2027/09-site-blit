@@ -40,3 +40,6 @@ CAP=500 SEATS=3000 PORT=8080 node server.js
 ## Files
 
 `queue-engine.js` (the room) · `server.js` (HTTP) · `public/wait.html` (the tiny waiting page) · `loadgen.js`, `loadtest.js`, `run-scenarios.sh`, `summarize.js` (the load test) · `LOADTEST.md` + `results/` (what it measured) · `nginx.conf.example`.
+
+## The single-seat rule (`orphan.js`)
+A hold must not leave ONE free seat alone in its row (nobody can buy a single seat later). `orphan.js` is the same text as the site's (made by `tools/af-orphan-sync.py` from `parts9/buy.js`): build the runs of the hall's plan once with `orphanRuns(plan)`, then on every hold request call `orphanCheck(plan, new Set(seatKeys), cfg)`; in mode `block` refuse a request that returns lonely seats (with the seats named), unless the hall has `cfg.last` (default 3) free seats or fewer. The queue engine does not need it; the shop's hold route does.

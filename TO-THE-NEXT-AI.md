@@ -40,3 +40,9 @@ Real payment gateway · SMS gateway · database (everything lives in the browser
 
 ## 4. Files to read, in order
 `START-HERE.md` → `repo/ui-reference/BRIEF.md` → `repo/ui-reference/01-hero/v9/SPEC.md` (§10.24 is the latest) → `repo/ui-reference/HANDOFF.md` → `repo/server/README.md` + `LOADTEST.md` + `ساده.md`.
+
+## Added in round AF (the owner's fourth message)
+- **The single-seat rule** is in `ui-reference/01-hero/v9` (the site, in `parts9/buy.js` between `orphan:begin` and `orphan:end`) and in `server/orphan.js` (generated from it; the real shop must call `orphanCheck` where a hold is asked for). Test: `tools/af-orphan-test.js`.
+- **Bare patches** (a page where one side ends and only the background shows) are the owner's pet hate. `tools/af-gap-audit.js` finds them; `sfill` (in `parts9/more.js`) mends the common ones. Run it after any layout change.
+- **Sessions** (wizard step 4) are one line to add and one list; **halls**: «ساخت سریع» plus six sample big halls; tests `af-sessions-test`, `af-hall-test`.
+- Still to do (the owner said so): more halls and a still easier hall system (he finds it «complicated»); every panel still deserves a look from a first-time user's eyes.
