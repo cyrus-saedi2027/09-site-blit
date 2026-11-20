@@ -4050,6 +4050,27 @@ html.is-desk .dk-tabs::-webkit-scrollbar-thumb { background: rgba(255, 255, 255,
 .ad-sn-g .bk-fld span { font-size: 11.5px; opacity: .75; }
 #ahSnSave { margin-top: 14px; display: inline-flex; align-items: center; gap: .5em; }
 
+/* ───── round AH: the rail's tabs in a box with two round «more» buttons; one icon for one tab; a little shorter rows on a short window ───── */
+.dk-tw { position: relative; min-width: 0; display: flex; flex-direction: column; }
+.dk-sc { all: unset; box-sizing: border-box; position: absolute; left: 50%; z-index: 4; width: 34px; height: 34px; margin-left: -17px; display: grid; place-items: center; border-radius: 17px; color: #fff; background: #34343c; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 8px 18px -8px rgba(0, 0, 0, .9); cursor: pointer; transition: background-color .2s, transform .2s; }
+.dk-sc[hidden] { display: none; }
+.dk-sc:hover { background: #47474f; transform: scale(1.06); }
+.dk-sc:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.dk-sc svg.i { width: 20px; height: 20px; }
+.dk-sc-up { top: 2px; } .dk-sc-dn { bottom: 2px; }
+@media (min-width: 761px) and (min-aspect-ratio: 5/4) {
+  html.is-desk .dk-tw { flex: 0 1 auto; min-height: 0; }
+  html.is-desk .dk-tw > .dk-tabs { flex: 0 1 auto; min-height: 0; }
+}
+@media (max-width: 760px), (max-aspect-ratio: 5/4) {
+  .dk-tw { flex: 1; min-width: 0; flex-direction: row; }
+  .dk-tw > .dk-tabs { flex: 1; }
+  .dk-sc { display: none !important; }
+}
+@media (max-height: 940px) and (min-width: 761px) { html.is-desk .dk-tabs a, html.is-desk .dk-foot a, html.is-desk .dk-tg, html.is-desk .dk-logo, html.is-desk .dk-who { height: 42px; } html.is-desk .dk-ind { min-height: 42px; } html.is-desk .dk-tabs { gap: 2px; } }
+@media (max-height: 820px) and (min-width: 761px) { html.is-desk .dk-tabs a, html.is-desk .dk-foot a, html.is-desk .dk-tg, html.is-desk .dk-logo, html.is-desk .dk-who { height: 38px; } html.is-desk .dk-ind { min-height: 38px; } }
+@media (max-height: 720px) and (min-width: 761px) { html.is-desk .dk-tabs a, html.is-desk .dk-foot a, html.is-desk .dk-tg, html.is-desk .dk-logo, html.is-desk .dk-who { height: 36px; } html.is-desk .dk-ind { min-height: 36px; } }
+
 /* ════════════════════════════════════════════════════════════════
    round S: the inner pages' own look («lux»). One layer for every page inside the site (a program, its seats, the payment, the ticket, the fixed pages, the desks):
    one frame, one rhythm of spaces, calm panels with a fine light on their edge, headings with a small icon chip, big pictures instead of many small boxes.
@@ -4701,6 +4722,9 @@ html:not(.show-notes) .notes { display: none; }
   <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
   <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M10.6 5.1A9.9 9.9 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.1 3.9M6.6 6.6A16.6 16.6 0 0 0 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18"/></symbol>
   <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 20H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3"/><path d="M16 16l4-4-4-4M20 12H9"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24"><rect x="3.5" y="8.5" width="17" height="4.2" rx="1"/><path d="M5 12.7V20h14v-7.3M12 8.5V20"/><path d="M12 8.5C10.9 5.3 7.2 5 7.2 7.2c0 1.4 1.7 1.3 4.8 1.3Zm0 0c1.1-3.2 4.8-3.5 4.8-1.3 0 1.4-1.7 1.3-4.8 1.3Z"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17c1.3 0 2-.9 2-1.8 0-1.4-1-1.6-1-2.7 0-.9.7-1.5 1.7-1.5H17a3.5 3.5 0 0 0 3.5-3.5C20.5 6.7 16.7 3.5 12 3.5Z"/><circle cx="7.9" cy="11.3" r="1.05" fill="currentColor" stroke="none"/><circle cx="10.4" cy="7.7" r="1.05" fill="currentColor" stroke="none"/><circle cx="14.7" cy="7.7" r="1.05" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-cog" viewBox="0 0 24 24"><path d="M10.3 3.5h3.4l.5 2.1 1.5.9 2-.7 1.7 3-1.5 1.5v1.8l1.5 1.5-1.7 3-2-.7-1.5.9-.5 2.1h-3.4l-.5-2.1-1.5-.9-2 .7-1.7-3 1.5-1.5v-1.8L4.6 9.3l1.7-3 2 .7 1.5-.9Z"/><circle cx="12" cy="12" r="2.6"/></symbol>
 </svg>
 
 <div class="app" id="app">
@@ -5185,7 +5209,7 @@ function sanitizeLib(j) {
     halls[k] = h;
   });
   const hallNew = arr(j.hallNew).filter((h) => h && str(h.id) && str(h.name) && str(h.city)).map((h) => { const l = arr(h.lay).filter(okLay).map(lay); return { id: h.id, slug: h.id, name: h.name, addr: typeof h.addr === 'string' ? h.addr : '', city: h.city, loc: pt(h.loc), cap: 0, ty: [], z: [], sb: [], alias: [], lay: l.length ? l : [{ n: 'چیدمان اصلی', p: { shape: 'fan', rows: 10, seats: 14, blocks: 2, grow: false, balcony: 0, boxes: 0, tables: 0, stand: 0 } }] }; });
-  return { v: 1, cities, cityNew, halls, hallNew, seq: Number.isInteger(j.seq) && j.seq >= 0 ? j.seq : 0, seedBig: j.seedBig ? 1 : 0, seedAG: j.seedAG ? 1 : 0 };
+  return { v: 1, cities, cityNew, halls, hallNew, seq: Number.isInteger(j.seq) && j.seq >= 0 ? j.seq : 0, seedBig: j.seedBig ? 1 : 0, seedAG: Number.isInteger(j.seedAG) && j.seedAG > 0 ? j.seedAG : 0 };
 }
 const lib = {
   v: 0, fns: [], o: null,
@@ -5401,8 +5425,8 @@ const libSet = {
     else { const x = lib.o.halls[h.id] = { ...(lib.o.halls[h.id] || {}) }; ['name', 'addr', 'city'].forEach((k) => { if (patch[k] != null) x[k] = patch[k]; }); if ('loc' in patch) { if (patch.loc === undefined) delete x.loc; else x.loc = patch.loc; } if (patch.zones) x.zones = { ...(x.zones || {}), ...patch.zones }; if (patch.sn) { x.sn = { ...(x.sn || {}) }; Object.entries(patch.sn).forEach(([li, m]) => { x.sn[li] = { ...(x.sn[li] || {}) }; Object.entries(m).forEach(([si, t]) => { if (t) x.sn[li][si] = t; else delete x.sn[li][si]; }); if (!Object.keys(x.sn[li]).length) delete x.sn[li]; }); if (!Object.keys(x.sn).length) delete x.sn; } }
     lib.save(); return true;
   },
-  hallAdd({ name, addr = '', city, loc = null, lay }) {
-    const id = lib.next('x'); lib.o.hallNew.push({ id, slug: id, name: name.trim(), addr, city, loc, cap: 0, ty: [], z: [], sb: [], alias: [], lay: lay || [] }); lib.save(); return id;
+  hallAdd({ name, addr = '', city, loc = null, lay, id: fixed }) {
+    const id = fixed || lib.next('x'); lib.o.hallNew.push({ id, slug: id, name: name.trim(), addr, city, loc, cap: 0, ty: [], z: [], sb: [], alias: [], lay: lay || [] }); lib.save(); return id;
   },
   // a hall's own layouts (the admin's): a designer plan (txt: the table of rows, or p: the numbers) or a copy of another hall's layout (copy: {hall, lay})
   layAdd(id, lay) {
@@ -5799,6 +5823,13 @@ const SAMPLE = [
   ['theatre', 'تهران', 'نمایش موزیکال', 'پردهٔ سرخ', 41, 'crimson', 1, 26, '19:30', 700000, 'normal', 0, 'x-pardeh-sorkh', 21],
   ['comedy', 'تهران', 'نمایش کودک', 'پینوکیو', 59, 'crimson', 0, 18, '16:00', 280000, 'normal', 0, 'x-pinokio', 24],
   ['comedy', 'اصفهان', 'جُنگ', 'شب خنده (استندآپ کمدی)', 80, 'yellow', 8, 0, '20:00', 500000, 'normal', 0, 'x-shab-khande', 25],
+  // (round AH: one sample program in each big hall that had none, so the owner can open the zone view and the map of every one of them; the names say «نمونه»)
+  ['concert', 'تهران', 'کنسرت', 'شب موسیقی ایرانی (نمونه)', 37, 'teal', 12, 13, '20:30', 600000, 'normal', 0, 'photo-persian-setar-man', 31],
+  ['concert', 'تهران', 'کنسرت', 'شب بزرگ پاپ (نمونه)', 52, 'orange', 11, 12, '21:00', 800000, 'normal', 0, 'photo-pop-guitar-pink', 32],
+  ['concert', 'تهران', 'کنسرت', 'کنسرت راک (نمونه)', 99, 'crimson', 13, 0, '20:00', 700000, 'normal', 0, 'photo-rock-red', 33],
+  ['concert', 'شیراز', 'کنسرت', 'شب حافظ‌خوانی (نمونه)', 108, 'gold', 14, 15, '20:00', 500000, 'normal', 0, 'photo-folk-singer-orchestra', 34],
+  ['concert', 'تهران', 'کنسرت', 'کنسرت بزرگ آرنا (نمونه)', 'x-arenamall', 'blue', 16, 0, '21:00', 900000, 'normal', 0, 'photo-singer-spot-blue', 35],
+  ['concert', 'تهران', 'کنسرت', 'شب بام آرنا (نمونه)', 'x-bamarena', 'green', 17, 18, '20:30', 850000, 'normal', 0, 'photo-pop-smoke', 36],
 ];
 // finished posters: what is printed on them is fixed (the day, the hall, the time)
 const FIXED = [
@@ -8294,10 +8325,13 @@ libSeedBig();
 /* ───── round AG: the two halls of Iran Mall that were not designed (Arena Mall and Bam Arena). Their real seat maps could not be read (the sellers' pages did not answer), so each gets a FIRST plan made by the quick
    builder, named «چیدمان تقریبی»; the admin replaces it with the real one in the hall builder. They sit at Iran Mall's point (the library's own hall there). ───── */
 function libSeedAG() {
-  if (!lib.o || lib.o.seedAG) return; lib.o.seedAG = 1;
+  if (!lib.o || lib.o.seedAG >= 2) return; lib.o.seedAG = 2;
   const im = hallById('184'), loc = im && im.loc ? [im.loc[0], im.loc[1]] : [35.755359, 51.189605], addr = 'تهران، اتوبان شهید خرازی (انتهای اتوبان همت غرب)، مرکز تجاری ایران‌مال';
-  const HS = [['سالن آرنامال ایران‌مال', { kind: 'arena', cap: 2600, floors: 1, pit: 0.2 }], ['سالن بام آرنا ایران‌مال', { kind: 'arena', cap: 1800, floors: 1, pit: 0.45 }]];
-  lib.batch(() => { for (const [name, q] of HS) libSet.hallAdd({ name, addr, city: 'tehran', loc, lay: [{ n: 'چیدمان تقریبی (جایگزین کن)', b: hbQuick(q) }] }); });
+  const GUESS = 'چیدمان تقریبی (جایگزین کن)';
+  const HS = [['x-arenamall', 'سالن آرنامال ایران‌مال', { kind: 'arena', cap: 2600, floors: 1, pit: 0.2 }], ['x-bamarena', 'سالن بام آرنا ایران‌مال', { kind: 'arena', cap: 1800, floors: 1, pit: 0.45 }]];
+  // (the first version of this seed gave them random ids: those that nobody changed — the plan still has the guess's name — go, the ones with a fixed id come in their place)
+  lib.o.hallNew = lib.o.hallNew.filter((h) => !(HS.some((x) => x[1] === h.name) && !HS.some((x) => x[0] === h.id) && h.lay.length === 1 && h.lay[0].n === GUESS));
+  lib.batch(() => { for (const [id, name, q] of HS) if (!hallById(id)) libSet.hallAdd({ id, name, addr, city: 'tehran', loc, lay: [{ n: GUESS, b: hbQuick(q) }] }); });
   lib.save();
 }
 libSeedAG();
@@ -11418,7 +11452,8 @@ const desk = {
     page.el.innerHTML = `<div class="evp-in dk dk-${v.kind}" data-side="${ui.side}" data-open="${ui.open ? 1 : 0}">
       <div class="dk-bz"><i class="dk-tip" aria-hidden="true"></i><aside class="dk-nav" aria-label="${esc(D.title)}">
         <a class="dk-logo" href="#" data-home aria-label="بلیت · برگشت به سایت"><span class="dk-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><b>بلیت</b></a>
-        <nav class="dk-tabs" aria-label="بخش‌های ${esc(D.title)}"><i class="dk-ind" aria-hidden="true"></i>${top.map((t) => `<a href="#/${v.kind}${t.id === 'home' ? '' : `/${t.id}`}" data-tip="${esc(t.t)}"${t.id === tab.id || t.id === tab.parent ? ' aria-current="page"' : ''}>${ico(t.icon)}<span>${esc(t.t)}</span>${t.n ? `<small>${esc(t.n)}</small>` : ''}</a>`).join('')}</nav>
+        <div class="dk-tw"><nav class="dk-tabs" aria-label="بخش‌های ${esc(D.title)}"><i class="dk-ind" aria-hidden="true"></i>${top.map((t) => `<a href="#/${v.kind}${t.id === 'home' ? '' : `/${t.id}`}" data-tip="${esc(t.t)}"${t.id === tab.id || t.id === tab.parent ? ' aria-current="page"' : ''}>${ico(t.icon)}<span>${esc(t.t)}</span>${t.n ? `<small>${esc(t.n)}</small>` : ''}</a>`).join('')}</nav>
+          <button type="button" class="dk-sc dk-sc-up" data-sc="-1" aria-label="بخش‌های بالاتر" hidden>${ico('up')}</button><button type="button" class="dk-sc dk-sc-dn" data-sc="1" aria-label="بخش‌های بیشتر" hidden>${ico('down')}</button></div>
         <div class="dk-foot">${D.foot || ''}<a href="#" data-home data-tip="برگشت به سایت">${ico('arrow-r')}<span>برگشت به سایت</span></a>
           <button type="button" class="dk-tg" data-dk="mode" data-tip="${LOOK.mode === 'light' ? 'حالت تیره' : 'حالت روشن'}">${ico(LOOK.mode === 'light' ? 'moon' : 'sun')}<span>${LOOK.mode === 'light' ? 'حالت تیره' : 'حالت روشن'}</span></button>
           <button type="button" class="dk-tg" data-dk="open" data-tip="نمایش اسم بخش‌ها" aria-pressed="${ui.open}">${ico('menu')}<span>نمایش اسم بخش‌ها</span></button>
@@ -11428,7 +11463,16 @@ const desk = {
       </aside>
       <div class="dk-main" id="dkMain"></div></div></div>`;
     this.rail($('.dk', page.el), v.kind); selUI.start();
-    { const tb = $('.dk-tabs', page.el); if (tb) { sfade.watch(tb); const cur = $('[aria-current="page"]', tb); if (cur) tb.scrollTop = Math.max(0, cur.offsetTop - 60); sfade.upd(tb); } }
+    {
+      const tb = $('.dk-tabs', page.el);
+      if (tb) {
+        sfade.watch(tb); const cur = $('[aria-current="page"]', tb); if (cur) tb.scrollTop = Math.max(0, cur.offsetTop - 60); sfade.upd(tb);
+        // (round AH: the list is longer than a short window; two round buttons say there is more, above or below, and take the buyer there; they show only while it is true)
+        const up = $('.dk-sc-up', page.el), dn = $('.dk-sc-dn', page.el), upd = () => { const more = tb.scrollHeight - tb.clientHeight > 4 && tb.clientHeight > 80; if (up) up.hidden = !more || tb.scrollTop < 4; if (dn) dn.hidden = !more || tb.scrollTop + tb.clientHeight >= tb.scrollHeight - 4; };
+        $$('.dk-sc', page.el).forEach((b) => b.addEventListener('click', () => tb.scrollBy({ top: +b.dataset.sc * Math.max(120, tb.clientHeight * 0.8), behavior: MOTK() ? 'smooth' : 'auto' })));
+        tb.addEventListener('scroll', upd, { passive: true }); if ('ResizeObserver' in window) { const ro2 = new ResizeObserver(upd); ro2.observe(tb); const p2 = page.leave; page.leave = () => { ro2.disconnect(); if (p2) p2(); }; } upd();
+      }
+    }
     { const who = $('.dk-who', page.el); who.addEventListener('click', () => deskAuth.account()); who.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); deskAuth.account(); } }); }
     tab.render.call(D, $('#dkMain', page.el), v);
     { const as = v.kind === 'org' && dsess.viewAs(); if (as) { const bar = document.createElement('div'); bar.className = 'da-as evp-rise'; bar.innerHTML = `${ico('eye')}<span>داری پنل «${esc(as.name)}» رو همون‌طور که خودش می‌بینه می‌بینی.</span><button type="button" class="chip">${ico('arrow-r')}برگشت به پنل مدیر</button>`; $('button', bar).addEventListener('click', () => { dsess.patch({ as: '' }); location.hash = '#/admin/orgs'; }); $('#dkMain', page.el).prepend(bar); } }
@@ -13720,23 +13764,23 @@ const admin = {
     const q = drafts.all().filter((d) => d.status === 'review').length + this.others().length + changes.pending().length;
     return [
       { id: 'home', t: 'پیشخوان', icon: 'grid', render: this.home },
-      { id: 'orgs', t: 'تهیه‌کننده‌ها', icon: 'mask', render: (el) => orgDesk.render(el) },
       { id: 'shows', t: 'برنامه‌ها و تأیید', icon: 'ticket', n: q ? fa(q) : '', render: this.shows },
-      { id: 'content', t: 'محتوای صفحه‌ی اصلی', icon: 'sliders', render: this.content },
-      { id: 'tickets', t: 'طرح بلیت‌ها', icon: 'ticket', render: (el) => tf.adminDesk(el) },
       { id: 'orders', t: 'سفارش‌ها', icon: 'bag', render: this.orders },
+      { id: 'tickets', t: 'طرح بلیت‌ها', icon: 'palette', render: (el) => tf.adminDesk(el) },
+      { id: 'gifts', t: 'کیف پول و کد هدیه', icon: 'gift', render: this.gifts },
+      { id: 'codes', t: 'کدهای تخفیف', icon: 'tag', render: (el) => codes.render(el, true) },
       { id: 'analytics', t: 'تحلیل و نمودارها', icon: 'award', render: (el) => ana.page(el, 'admin') },
-      { id: 'team', t: 'کاربرها و نقش‌ها', icon: 'users', render: this.team },
-      { id: 'cities', t: 'شهرها', icon: 'pin', render: (el) => adminGeo.cities(el) },
       { id: 'halls', t: 'سالن‌ها', icon: 'ruler', render: (el, v) => adminGeo.halls(el, v) },
-      { id: 'site', t: 'دسته‌ها و تنظیمات', icon: 'grid', render: this.site },
+      { id: 'cities', t: 'شهرها', icon: 'pin', render: (el) => adminGeo.cities(el) },
+      { id: 'content', t: 'محتوای صفحه‌ی اصلی', icon: 'sliders', render: this.content },
+      { id: 'orgs', t: 'تهیه‌کننده‌ها', icon: 'mask', render: (el) => orgDesk.render(el) },
+      { id: 'team', t: 'کاربرها و نقش‌ها', icon: 'users', render: this.team },
+      { id: 'site', t: 'دسته‌ها و تنظیمات', icon: 'cog', render: this.site },
+      { id: 'sms', t: 'پیامک‌ها', icon: 'bell', render: (el) => this.sms(el) },
+      { id: 'log', t: 'تاریخچه‌ی تغییرات', icon: 'clock', render: this.log },
       { id: 'new', t: 'برنامه‌ی تازه', icon: 'plus', parent: 'shows', render: (el, v) => wizard.render(el, v) },
       { id: 'review', t: 'بررسی کامل', icon: 'search', parent: 'shows', render: (el, v) => admin.review(el, v) },
       { id: 'reports', t: 'گزارش سفارش‌ها', icon: 'award', parent: 'analytics', render: this.reports },
-      { id: 'codes', t: 'کدهای تخفیف', icon: 'tag', render: (el) => codes.render(el, true) },
-      { id: 'gifts', t: 'کیف پول و کد هدیه', icon: 'tag', render: this.gifts },
-      { id: 'sms', t: 'پیامک‌ها', icon: 'bell', render: (el) => this.sms(el) },
-      { id: 'log', t: 'تاریخچه‌ی تغییرات', icon: 'clock', render: this.log },
     ];
   },
   // two waiting requests from other organisers, so the queue is never empty in the demo

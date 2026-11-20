@@ -39,7 +39,7 @@ Real payment gateway · SMS gateway · database (everything lives in the browser
 - `q-test.js` and `poster-test.js` are stale (they look for markup that was removed in round S); the rest of `final-checks-ad.sh` is green.
 
 ## 4. Files to read, in order
-`START-HERE.md` → `repo/ui-reference/BRIEF.md` → `repo/ui-reference/01-hero/v9/SPEC.md` (§10.26 is the latest) → `repo/ui-reference/HANDOFF.md` → `repo/server/README.md` + `LOADTEST.md` + `ساده.md`.
+`START-HERE.md` → `repo/ui-reference/BRIEF.md` → `repo/ui-reference/01-hero/v9/SPEC.md` (§10.27 is the latest) → `repo/ui-reference/HANDOFF.md` → `repo/server/README.md` + `LOADTEST.md` + `ساده.md`.
 
 ## Added in round AF (the owner's fourth message)
 - **The single-seat rule** is in `ui-reference/01-hero/v9` (the site, in `parts9/buy.js` between `orphan:begin` and `orphan:end`) and in `server/orphan.js` (generated from it; the real shop must call `orphanCheck` where a hold is asked for). Test: `tools/af-orphan-test.js`.
@@ -53,3 +53,8 @@ Real payment gateway · SMS gateway · database (everything lives in the browser
 - **Two Iran Mall halls** (Arena Mall, Bam Arena) have **guessed** plans (`libSeedAG`): the melotik / fidibo pages returned HTTP 503 from there. Replace them in the admin's hall builder when you have the real seat maps.
 - The admin's rail now scrolls (the «طرح بلیط‌ها» and «بخشش» tabs were cut off at a short window); `desk.js` / `desk.css`.
 - The zone blocks of the real plans are computed from aisles and rows, not hand-drawn: some halls may need a hand-made cut (not done).
+
+## Added in round AH (the owner, after AG: «you did not do everything I asked»)
+- **He was right.** In round AG I had only looked at the admin's rail at one window size and called it fixed. Lesson: **open the client's real file (`blit-admin.html`, sign in `admin` / `blit-admin`) at several window sizes, and look at the screenshot with your own eyes**, before saying a thing is done (`tools/ag-rail.js`).
+- The tabs of the admin's rail now have one icon each (`gift`, `palette`, `cog` are new) and the list has «more» buttons. Never give two tabs one icon (`tools/ah-rail-test.js`).
+- Six sample programs (31–36, «نمونه») sit in the big halls that had none; the two Iran Mall halls have fixed ids (`x-arenamall`, `x-bamarena`) — their plans are still rough guesses (melotik / fidibo answer 502 even to a real browser).
