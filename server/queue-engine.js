@@ -12,7 +12,7 @@
    ════════════════════════════════════════════════════════════════ */
 class Room {
   constructor(o = {}) {
-    Object.assign(this, { capMax: 500, adaptive: true, share: 0.35, avgSeats: 2.4, minCap: 8, holdMs: 600e3, claimMs: 45e3, staleMs: 40e3, nSeats: 1000, maxPerOrder: 8 }, o);
+    Object.assign(this, { capMax: 500, adaptive: true, share: 0.35, avgSeats: 2.4, minCap: 8, holdMs: 600e3, claimMs: 45e3, staleMs: 40e3, insideStaleMs: 60e3, nSeats: 1000, maxPerOrder: 8 }, o);
     this.t0 = Date.now(); this.next = 1; this.admitted = 0;
     this.seen = new Uint32Array(1 << 16);       // seconds (since t0, plus one) of the last sign of life of each ticket
     this.active = new Map();                    // ticket → { claimed, until }
@@ -35,7 +35,7 @@ class Room {
     while (this.active.size < cap && this.admitted < this.next - 1) {
       const t = ++this.admitted;
       if ((sec - this.seen[t]) * 1000 > this.staleMs) { this.st.skipped++; continue; }   // gone
-      this.active.set(t, { claimed: false, until: now + this.claimMs });
+      this.active.set(t, { claimed: false, until: now + this.claimMs, seen: now });
       this.st.admitted++; if (this.active.size > this.st.maxActive) this.st.maxActive = this.active.size;
       this.rec.push(now);
     }
@@ -50,23 +50,34 @@ class Room {
     if (!(t >= 1 && t < this.next)) return { s: 'bad' };
     this.touch(t);
     const a = this.active.get(t);
-    if (a) { if (!a.claimed) { a.claimed = true; a.until = Date.now() + this.holdMs; } return { s: 'in', left: a.until - Date.now(), cap: this.cap() }; }
+    if (a) { a.seen = Date.now(); if (!a.claimed) { a.claimed = true; a.until = a.seen + this.holdMs; } return { s: 'in', left: a.until - Date.now(), cap: this.cap() }; }
     if (this.soldOut()) return { s: 'soldout' };
     if (t <= this.admitted) return { s: 'gone' };
     const ahead = t - this.admitted - 1;
     return { s: 'wait', ahead, eta: Math.round(ahead / this.rate()), total: this.next - 1 - this.admitted };
   }
   // all or nothing: the new choice replaces the old one of the same ticket
-  hold(t, seats) {
+  // a sign of life of a person inside (the buying page asks for the map every second or two): one who closed the tab is let go after insideStaleMs, with his seats
+  ping(t) { const a = this.active.get(t); if (a) a.seen = Date.now(); }
+  // flex: a seat that was taken a moment ago is swapped for the nearest free one (the person is told, there is no error); only when there is nothing free is it refused.
+  // (here «nearest» is the nearest index; the real shop must look for the nearest free seat OF THE SAME PRICE CLASS and ask the person when there is none)
+  hold(t, seats, flex) {
     const a = this.active.get(t); if (!a || !a.claimed) return { ok: false, e: 'nopass' };
     if (!Array.isArray(seats) || !seats.length || seats.length > this.maxPerOrder) return { ok: false, e: 'count' };
     const u = [...new Set(seats)]; if (u.some((i) => !Number.isInteger(i) || i < 0 || i >= this.nSeats)) return { ok: false, e: 'seat' };
     this.release(t);
-    const bad = u.filter((i) => this.state[i] !== 0);
-    if (bad.length) { this.st.conflicts++; return { ok: false, e: 'taken', bad }; }
+    a.seen = Date.now();
+    const bad = u.filter((i) => this.state[i] !== 0); let moved = 0;
+    if (bad.length) {
+      this.st.conflicts++;
+      if (!flex) return { ok: false, e: 'taken', bad };
+      const take = new Set(u.filter((i) => this.state[i] === 0)), got = [...take];
+      for (const i of bad) { let f = -1; for (let d = 1; d <= this.nSeats && f < 0; d++) for (const j of [i + d, i - d]) if (j >= 0 && j < this.nSeats && this.state[j] === 0 && !take.has(j)) { f = j; break; } if (f < 0) { if (this.nSeats - this.sold - this.heldN >= 20) this.st.refusedWhileFree = (this.st.refusedWhileFree || 0) + 1; return { ok: false, e: 'taken', bad }; } take.add(f); got.push(f); moved++; }
+      u.length = 0; u.push(...got.sort((x, y) => x - y)); this.st.swapped = (this.st.swapped || 0) + moved;
+    }
     for (const i of u) { this.state[i] = 1; this.owner[i] = t; }
     this.heldN += u.length; this.holds.set(t, { seats: u }); this.st.holds++;
-    return { ok: true, left: a.until - Date.now() };
+    return { ok: true, left: a.until - Date.now(), seats: u, moved };
   }
   release(t) {
     const h = this.holds.get(t); if (!h) return;
@@ -83,7 +94,7 @@ class Room {
   finish(t) { if (this.active.delete(t)) this.st.finished++; this.release(t); this.pump(); }
   tick() {   // places and holds that ran out of time go back
     const now = Date.now();
-    for (const [t, a] of this.active) if (a.until < now) { this.active.delete(t); this.release(t); this.st.expired++; }
+    for (const [t, a] of this.active) if (a.until < now || (a.claimed && now - a.seen > this.insideStaleMs)) { this.active.delete(t); this.release(t); this.st.expired++; if (a.until >= now) this.st.vanished = (this.st.vanished || 0) + 1; }
     this.pump();
   }
   audit() {

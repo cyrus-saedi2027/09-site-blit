@@ -32,7 +32,7 @@ srv.stdout.once('data', async (d) => {
     latencyMs: Object.fromEntries(['join', 'status', 'seats', 'hold', 'pay'].map((k) => { const h = hist(k); return [k, { p50: pct(h, .5), p95: pct(h, .95), p99: pct(h, .99) }]; })),
     server: { cpuPeakPctOfOneCore: Math.round(peak.cpu), cpuSecondsTotal: Math.round((st.proc.cpuUserMs + st.proc.cpuSysMs) / 1000), ramPeakMB: Math.round(peak.rss / 1e6), loopLagP99Ms: peak.lag99, loopLagMaxMs: peak.lagMax, bytesOutMB: +(sum('bytes') / 1e6).toFixed(1) },
     senderCpuSeconds: Math.round(gcpu),
-    people: { joined: sum('joined'), boughtOrders: sum('bought'), boughtSeats: sum('boughtSeats'), toldSoldOut: sum('soldoutTold'), leftWhileWaiting: sum('abandonedWaiting'), leftBeforePaying: sum('left'), clashes: sum('clash'), rejoin: sum('rejoin'), noSeatsFound: sum('noHold'), payTooLate: sum('payLate'), maxWaitSec: Math.round(Math.max(0, ...res.map((r) => (r ? r.c.maxWait : 0))) / 1000), avgWaitSec: Math.round(sum('waitSum') / Math.max(1, sum('waited')) / 1000) },
+    people: { joined: sum('joined'), boughtOrders: sum('bought'), boughtSeats: sum('boughtSeats'), toldSoldOut: sum('soldoutTold'), leftWhileWaiting: sum('abandonedWaiting'), leftBeforePaying: sum('left'), clashes: sum('clash'), movedToNeighbour: sum('moved'), rejoin: sum('rejoin'), noSeatsFound: sum('noHold'), payTooLate: sum('payLate'), maxWaitSec: Math.round(Math.max(0, ...res.map((r) => (r ? r.c.maxWait : 0))) / 1000), avgWaitSec: Math.round(sum('waitSum') / Math.max(1, sum('waited')) / 1000) },
     room: st.room, audit: au, finishedAll: res.every((r) => r && r.finished) };
   console.log('\n' + JSON.stringify(out, null, 1)); srv.kill(); process.exit(0);
 });

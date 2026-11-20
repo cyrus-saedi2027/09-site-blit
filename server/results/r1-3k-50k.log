@@ -1,0 +1,128 @@
+reference server on :8642 · cap 500 (adaptive) · 3000 seats · time ×4
+49998 virtual buyers arrive within 10 s; cap 500 adaptive; 3000 seats; time ×4; up to 360 s
+
+   5 s · (starting)
+  10 s · waiting  49037 · inside  371/ 371 · held  796 · sold   454/3000 ·  17432 req/s · server CPU  62% · RAM 91 MB · loop lag p99 11 ms
+  15 s · waiting  49272 · inside  281/ 281 · held  564 · sold  1068/3000 ·  16951 req/s · server CPU  58% · RAM 93 MB · loop lag p99 11 ms
+  20 s · waiting  49196 · inside  244/ 244 · held  509 · sold  1325/3000 ·  16809 req/s · server CPU  54% · RAM 106 MB · loop lag p99 11 ms
+  25 s · waiting  49089 · inside  196/ 196 · held  368 · sold  1654/3000 ·  16681 req/s · server CPU  57% · RAM 107 MB · loop lag p99 7 ms
+  30 s · waiting  49015 · inside  166/ 166 · held  337 · sold  1858/3000 ·  16308 req/s · server CPU  54% · RAM 108 MB · loop lag p99 7 ms
+  35 s · waiting  48947 · inside  140/ 140 · held  276 · sold  2040/3000 ·  16350 req/s · server CPU  55% · RAM 111 MB · loop lag p99 7 ms
+  40 s · waiting  48899 · inside  117/ 117 · held  255 · sold  2194/3000 ·  16374 req/s · server CPU  53% · RAM 112 MB · loop lag p99 7 ms
+  45 s · waiting  48857 · inside   99/  99 · held  223 · sold  2318/3000 ·  16228 req/s · server CPU  54% · RAM 115 MB · loop lag p99 5 ms
+  50 s · waiting  48815 · inside   82/  82 · held  165 · sold  2437/3000 ·  16180 req/s · server CPU  52% · RAM 115 MB · loop lag p99 5 ms
+  55 s · waiting  48786 · inside   70/  70 · held  161 · sold  2520/3000 ·  16248 req/s · server CPU  53% · RAM 115 MB · loop lag p99 4 ms
+  60 s · waiting  48755 · inside   57/  57 · held  135 · sold  2607/3000 ·  16111 req/s · server CPU  53% · RAM 116 MB · loop lag p99 5 ms
+  65 s · waiting  48731 · inside   46/  46 · held  114 · sold  2681/3000 ·  16159 req/s · server CPU  53% · RAM 116 MB · loop lag p99 4 ms
+  70 s · waiting  48717 · inside   36/  36 · held   87 · sold  2749/3000 ·  16154 req/s · server CPU  51% · RAM 117 MB · loop lag p99 4 ms
+  75 s · waiting  48706 · inside   29/  29 · held   64 · sold  2798/3000 ·  16074 req/s · server CPU  52% · RAM 117 MB · loop lag p99 4 ms
+  80 s · waiting  48696 · inside   24/  24 · held   55 · sold  2830/3000 ·  16055 req/s · server CPU  55% · RAM 117 MB · loop lag p99 4 ms
+  85 s · waiting  48687 · inside   18/  18 · held   44 · sold  2870/3000 ·  16111 req/s · server CPU  54% · RAM 117 MB · loop lag p99 4 ms
+  90 s · waiting  48679 · inside   14/  14 · held   35 · sold  2898/3000 ·  16058 req/s · server CPU  52% · RAM 118 MB · loop lag p99 4 ms
+  95 s · waiting  48669 · inside   11/  11 · held   26 · sold  2922/3000 ·  16022 req/s · server CPU  54% · RAM 118 MB · loop lag p99 4 ms
+ 100 s · waiting  48666 · inside   10/  10 · held   24 · sold  2931/3000 ·  16051 req/s · server CPU  54% · RAM 118 MB · loop lag p99 4 ms
+ 105 s · waiting  48660 · inside    8/   8 · held   14 · sold  2955/3000 ·  16048 req/s · server CPU  52% · RAM 118 MB · loop lag p99 4 ms
+ 110 s · waiting  48655 · inside    8/   8 · held   12 · sold  2963/3000 ·  16035 req/s · server CPU  59% · RAM 88 MB · loop lag p99 4 ms
+ 115 s · waiting  48654 · inside    8/   8 · held   15 · sold  2967/3000 ·  16051 req/s · server CPU  55% · RAM 94 MB · loop lag p99 4 ms
+ 120 s · waiting  48649 · inside    8/   8 · held   18 · sold  2976/3000 ·  16040 req/s · server CPU  54% · RAM 95 MB · loop lag p99 4 ms
+ 125 s · waiting  48645 · inside    8/   8 · held   15 · sold  2985/3000 ·  16013 req/s · server CPU  51% · RAM 96 MB · loop lag p99 4 ms
+ 130 s · waiting  48637 · inside    8/   8 · held    7 · sold  2993/3000 ·  16033 req/s · server CPU  53% · RAM 96 MB · loop lag p99 4 ms
+ 135 s · waiting  48632 · inside    8/   8 · held    7 · sold  2993/3000 ·  16047 req/s · server CPU  52% · RAM 107 MB · loop lag p99 4 ms
+ 140 s · waiting  48627 · inside    8/   8 · held    5 · sold  2995/3000 ·  16078 req/s · server CPU  54% · RAM 111 MB · loop lag p99 4 ms
+ 145 s · waiting  48621 · inside    8/   8 · held    4 · sold  2996/3000 ·  16037 req/s · server CPU  52% · RAM 111 MB · loop lag p99 4 ms
+ 150 s · waiting  48619 · inside    2/   8 · held    0 · sold  3000/3000 ·  12668 req/s · server CPU  45% · RAM 111 MB · loop lag p99 4 ms
+
+{
+ "seconds": 151,
+ "users": 49998,
+ "cap": 500,
+ "adaptive": true,
+ "seats": 3000,
+ "scale": 4,
+ "requests": 2385089,
+ "reqPerSecAvg": 15799,
+ "reqPerSecPeak": 17432,
+ "errors": 0,
+ "timeouts": 0,
+ "latencyMs": {
+  "join": {
+   "p50": 0,
+   "p95": 4,
+   "p99": 20
+  },
+  "status": {
+   "p50": 0,
+   "p95": 2,
+   "p99": 8
+  },
+  "seats": {
+   "p50": 0,
+   "p95": 2,
+   "p99": 8
+  },
+  "hold": {
+   "p50": 0,
+   "p95": 3,
+   "p99": 10
+  },
+  "pay": {
+   "p50": 0,
+   "p95": 2,
+   "p99": 8
+  }
+ },
+ "server": {
+  "cpuPeakPctOfOneCore": 62,
+  "cpuSecondsTotal": 85,
+  "ramPeakMB": 118,
+  "loopLagP99Ms": 11,
+  "loopLagMaxMs": 11,
+  "bytesOutMB": 736.8
+ },
+ "senderCpuSeconds": 189,
+ "people": {
+  "joined": 49998,
+  "boughtOrders": 1171,
+  "boughtSeats": 3000,
+  "toldSoldOut": 44703,
+  "leftWhileWaiting": 3982,
+  "leftBeforePaying": 118,
+  "clashes": 3,
+  "movedToNeighbour": 1389,
+  "rejoin": 0,
+  "noSeatsFound": 24,
+  "payTooLate": 0,
+  "maxWaitSec": 145,
+  "avgWaitSec": 23
+ },
+ "room": {
+  "next": 49998,
+  "admitted": 1332,
+  "waiting": 48619,
+  "inside": 0,
+  "cap": 8,
+  "capMax": 500,
+  "sold": 3000,
+  "held": 0,
+  "free": 0,
+  "seats": 3000,
+  "orders": 1171,
+  "joined": 49998,
+  "skipped": 47,
+  "finished": 1269,
+  "expired": 63,
+  "maxActive": 437,
+  "conflicts": 612,
+  "holds": 1289,
+  "pays": 1171,
+  "swapped": 1389,
+  "vanished": 44
+ },
+ "audit": {
+  "ok": true,
+  "problems": [],
+  "sold": 3000,
+  "held": 0
+ },
+ "finishedAll": true
+}

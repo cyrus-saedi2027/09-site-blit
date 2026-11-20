@@ -4,9 +4,10 @@
    in the first third of the hall, to make seats clash) → pay (or leave). Times are divided by TIME_SCALE. Results go to the parent. */
 const http = require('http');
 const A = JSON.parse(process.env.GEN), S = A.scale, rnd = Math.random;
+const E = process.env, LOOKMIN = E.LOOKMIN != null ? +E.LOOKMIN : 2, LOOKMAX = E.LOOKMAX != null ? +E.LOOKMAX : 8, FLEX = E.FLEX === '1', KEEPALIVE = E.KEEPALIVE === '1', VANISH = E.VANISH != null ? +E.VANISH : 0;   // (see the README of the load test: the realistic mode is LOOKMIN=0 LOOKMAX=2 FLEX=1 KEEPALIVE=1 VANISH=0.5)
 const agent = new http.Agent({ keepAlive: true, maxSockets: A.sockets, keepAliveMsecs: 10000 });
 const H = { join: new Uint32Array(6000), status: new Uint32Array(6000), seats: new Uint32Array(6000), hold: new Uint32Array(6000), pay: new Uint32Array(6000) };
-const C = { users: 0, joined: 0, errors: 0, timeouts: 0, rejoin: 0, abandonedWaiting: 0, soldoutTold: 0, bought: 0, boughtSeats: 0, payLate: 0, noHold: 0, clash: 0, retries: 0, left: 0, reqs: 0, bytes: 0, maxWait: 0, waitSum: 0, waited: 0, fifoBad: 0 };
+const C = { users: 0, joined: 0, errors: 0, timeouts: 0, rejoin: 0, abandonedWaiting: 0, soldoutTold: 0, bought: 0, boughtSeats: 0, payLate: 0, noHold: 0, moved: 0, clash: 0, retries: 0, left: 0, reqs: 0, bytes: 0, maxWait: 0, waitSum: 0, waited: 0, fifoBad: 0 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, Math.max(0, ms)));
 const req = (kind, method, path, body) => new Promise((res) => {
   const t0 = process.hrtime.bigint(); C.reqs++;
@@ -39,13 +40,14 @@ async function user(i) {
   let held = false;
   for (let a = 0; a < 5 && !held; a++) {
     const m = await req('seats', 'GET', `/api/seats?t=${tok}`); if (m.code !== 200) break;
-    const map = new Uint8Array(m.b); await sleep((2 + rnd() * 6) * 1000 / S);   // the person looks at the map and decides: it is already old when they press
+    const map = new Uint8Array(m.b); await sleep((LOOKMIN + rnd() * (LOOKMAX - LOOKMIN)) * 1000 / S);   // the person looks at the map and decides: it is already old when they press (the real page refreshes the map every ~2 s)
     const want = pickSeats(map, 1 + Math.floor(rnd() * 4)); if (!want.length) { await sleep(2000 / S); continue; }
-    const r = await req('hold', 'POST', `/api/hold?t=${tok}`, JSON.stringify({ seats: want }));
-    if (r.code === 200) held = want.length; else if (r.code === 409) { C.clash++; C.retries++; await sleep((0.8 + rnd()) * 1000 / S); } else break;
+    const r = await req('hold', 'POST', `/api/hold?t=${tok}`, JSON.stringify({ seats: want, flex: FLEX }));
+    if (r.code === 200) { held = (r.j && r.j.seats ? r.j.seats.length : want.length); C.moved += (r.j && r.j.moved) || 0; } else if (r.code === 409) { C.clash++; C.retries++; await sleep((0.8 + rnd()) * 1000 / S); } else break;
   }
   if (!held) { C.noHold++; await req('status', 'POST', `/api/leave?t=${tok}`); return; }
-  await sleep((15 + rnd() * 35) * 1000 / S);
+  const payAt = Date.now() + (15 + rnd() * 35) * 1000 / S, vanish = rnd() < A.payFail && rnd() < VANISH;
+  while (Date.now() < payAt) { await sleep(Math.min(2000 / S, payAt - Date.now())); if (KEEPALIVE && !vanish && Date.now() < payAt) await req('seats', 'GET', `/api/seats?t=${tok}`); else if (vanish) { C.left++; return; } }   // (the page keeps asking for the map while the person pays; one who closes the tab just stops)
   if (rnd() < A.payFail) { C.left++; await req('status', 'POST', `/api/leave?t=${tok}`); return; }
   const p = await req('pay', 'POST', `/api/pay?t=${tok}`);
   if (p.code === 200) { C.bought++; C.boughtSeats += held; } else C.payLate++;

@@ -33,3 +33,28 @@ In every run: **zero errors, zero timeouts, the audit passed** (no seat sold twi
 
 - Real network (latency, packet loss, mobile clients), a real VPS (shared cores are slower than this sandbox, count on 30–50 % less), TLS, a database, the payment gateway. The queue state is in memory: a restart empties the line (people re-join; held seats are lost) — fine for a test server, for the real shop persist `sold` to the database at `pay` and re-read it on start.
 - 500 000+ people: not tested; one core would be full at ≈ 100 000 (at 4× speed) so the answer there is a second process (shard by show) behind nginx.
+
+---
+
+# Part 2 — the realistic runs (the owner asked: every seat must sell, no error, what does irVPS3 carry?)
+
+What changed in the test (and in the engine, `queue-engine.js`): the buying page asks for the map about every 2 s (`LOOKMAX=2`, not 2–8 s), **a seat that someone else took a moment ago is swapped for the nearest free seat** and the person is told (`FLEX`; the real shop must look for the nearest free seat *of the same price class* and ask the person when there is none), the people inside keep showing signs of life (`KEEPALIVE`) and **one who closes the tab is let go after 60 s with his seats** (`INSIDE_STALE_S`; before it was the whole 10 minutes of the hold), half of the people who do not pay vanish silently (`VANISH=0.5`). Every run goes on until the hall is sold out. Script: `run-final.sh`, summary: `node summarize2.js results/r*.log`.
+
+| run | people | hall | room ≤ | the whole hall sold | time to sell out (real, ×4) | seat taken by another → neighbour | refused while ≥ 20 seats free | found no seat (they came at the very end) | errors | audit | CPU of one core | RAM | p99 of every call |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| r1 | 50 000 | 3 000 | 500 (adaptive) | **3 000 / 3 000** | 10 min | 612 → 1 389 seats | **0** | 24 | 0 | ok | 62 % | 118 MB | ≤ 20 ms |
+| r6 (`MINCAP=40`) | 50 000 | 3 000 | 500 (adaptive, never below 40) | **3 000 / 3 000** | **8 min** | 678 → 1 435 | **0** | 78 | 0 | ok | 62 % | 118 MB | ≤ 56 ms |
+| r2 | 20 000 | 1 200 | 500 (adaptive) | **1 200 / 1 200** | 8 min | 196 → 420 | **0** | 9 | 0 | ok | 41 % | 105 MB | ≤ 4 ms |
+| r3 | 50 000 | 20 000 | 1 000 (adaptive) | **20 000 / 20 000** | 17 min | 4 618 → 11 017 | **0** | 29 | 20 of 3.7 M requests (the test tool's own socket resets) | ok | 63 % | 140 MB | ≤ 123 ms |
+| r4 | **10 000 in 2 s** | 3 000 | 500 (adaptive) | **3 000 / 3 000** | 10 min | 671 → 1 471 | **0** | 18 | 0 | ok | 32 % | 91 MB | join 151 ms, the rest ≤ 8 ms |
+| r5 | **100 000** | 20 000 | 1 000 (adaptive) | **20 000 / 20 000** | 18 min | 4 699 → 11 181 | **0** | 31 | 0 | ok | **90 %** | 147 MB | ≤ 103 ms |
+
+(All with the clock four times faster: CPU and requests per second are four times what a real sale gives; the minutes are real minutes. The `found no seat` people are the last few admitted when nothing was left: they are told at once.)
+
+## What it proves, in plain words
+1. **Every seat is sold.** In every run the whole hall was sold, never a seat twice, never one left unsold behind a forgotten hold (the audit checks it at the end of each run).
+2. **Nobody is refused while seats are free** (0 in every run). When two people want the same seat the second is moved to the nearest free one; the only people who meet «no seat» are the last handful, when the hall is really full.
+3. **The last 1 % is the slow part** (people who have seats held take 15–50 s to pay): with the room never below 40 people the sale of 3 000 seats ends in 8 min instead of 10. Use `MINCAP=40`.
+
+## TLS (the cost a plain Node test does not show) — `./tls-test.sh`
+One core accepts ≈ **1 500 new HTTPS connections per second at the client's pace (the server used 56 % of the core, so ≈ 2 700/s is its limit)** with an ECDSA P-256 certificate (Let's Encrypt's); a returning phone with session resumption costs the same order. A 10 000-person burst therefore connects in **about 4–7 s on one or two cores** (nginx terminates TLS; a slower VPS: count 1 000/s per core). Nobody gets an error; the first seconds are just slower. Keep-alive and session resumption in nginx make every poll after the first nearly free.

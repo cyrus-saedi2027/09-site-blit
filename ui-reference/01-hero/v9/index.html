@@ -2923,6 +2923,8 @@ html.spx-open, html.spx-open body { overflow: hidden; }
 .ad-ha-in { display: grid; gap: .9em; }
 .ad-ha-l { display: flex; flex-wrap: wrap; align-items: center; gap: .5em; font-size: 12.5px; }
 .ad-ha-l .chip button { appearance: none; border: 0; background: transparent; color: inherit; font-size: 16px; line-height: 1; cursor: pointer; margin-inline-start: .4em; }
+.cpn-own select { height: 38px; }
+.cpn-for small { font-size: .85em; opacity: .7; }
 .wz-go { display: grid; gap: 2px; justify-items: center; width: 100%; padding-block: .7em; }
 .wz-go small { font-size: 11px; font-weight: 500; opacity: .85; }
 /* the three steps of «سانس بساز» (round AD): days → hours → add; a finished step gets a tick */
@@ -3819,15 +3821,16 @@ html.is-desk .dk-tbl-w { overscroll-behavior-y: auto; }
 
 /* round Z: the admin's tab «طرح بلیت‌ها» */
 .tf-ad { display: grid; gap: calc(var(--u) * 1.1); }
-.tf-gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 12px; }
+.tf-gal { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); grid-auto-rows: 4px; column-gap: 12px; row-gap: 0; grid-auto-flow: dense; align-items: start; }
 .tf-tile { all: unset; box-sizing: border-box; cursor: pointer; display: grid; gap: 4px; align-content: start; padding: 8px 8px 12px; border-radius: 16px; background: rgba(var(--fg), .05); box-shadow: inset 0 0 0 1px rgba(var(--fg), .1); transition: transform .28s cubic-bezier(.2, .8, .2, 1), box-shadow .25s, background .25s; }
 .tf-tile:hover { transform: translateY(-3px); }
 /* round AD: groups with a filter, a «بزرگ‌نمایی» on every tile, the site's own forms as real pictures */
 .tf-flt { display: flex; flex-wrap: wrap; gap: .4em; margin-bottom: 12px; }
 .tf-flt .chip[aria-pressed="true"] { background: var(--viz-1); color: #fff; box-shadow: none; }
-.tf-tw { position: relative; display: grid; min-width: 0; }
+.tf-tw { position: relative; display: grid; min-width: 0; margin-bottom: 12px; align-self: start; }
+.tf-tw.is-wide { grid-column: span 2; }
 .tf-tw[hidden] { display: none; }
-.tf-tw .tf-tile { align-content: start; height: 100%; padding-bottom: 46px; }
+.tf-tw .tf-tile { align-content: start; height: auto; padding-bottom: 46px; }
 .tf-zm { appearance: none; position: absolute; inset-inline: 12px; bottom: 10px; display: inline-flex; align-items: center; justify-content: center; gap: .4em; height: 32px; border: 0; border-radius: 10px; background: rgba(var(--fg), .1); color: inherit; font: 700 12.5px var(--font); cursor: pointer; transition: background .15s; }
 .tf-zm:hover { background: rgba(var(--fg), .2); } .tf-zm:focus-visible { outline: 2px solid rgb(var(--fg)); outline-offset: 2px; }
 .tf-zm svg.i { width: 1.1em; height: 1.1em; }
@@ -12323,6 +12326,19 @@ const tf = {
     return this.scaled(buy.passInner(sm.o, sh, sm.x, 0, ctx), 340);
   },
   natW(id) { return TF_TPL[id] ? this.size(id).w : { pass: 960, card: 560, qr: 340 }[id]; },
+  natH(id) { return TF_TPL[id] ? this.size(id).h : { pass: 274, card: 134, qr: 625 }[id]; },
+  wide(id) { return this.natW(id) / this.natH(id) >= 2.2; },
+  // the gallery is packed like a wall of bricks: a tile is as tall as its own picture, a wide design takes two columns, the rows are 4 px so the short ones fill the holes between the tall ones
+  pack(root) {
+    const gal = $('.tf-gal', root); if (!gal) return;
+    const lay = () => {
+      const cols = getComputedStyle(gal).gridTemplateColumns.split(' ').length;
+      $$('.tf-tw', gal).forEach((tw) => tw.classList.toggle('is-wide', cols >= 3 && tw.dataset.wide === '1'));
+      $$('.tf-tw:not([hidden])', gal).forEach((tw) => { tw.style.gridRowEnd = ''; tw.style.gridRowEnd = `span ${Math.ceil((tw.getBoundingClientRect().height + 12) / 4)}`; });
+    };
+    lay();
+    if (window.ResizeObserver) { const ro = new ResizeObserver(() => lay()); ro.observe(gal); $$('.tf-tw .tf-pv', gal).forEach((x) => ro.observe(x)); }
+  },
   // a design, big: a window with the design as large as the screen allows («اندازه‌ی واقعی» shows it at its own size), arrows to the next and the one before, and «choose it»
   enlarge(id, ctx) {
     const list = ctx.list; let k = Math.max(0, list.indexOf(id)); const sm = this.sample(ctx.sh);
@@ -12373,7 +12389,7 @@ const tf = {
       <div class="tf-ad">
         <section class="panel dk-box evp-rise" aria-labelledby="tfH1"><h2 id="tfH1">${ico('ticket')}همه‌ی طرح‌ها</h2><p class="bk-lead">روی یه طرح بزن تا بلیت همه‌ی برنامه‌ها اون بشه (جز اونایی که پایین‌تر براشون طرح جدا گذاشتی). پیش‌نمایش با برنامه‌ی «${esc(sh.title)}» ساخته شده.</p>
           <div class="tf-flt" role="group" aria-label="نمایش طرح‌ها">${this.GROUPS.map(([g, t]) => `<button type="button" class="chip" data-flt="${g}" aria-pressed="${flt === g}">${t}</button>`).join('')}</div>
-          <div class="tf-gal" role="radiogroup" aria-label="طرح پیش‌فرض"><div class="tf-tw"${flt === 'all' ? '' : ' hidden'}><button type="button" role="radio" class="tf-tile" data-tile="auto" aria-checked="${s.def === 'auto'}"><span class="tf-pv tf-auto">${['concert', 'theatre', 'comedy'].map((k) => `<span><i>${this.KINDS.find((x) => x[0] === k)[1]}</i><b>${this.DESIGNS.find((d) => d.id === this.AUTO[k]).t}</b></span>`).join('')}</span><b>خودکار · هر نوع برنامه یه طرح</b><small>کنسرت صحنه، تئاتر پرده، جُنگ قرمز</small></button></div>${this.DESIGNS.map((dz) => `<div class="tf-tw" data-g="${dz.g}"${flt === 'all' || flt === dz.g ? '' : ' hidden'}><button type="button" role="radio" class="tf-tile" data-tile="${dz.id}" aria-checked="${s.def === dz.id}"><span class="tf-pv">${this.preview(dz.id, sh, sm)}</span><b>${dz.t}</b><small>${dz.d}</small></button><button type="button" class="tf-zm" data-zm="${dz.id}" aria-label="بزرگ‌نمایی طرح ${esc(dz.t)}">${ico('search')}بزرگ‌نمایی</button></div>`).join('')}</div>
+          <div class="tf-gal" role="radiogroup" aria-label="طرح پیش‌فرض"><div class="tf-tw"${flt === 'all' ? '' : ' hidden'}><button type="button" role="radio" class="tf-tile" data-tile="auto" aria-checked="${s.def === 'auto'}"><span class="tf-pv tf-auto">${['concert', 'theatre', 'comedy'].map((k) => `<span><i>${this.KINDS.find((x) => x[0] === k)[1]}</i><b>${this.DESIGNS.find((d) => d.id === this.AUTO[k]).t}</b></span>`).join('')}</span><b>خودکار · هر نوع برنامه یه طرح</b><small>کنسرت صحنه، تئاتر پرده، جُنگ قرمز</small></button></div>${this.DESIGNS.map((dz) => `<div class="tf-tw" data-g="${dz.g}" data-wide="${this.wide(dz.id) ? 1 : 0}"${flt === 'all' || flt === dz.g ? '' : ' hidden'}><button type="button" role="radio" class="tf-tile" data-tile="${dz.id}" aria-checked="${s.def === dz.id}"><span class="tf-pv">${this.preview(dz.id, sh, sm)}</span><b>${dz.t}</b><small>${dz.d}</small></button><button type="button" class="tf-zm" data-zm="${dz.id}" aria-label="بزرگ‌نمایی طرح ${esc(dz.t)}">${ico('search')}بزرگ‌نمایی</button></div>`).join('')}</div>
         </section>
         <section class="panel dk-box evp-rise" aria-labelledby="tfHo"><h2 id="tfHo">${ico('eye')}چی روی بلیت باشه</h2><p class="bk-lead">این دو تا برای همه‌ی طرح‌ها هست: صفحه‌ی بلیت، عکس، PDF و پیش‌نمایش‌ها.</p>
           <div class="tf-opts"><label class="wz-wk"><input type="checkbox" data-opt="name"${s.opt.name ? ' checked' : ''}><span><b>اسم خریدار</b><small>اگه خاموش باشه به‌جاش یه خط تیره می‌آد (برای بلیت‌هایی که دست‌به‌دست می‌شن)</small></span></label><label class="wz-wk"><input type="checkbox" data-opt="price"${s.opt.price ? ' checked' : ''}><span><b>مبلغ بلیت</b><small>اگه خاموش باشه قیمت روی بلیت نوشته نمی‌شه (مثلاً بلیت هدیه)</small></span></label></div></section>
@@ -12386,11 +12402,11 @@ const tf = {
           <div class="tf-live"><b>این برنامه الان:</b> ${this.DESIGNS.find((dz) => dz.id === cur).t}</div>
         </section>
         <section class="panel dk-box evp-rise" aria-labelledby="tfH4"><h2 id="tfH4">${ico('grid')}جاهای دیگه‌ی سایت</h2><p class="bk-lead">بلیت‌های خریدشده تو این صفحه‌ها هم دیده می‌شن. برای هرکدوم تعیین کن چی باشه: کارت رزرو کوچیک، همون طرح صفحه‌ی بلیت هر برنامه، یا یه طرح مشخص. (روی گوشی همیشه کارت کوچیکه.)</p>
-          <div class="tf-spots">${this.SPOTS.map((sp) => { const v = this.spotVal(sp.id), shown = v === 'card' ? 'card' : v === 'same' ? cur : v; return `<div class="tf-spot"><div class="tf-spot-t"><b>${esc(sp.t)}</b><small>${esc(sp.d)}</small><label class="bk-fld"><span>طرح این‌جا</span><select data-spot="${sp.id}"><option value="card"${v === 'card' ? ' selected' : ''}>کارت رزرو کوچیک${sp.def === 'card' ? ' (پیشنهاد)' : ''}</option><option value="same"${v === 'same' ? ' selected' : ''}>همون طرح صفحه‌ی بلیت هر برنامه${sp.def === 'same' ? ' (پیشنهاد)' : ''}</option>${this.DESIGNS.filter((dz) => dz.id !== 'pass').map((dz) => `<option value="${dz.id}"${v === dz.id ? ' selected' : ''}>${dz.t}</option>`).join('')}</select></label></div><div class="tf-spot-v">${shown === 'card' ? `<span class="tf-spot-c">${ico('ticket')}<b>${esc(sh.title)}</b><small>کارت رزرو کوچیک با تاریخ و کد</small></span>` : this.html(shown, sm.d)}</div></div>`; }).join('')}</div>
+          <div class="tf-spots">${this.SPOTS.map((sp) => { const v = this.spotVal(sp.id), shown = v === 'card' ? 'card' : v === 'same' ? cur : v; return `<div class="tf-spot"><div class="tf-spot-t"><b>${esc(sp.t)}</b><small>${esc(sp.d)}</small><label class="bk-fld"><span>طرح این‌جا</span><select data-spot="${sp.id}"><option value="card"${v === 'card' ? ' selected' : ''}>کارت رزرو کوچیک${sp.def === 'card' ? ' (پیشنهاد)' : ''}</option><option value="same"${v === 'same' ? ' selected' : ''}>همون طرح صفحه‌ی بلیت هر برنامه${sp.def === 'same' ? ' (پیشنهاد)' : ''}</option>${this.DESIGNS.filter((dz) => !['pass', 'card', 'qr'].includes(dz.id)).map((dz) => `<option value="${dz.id}"${v === dz.id ? ' selected' : ''}>${dz.t}</option>`).join('')}</select></label></div><div class="tf-spot-v">${shown === 'card' ? `<span class="tf-spot-c">${ico('ticket')}<b>${esc(sh.title)}</b><small>کارت رزرو کوچیک با تاریخ و کد</small></span>` : this.html(shown, sm.d)}</div></div>`; }).join('')}</div>
         </section>
         <section class="panel dk-box evp-rise tf-prev" aria-labelledby="tfH5"><h2 id="tfH5">${ico('eye')}پیش‌نمایش بلیت این برنامه</h2><div class="tf-big">${cur === 'pass' ? '<p class="bk-lead">این برنامه بلیت پیش‌فرض سایت رو داره (پیش‌نمایشش تو صفحه‌ی بلیت بعد از خرید دیده می‌شه).</p>' : this.html(cur, sm.d)}</div></section>
       </div>`;
-      this.mount(el);
+      this.mount(el); this.pack(el);
       const note = (t) => { toast(t); auditLog(t); };
       $$('[data-tile]', el).forEach((b) => b.addEventListener('click', () => { const v = this.set(); v.def = b.dataset.tile; this.save(v); note(`طرح پیش‌فرض بلیت: ${v.def === 'auto' ? 'خودکار (هر نوع برنامه یه طرح)' : this.DESIGNS.find((dz) => dz.id === v.def).t}`); draw(); }));
       $$('[data-flt]', el).forEach((b) => b.addEventListener('click', () => { flt = b.dataset.flt; draw(); }));
@@ -12802,15 +12818,17 @@ const giftState = (g) => (g.off ? ['غیرفعال', 'mute'] : g.until < Date.no
 
 const codes = {
   // the organiser's page: the numbers, the codes as coupons (filter, search, edit, share, print), and the form for a new one
-  render(el) {
-    const shows = orgShows().filter((e) => !e.draft), pre = store.sget('blit.codeFor', null); store.sset('blit.codeFor', null);
-    const l0 = ownCodes(), on = l0.filter((c) => codeState(c)[1] === 'good');
+  // adm = the admin's own tab «کدهای تخفیف» (round AD): all the codes of the site, any organiser's, and the codes the admin makes himself (for any show of the site)
+  render(el, adm) {
+    const who = adm ? 'مدیر سایت' : ORG.name, ownerName = (id) => (id === 'admin' ? 'مدیر سایت' : (orgs.get(id) || {}).name || id), mine = () => (adm ? codeList() : ownCodes());
+    const shows = (adm ? LIST() : orgShows()).filter((e) => !e.draft), pre = store.sget('blit.codeFor', null); store.sset('blit.codeFor', null);
+    const l0 = mine(), on = l0.filter((c) => codeState(c)[1] === 'good');
     const near = on.filter((c) => c.used >= c.limit * 0.8), soon = on.filter((c) => c.until - Date.now() < 3 * DAY);
     el.innerHTML = `${desk.head('کدهای تخفیف', 'برای یه برنامه یا همه، درصدی یا مبلغی، با سقف استفاده، حداقل خرید و مهلت. هر کد، پیام تبلیغاتی و کارت چاپی آماده داره.')}
       <section class="dk-tiles" aria-label="عددهای کدها">${desk.tile('کدهای فعال', fa(on.length), null, null, true, `از ${fa(l0.length)} کد`)}${desk.tile('بار استفاده', money(l0.reduce((a, c) => a + c.used, 0)), null, null, true, 'روی هم، همه‌ی کدها')}${desk.tile('نزدیک پر شدن', fa(near.length), null, null, true, 'بالای ۸۰٪ ظرفیت')}${desk.tile('در شرف تموم شدن', fa(soon.length), null, null, true, 'کمتر از ۳ روز مهلت')}</section>
       <div class="dk-cols dk-cols-r">
         <section class="panel dk-box evp-rise" aria-labelledby="cdListH"><h2 id="cdListH">${ico('tag')}کدها<small id="cpCount"></small></h2>
-          <div class="cpn-bar"><div class="sec-chips" role="radiogroup" aria-label="فیلتر کدها">${[['all', 'همه'], ['good', 'فعال'], ['warn', 'ظرفیت پر'], ['mute', 'تموم‌شده و غیرفعال']].map(([k, t], i) => `<button type="button" class="chip" role="radio" data-f="${k}" aria-checked="${i === 0}">${t}</button>`).join('')}</div>
+          <div class="cpn-bar">${adm ? `<label class="bk-fld cpn-own"><span class="sr-only">کدهای کدوم تهیه‌کننده</span><select id="cpOwn"><option value="">همه‌ی تهیه‌کننده‌ها و مدیر</option><option value="admin">فقط کدهای مدیر</option>${orgs.all().map((o) => `<option value="${esc(o.id)}">${esc(o.name)}</option>`).join('')}</select></label>` : ''}<div class="sec-chips" role="radiogroup" aria-label="فیلتر کدها">${[['all', 'همه'], ['good', 'فعال'], ['warn', 'ظرفیت پر'], ['mute', 'تموم‌شده و غیرفعال']].map(([k, t], i) => `<button type="button" class="chip" role="radio" data-f="${k}" aria-checked="${i === 0}">${t}</button>`).join('')}</div>
             <label class="cpn-q"><span class="sr-only">جستجوی کد</span>${ico('search')}<input id="cpQ" dir="ltr" placeholder="جستجوی کد…" autocomplete="off" spellcheck="false"></label></div>
           <div class="cpn-list" id="cpList"></div></section>
         <section class="panel dk-box evp-rise" aria-labelledby="cdNewH"><h2 id="cdNewH">${ico('plus')}کد تازه</h2>
@@ -12823,7 +12841,7 @@ const codes = {
             <label class="bk-fld"><span>مهلت</span><select name="days">${[[3, 'سه روز'], [7, 'یک هفته'], [14, 'دو هفته'], [30, 'یک ماه'], [60, 'دو ماه'], [90, 'سه ماه']].map(([n, t]) => `<option value="${n}"${n === 14 ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
             <button type="submit" class="buy">${ico('check')}ساختن کد</button><div class="cpn-done" id="cdSt" role="status" aria-live="polite"></div></form></section>
       </div>`;
-    const f = $('#cdNew', el), st = { f: 'all', q: '' }; let type = 'pct';
+    const f = $('#cdNew', el), st = { f: 'all', q: '', o: '' }; let type = 'pct';
     const nf = (n) => (n ? fa(n.toLocaleString('en-US')).replace(/,/g, '٬') : '');
     const num = (s) => +enDigits(String(s)).replace(/\D/g, '') || 0;
     const more = (c) => {
@@ -12835,19 +12853,20 @@ const codes = {
       const e = c.eid && showById(c.eid), s = codeState(c), p = Math.min(1, c.used / Math.max(1, c.limit));
       return `<article class="cpn" data-tone="${s[1]}" data-c="${esc(c.code)}"><div class="cpn-off"><b>${c.type === 'pct' ? `${fa(c.v)}٪` : esc(short(c.v))}</b><small>${c.type === 'pct' ? 'تخفیف' : 'تومان تخفیف'}</small></div>
         <div class="cpn-body"><div class="cpn-top"><code class="cpn-code" dir="ltr">${esc(c.code)}</code><button type="button" class="cpn-ic" data-copy="${esc(c.code)}" aria-label="کپی کد ${esc(c.code)}">${ico('copy')}</button><em class="st" data-tone="${s[1]}">${esc(s[0])}</em><button type="button" class="cpn-ic cpn-tg" data-tg aria-expanded="false" aria-label="جزئیات کد ${esc(c.code)}">${ico('down')}</button></div>
-          <p class="cpn-for">${esc(e ? e.title : 'همه‌ی برنامه‌ها')}</p>
+          <p class="cpn-for">${esc(e ? e.title : 'همه‌ی برنامه‌ها')}${adm ? ` <small>· ${esc(ownerName(c.org || 'org1'))}</small>` : ''}</p>
           <div class="cpn-meter"><span class="dk-meter" style="--p:${p.toFixed(3)}"><i></i></span><small>${money(c.used)} از ${money(c.limit)} بار${c.subs && c.subs.length ? ` · ${fa(c.subs.length)} کد یکتای چاپی` : ''}</small></div>
           <div class="cpn-meta"><span>${ico('clock')}${esc(dayOf(c.until))} · ${esc(daysLeft(c.until))}</span>${c.min ? `<span>${ico('bag')}حداقل خرید ${esc(short(c.min))}</span>` : ''}${c.cap && c.type === 'pct' ? `<span>${ico('tag')}تا ${esc(short(c.cap))} تخفیف</span>` : ''}</div></div>
         <div class="cpn-acts"><button type="button" class="chip" data-promo="${esc(c.code)}">${ico('share')}پیام تبلیغاتی</button><button type="button" class="chip" data-cards="${esc(c.code)}">${ico('ticket')}کارت چاپی</button><button type="button" class="chip" data-edit="${esc(c.code)}">${ico('sliders')}ویرایش</button></div>${more(c)}</article>`;
     };
     const paint = (focusNew) => {
-      const l = ownCodes().filter((c) => (st.f === 'all' || codeState(c)[1] === st.f || (st.f === 'mute' && codeState(c)[1] === 'mute')) && (!st.q || c.code.includes(st.q)));
+      const l = mine().filter((c) => (st.f === 'all' || codeState(c)[1] === st.f || (st.f === 'mute' && codeState(c)[1] === 'mute')) && (!st.q || c.code.includes(st.q)) && (!st.o || (c.org || 'org1') === st.o));
       $('#cpList', el).innerHTML = l.length ? l.map(card).join('') : `<p class="dk-empty cpn-empty">${st.q || st.f !== 'all' ? 'کدی با این فیلتر نیست.' : 'هنوز کدی نساختی؛ از فرم کنار شروع کن.'}</p>`;
       $('#cpCount', el).textContent = `${fa(l.length)} کد`;
       if (focusNew) { const n = $(`[data-c="${CSS.escape(focusNew)}"]`, el); if (n) { n.classList.add('is-new'); n.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' }); } }
     };
     paint();
     $$('[data-f]', el).forEach((b) => b.addEventListener('click', () => { st.f = b.dataset.f; $$('[data-f]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); paint(); }));
+    if (adm) $('#cpOwn', el).addEventListener('change', (ev) => { st.o = ev.target.value; paint(); });
     $('#cpQ', el).addEventListener('input', (ev) => { st.q = enDigits(ev.target.value).toUpperCase().replace(/[^A-Z0-9-]/g, ''); paint(); });
     $('#cpList', el).addEventListener('click', async (ev) => {
       if (desk.openCard(ev)) return;
@@ -12855,7 +12874,7 @@ const codes = {
       if (b.dataset.copy) copyText(b.dataset.copy, /^https?:/.test(b.dataset.copy) ? 'لینک کپی شد.' : `کد ${b.dataset.copy} کپی شد.`);
       else if (b.dataset.promo) this.promo(get('promo'));
       else if (b.dataset.cards) this.cards(get('cards'));
-      else if (b.dataset.edit) this.edit(get('edit'), () => { this.render(el); });
+      else if (b.dataset.edit) this.edit(get('edit'), () => { this.render(el, adm); });
     });
     // the form
     const capF = $('#cdCapF', el);
@@ -12875,8 +12894,8 @@ const codes = {
       if (type === 'amt' && !(v >= 10000)) return bad('دست‌کم ۱۰ هزار تومان.');
       if (!(lim >= 1)) return bad('تعداد استفاده رو بنویس.');
       if (min && type === 'amt' && min <= v) return bad('حداقل خرید باید از مبلغ تخفیف بیشتر باشه.');
-      const l = codeList(); l.unshift({ code, org: dsess.orgId(), eid: f.elements.eid.value || null, type, v, limit: lim, used: 0, until: Date.now() + (+f.elements.days.value) * DAY, at: Date.now(), ...(min ? { min } : {}), ...(cap ? { cap } : {}) }); store.set('blit.codes', l); syncCodes();
-      auditLog(`کد تخفیف ${code} ساخته شد`, ORG.name); toast(`کد ${code} ساخته شد و از همین حالا تو خرید کار می‌کنه.`);
+      const l = codeList(); l.unshift({ code, org: adm ? 'admin' : dsess.orgId(), eid: f.elements.eid.value || null, type, v, limit: lim, used: 0, until: Date.now() + (+f.elements.days.value) * DAY, at: Date.now(), ...(min ? { min } : {}), ...(cap ? { cap } : {}) }); store.set('blit.codes', l); syncCodes();
+      auditLog(`کد تخفیف ${code} ساخته شد`, who); toast(`کد ${code} ساخته شد و از همین حالا تو خرید کار می‌کنه.`);
       st.f = 'all'; st.q = ''; $$('[data-f]', el).forEach((x) => x.setAttribute('aria-checked', String(x.dataset.f === 'all'))); $('#cpQ', el).value = ''; paint(code);
       out.className = 'cpn-done is-ok'; out.innerHTML = `${ico('check')}<span>کد <b dir="ltr">${esc(code)}</b> ساخته شد.</span><button type="button" class="chip" data-p>${ico('share')}پیام تبلیغاتی</button><button type="button" class="chip" data-k>${ico('ticket')}کارت چاپی</button>`;
       $('[data-p]', out).addEventListener('click', () => this.promo(codeList().find((c) => c.code === code))); $('[data-k]', out).addEventListener('click', () => this.cards(codeList().find((c) => c.code === code)));
@@ -13193,6 +13212,7 @@ const admin = {
       { id: 'new', t: 'برنامه‌ی تازه', icon: 'plus', parent: 'shows', render: (el, v) => wizard.render(el, v) },
       { id: 'review', t: 'بررسی کامل', icon: 'search', parent: 'shows', render: (el, v) => admin.review(el, v) },
       { id: 'reports', t: 'گزارش سفارش‌ها', icon: 'award', parent: 'analytics', render: this.reports },
+      { id: 'codes', t: 'کدهای تخفیف', icon: 'tag', render: (el) => codes.render(el, true) },
       { id: 'gifts', t: 'کیف پول و کد هدیه', icon: 'tag', render: this.gifts },
       { id: 'sms', t: 'پیامک‌ها', icon: 'bell', render: (el) => this.sms(el) },
       { id: 'log', t: 'تاریخچه‌ی تغییرات', icon: 'clock', render: this.log },
