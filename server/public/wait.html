@@ -15,6 +15,8 @@ h1{font-size:20px;margin:0}
 .bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--fg);transition:width .8s}
 p{margin:0;color:var(--dim);font-size:14px}
+.room{padding:.7em 1em;border-radius:14px;background:rgba(127,127,127,.12);color:var(--fg)}
+.room b{font-variant-numeric:tabular-nums}
 a.go{display:none;justify-self:center;padding:.8em 2em;border-radius:14px;background:var(--ok);color:#052e14;font-weight:800;text-decoration:none}
 </style>
 </head>
@@ -22,7 +24,8 @@ a.go{display:none;justify-self:center;padding:.8em 2em;border-radius:14px;backgr
 <main>
   <h1 id="h">تو صف خرید هستی</h1>
   <div class="n" id="n" dir="ltr">…</div>
-  <p id="m">لطفاً این صفحه رو نبند و دوباره تازه‌اش نکن؛ جات تو صف حفظ می‌شه.</p>
+  <p id="r" class="room"></p>
+  <p id="m">لطفاً این صفحه رو نبند؛ جات تو صف حفظ می‌شه. اگه گوشیت خوابید یا صفحه بسته شد، تا ۳۰ دقیقه جات می‌مونه و اولِ صف برمی‌گردی.</p>
   <div class="bar" aria-hidden="true"><i id="b"></i></div>
   <a class="go" id="go" href="#">ورود به خرید</a>
 </main>
@@ -39,10 +42,10 @@ a.go{display:none;justify-self:center;padding:.8em 2em;border-radius:14px;backgr
       const j = await r.json();
       if (j.t) { tok = j.t; try { sessionStorage.setItem('q.' + E + '.' + S, tok); } catch (e) { /* ok */ } }
       if (j.s === 'soldout') { $('h').textContent = 'بلیت‌ها تموم شد'; $('n').textContent = '—'; $('m').textContent = 'متأسفانه همه‌ی صندلی‌های این سانس فروخته شد.'; return; }
-      if (j.s === 'in') { $('h').textContent = 'نوبت توئه'; $('n').textContent = '✓'; $('b').style.width = '100%'; $('m').textContent = 'برای انتخاب صندلی وارد شو؛ مهلت داری.'; const g = $('go'); g.style.display = 'block'; g.href = `/#/e/${E}/${S}?qt=${encodeURIComponent(tok)}`; return; }
+      if (j.s === 'in') { $('h').textContent = 'نوبت توئه'; $('n').textContent = '✓'; $('b').style.width = '100%'; $('r').innerHTML = j.inside ? `تو الان نفر <b>${fa(j.inside)}</b> از <b>${fa(j.cap)}</b> نفری هستی که دارن خرید می‌کنن.` : ''; $('m').textContent = 'برای انتخاب صندلی وارد شو؛ مهلت داری.'; const g = $('go'); g.style.display = 'block'; g.href = `/#/e/${E}/${S}?qt=${encodeURIComponent(tok)}`; return; }
       if (j.s === 'wait') {
         if (!first) first = Math.max(1, j.ahead);
-        $('n').textContent = fa((j.ahead + 1).toLocaleString('en')); $('m').textContent = `نفر جلوی تو ${fa(j.ahead)} نفره · حدود ${eta(j.eta || 0)} دیگه`; $('b').style.width = Math.max(2, Math.min(100, 100 - (j.ahead / first) * 100)) + '%';
+        $('n').textContent = fa((j.ahead + 1).toLocaleString('en')); $('r').innerHTML = j.cap ? `الان <b>${fa(j.inside)}</b> نفر از <b>${fa(j.cap)}</b> نفر ظرفیت تو مرحله‌ی خرید هستن. هر وقت یکی تموم کنه، نفر بعدی وارد می‌شه.` : ''; $('m').textContent = `${j.back ? 'خوش برگشتی؛ جات حفظ شده بود. ' : ''}نفر جلوی تو ${fa(j.ahead)} نفره · حدود ${eta(j.eta || 0)} دیگه`; $('b').style.width = Math.max(2, Math.min(100, 100 - (j.ahead / first) * 100)) + '%';
         return next(j.poll || 5000);
       }
       if (j.s === 'gone' || j.s === 'bad') { tok = null; first = 0; return next(1500); }

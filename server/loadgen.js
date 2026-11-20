@@ -4,10 +4,11 @@
    in the first third of the hall, to make seats clash) → pay (or leave). Times are divided by TIME_SCALE. Results go to the parent. */
 const http = require('http');
 const A = JSON.parse(process.env.GEN), S = A.scale, rnd = Math.random;
-const E = process.env, LOOKMIN = E.LOOKMIN != null ? +E.LOOKMIN : 2, LOOKMAX = E.LOOKMAX != null ? +E.LOOKMAX : 8, FLEX = E.FLEX === '1', KEEPALIVE = E.KEEPALIVE === '1', VANISH = E.VANISH != null ? +E.VANISH : 0;   // (see the README of the load test: the realistic mode is LOOKMIN=0 LOOKMAX=2 FLEX=1 KEEPALIVE=1 VANISH=0.5)
+const E = process.env, LOOKMIN = E.LOOKMIN != null ? +E.LOOKMIN : 2, LOOKMAX = E.LOOKMAX != null ? +E.LOOKMAX : 8, FLEX = E.FLEX === '1', KEEPALIVE = E.KEEPALIVE === '1', VANISH = E.VANISH != null ? +E.VANISH : 0, SLEEP = +E.SLEEP || 0, BANK = +E.BANK || 0;   // SLEEP = share of the waiting people whose phone sleeps for 70–180 s; BANK = share of the payers who go to the bank's page (no request at all for 90–300 s)
+   // (see the README of the load test: the realistic mode is LOOKMIN=0 LOOKMAX=2 FLEX=1 KEEPALIVE=1 VANISH=0.5)
 const agent = new http.Agent({ keepAlive: true, maxSockets: A.sockets, keepAliveMsecs: 10000 });
 const H = { join: new Uint32Array(6000), status: new Uint32Array(6000), seats: new Uint32Array(6000), hold: new Uint32Array(6000), pay: new Uint32Array(6000) };
-const C = { users: 0, joined: 0, errors: 0, timeouts: 0, rejoin: 0, abandonedWaiting: 0, soldoutTold: 0, bought: 0, boughtSeats: 0, payLate: 0, noHold: 0, moved: 0, clash: 0, retries: 0, left: 0, reqs: 0, bytes: 0, maxWait: 0, waitSum: 0, waited: 0, fifoBad: 0 };
+const C = { users: 0, joined: 0, errors: 0, timeouts: 0, rejoin: 0, abandonedWaiting: 0, soldoutTold: 0, bought: 0, boughtSeats: 0, payLate: 0, noHold: 0, moved: 0, slept: 0, bank: 0, clash: 0, retries: 0, left: 0, reqs: 0, bytes: 0, maxWait: 0, waitSum: 0, waited: 0, fifoBad: 0 };
 const sleep = (ms) => new Promise((r) => setTimeout(r, Math.max(0, ms)));
 const req = (kind, method, path, body) => new Promise((res) => {
   const t0 = process.hrtime.bigint(); C.reqs++;
@@ -26,12 +27,13 @@ async function user(i) {
   C.users++; await sleep(rnd() * A.ramp * 1000);
   const quit = rnd() < A.abandon ? Date.now() + (4 + rnd() * 50) * 1000 / S : Infinity;
   let j = null, tries = 0; while (!j || !j.t) { const r = await req('join', 'POST', `/api/q/join?e=${A.e}&s=${A.s}`); j = r.j; if (j && j.s === 'soldout') { C.soldoutTold++; return; } if (!j || !j.t) { if (++tries > 6) return; await sleep(500); } }
-  C.joined++; let tok = j.t, wait0 = Date.now(), st = j;
+  C.joined++; let tok = j.t, wait0 = Date.now(), st = j, slept = false;
   for (;;) {
     if (st.s === 'in') break;
     if (st.s === 'soldout') { C.soldoutTold++; return; }
     if (st.s === 'gone') { C.rejoin++; const r = await req('join', 'POST', `/api/q/join?e=${A.e}&s=${A.s}`); if (!r.j || !r.j.t) return; tok = r.j.t; st = r.j; continue; }
     await sleep(st.poll || 3000);
+    if (!slept && rnd() < SLEEP / 12) { slept = true; C.slept++; await sleep((70 + rnd() * 110) * 1000 / S); }   // (a phone locked for a minute or three; asked about about 12 times while waiting, so the chance is split)
     if (Date.now() > quit) { C.abandonedWaiting++; return; }
     const r = await req('status', 'GET', `/api/q/status?t=${tok}`); if (!r.j) continue; st = r.j;
   }
@@ -49,6 +51,7 @@ async function user(i) {
   const payAt = Date.now() + (15 + rnd() * 35) * 1000 / S, vanish = rnd() < A.payFail && rnd() < VANISH;
   while (Date.now() < payAt) { await sleep(Math.min(2000 / S, payAt - Date.now())); if (KEEPALIVE && !vanish && Date.now() < payAt) await req('seats', 'GET', `/api/seats?t=${tok}`); else if (vanish) { C.left++; return; } }   // (the page keeps asking for the map while the person pays; one who closes the tab just stops)
   if (rnd() < A.payFail) { C.left++; await req('status', 'POST', `/api/leave?t=${tok}`); return; }
+  if (rnd() < BANK) { C.bank++; await req('pay', 'POST', `/api/pay/start?t=${tok}`); await sleep((90 + rnd() * 210) * 1000 / S); }   // the bank's page: this page sends nothing for minutes
   const p = await req('pay', 'POST', `/api/pay?t=${tok}`);
   if (p.code === 200) { C.bought++; C.boughtSeats += held; } else C.payLate++;
 }

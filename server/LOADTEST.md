@@ -58,3 +58,25 @@ What changed in the test (and in the engine, `queue-engine.js`): the buying page
 
 ## TLS (the cost a plain Node test does not show) — `./tls-test.sh`
 One core accepts ≈ **1 500 new HTTPS connections per second at the client's pace (the server used 56 % of the core, so ≈ 2 700/s is its limit)** with an ECDSA P-256 certificate (Let's Encrypt's); a returning phone with session resumption costs the same order. A 10 000-person burst therefore connects in **about 4–7 s on one or two cores** (nginx terminates TLS; a slower VPS: count 1 000/s per core). Nobody gets an error; the first seconds are just slower. Keep-alive and session resumption in nginx make every poll after the first nearly free.
+
+---
+
+# Part 3 — «nobody has a problem»: sleeping phones, the bank's page, a room of 1 000, 100 000 people
+
+The owner's rule: *even with 100 000 people nobody may have a problem.* What was found and changed in `queue-engine.js` (read this with `server/ساده.md`, the same in plain Persian):
+
+1. **The room counted the wrong people.** The first rule limited *everybody inside* by the free seats, so people who already held seats or were at the bank's page shut the door on people who were looking: the last seats sold slowly (34 min for 3 000 seats) and 322 people were let in to find nothing. Now the room is `CAP` people at most (1 000), and only the people still **looking** for seats are limited by the free seats (`seekCap = max(min(free, 6), min(CAP, free × share / seats-per-person))`, free = not sold and not held). Same 3 000 seats: **17 min, 6 people found nothing, up to 975 people inside.**
+2. **A sleeping phone no longer loses the place.** A waiting person who does not ask for a minute is skipped (so the front is not blocked) but is remembered for 30 min (`LATE_S`); when the page wakes up he goes in **before anybody new**. Same for a person let in who did not arrive in 45 s, and for one inside who went silent (3 min: `INSIDE_STALE_S`).
+3. **The bank's page cannot take the seats away.** `POST /api/pay/start` (when the person is sent to the bank) locks the hold for 15 min (`PAY_S`) whatever the page does; `POST /api/pay` (the bank's answer) sells it. Without it a 3-minute silence would have released seats of somebody who is paying.
+4. The status shows `inside` and `cap` so the page can say «now N of 1 000 are buying», `back: true` for a returning person.
+
+| run (every wait ÷ 4; 25 % of the people let the phone sleep 70–180 s, 80 % of the payers spend 90–300 s at the bank's page) | the hall sold | time to sell out (real) | found no seat | phones asleep → came back first | bank trips → paid too late | lost their place (re-joined as new) | errors | audit | one core |
+|---|---|---|---|---|---|---|---|---|---|
+| p1: 50 000 people, 3 000 seats, room 1 000 **adaptive** | **3 000 / 3 000** | 17 min | **6** | 33 604 → 183 | 953 → **0** | **0** | 4 of ~4 M requests | ok | 67 % |
+| p2: the same, room **fixed** at 1 000 (adaptive off) | 3 000 / 3 000 | 17 min | **21 414** (they were let in and found nothing) | 32 444 → 3 047 | 1 005 → 0 | 0 | 0 | ok | 67 % |
+| p3: **10 000 in 2 s**, 3 000 seats | 3 000 / 3 000 | 16 min | 3 | 7 149 → 181 | 967 → 0 | 0 | 0 | ok | 39 % |
+| p4: **100 000** people, 20 000 seats, room 1 000 | **20 000 / 20 000** | 38 min | 6 | 86 731 → 922 | 6 401 → **0** | **0** | 0 | ok | 89 % (at 4× speed) |
+
+**Lesson of p2: never switch the adaptive room off.** With a fixed room of 1 000 in a small hall, 21 000 people are let in for nothing.
+In all four runs: every seat sold, never a seat twice, nobody refused while ≥ 20 seats were free, everybody finished (bought, left, or was told «sold out»), `paid too late` 0. The `errors` are the test tool's own socket resets (≤ 0.0001 %).
+Test: `./run-people.sh` (about 30 min) then `node summarize2.js results/p*.log`; the waiting page against a tiny room: `tools/ad-waitpage.js`.

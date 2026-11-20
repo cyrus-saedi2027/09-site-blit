@@ -2728,6 +2728,8 @@ a.wz-hall:hover { background: rgba(var(--fg), .07); transform: translateY(-2px);
 .q-top p { margin: 0; font-size: calc(max(12.5px, calc(var(--u) * .78)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), max(.62, var(--dmin))); }
 .q-pos { position: relative; display: grid; justify-items: center; gap: .15em; padding: calc(var(--u) * .6) 0; text-align: center; }
 .q-pos small { font-size: calc(max(12.5px, calc(var(--u) * .8)) * var(--tx) * var(--tx-small)); color: rgba(var(--fg), .65); }
+.q-room { margin: 0; padding: .8em 1em; border-radius: 14px; background: rgba(var(--fg), .06); text-align: center; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); line-height: 1.9; }
+.q-room b { font-variant-numeric: tabular-nums; }
 .q-pos b { font-size: clamp(48px, calc(var(--u) * 5.2), 92px); font-weight: 900; line-height: 1.15; }
 .q-pos span { min-height: 1.6em; font-size: calc(max(13px, calc(var(--u) * .82)) * var(--tx) * var(--tx-main)); color: rgba(var(--fg), .75); }
 .q-box.is-in .q-pos b { color: var(--t-ok); animation: dkTick .8s var(--ease); }
@@ -13421,7 +13423,8 @@ const admin = {
         <form class="rc-row" id="adCat"><label class="bk-fld"><span>دسته‌ی تازه</span><input name="t" placeholder="مثلاً: ویژه‌ی کودکان" required></label><button type="submit" class="chip">${ico('plus')}افزودن</button></form></section>
       <section class="panel dk-box evp-rise"><h2>${ico('shield')}تنظیمات خرید</h2>
         <h3 class="wz-h3">تأیید موبایل با کد پیامکی موقع خرید</h3><div class="bk-seg" role="radiogroup" aria-label="تأیید موبایل">${[['off', 'خاموش'], ['busy', 'فقط اجراهای پرطرفدار'], ['always', 'همیشه']].map(([k, t]) => `<button type="button" role="radio" data-otp="${k}" aria-checked="${store.get('blit.otpMode', 'busy') === k}">${t}</button>`).join('')}</div>
-        <h3 class="wz-h3">صف انتظار مجازی موقع شروع فروش</h3><div class="bk-seg" role="radiogroup" aria-label="صف انتظار">${[['off', 'خاموش'], ['hot', 'فقط اجراهای پرطرفدار'], ['always', 'همه‌ی اجراها']].map(([k, t]) => `<button type="button" role="radio" data-qm="${k}" aria-checked="${store.get('blit.queueMode', 'hot') === k}">${t}</button>`).join('')}</div></section></div>`;
+        <h3 class="wz-h3">صف انتظار هوشمند <small>(محافظ سایت و خرید)</small></h3><p class="bk-lead">وقتی تعداد خریدارها از ظرفیت (مثلاً ۱۰۰۰ نفر هم‌زمان) بیشتر شد، بقیه تو صف می‌ایستن و هر کدوم می‌بینه «الان N نفر از ظرفیت تو مرحله‌ی خرید هستن، جلوی تو N نفره»؛ هر کی تموم کرد نفر بعدی وارد می‌شه. تا ظرفیت پر نشده، همه فوری وارد می‌شن. این‌جا (نمونه) صف شبیه‌سازی می‌شه؛ صف واقعی تو پوشه‌ی <code dir="ltr">server/</code> ساخته و با ۱۰۰ هزار نفر تست شده. <a href="#" id="qSee">دیدن صفحه‌ی صف</a></p><div class="bk-seg" role="radiogroup" aria-label="صف انتظار">${[['off', 'خاموش'], ['hot', 'فقط اجراهای پرطرفدار'], ['always', 'همه‌ی اجراها']].map(([k, t]) => `<button type="button" role="radio" data-qm="${k}" aria-checked="${store.get('blit.queueMode', 'hot') === k}">${t}</button>`).join('')}</div></section></div>`;
+    { const see = $('#qSee', el); if (see) see.addEventListener('click', (ev) => { ev.preventDefault(); const e = LIST().find((x) => sessionsOf(x).length); if (e) { store.sset('blit.qpass', null); location.hash = queue.url(e, sessionsOf(e)[0].id); } }); }
     $$('[data-qm]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.queueMode', b.dataset.qm); $$('[data-qm]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`صف انتظار مجازی: ${b.textContent}`); toast(`صف انتظار مجازی: ${b.textContent}.`); }));
     $$('[data-otp]', el).forEach((b) => b.addEventListener('click', () => { store.set('blit.otpMode', b.dataset.otp); $$('[data-otp]', el).forEach((x) => x.setAttribute('aria-checked', String(x === b))); auditLog(`تأیید موبایل موقع خرید: ${b.textContent}`); toast(`تأیید موبایل موقع خرید: ${b.textContent}.`); }));
     $('#adCat', el).addEventListener('submit', (ev) => { ev.preventDefault(); const t = ev.target.elements.t.value.trim(); if (!t) return; store.set('blit.cats', extra.concat({ t, tag: t })); auditLog(`دسته‌ی «${t}» ساخته شد`); toast('دسته ساخته شد؛ برنامه‌ها با برچسبش توش می‌آن.'); this.site(el); });
@@ -14436,6 +14439,7 @@ const hallsPage = {
    ten minutes to choose. The seats' address can't skip it (it comes back here without a pass). The admin turns it on for the
    busy shows (the default), for all, or off. Here the line is simulated and moves faster than a real one.
    ════════════════════════════════════════════════════════════════ */
+const ROOM = 500;   // (the demo's room: the real server's is chosen by the admin, 500–1000, and it shrinks by itself in a small hall)
 const hotShow = (e) => !!((e.badge && !e.draft) || saleMs(e)) || ['hani-nazarian', 'dokhtar-pesar', 's-21'].includes(e.id);   // a new show's «تازه» is not demand
 const queue = {
   need(e) { const m = store.get('blit.queueMode', 'hot'); return m === 'always' || (m === 'hot' && hotShow(e)); },
@@ -14452,15 +14456,16 @@ const queue = {
     const box = pages.wrap('q-pg', `<section class="panel q-box evp-rise" aria-labelledby="qH">
         <div class="q-top"><figure class="bk-poster"><img src="${esc(src)}" alt=""></figure><div><small>صف خرید بلیت</small><h1 id="qH">${esc(e.title)}</h1><p>${esc(w.wd)} ${esc(w.dm)} · ساعت ${esc(w.tm)} · ${esc(hallOf(e).name)}</p></div></div>
         <div class="q-pos" aria-live="polite"><small id="qLab">نفرات جلوی تو</small><b id="qPos">${money(P0)}</b><span id="qEta"></span></div>
+        <p class="q-room" id="qRoom" aria-live="polite">الان <b>${fa(ROOM)}</b> نفر از <b>${fa(ROOM)}</b> نفر ظرفیت تو مرحله‌ی خرید هستن. هر وقت یکی از اون‌ها کارش تموم شد، نفر بعدیِ صف وارد می‌شه؛ نوبت تو که شد خودکار می‌ری به انتخاب صندلی.</p>
         <div class="q-line" aria-hidden="true">${Array.from({ length: 26 }, (_, i) => `<i style="--i:${i}"${i === 18 ? ' class="is-me"' : ''}></i>`).join('')}<span class="q-door">${ico('ticket')}</span></div>
         <div class="q-bar" aria-hidden="true"><i id="qBar"></i></div>
         <dl class="q-nums"><div><dt>کل صف</dt><dd>${money(total)} نفر</dd></div><div><dt>سرعت ورود</dt><dd>${money(rate)} نفر در دقیقه</dd></div><div><dt>پشت سرت</dt><dd id="qMe">${money(total - P0)} نفر</dd></div></dl>
-        <ul class="pg-tips q-tips"><li>این صفحه رو نبند؛ نوبتت که شد خودکار می‌ری به انتخاب صندلی.</li><li>با باز کردن چند پنجره جلو نمی‌افتی؛ یه پنجره کافیه.</li><li>وقتی نوبتت شد ۱۰ دقیقه وقت داری صندلی‌هات رو انتخاب کنی.</li></ul>
+        <ul class="pg-tips q-tips"><li>این صفحه رو نبند؛ نوبتت که شد خودکار می‌ری به انتخاب صندلی. اگه گوشیت خوابید یا صفحه بسته شد، تا ۳۰ دقیقه جات حفظ می‌شه و اولِ صف برمی‌گردی.</li><li>با باز کردن چند پنجره جلو نمی‌افتی؛ یه پنجره کافیه.</li><li>وقتی نوبتت شد ۱۰ دقیقه وقت داری صندلی‌هات رو انتخاب کنی.</li></ul>
         <p class="bk-note">${ico('info')}تو این نمونه صف خیلی سریع‌تر از واقعیت جلو می‌ره. <a href="#" id="qSkip">رد شدن از صف</a></p>
       </section>`);
     const pos = $('#qPos', box), eta = $('#qEta', box), bar = $('#qBar', box), me = $('#qMe', box), t0 = performance.now(), D = reduceMotion ? 2500 : 9000 + R() * 5000;
     let raf = 0, done = false, last = P0;
-    const pass = () => { if (done) return; done = true; cancelAnimationFrame(raf); store.sset('blit.qpass', { sid: s.id, until: Date.now() + 10 * 6e4 }); pos.textContent = 'نوبت توئه!'; $('#qLab', box).textContent = 'ورود به انتخاب صندلی'; eta.textContent = '۱۰ دقیقه وقت داری'; bar.style.setProperty('--p', 1); box.querySelector('.q-box').classList.add('is-in'); setTimeout(() => { if (page.v && page.v.kind === 'queue' && page.v.sid === s.id) page.go(seats); }, reduceMotion ? 300 : 1400); };
+    const pass = () => { if (done) return; done = true; cancelAnimationFrame(raf); store.sset('blit.qpass', { sid: s.id, until: Date.now() + 10 * 6e4 }); pos.textContent = 'نوبت توئه!'; $('#qRoom', box).innerHTML = `تو الان نفر <b>${fa(ROOM - 3 - Math.floor(R() * 40))}</b> از <b>${fa(ROOM)}</b> نفری هستی که دارن خرید می‌کنن.`; $('#qLab', box).textContent = 'ورود به انتخاب صندلی'; eta.textContent = '۱۰ دقیقه وقت داری'; bar.style.setProperty('--p', 1); box.querySelector('.q-box').classList.add('is-in'); setTimeout(() => { if (page.v && page.v.kind === 'queue' && page.v.sid === s.id) page.go(seats); }, reduceMotion ? 300 : 1400); };
     const step = (now) => {
       const p = clamp((now - t0) / D, 0, 1), k = 1 - Math.pow(1 - p, 1.6), left = Math.max(0, Math.round(P0 * (1 - k)));
       if (left !== last) { pos.textContent = money(left); me.textContent = `${money(total - P0 + Math.round(k * P0 * 0.7))} نفر`; const m = Math.ceil(left / rate); eta.textContent = left ? `حدود ${m <= 1 ? 'یک دقیقه' : `${fa(m)} دقیقه`} دیگه` : ''; if (Math.floor(last / 40) !== Math.floor(left / 40)) { const l = $('.q-line', box); l.classList.remove('is-step'); void l.offsetWidth; l.classList.add('is-step'); } last = left; }

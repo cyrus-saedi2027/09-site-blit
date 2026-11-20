@@ -5,7 +5,7 @@ const http = require('http'), fs = require('fs'), path = require('path'), zlib =
 const { Room } = require('./queue-engine');
 const E = process.env, SCALE = +E.TIME_SCALE || 1, PORT = +E.PORT || 8080, ROOT = path.resolve(E.ROOT || path.join(__dirname, '..', 'ui-reference', '01-hero', 'v9'));
 const SECRET = E.SECRET ? Buffer.from(E.SECRET) : crypto.randomBytes(32);
-const cfg = { capMax: +E.CAP || 500, adaptive: E.ADAPTIVE !== '0', nSeats: +E.SEATS || 3000, minCap: +E.MINCAP || 8, share: +E.SHARE || 0.35, holdMs: (+E.HOLD_S || 600) * 1000 / SCALE, claimMs: (+E.CLAIM_S || 45) * 1000 / SCALE, staleMs: (+E.STALE_S || 40) * 1000 / SCALE, insideStaleMs: (+E.INSIDE_STALE_S || 60) * 1000 / SCALE };
+const cfg = { capMax: +E.CAP || 500, adaptive: E.ADAPTIVE !== '0', nSeats: +E.SEATS || 3000, minCap: +E.MINCAP || 8, share: +E.SHARE || 0.35, holdMs: (+E.HOLD_S || 600) * 1000 / SCALE, claimMs: (+E.CLAIM_S || 45) * 1000 / SCALE, staleMs: (+E.STALE_S || 60) * 1000 / SCALE, insideStaleMs: (+E.INSIDE_STALE_S || 180) * 1000 / SCALE, lateMs: (+E.LATE_S || 1800) * 1000 / SCALE, payMs: (+E.PAY_S || 900) * 1000 / SCALE };
 const rooms = new Map();
 const room = (e, s, make) => { const k = `${e}|${s}`; let r = rooms.get(k); if (!r && make) rooms.set(k, r = new Room(cfg)); return r; };
 // the ticket: «show.session.number.signature» (nothing is stored for it but 4 bytes in the room)
@@ -37,6 +37,7 @@ const api = (req, res, p, q) => {
   if (p === '/api/q/status') { bump('status'); const k = open(g('t')); if (!k) return json(res, 400, { s: 'bad' }); const st = k.r.status(k.t); if (st.s === 'wait') st.poll = poll(st.ahead); return json(res, 200, st); }
   if (p === '/api/seats') { bump('seats'); const k = open(g('t')); if (!k) return json(res, 400, { s: 'bad' }); k.r.ping(k.t); res.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Length': k.r.nSeats, 'Cache-Control': 'no-store' }); return res.end(Buffer.from(k.r.state.buffer, k.r.state.byteOffset, k.r.nSeats)); }
   if (p === '/api/hold' && req.method === 'POST') { bump('hold'); const k = open(g('t')); if (!k) return json(res, 400, { s: 'bad' }); return body(req, (b) => { if (!b) return json(res, 400, { e: 'json' }); const r = k.r.hold(k.t, b.seats, b.flex !== false); return json(res, r.ok ? 200 : r.e === 'taken' ? 409 : 403, r); }); }
+  if (p === '/api/pay/start' && req.method === 'POST') { bump('paystart'); const k = open(g('t')); if (!k) return json(res, 400, { s: 'bad' }); const r = k.r.beginPay(k.t); return json(res, r.ok ? 200 : 403, r); }
   if (p === '/api/pay' && req.method === 'POST') { bump('pay'); const k = open(g('t')); if (!k) return json(res, 400, { s: 'bad' }); const r = k.r.pay(k.t); return json(res, r.ok ? 200 : 403, r); }
   if (p === '/api/leave' && req.method === 'POST') { bump('leave'); const k = open(g('t')); if (!k) return json(res, 400, { s: 'bad' }); k.r.finish(k.t); return json(res, 200, { ok: true }); }
   if (p === '/api/stats') { const r = room(g('e'), g('s'), false), c = process.cpuUsage(), m = process.memoryUsage(); return json(res, 200, { room: r ? r.stats() : null, rooms: rooms.size, proc: { rss: m.rss, heap: m.heapUsed, cpuUserMs: c.user / 1000, cpuSysMs: c.system / 1000, lagP50: pct(lag, 0.5), lagP99: pct(lag, 0.99), lagMax: Math.round(lagMax), conns: server.listenerCount ? undefined : undefined }, req: count, cfg }); }

@@ -7,12 +7,12 @@
    numbers, each with `holdMs` to choose and pay; a ticket that has not been seen for `staleMs` (the person left) is skipped, so a gone
    person never holds a place. The seats are a byte each (free, held, sold) and a choice of seats is all or nothing, so no seat is ever
    held or sold twice. When the hall is sold out everyone still waiting is told at once.
-   `cap` shrinks as the seats run out (adaptive): the people inside may hold at most `share` of the free seats, or the hall would be
-   «all held» by people who then fail to pay.
+   The room is `cap` people at most. Adaptive: the people who are still LOOKING for seats may be at most `share` of the free (not sold, not held) seats
+   divided by the seats a person takes, or they would fight over the same seats; people who already hold seats or are paying do not count.
    ════════════════════════════════════════════════════════════════ */
 class Room {
   constructor(o = {}) {
-    Object.assign(this, { capMax: 500, adaptive: true, share: 0.35, avgSeats: 2.4, minCap: 8, holdMs: 600e3, claimMs: 45e3, staleMs: 40e3, insideStaleMs: 60e3, nSeats: 1000, maxPerOrder: 8 }, o);
+    Object.assign(this, { capMax: 500, adaptive: true, share: 0.35, avgSeats: 2.4, minCap: 8, holdMs: 600e3, claimMs: 45e3, staleMs: 60e3, insideStaleMs: 180e3, lateMs: 30 * 60e3, payMs: 15 * 60e3, nSeats: 1000, maxPerOrder: 8 }, o);
     this.t0 = Date.now(); this.next = 1; this.admitted = 0;
     this.seen = new Uint32Array(1 << 16);       // seconds (since t0, plus one) of the last sign of life of each ticket
     this.active = new Map();                    // ticket → { claimed, until }
@@ -21,9 +21,19 @@ class Room {
     this.holds = new Map();                     // ticket → { seats }
     this.sold = 0; this.heldN = 0; this.orders = 0;
     this.st = { joined: 0, admitted: 0, skipped: 0, finished: 0, expired: 0, maxActive: 0, conflicts: 0, holds: 0, pays: 0 };
+    this.late = new Map();                      // tickets that were skipped (the page was asleep) → when; they keep their right to come back first, for lateMs
+    this.prio = []; this.prioSet = new Set();   // the ones who came back, in the order they came: let in before anybody new
     this.rec = []; this.recI = 0;               // when people were let in (for the speed shown to the line)
   }
-  cap() { return this.adaptive ? Math.max(this.minCap, Math.min(this.capMax, Math.floor(((this.nSeats - this.sold) * this.share) / this.avgSeats))) : this.capMax; }
+  cap() { return this.capMax; }   // the room: the most people in the buying step at once (looking for seats, holding seats, paying)
+  // how many may be LOOKING for seats at the same time: not more than the free seats can serve (a person who holds seats or is at the bank's page does not count: he is not in anybody's way)
+  avail() { return this.nSeats - this.sold - this.heldN; }
+  seekCap() {
+    if (!this.adaptive) return this.capMax;
+    const av = this.avail(); if (av <= 0) return 0;
+    return Math.max(Math.min(av, 6), Math.min(this.capMax, Math.floor((av * this.share) / this.avgSeats)));
+  }
+  seekers() { return this.active.size - this.holds.size; }
   soldOut() { return this.sold >= this.nSeats; }
   secNow() { return Math.floor((Date.now() - this.t0) / 1000) + 1; }
   touch(t) { if (t >= this.seen.length) { const n = new Uint32Array(Math.max(this.seen.length * 2, t + 1)); n.set(this.seen); this.seen = n; } this.seen[t] = this.secNow(); }
@@ -32,9 +42,13 @@ class Room {
   pump() {
     if (this.soldOut()) return;
     const cap = this.cap(), now = Date.now(), sec = this.secNow();
-    while (this.active.size < cap && this.admitted < this.next - 1) {
+    while (this.active.size < cap && this.seekers() < this.seekCap() && (this.prio.length || this.admitted < this.next - 1)) {
+      if (this.prio.length) {   // someone whose page had been asleep and is back: first
+        const b = this.prio.shift(); this.prioSet.delete(b); if (!this.late.has(b) || this.active.has(b)) continue;
+        this.late.delete(b); this.active.set(b, { claimed: false, until: now + this.claimMs, seen: now }); this.st.admitted++; this.st.returned = (this.st.returned || 0) + 1; if (this.active.size > this.st.maxActive) this.st.maxActive = this.active.size; continue;
+      }
       const t = ++this.admitted;
-      if ((sec - this.seen[t]) * 1000 > this.staleMs) { this.st.skipped++; continue; }   // gone
+      if ((sec - this.seen[t]) * 1000 > this.staleMs) { this.st.skipped++; this.late.set(t, now); continue; }   // not asking for a minute: skipped, but he keeps the right to come back first
       this.active.set(t, { claimed: false, until: now + this.claimMs, seen: now });
       this.st.admitted++; if (this.active.size > this.st.maxActive) this.st.maxActive = this.active.size;
       this.rec.push(now);
@@ -50,13 +64,21 @@ class Room {
     if (!(t >= 1 && t < this.next)) return { s: 'bad' };
     this.touch(t);
     const a = this.active.get(t);
-    if (a) { a.seen = Date.now(); if (!a.claimed) { a.claimed = true; a.until = a.seen + this.holdMs; } return { s: 'in', left: a.until - Date.now(), cap: this.cap() }; }
+    const inRes = (x) => { x.seen = Date.now(); if (!x.claimed) { x.claimed = true; x.until = x.seen + this.holdMs; } return { s: 'in', left: x.until - Date.now(), cap: this.cap(), inside: this.active.size }; };
+    if (a) return inRes(a);
     if (this.soldOut()) return { s: 'soldout' };
+    if (this.late.has(t)) {   // the page was asleep and he was skipped: he is back, he goes in before the new ones
+      if (!this.prioSet.has(t)) { this.prio.push(t); this.prioSet.add(t); this.pump(); const a2 = this.active.get(t); if (a2) return inRes(a2); }
+      const ahead = Math.max(0, this.prio.indexOf(t));
+      return { s: 'wait', ahead, eta: Math.round((ahead + 1) / this.rate()), total: this.next - 1 - this.admitted + this.prio.length, inside: this.active.size, cap: this.cap(), back: true };
+    }
     if (t <= this.admitted) return { s: 'gone' };
     const ahead = t - this.admitted - 1;
-    return { s: 'wait', ahead, eta: Math.round(ahead / this.rate()), total: this.next - 1 - this.admitted };
+    return { s: 'wait', ahead, eta: Math.round(ahead / this.rate()), total: this.next - 1 - this.admitted, inside: this.active.size, cap: this.cap() };
   }
   // all or nothing: the new choice replaces the old one of the same ticket
+  // he pressed «pay» and goes to the bank: for payMs nothing is taken from him, whatever the page does (a phone that sleeps, a bank page that takes minutes)
+  beginPay(t) { const a = this.active.get(t), h = this.holds.get(t); if (!a || !h) return { ok: false, e: 'nohold' }; a.paying = true; a.seen = Date.now(); a.until = a.seen + this.payMs; return { ok: true, left: this.payMs }; }
   // a sign of life of a person inside (the buying page asks for the map every second or two): one who closed the tab is let go after insideStaleMs, with his seats
   ping(t) { const a = this.active.get(t); if (a) a.seen = Date.now(); }
   // flex: a seat that was taken a moment ago is swapped for the nearest free one (the person is told, there is no error); only when there is nothing free is it refused.
@@ -94,7 +116,11 @@ class Room {
   finish(t) { if (this.active.delete(t)) this.st.finished++; this.release(t); this.pump(); }
   tick() {   // places and holds that ran out of time go back
     const now = Date.now();
-    for (const [t, a] of this.active) if (a.until < now || (a.claimed && now - a.seen > this.insideStaleMs)) { this.active.delete(t); this.release(t); this.st.expired++; if (a.until >= now) this.st.vanished = (this.st.vanished || 0) + 1; }
+    for (const [t, a] of this.active) {
+      const gone = !a.paying && a.claimed && now - a.seen > this.insideStaleMs, unclaimed = !a.claimed && a.until < now;
+      if (a.until < now || gone) { this.active.delete(t); this.release(t); this.st.expired++; if (gone) this.st.vanished = (this.st.vanished || 0) + 1; if (gone || unclaimed) this.late.set(t, now); }
+    }
+    for (const [t, at] of this.late) if (now - at > this.lateMs) this.late.delete(t);
     this.pump();
   }
   audit() {
