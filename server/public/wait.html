@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>صف خرید</title>
+<style>
+:root{--bg:#0b0b0d;--fg:#f4f4f5;--dim:#a1a1aa;--line:#2a2a30;--ok:#22c55e}
+@media (prefers-color-scheme:light){:root{--bg:#fafafa;--fg:#18181b;--dim:#52525b;--line:#e4e4e7}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--fg);font:16px/1.8 Vazirmatn,Tahoma,system-ui,sans-serif;padding:16px}
+main{width:min(440px,100%);text-align:center;display:grid;gap:14px}
+h1{font-size:20px;margin:0}
+.n{font-size:56px;font-weight:800;letter-spacing:-.02em;line-height:1.2}
+.bar{height:6px;border-radius:9px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--fg);transition:width .8s}
+p{margin:0;color:var(--dim);font-size:14px}
+a.go{display:none;justify-self:center;padding:.8em 2em;border-radius:14px;background:var(--ok);color:#052e14;font-weight:800;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+  <h1 id="h">تو صف خرید هستی</h1>
+  <div class="n" id="n" dir="ltr">…</div>
+  <p id="m">لطفاً این صفحه رو نبند و دوباره تازه‌اش نکن؛ جات تو صف حفظ می‌شه.</p>
+  <div class="bar" aria-hidden="true"><i id="b"></i></div>
+  <a class="go" id="go" href="#">ورود به خرید</a>
+</main>
+<script>
+(() => {
+  const q = new URLSearchParams(location.search), E = q.get('e') || 'big-show', S = q.get('s') || 'night-1', $ = (i) => document.getElementById(i);
+  const fa = (x) => String(x).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]);
+  let tok = null, first = 0, timer = 0;
+  const eta = (s) => (s < 60 ? 'کمتر از یک دقیقه' : s < 3600 ? fa(Math.round(s / 60)) + ' دقیقه' : fa(Math.round(s / 360) / 10) + ' ساعت');
+  const next = (ms) => { clearTimeout(timer); timer = setTimeout(tick, ms); };
+  const tick = async () => {
+    try {
+      const r = await fetch(tok ? `/api/q/status?t=${encodeURIComponent(tok)}` : `/api/q/join?e=${E}&s=${S}`, { method: tok ? 'GET' : 'POST', cache: 'no-store' });
+      const j = await r.json();
+      if (j.t) { tok = j.t; try { sessionStorage.setItem('q.' + E + '.' + S, tok); } catch (e) { /* ok */ } }
+      if (j.s === 'soldout') { $('h').textContent = 'بلیت‌ها تموم شد'; $('n').textContent = '—'; $('m').textContent = 'متأسفانه همه‌ی صندلی‌های این سانس فروخته شد.'; return; }
+      if (j.s === 'in') { $('h').textContent = 'نوبت توئه'; $('n').textContent = '✓'; $('b').style.width = '100%'; $('m').textContent = 'برای انتخاب صندلی وارد شو؛ مهلت داری.'; const g = $('go'); g.style.display = 'block'; g.href = `/#/e/${E}/${S}?qt=${encodeURIComponent(tok)}`; return; }
+      if (j.s === 'wait') {
+        if (!first) first = Math.max(1, j.ahead);
+        $('n').textContent = fa((j.ahead + 1).toLocaleString('en')); $('m').textContent = `نفر جلوی تو ${fa(j.ahead)} نفره · حدود ${eta(j.eta || 0)} دیگه`; $('b').style.width = Math.max(2, Math.min(100, 100 - (j.ahead / first) * 100)) + '%';
+        return next(j.poll || 5000);
+      }
+      if (j.s === 'gone' || j.s === 'bad') { tok = null; first = 0; return next(1500); }
+    } catch (e) { $('m').textContent = 'اتصال قطع شد؛ دوباره تلاش می‌کنم…'; }
+    next(4000 + Math.random() * 3000);
+  };
+  try { tok = sessionStorage.getItem('q.' + E + '.' + S); } catch (e) { /* ok */ }
+  tick();
+})();
+</script>
+</body>
+</html>

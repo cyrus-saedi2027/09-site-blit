@@ -1,0 +1,33 @@
+# nginx in front of the reference server (Ubuntu: /etc/nginx/sites-available/blit). Replace example.ir.
+# Terminates TLS, serves the site's files and images itself (cache), proxies only /api/ and /wait to Node on 127.0.0.1:8080.
+worker_processes auto;                      # in nginx.conf (main context)
+# events { worker_connections 20000; }      # in nginx.conf: 50 000 people waiting ≈ a few thousand open connections at a time
+# also: ulimit -n 65535 (systemd: LimitNOFILE=65535) and  net.core.somaxconn = 4096  (sysctl)
+
+upstream blit_node { server 127.0.0.1:8080; keepalive 256; }
+
+server {
+    listen 443 ssl http2;
+    server_name example.ir;
+    ssl_certificate     /etc/letsencrypt/live/example.ir/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.ir/privkey.pem;
+    ssl_session_cache   shared:SSL:50m;      # a returning phone skips the expensive handshake
+    ssl_session_timeout 1d;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+
+    gzip on; gzip_types text/css application/javascript application/json image/svg+xml; gzip_min_length 512;
+    # (brotli: install ngx_brotli and add `brotli on; brotli_types ...;` — the 0.76 MB page becomes 0.61 MB)
+
+    root /var/www/blit;                      # the site folder (index.html + images)
+    location / { try_files $uri /index.html; add_header Cache-Control "public, max-age=300"; }
+    location ~* \.(webp|png|jpg|jpeg|svg|woff2)$ { add_header Cache-Control "public, max-age=31536000, immutable"; access_log off; }
+
+    # the line and the seat desk: never cached, a short timeout
+    location /api/  { proxy_pass http://blit_node; proxy_http_version 1.1; proxy_set_header Connection ""; proxy_set_header Host $host;
+                      proxy_set_header X-Forwarded-For $remote_addr; proxy_read_timeout 10s; proxy_buffering off; }
+    location = /wait { proxy_pass http://blit_node; proxy_http_version 1.1; proxy_set_header Connection ""; add_header Cache-Control "public, max-age=60"; }
+
+    # a cheap guard so one address cannot hammer the desk (polls are ≤ 1/s per person by design)
+    # limit_req_zone $binary_remote_addr zone=blit:20m rate=20r/s;   (in http {} )  and  limit_req zone=blit burst=40 nodelay;  inside /api/
+}
+server { listen 80; server_name example.ir; return 301 https://$host$request_uri; }

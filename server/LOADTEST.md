@@ -1,0 +1,35 @@
+# Load test of the waiting room + seat desk (round AD)
+
+What was tested: `queue-engine.js` + `server.js` (Node 22, no packages) against `loadgen.js` virtual buyers, in one 4-core / 16 GB sandbox (server = one process, one core; the buyers = three other processes).
+Every virtual buyer does what a real one does: joins the line, polls for its turn (the server tells it how long to wait: 1–15 s with jitter, by distance), looks at the seat map (a few seconds old: that is what makes seat clashes real), holds 1–8 seats, pays (7 % fail) or abandons (8 % leave the line, some leave before paying).
+`SCALE=4` means **every wait is four times shorter** (so the server sees four times the requests per buyer, and a 90 s run is ≈ 6 minutes of a real sale). It is a harder test than real life, not an easier one. The first run (`s1`) is real-time (`SCALE=1`).
+Raw logs: `results/*.log` (the JSON at the end of each is the verdict). Re-run: `./run-scenarios.sh` (≈ 15 min), then `node summarize.js results/*.log`.
+
+## Results
+
+| run | people | seats | room (inside at once) | requests/s avg / peak | server CPU (of ONE core) | RAM | loop lag p99 | errors | seats sold | seat clashes per order | notes |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| s1 (real time) | 50 000 | 3 000 | adaptive ≤ 500 | 4 100 / 6 400 | 24–37 % | 108 MB | 2 ms | 0 | 2 488 in 300 s | 1.8 | audit ok |
+| a1 | 50 000 | 3 000 | fixed 500 | 13 900 / 16 700 | 60 % | 132 MB | 18 ms | 0 | **3 000 (sold out in 83 s)** | **5.1** | 2 047 people left without finding seats |
+| a2 | 50 000 | 3 000 | adaptive ≤ 500 | 15 800 / 16 700 | 60 % | 136 MB | 5 ms | 0 | 2 583 in 90 s | 1.9 | calm: 178 found no seats |
+| b1 | 50 000 | 20 000 | fixed 500 | 15 500 / 16 700 | 62 % | 128 MB | 4 ms | 0 | 8 520 in 90 s | **0.3** | slowest to sell |
+| b2 | 50 000 | 20 000 | fixed 1 000 | 15 300 / 16 600 | 59 % | 120 MB | 50 ms | 0 | 14 020 in 90 s | 1.8 | |
+| b3 | 50 000 | 20 000 | fixed 2 000 | 14 900 / 16 400 | 59 % | 135 MB | 14 ms | 0 | 19 980 in 90 s | 4.5 | 5 571 found no seats |
+| b4 | 50 000 | 20 000 | fixed 5 000 | 12 700 / 17 200 | 66 % | 139 MB | 14 ms | 0 | 20 000 in 80 s | **8.4** | 22 527 found no seats |
+| c1 | **10 000 in 2 s** | 1 000 | adaptive ≤ 500 | 4 900 / 5 200 | 36 % | 91 MB | 8 ms | 0 | 777 in 60 s | 1.5 | join p99 138 ms |
+| d1 | **100 000** | 20 000 | adaptive ≤ 1 000 | 27 000 / 29 700 | **91 %** | 128 MB | 31 ms | 0 | 13 838 in 91 s | 1.7 | the one core is nearly full (at 4× speed); join p99 416 ms |
+
+In every run: **zero errors, zero timeouts, the audit passed** (no seat sold twice, no seat both free and held, never more people inside than allowed, every order paid exactly once). Latency p99 of status / seats / hold / pay: 4–12 ms (d1: 150–180 ms).
+
+## What it means
+
+1. **The server is not the bottleneck; the buyers' fight over seats is.** 50 000 waiting people cost ≈ 130 MB and 15 % of one core at real speed. The load is almost all polls of 215 bytes.
+2. **How many may be inside at once** (the room) decides two things: how fast the sale goes, and how many seat clashes (a buyer picks seats someone else already holds) each order costs. Rule of thumb from the table: keep the room at about **12–15 % of the free seats**, never above ≈ 1 000 for a normal sale. 500 on a 3 000-seat hall already gives 5 clashes per order (a1); on a 20 000-seat hall 1 000 gives 1.8 (fine), 2 000 gives 4.5 (annoying), 5 000 gives 8.4 and 22 000 people give up (bad).
+3. **The adaptive room** (`ADAPTIVE=1`, default: `cap = min(CAP, 0.35 × freeSeats / 2.4)`) keeps that ratio all the time and shrinks as seats sell. Result: 1.8–1.9 clashes per order on a small hall and nobody told «no seats» after waiting. Its price: the tail of the sale (last ~15 % of seats) is slower. Use it. `CAP` is only the ceiling: **500 for halls ≤ 5 000 seats, 1 000 for bigger ones**; 2 000 only if the owner wants speed over comfort.
+4. **Traffic is the real limit of the plans, not CPU.** The site's first visit is 4.33 MB on the wire (HTML 0.76 MB + 51 images 3.57 MB). 50 000 people × 4.33 MB = **216 GB**. So the sale link must open the tiny waiting page (`/wait`, **1.5 KB** brotli / 2 KB gzip, then one 215-byte poll every few seconds ≈ 15–20 KB per person for a whole wait): 50 000 people ≈ **1 GB**. Only people who are let in load the big site (≈ 1 250 buyers for a 3 000-seat hall ≈ 5 GB). Static files and images should come from nginx with cache or a CDN, not from Node.
+5. **One core of the VPS is enough for the queue API up to ≈ 100 000 waiting people at real speed** (d1 at 4× speed used 91 %; real speed ≈ 25 %). TLS is the cost the sandbox did not include: the first seconds of a big sale (10 000 people in 2 s) mean ≈ 5 000 TLS handshakes/s; on 1–2 vCores they queue for a second or two (slow connect, not errors). Let nginx terminate TLS with session resumption.
+
+## Not measured here (be honest)
+
+- Real network (latency, packet loss, mobile clients), a real VPS (shared cores are slower than this sandbox, count on 30–50 % less), TLS, a database, the payment gateway. The queue state is in memory: a restart empties the line (people re-join; held seats are lost) — fine for a test server, for the real shop persist `sold` to the database at `pay` and re-read it on start.
+- 500 000+ people: not tested; one core would be full at ≈ 100 000 (at 4× speed) so the answer there is a second process (shard by show) behind nginx.

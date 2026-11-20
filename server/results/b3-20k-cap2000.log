@@ -1,0 +1,113 @@
+reference server on :8375 · cap 2000 · 20000 seats · time ×4
+49998 virtual buyers arrive within 10 s; cap 2000 fixed; 20000 seats; time ×4; up to 90 s
+
+   5 s · (starting)
+  10 s · waiting  46971 · inside 2000/2000 · held 3658 · sold  1296/20000 ·  16316 req/s · server CPU  58% · RAM 111 MB · loop lag p99 14 ms
+  15 s · waiting  46250 · inside 2000/2000 · held 2510 · sold  3970/20000 ·  16433 req/s · server CPU  59% · RAM 114 MB · loop lag p99 11 ms
+  20 s · waiting  45557 · inside 2000/2000 · held 3285 · sold  5340/20000 ·  16073 req/s · server CPU  53% · RAM 126 MB · loop lag p99 11 ms
+  25 s · waiting  44585 · inside 2000/2000 · held 2617 · sold  7217/20000 ·  15921 req/s · server CPU  54% · RAM 127 MB · loop lag p99 8 ms
+  30 s · waiting  43691 · inside 2000/2000 · held 2226 · sold  8863/20000 ·  15789 req/s · server CPU  55% · RAM 129 MB · loop lag p99 8 ms
+  35 s · waiting  42846 · inside 2000/2000 · held 2223 · sold 10089/20000 ·  15719 req/s · server CPU  55% · RAM 130 MB · loop lag p99 8 ms
+  40 s · waiting  41944 · inside 2000/2000 · held 2165 · sold 11379/20000 ·  15686 req/s · server CPU  55% · RAM 131 MB · loop lag p99 8 ms
+  45 s · waiting  41066 · inside 2000/2000 · held 2198 · sold 12600/20000 ·  15421 req/s · server CPU  52% · RAM 131 MB · loop lag p99 7 ms
+  50 s · waiting  40171 · inside 2000/2000 · held 2085 · sold 13889/20000 ·  15193 req/s · server CPU  53% · RAM 132 MB · loop lag p99 7 ms
+  55 s · waiting  39298 · inside 2000/2000 · held 2030 · sold 15026/20000 ·  15094 req/s · server CPU  56% · RAM 133 MB · loop lag p99 5 ms
+  60 s · waiting  38403 · inside 2000/2000 · held 1876 · sold 16145/20000 ·  14850 req/s · server CPU  57% · RAM 133 MB · loop lag p99 5 ms
+  65 s · waiting  37501 · inside 2000/2000 · held 1651 · sold 17241/20000 ·  14717 req/s · server CPU  55% · RAM 134 MB · loop lag p99 5 ms
+  70 s · waiting  36558 · inside 2000/2000 · held 1357 · sold 18209/20000 ·  14601 req/s · server CPU  55% · RAM 134 MB · loop lag p99 5 ms
+  75 s · waiting  35541 · inside 2000/2000 · held  871 · sold 19028/20000 ·  14531 req/s · server CPU  56% · RAM 134 MB · loop lag p99 4 ms
+  80 s · waiting  34481 · inside 2000/2000 · held  414 · sold 19580/20000 ·  14510 req/s · server CPU  53% · RAM 134 MB · loop lag p99 5 ms
+  85 s · waiting  33353 · inside 2000/2000 · held   98 · sold 19893/20000 ·  14427 req/s · server CPU  52% · RAM 135 MB · loop lag p99 4 ms
+  90 s · waiting  32323 · inside 2000/2000 · held   20 · sold 19980/20000 ·  13714 req/s · server CPU  50% · RAM 135 MB · loop lag p99 4 ms
+
+{
+ "seconds": 90,
+ "users": 49998,
+ "cap": 2000,
+ "adaptive": false,
+ "seats": 20000,
+ "scale": 4,
+ "requests": 1344655,
+ "reqPerSecAvg": 14877,
+ "reqPerSecPeak": 16433,
+ "errors": 0,
+ "timeouts": 0,
+ "latencyMs": {
+  "join": {
+   "p50": 0,
+   "p95": 6,
+   "p99": 190
+  },
+  "status": {
+   "p50": 0,
+   "p95": 3,
+   "p99": 8
+  },
+  "seats": {
+   "p50": 0,
+   "p95": 3,
+   "p99": 9
+  },
+  "hold": {
+   "p50": 0,
+   "p95": 3,
+   "p99": 8
+  },
+  "pay": {
+   "p50": 0,
+   "p95": 3,
+   "p99": 8
+  }
+ },
+ "server": {
+  "cpuPeakPctOfOneCore": 59,
+  "cpuSecondsTotal": 54,
+  "ramPeakMB": 135,
+  "loopLagP99Ms": 14,
+  "loopLagMaxMs": 14,
+  "bytesOutMB": 1377.6
+ },
+ "senderCpuSeconds": 127,
+ "people": {
+  "joined": 49998,
+  "boughtOrders": 8267,
+  "boughtSeats": 19980,
+  "toldSoldOut": 0,
+  "leftWhileWaiting": 3934,
+  "leftBeforePaying": 626,
+  "clashes": 37351,
+  "rejoin": 0,
+  "noSeatsFound": 5571,
+  "payTooLate": 0,
+  "maxWaitSec": 87,
+  "avgWaitSec": 42
+ },
+ "room": {
+  "next": 49998,
+  "admitted": 16605,
+  "waiting": 32265,
+  "inside": 2000,
+  "cap": 2000,
+  "capMax": 2000,
+  "sold": 19980,
+  "held": 20,
+  "free": 0,
+  "seats": 20000,
+  "orders": 8267,
+  "joined": 49998,
+  "skipped": 1128,
+  "finished": 14464,
+  "expired": 141,
+  "maxActive": 2000,
+  "conflicts": 37351,
+  "holds": 8907,
+  "pays": 8267
+ },
+ "audit": {
+  "ok": true,
+  "problems": [],
+  "sold": 19980,
+  "held": 20
+ },
+ "finishedAll": false
+}

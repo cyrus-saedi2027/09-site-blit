@@ -1,0 +1,113 @@
+reference server on :8527 · cap 1000 (adaptive) · 20000 seats · time ×4
+99999 virtual buyers arrive within 10 s; cap 1000 adaptive; 20000 seats; time ×4; up to 90 s
+
+   5 s · (starting)
+  10 s · waiting  98677 · inside 1000/1000 · held 1784 · sold   751/20000 ·  27358 req/s · server CPU  87% · RAM 117 MB · loop lag p99 31 ms
+  16 s · waiting  98004 · inside 1000/1000 · held 1457 · sold  2271/20000 ·  29737 req/s · server CPU  91% · RAM 120 MB · loop lag p99 31 ms
+  20 s · waiting  97772 · inside 1000/1000 · held 1830 · sold  2795/20000 ·  28074 req/s · server CPU  89% · RAM 123 MB · loop lag p99 31 ms
+  25 s · waiting  97262 · inside 1000/1000 · held 1568 · sold  3770/20000 ·  28250 req/s · server CPU  91% · RAM 124 MB · loop lag p99 31 ms
+  30 s · waiting  96779 · inside 1000/1000 · held 1797 · sold  4748/20000 ·  27686 req/s · server CPU  88% · RAM 124 MB · loop lag p99 31 ms
+  35 s · waiting  96288 · inside 1000/1000 · held 1732 · sold  5780/20000 ·  28079 req/s · server CPU  85% · RAM 124 MB · loop lag p99 31 ms
+  40 s · waiting  95844 · inside 1000/1000 · held 1627 · sold  6725/20000 ·  27912 req/s · server CPU  82% · RAM 124 MB · loop lag p99 31 ms
+  45 s · waiting  95391 · inside 1000/1000 · held 1410 · sold  7685/20000 ·  27741 req/s · server CPU  81% · RAM 124 MB · loop lag p99 31 ms
+  50 s · waiting  94945 · inside 1000/1000 · held 1286 · sold  8540/20000 ·  27722 req/s · server CPU  82% · RAM 124 MB · loop lag p99 31 ms
+  55 s · waiting  94506 · inside 1000/1000 · held 1122 · sold  9323/20000 ·  27564 req/s · server CPU  81% · RAM 124 MB · loop lag p99 31 ms
+  60 s · waiting  94111 · inside 1000/1000 · held 1144 · sold  9928/20000 ·  27947 req/s · server CPU  84% · RAM 125 MB · loop lag p99 31 ms
+  65 s · waiting  93671 · inside 1000/1000 · held 1111 · sold 10582/20000 ·  27429 req/s · server CPU  85% · RAM 125 MB · loop lag p99 27 ms
+  70 s · waiting  93245 · inside 1000/1000 · held 1132 · sold 11211/20000 ·  27275 req/s · server CPU  87% · RAM 125 MB · loop lag p99 27 ms
+  75 s · waiting  92772 · inside 1000/1000 · held 1123 · sold 11879/20000 ·  27420 req/s · server CPU  82% · RAM 125 MB · loop lag p99 25 ms
+  81 s · waiting  92256 · inside 1000/1000 · held 1131 · sold 12609/20000 ·  27007 req/s · server CPU  89% · RAM 126 MB · loop lag p99 25 ms
+  85 s · waiting  91902 · inside 1000/1000 · held 1152 · sold 13117/20000 ·  27132 req/s · server CPU  86% · RAM 128 MB · loop lag p99 25 ms
+  90 s · waiting  91558 · inside  908/ 908 · held 1099 · sold 13772/20000 ·  27097 req/s · server CPU  84% · RAM 128 MB · loop lag p99 25 ms
+
+{
+ "seconds": 91,
+ "users": 99999,
+ "cap": 1000,
+ "adaptive": true,
+ "seats": 20000,
+ "scale": 4,
+ "requests": 2446320,
+ "reqPerSecAvg": 26999,
+ "reqPerSecPeak": 29737,
+ "errors": 0,
+ "timeouts": 0,
+ "latencyMs": {
+  "join": {
+   "p50": 2,
+   "p95": 178,
+   "p99": 416
+  },
+  "status": {
+   "p50": 4,
+   "p95": 73,
+   "p99": 170
+  },
+  "seats": {
+   "p50": 4,
+   "p95": 65,
+   "p99": 151
+  },
+  "hold": {
+   "p50": 4,
+   "p95": 68,
+   "p99": 153
+  },
+  "pay": {
+   "p50": 5,
+   "p95": 82,
+   "p99": 184
+  }
+ },
+ "server": {
+  "cpuPeakPctOfOneCore": 91,
+  "cpuSecondsTotal": 81,
+  "ramPeakMB": 128,
+  "loopLagP99Ms": 31,
+  "loopLagMaxMs": 39,
+  "bytesOutMB": 1021.2
+ },
+ "senderCpuSeconds": 189,
+ "people": {
+  "joined": 99999,
+  "boughtOrders": 5632,
+  "boughtSeats": 13838,
+  "toldSoldOut": 0,
+  "leftWhileWaiting": 7938,
+  "leftBeforePaying": 410,
+  "clashes": 9732,
+  "rejoin": 0,
+  "noSeatsFound": 904,
+  "payTooLate": 0,
+  "maxWaitSec": 89,
+  "avgWaitSec": 40
+ },
+ "room": {
+  "next": 99999,
+  "admitted": 7908,
+  "waiting": 91524,
+  "inside": 898,
+  "cap": 898,
+  "capMax": 1000,
+  "sold": 13838,
+  "held": 1073,
+  "free": 5089,
+  "seats": 20000,
+  "orders": 5632,
+  "joined": 99999,
+  "skipped": 567,
+  "finished": 6946,
+  "expired": 64,
+  "maxActive": 1000,
+  "conflicts": 9732,
+  "holds": 6487,
+  "pays": 5632
+ },
+ "audit": {
+  "ok": true,
+  "problems": [],
+  "sold": 13838,
+  "held": 1073
+ },
+ "finishedAll": false
+}
